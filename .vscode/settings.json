@@ -1,0 +1,16 @@
+{
+  "typescript.tsdk": "node_modules\\typescript\\lib",
+  "restoreTerminals.terminals": [
+    {
+      "splitTerminals": [
+        {
+          "name": "App",
+          "commands": [
+            "aws sso login",
+            "pnpm dev"
+          ]
+        },
+      ]
+    }
+  ]
+}
