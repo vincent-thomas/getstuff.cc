@@ -194,6 +194,8 @@ export const accountsRouter = router({
     ),
   logout: protectedProc.mutation(async ({ ctx }) => {
     const username = cookies().get("stuff-active")?.value;
+    cookies().delete("stuff-active");
+
     if (username) {
       const jti = cookies().get("stuff-token-" + username)?.value;
       if (jti) {

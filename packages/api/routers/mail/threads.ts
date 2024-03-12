@@ -60,6 +60,8 @@ export const threadsRouter = router({
         });
       }
 
+      threads.sort((a, b) => b.lastActive - a.lastActive);
+
       return threads;
     }),
   getThread: protectedProc
@@ -94,6 +96,19 @@ export const threadsRouter = router({
 
       const { Items: messages } = await ctx.dyn.send(messageCommand);
 
+      const threadCommand = new QueryCommand({
+        TableName: getDataTable(env.STAGE),
+        KeyConditionExpression: "begins_with(sk,:sk) and pk = :pk",
+        ExpressionAttributeValues: {
+          ":sk": `thread|`,
+          ":pk": "mail|" + threadView.pk.split("|")[1]
+        }
+      });
+
+      const { Items: threadItems } = await ctx.dyn.send(threadCommand);
+
+      const thread = threadInterface.parse(threadItems?.[0]);
+
       const niceMessages = [];
 
       const formattedMessages = z.array(messageInterface).parse(messages);
@@ -123,7 +138,8 @@ export const threadsRouter = router({
         thread: {
           lastActive: threadView.last_active,
           encryptionKey: threadView.encryptedKey,
-          read: threadView.read
+          read: threadView.read,
+          title: thread.title
         }
       };
     }),

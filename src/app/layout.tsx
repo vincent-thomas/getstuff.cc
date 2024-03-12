@@ -7,6 +7,7 @@ import type { ReactNode } from "react";
 import { ThemeProvider } from "@/providers/theme";
 import { cn } from "packages/components/utils";
 import { JotaiProvider } from "@/providers/jotai";
+import { ToolTipProvider } from "@/providers/tooltip";
 
 const open_sans = Poppins({
   subsets: ["latin"],
@@ -35,7 +36,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           disableTransitionOnChange
         >
           <JotaiProvider>
-            <TRPCReactProvider>{children}</TRPCReactProvider>
+            <ToolTipProvider>
+              <TRPCReactProvider>{children}</TRPCReactProvider>
+            </ToolTipProvider>
           </JotaiProvider>
         </ThemeProvider>
       </body>

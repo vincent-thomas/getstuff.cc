@@ -60,7 +60,13 @@ export const Threads = ({
           {selected.length === 0 ? (
             <RefreshButton folderId={folderId} />
           ) : (
-            <SelectedBar folderId={folderId} />
+            <SelectedBar
+              threadIds={selected}
+              folderId={folderId}
+              whenDone={() => {
+                setSelected([]);
+              }}
+            />
           )}
         </div>
       </header>
