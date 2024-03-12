@@ -3,42 +3,64 @@
 import { userDataInterface } from "@/interfaces/userData";
 import { decryptSymmetric } from "@/lib/sym-crypto";
 import { api } from "@stuff/api-client/react";
-import { useMemo, useRef, useState } from "react";
-import type { z } from "zod";
+import { useAtom } from "jotai";
+import { useEffect, useRef } from "react";
+import { userAtom } from "./userStore";
 
 export const useUser = () => {
-  const encryptedDataQuery = api.user.encryptedData.useQuery();
+  const sessionQuery = api.user.session.useQuery();
+  const encryptedDataQuery = api.user.encryptedData.useQuery(undefined, {
+    enabled: sessionQuery.data !== undefined && sessionQuery.data !== null
+  });
   const count = useRef(false);
 
-  const [user, setUser] = useState<null | z.infer<typeof userDataInterface>>(
-    null
-  );
+  const [user, setUser] = useAtom(userAtom);
+  const logoutMutation = api.accounts.logout.useMutation();
 
   const passwordDerivedSecretHex =
     typeof window !== "undefined"
       ? sessionStorage.getItem("password_derived_secret")
-      : null;
+      : undefined;
 
-  useMemo(() => {
+  useEffect(() => {
     if (count.current == false) {
       count.current = true;
       return;
     }
+
     if (passwordDerivedSecretHex === null) {
-      throw new Error("PasswordDerivedSecret not found in session storage");
-    }
-    if (encryptedDataQuery.data?.encryptedUserData === undefined) {
+      logoutMutation.mutate();
+      setUser(null);
       return;
     }
+
+    if (passwordDerivedSecretHex === undefined) {
+      return;
+    }
+
+    if (sessionQuery.data === null) {
+      setUser(null);
+      return;
+    }
+
+    // Loading state...
+    if (encryptedDataQuery.data === undefined) {
+      return;
+    }
+
+    if (encryptedDataQuery.data === null) {
+      setUser(null);
+      return;
+    }
+
     const passwordDerivedSecret = Buffer.from(passwordDerivedSecretHex, "hex");
 
     const result = decryptSymmetric(
-      encryptedDataQuery.data?.encryptedUserData,
+      encryptedDataQuery.data.encryptedUserData,
       passwordDerivedSecret
     );
-    console.log(result);
     setUser(userDataInterface.parse(JSON.parse(result)));
-  }, [encryptedDataQuery.data, passwordDerivedSecretHex]);
+  }, [encryptedDataQuery.data, passwordDerivedSecretHex, sessionQuery.data]);
 
   return user;
 };

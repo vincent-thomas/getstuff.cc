@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { router, pubProc } from "packages/api/trpc";
+import { router, pubProc, protectedProc } from "packages/api/trpc";
 import { getDyn } from "../client/dyn";
 import { getStripe } from "../client/stripe";
 import { GetCommand, PutCommand } from "@aws-sdk/lib-dynamodb";
@@ -191,5 +191,15 @@ export const accountsRouter = router({
           throw { code: "NOT_FOUND", message: "Invalid credentials" };
         }
       }
-    )
+    ),
+  logout: protectedProc.mutation(async ({ ctx }) => {
+    const username = cookies().get("stuff-active")?.value;
+    if (username) {
+      const jti = cookies().get("stuff-token-" + username)?.value;
+      if (jti) {
+        cookies().delete("stuff-token-" + username);
+        await ctx.redis.del(`session:${jti}`);
+      }
+    }
+  })
 });

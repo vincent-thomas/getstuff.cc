@@ -24,6 +24,7 @@ import {
 } from "./util";
 import { getDataTable } from "@stuff/infra-constants";
 import { getUser } from "packages/api/utils/getUser";
+import { encryptAsymmetric } from "@/lib/asym-crypto";
 
 export const mailHandler = async (
   tableName: string,
@@ -208,9 +209,9 @@ export const mailHandler = async (
 
     username = user.user_id;
 
-    const encryptedUserKey = encryptSymmetric(
-      Buffer.from(encryptionKey).toString("hex"),
-      Buffer.from(user.publicKey, "hex")
+    const encryptedUserKey = encryptAsymmetric(
+      Buffer.from(encryptionKey),
+      user.publicKey
     );
 
     await dyn.send(

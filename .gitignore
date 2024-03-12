@@ -22,6 +22,6 @@ cdk.out
 
 # vercel
 .vercel
-
+dist 
 # typescript
 *.tsbuildinfo

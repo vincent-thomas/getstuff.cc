@@ -10,6 +10,7 @@ import { messagesIdSelected } from "../store/messages-id-selected";
 import { SelectedBar } from "./selected-bar";
 import { Flex } from "packages/components/lib/flex";
 import { ScrollArea } from "packages/components/lib/scroll-area";
+import { useRouter } from "next/navigation";
 
 const headerHeight = 18 + 0.25 * 4 * 2 * 16;
 
@@ -26,6 +27,8 @@ export const Threads = ({
     { initialData: threads as any }
   );
   const [selected, setSelected] = useAtom(messagesIdSelected);
+  const router = useRouter();
+  const utils = api.useUtils();
 
   return (
     <Flex col className="h-screen">
@@ -94,10 +97,23 @@ export const Threads = ({
                   </button>
                 </div>
 
-                <Link
+                <button
                   key={thread.threadId}
-                  className="flex grow items-center gap-8 py-3 pr-5"
-                  href={"/app/" + folderId + "/" + thread.threadId}
+                  className="flex grow items-center gap-8 py-3 pr-5 text-left"
+                  onMouseOver={async () => {
+                    await utils.mail.threads.getThread.prefetch(
+                      {
+                        folderId,
+                        threadId: thread.threadId
+                      },
+                      {
+                        staleTime: 10_000
+                      }
+                    );
+                  }}
+                  onClick={async () => {
+                    router.push("/app/" + folderId + "/" + thread.threadId);
+                  }}
                 >
                   <p
                     className={cn(
@@ -115,7 +131,7 @@ export const Threads = ({
                   <div className="w-16 text-right text-muted-foreground">
                     <i>{thread.read ? "read" : "not read"}</i>
                   </div>
-                </Link>
+                </button>
               </div>
             );
           })}

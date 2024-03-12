@@ -14,6 +14,8 @@ import { getJwtId, jwtPayloadValidator, verifyJwt } from "./utils/jwt";
 import { getRedis } from "./client/redis";
 import { getDyn } from "./client/dyn";
 import type { NextRequest } from "next/server";
+import { getS3 } from "./client/s3";
+import { env } from "@/env";
 
 const sessionType = jwtPayloadValidator.nullable();
 
@@ -33,10 +35,13 @@ interface CreateInnerContextOptions {
 export const createContextInner = async (opts: CreateInnerContextOptions) => {
   const dyn = getDyn();
   const redis = await getRedis();
+  const s3 = getS3();
   return {
     session: opts.session,
     dyn,
-    redis
+    redis,
+    s3,
+    env: env
   };
 };
 /**
@@ -47,11 +52,11 @@ export const createContextInner = async (opts: CreateInnerContextOptions) => {
 export async function createContext(opts: { req: NextRequest }) {
   const redis = await getRedis();
   const active = opts.req.cookies.get("stuff-active")?.value ?? "";
+  const token = opts.req.cookies.get(`stuff-token-${active}`)?.value ?? "";
   const session = await getUserFromHeader(
     {
       "stuff-active": active,
-      [`stuff-token-${active}`]:
-        opts.req.cookies.get(`stuff-token-${active}`)?.value ?? ""
+      [`stuff-token-${active}`]: token
     },
     redis
   );

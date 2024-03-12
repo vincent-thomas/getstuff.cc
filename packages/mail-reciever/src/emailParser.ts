@@ -48,7 +48,6 @@ export const parseEmail = async (mimeEmail: string) => {
       address: cc.address
     }));
   }
-  console.log(parsedEmailContent.headers);
 
   const returnPath = parsedEmailContent.headers.get(
     "return-path"

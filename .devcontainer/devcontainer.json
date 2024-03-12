@@ -1,22 +1,16 @@
 {
 	"name": "Stuff",
-	"image": "mcr.microsoft.com/devcontainers/base:alpine-3.19",
-	"features": {
-		"ghcr.io/devcontainers/features/aws-cli:1": {
-			"version": "latest"
-		},
-		"ghcr.io/devcontainers/features/node:1": {
-			"nodeGypDependencies": true,
-			"version": "lts",
-			"nvmVersion": "latest"
-		},
-		"ghcr.io/devcontainers-contrib/features/aws-cdk:2": {
-			"version": "latest"
-		}
+	"build": {
+		"dockerfile": "Dockerfile",
+		"context": ".."
 	},
-	"forwardPorts": [
-		3000
-	],
-	"postCreateCommand": "pnpm install",
-	"remoteUser": "root"
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ms-azuretools.vscode-docker",
+				"EthanSK.restore-terminals",
+				"esbenp.prettier-vscode"
+			]
+		}
+	}
 }

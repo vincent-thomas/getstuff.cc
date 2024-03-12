@@ -18,6 +18,7 @@ import { deserializeData, encryptSymmetric } from "@/lib/sym-crypto";
 import { userDataInterface } from "@/interfaces/userData";
 import { MailInput, NameInput, PasswordInput } from "../../_components/inputs";
 import { randomBytes } from "crypto";
+import { genKeyPair } from "@/lib/asym-crypto";
 
 const validator = z.object({
   username: z.string(),
@@ -76,14 +77,15 @@ export const Form = () => {
       ).toString("hex")}`
     } satisfies z.infer<typeof userDataInterface>);
 
-    const { publicKey, secretKey } = box.keyPair();
+    const { publicKey, privateKey } = genKeyPair();
 
     const encryptedData = encryptSymmetric(
       deserializeData(Buffer.from(JSON.stringify(defaultUserData))),
       passwordDerivedSecret
     );
+
     const encryptedPrivateKey = encryptSymmetric(
-      deserializeData(Buffer.from(secretKey)),
+      deserializeData(Buffer.from(privateKey)),
       passwordDerivedSecret
     );
 
@@ -94,7 +96,7 @@ export const Form = () => {
       salt,
       encryptedDataKey: encryptedPrivateKey,
       encryptedUserData: encryptedData,
-      publicKey: Buffer.from(publicKey).toString("hex")
+      publicKey
     });
   });
 

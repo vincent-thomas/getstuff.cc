@@ -9,6 +9,7 @@ export const SelectedBar = ({ folderId }: { folderId: string }) => {
   const [selected, setSelected] = useAtom(messagesIdSelected);
   const threadsQuery = api.mail.threads.getThreads.useQuery({ folderId });
   const moveThreads = api.mail.threads.moveThreads.useMutation();
+  const setReadMutation = api.mail.threads.setRead.useMutation();
   const utils = api.useUtils();
 
   return (
@@ -18,7 +19,18 @@ export const SelectedBar = ({ folderId }: { folderId: string }) => {
       </button>
 
       <button className="rounded-full p-3 p-3 hover:bg-accent">
-        <MailOpen size={18} color="hsl(var(--foreground))" />
+        <MailOpen
+          size={18}
+          color="hsl(var(--foreground))"
+          onClick={async () => {
+            await setReadMutation.mutateAsync({
+              folderId,
+              value: false,
+              threadIds: selected
+            });
+            await utils.mail.threads.getThreads.invalidate({ folderId });
+          }}
+        />
       </button>
 
       <button
@@ -29,6 +41,7 @@ export const SelectedBar = ({ folderId }: { folderId: string }) => {
             newFolderId: "archive",
             threadIds: selected
           });
+
           if (successed.includes(false)) {
             alert("Some threads failed to move");
           }

@@ -3,13 +3,17 @@ import {
   DeleteCommand,
   GetCommand,
   PutCommand,
-  QueryCommand
+  QueryCommand,
+  UpdateCommand
 } from "@aws-sdk/lib-dynamodb";
-import { getDataTable } from "@stuff/infra-constants";
+import { getDataTable, getEmailContentBucket } from "@stuff/infra-constants";
 import { threadInterface } from "packages/api/interfaces/thread";
 import { threadViewInterface } from "packages/api/interfaces/threadView";
 import { protectedProc, router } from "packages/api/trpc";
 import { z } from "zod";
+import { messageInterface } from "../../interfaces/message";
+import { GetObjectCommand } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 export const threadsRouter = router({
   getThreads: protectedProc
@@ -28,7 +32,6 @@ export const threadsRouter = router({
       const { Items } = await ctx.dyn.send(threadViewsCommand);
 
       const threadViews = z.array(threadViewInterface).parse(Items);
-      console.log(threadViews);
       const threads = [];
       for (const threadView of threadViews) {
         const threadCommand = new QueryCommand({
@@ -47,7 +50,6 @@ export const threadsRouter = router({
         }
 
         const thread = threadInterface.parse(Items?.[0]);
-        console.log(thread, threadView);
 
         threads.push({
           threadId: z.string().parse(thread.pk.split("|")[1]),
@@ -75,7 +77,55 @@ export const threadsRouter = router({
 
       const { Items } = await ctx.dyn.send(threadViewsCommand);
 
-      return z.array(threadViewInterface).parse(Items);
+      const threadView = z.array(threadViewInterface).parse(Items)?.[0];
+
+      if (threadView === undefined) {
+        return null;
+      }
+
+      const messageCommand = new QueryCommand({
+        TableName: getDataTable(env.STAGE),
+        KeyConditionExpression: "begins_with(sk,:sk) and pk = :pk",
+        ExpressionAttributeValues: {
+          ":sk": `message|`,
+          ":pk": `mail|${threadId}`
+        }
+      });
+
+      const { Items: messages } = await ctx.dyn.send(messageCommand);
+
+      const niceMessages = [];
+
+      const formattedMessages = z.array(messageInterface).parse(messages);
+
+      for (const message of formattedMessages) {
+        const messageId = message.sk.split("|")[1];
+        const command = new GetObjectCommand({
+          Bucket: getEmailContentBucket(ctx.env.STAGE),
+          Key: messageId
+        });
+
+        const contentUrl = await getSignedUrl(ctx.s3, command);
+        niceMessages.push({
+          messageId,
+          to: message.to,
+          from: message.from,
+          subject: message.subject,
+          contentUrl
+        });
+
+        await ctx.redis.set("content-url:" + messageId, contentUrl, {
+          ex: 900
+        });
+      }
+      return {
+        messages: niceMessages,
+        thread: {
+          lastActive: threadView.last_active,
+          encryptionKey: threadView.encryptedKey,
+          read: threadView.read
+        }
+      };
     }),
   moveThreads: protectedProc
     .input(
@@ -131,5 +181,34 @@ export const threadsRouter = router({
         results.push(true);
       }
       return results;
+    }),
+
+  setRead: protectedProc
+    .input(
+      z.object({
+        folderId: z.string(),
+        threadIds: z.array(z.string()),
+        value: z.boolean()
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      for (const threadId of input.threadIds) {
+        const command = new UpdateCommand({
+          TableName: getDataTable(ctx.env.STAGE),
+          Key: {
+            pk: `mail|${threadId}`,
+            sk: `thread-view|${input.folderId}|${ctx.session.username}`
+          },
+          ExpressionAttributeNames: {
+            "#read": "read"
+          },
+          ExpressionAttributeValues: {
+            ":value": input.value
+          },
+          UpdateExpression: "set #read = :value"
+        });
+
+        await ctx.dyn.send(command);
+      }
     })
 });

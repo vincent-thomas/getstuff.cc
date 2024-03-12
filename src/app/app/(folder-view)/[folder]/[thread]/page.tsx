@@ -1,6 +1,7 @@
 import { setupPage } from "@/lib/setupPage";
-import { api } from "@stuff/api-client/server";
 import { z } from "zod";
+import { Page } from "./page-client";
+import { api } from "@stuff/api-client/server";
 
 export default setupPage({
   params: z.object({
@@ -8,9 +9,18 @@ export default setupPage({
     thread: z.string()
   }),
   async Component({ params }) {
-    console.log(params);
+    const thread = await api.mail.threads.getThread.query({
+      folderId: params.folder,
+      threadId: params.thread
+    });
+    if (!thread?.thread.read) {
+      await api.mail.threads.setRead.mutate({
+        folderId: params.folder,
+        threadIds: [params.thread],
+        value: true
+      });
+    }
 
-    api.mail.threads.getThreads;
-    return <></>;
+    return <Page folderId={params.folder} threadId={params.thread} />;
   }
 });
