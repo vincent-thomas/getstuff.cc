@@ -5,6 +5,7 @@ export const verdictValidator = z.enum(["PASS", "FAIL", "GRAY"]);
 export type Verdict = z.infer<typeof verdictValidator>;
 export const messageValidator = z.object({
   mail: z.object({
+    messageId: z.string(),
     commonHeaders: z.object({
       messageId: z.string(),
       date: z.string(),

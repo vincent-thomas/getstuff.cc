@@ -99,3 +99,70 @@ export const getUserFromAlias = async (
   }
   return await getUser(dyn, z.string().parse(existingAlias.pk.split("|")[1]));
 };
+
+type Contact = {
+  address: string;
+  name: string;
+};
+
+export const uploadMessage = async (
+  s3: S3Client,
+  dyn: DynamoDBDocumentClient,
+  messageId: string,
+  threadId: string,
+  {
+    subject,
+    to,
+    from,
+    cc,
+    content: { html, text }
+  }: {
+    subject: string;
+    to: Contact[];
+    cc: Contact[];
+    content: { html?: string; text: string };
+    from: Contact;
+  },
+  replyToMessageId?: string
+) => {
+  await uploadEmailContent(s3, messageId, {
+    html,
+    text
+  });
+
+  await dyn.send(
+    new PutCommand({
+      TableName: getDataTable(env.STAGE),
+      Item: {
+        pk: `mail|${threadId}`,
+        sk: `message|${messageId}`,
+        created_at: Date.now(),
+        subject,
+        from,
+        repliedToId: replyToMessageId ?? null,
+        to: to,
+        cc
+      }
+    })
+  );
+};
+
+export const createThreadView = (
+  dyn: DynamoDBDocumentClient,
+  folderId: string,
+  threadId: string,
+  username: string,
+  encryptedUserKey: string
+) =>
+  dyn.send(
+    new PutCommand({
+      TableName: getDataTable(env.STAGE),
+      Item: {
+        pk: `mail|${threadId}`,
+        sk: `thread-view|${folderId}|${username}`,
+        last_active: Date.now(),
+        read: false,
+        encryptedKey: encryptedUserKey
+      }
+    })
+  );

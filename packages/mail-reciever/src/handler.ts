@@ -18,9 +18,11 @@ import { parseEmail } from "./emailParser";
 import { encryptSymmetric, genSymmetricKey } from "@/lib/sym-crypto";
 import {
   createThread,
+  createThreadView,
   getThreadFromMsgId,
   getUserFromAlias,
-  uploadEmailContent
+  uploadEmailContent,
+  uploadMessage
 } from "./util";
 import { getDataTable } from "@stuff/infra-constants";
 import { getUser } from "packages/api/utils/getUser";
@@ -125,10 +127,6 @@ export const mailHandler = async (
   if (textContent === undefined) {
     return;
   }
-  await uploadEmailContent(s3, messageId, {
-    html: htmlContent,
-    text: textContent
-  });
 
   let threadId: string | undefined;
 
@@ -148,24 +146,18 @@ export const mailHandler = async (
     );
   }
 
-  await dyn.send(
-    new PutCommand({
-      TableName: tableName,
-      Item: {
-        pk: `mail|${threadId}`,
-        sk: `message|${messageId}`,
-        created_at: Date.now(),
-        subject: parsed.subject,
-        from: parsed.sentFromAddress,
-        repliedToId:
-          parsed.messageIdReplyingTo === undefined
-            ? null
-            : z.string().parse(parsed.messageIdReplyingTo),
-        to: parsed.recievedByAddresses,
-        cc: parsed.cc
-      }
-    })
-  );
+  const contactInterface = z.object({ name: z.string(), address: z.string() });
+
+  await uploadMessage(s3, dyn, messageId, threadId, {
+    subject: parsed.subject ?? "No Subject",
+    to: parsed.recievedByAddresses,
+    cc: z.array(contactInterface).parse(parsed.cc),
+    content: {
+      html: htmlContent,
+      text: textContent
+    },
+    from: contactInterface.parse(parsed.sentFromAddress)
+  });
 
   for (const att of parsed.attachments) {
     await dyn.send(
@@ -213,18 +205,6 @@ export const mailHandler = async (
       Buffer.from(encryptionKey),
       user.publicKey
     );
-
-    await dyn.send(
-      new PutCommand({
-        TableName: getDataTable(env.STAGE),
-        Item: {
-          pk: `mail|${threadId}`,
-          sk: `thread-view|inbox|${username}`,
-          last_active: Date.now(),
-          read: false,
-          encryptedKey: encryptedUserKey
-        }
-      })
-    );
+    await createThreadView(dyn, "inbox", threadId, username, encryptedUserKey);
   }
 };

@@ -28,12 +28,12 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 
         {loading && (
           <Loading
-            innerClassName={
+            color={
               variant === "default"
-                ? "text-muted-foreground"
-                : "text-foreground"
+                ? "hsl(var(--muted-foreground))"
+                : "hsl(var(--foreground))"
             }
-            className={cn("h-[20px]")}
+            size={20}
           />
         )}
       </button>

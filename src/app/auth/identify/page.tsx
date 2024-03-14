@@ -7,7 +7,6 @@ const Page = () => {
     <>
       <div className="flex w-full justify-between">
         <h1 className="text-2xl font-semibold">Login to Stuff!</h1>
-
         <Link
           href="/auth/init"
           className={cn(

@@ -72,7 +72,7 @@ export const Form = () => {
         passwordDerivedSecret.toString("hex")
       );
 
-      router.push("/app/inbox");
+      router.push("/mail/inbox");
     } catch (error) {
       setInvalidCredentials(true);
       setLoading(false);

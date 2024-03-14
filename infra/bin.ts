@@ -12,6 +12,8 @@ const dataApiStack = new DataApiInfra(app, `${env.STAGE}-stuff-infra`, {
     region: env.REGION,
     account: env.AWS_ACCOUNT_ID
   },
+  zoneName: "getstuff.cc",
+  domain: env.DOMAIN,
 
   stage: env.STAGE
 });

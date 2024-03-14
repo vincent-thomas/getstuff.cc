@@ -12,7 +12,7 @@ export const UserChecker = ({ whenDone }: { whenDone: () => void }) => {
       return;
     }
     if (user !== null) {
-      router.push("/app/inbox");
+      router.push("/mail/inbox");
       return;
     }
     whenDone();

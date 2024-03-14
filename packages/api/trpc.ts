@@ -16,6 +16,7 @@ import { getDyn } from "./client/dyn";
 import type { NextRequest } from "next/server";
 import { getS3 } from "./client/s3";
 import { env } from "@/env";
+import { getSes } from "./client/ses";
 
 const sessionType = jwtPayloadValidator.nullable();
 
@@ -36,11 +37,13 @@ export const createContextInner = async (opts: CreateInnerContextOptions) => {
   const dyn = getDyn();
   const redis = await getRedis();
   const s3 = getS3();
+  const ses = getSes();
   return {
     session: opts.session,
     dyn,
     redis,
     s3,
+    ses,
     env: env
   };
 };
