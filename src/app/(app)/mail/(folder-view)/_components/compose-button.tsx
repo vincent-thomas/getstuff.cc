@@ -23,6 +23,7 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { api } from "@stuff/api-client/react";
+import { ScrollArea } from "packages/components/lib/scroll-area";
 
 const promise = () =>
   new Promise(resolve =>
@@ -94,56 +95,61 @@ export const ComposeButton = () => {
         <PlusIcon color="hsl(var(--muted-foreground))" size={24} />
         <span>Compose</span>
       </DrawerTrigger>
-      <DrawerContent className="mx-auto flex h-[calc(100vh-20px)] w-screen max-w-[800px] flex-col overflow-visible border border-gray-500">
-        <form onSubmit={onSubmit} className="pb-auto flex grow flex-col">
-          <DrawerHeader>
-            <Flex gap="1rem" align="center" justify="between">
-              <DrawerTitle>Send Email</DrawerTitle>
-              <button className="rounded-full bg-primary p-1" type="submit">
-                <ArrowUpIcon color="hsl(var(--background))" size={26} />
-              </button>
-            </Flex>
-            <DrawerDescription>
-              Sending an email cant be undone
-            </DrawerDescription>
-          </DrawerHeader>
-          <div className="border-t border-border">
-            <Flex
-              className="w-full border-b border-border px-6 py-3"
-              gap="1rem"
-              align="center"
-            >
-              <span className="text-muted-foreground">To:</span>
 
+      <DrawerContent className="mx-auto flex w-screen   max-w-[800px] flex-col overflow-visible border border-gray-500">
+          <form onSubmit={onSubmit} className="pb-auto flex grow flex-col">
+            <DrawerHeader>
+              <Flex gap="1rem" align="center" justify="between">
+                <DrawerTitle>Send Email</DrawerTitle>
+                <button className="rounded-full bg-primary p-1" type="submit">
+                  <ArrowUpIcon color="hsl(var(--background))" size={26} />
+                </button>
+              </Flex>
+              <DrawerDescription>
+                Sending an email cant be undone
+              </DrawerDescription>
+            </DrawerHeader>
+            <div className="border-t border-border">
+              <Flex
+                className="w-full border-b border-border px-6 py-3"
+                gap="1rem"
+                align="center"
+              >
+                <span className="text-muted-foreground">To:</span>
+
+                <input
+                  {...register("to")}
+                  className="h-full w-full bg-transparent outline-none"
+                />
+              </Flex>
+            </div>
+            <DrawerMainContent className="flex grow flex-col gap-4">
               <input
-                {...register("to")}
-                className="h-full w-full bg-transparent outline-none"
+                type="text"
+                className="w-full bg-transparent text-2xl outline-none"
+                placeholder="Subject"
+                {...register("subject")}
               />
-            </Flex>
-          </div>
-          <DrawerMainContent className="flex grow flex-col gap-4">
-            <input
-              type="text"
-              className="w-full bg-transparent text-2xl outline-none"
-              placeholder="Subject"
-              {...register("subject")}
-            />
-            <Tiptap
-              className="grow"
-              placeholder="Compose your email..."
-              initialContent="<p></p>"
-              onUpdate={({ text, html }) => setDefaultContent({ text, html })}
-            />
-          </DrawerMainContent>
-        </form>
-        <DrawerFooter>
-          <DrawerClose
-            className={cn(buttonVariants({ variant: "outline" }), "w-full")}
-          >
-            Cancel
-          </DrawerClose>
-        </DrawerFooter>
+              <ScrollArea className="h-[calc(100vh-(8px+16px)-92px-50px-32px-70px-3rem-24px)]">
+                <Tiptap
+                  placeholder="Compose your email..."
+                  initialContent="<p></p>"
+                  className="h-full"
+                  onUpdate={({ text, html }) => setDefaultContent({ text, html })}
+                />
+              </ScrollArea>
+            </DrawerMainContent>
+          </form>
+          <DrawerFooter>
+            <DrawerClose
+              className={cn(buttonVariants({ variant: "outline" }), "w-full")}
+            >
+              Cancel
+            </DrawerClose>
+          </DrawerFooter>
+
       </DrawerContent>
+
     </Drawer>
   );
 };

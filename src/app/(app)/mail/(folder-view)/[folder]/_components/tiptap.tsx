@@ -19,7 +19,7 @@ const Tiptap = ({
 }: {
   initialContent: string;
   placeholder: string;
-  className: string;
+  className?: string;
   onUpdate?: ({
     html,
     text,

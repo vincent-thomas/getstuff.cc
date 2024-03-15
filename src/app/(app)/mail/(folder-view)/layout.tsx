@@ -5,17 +5,10 @@ import { redirect } from "next/navigation";
 import type { ReactNode } from "react";
 import { ComposeButton } from "./_components/compose-button";
 import { UserAvatar } from "./_components/user-avatar";
-import { ArchiveIcon, Inbox, Plus, SendIcon } from "lucide-react";
+import { ArchiveIcon, Inbox, SendIcon } from "lucide-react";
 import { Flex } from "packages/components/lib/flex";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger
-} from "packages/components/lib/sheet";
-import { Button } from "packages/components/lib";
+
+import { CreateFolderButton } from "./_components/create-folder-button";
 const Thing = ({ children }: { children: ReactNode }) => {
   return <div className="flex flex-col gap-1 p-1">{children}</div>;
 };
@@ -25,6 +18,9 @@ const Layout = async (props: LayoutProps) => {
   if (session === null) {
     redirect("/auth/identify");
   }
+
+  const folders = await api.mail.folders.listFolders.query();
+
   return (
     <div className="flex h-full min-w-[400px] overflow-hidden">
       <aside className="flex h-full w-[240px] flex-col border-r border-border">
@@ -80,38 +76,13 @@ const Layout = async (props: LayoutProps) => {
         <Flex col gap={"0.5rem"} className="p-1">
           <div className="flex w-full items-center justify-between px-2">
             <h1 className="text-muted-foreground">Folders</h1>
-            <Sheet>
-              <SheetTrigger asChild>
-                <button className="rounded-full p-1 p-1 hover:bg-accent">
-                  <Plus />
-                </button>
-              </SheetTrigger>
-              <SheetContent side="left">
-                <SheetHeader>
-                  <SheetTitle>Create Folder</SheetTitle>
-                  <SheetDescription>
-                    Folder is a place to store your emails. You can use it to
-                    categorize your emails.
-                  </SheetDescription>
-                </SheetHeader>
-                <Flex col gap="0.5rem" className="py-2">
-                  <label htmlFor="folder-name">Folder Name</label>
-                  <input
-                    placeholder="..."
-                    name="folder-name"
-                    className="rounded-md px-4 py-3 outline-none"
-                  />
-                  <div className="pt-2">
-                    <Button>Create folder</Button>
-                  </div>
-                </Flex>
-              </SheetContent>
-            </Sheet>
+            <CreateFolderButton />
           </div>
           <div className="flex flex-col gap-2 overflow-y-auto">
-            <Flex justify="start" className="pl-6 pt-1">
+            {folders.length === 0 ? (<Flex justify="start" className="pl-6 pt-1">
               No Folders!
-            </Flex>
+            </Flex>) : (folders.map(folder => (<Link href={`./${folder.sk.split("|")[1]}`} key={folder.sk.split("|")[1]} className="px-4 py-2">{folder.gsi2.split("|")[2]}</Link>)))}
+
           </div>
         </Flex>
       </aside>

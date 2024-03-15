@@ -5,6 +5,7 @@ import { Flex } from "packages/components/lib/flex";
 import { Card } from "../_components/card";
 import { Button } from "packages/components/lib";
 import { PageHeador } from "../_components/header";
+import { CheckoutButton } from "./_components/button-checkout";
 
 export default setupPage({
   Component() {
@@ -64,9 +65,9 @@ export default setupPage({
                   <li>Everything in Free</li>
                   <li>20GB storage</li>
                 </ul>
-                <Button className="ml-auto mt-auto font-semibold">
-                  Upgrade
-                </Button>
+                <div className="ml-auto mt-auto">
+                  <CheckoutButton />
+                </div>
               </div>
             </Card>
           </div>

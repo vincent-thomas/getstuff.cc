@@ -1,4 +1,3 @@
-import { TRPCReactProvider } from "@stuff/api-client/react";
 import type { ReactNode } from "react";
 import { JotaiProvider } from "@/providers/jotai";
 import { ToolTipProvider } from "@/providers/tooltip";
@@ -15,11 +14,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <JotaiProvider>
       <ToastProvider>
         <ToolTipProvider>
-          <TRPCReactProvider>
             <div vaul-drawer-wrapper="" className="h-screen">
               {children}
             </div>
-          </TRPCReactProvider>
         </ToolTipProvider>
       </ToastProvider>
     </JotaiProvider>

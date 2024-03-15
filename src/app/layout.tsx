@@ -5,6 +5,7 @@ import { Poppins } from "next/font/google";
 import type { ReactNode } from "react";
 import { ThemeProvider } from "@/providers/theme";
 import { cn } from "packages/components/utils";
+import { TRPCReactProvider } from "@stuff/api-client/react";
 
 const open_sans = Poppins({
   subsets: ["latin"],
@@ -27,6 +28,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           enableSystem
           disableTransitionOnChange
         >
+          <TRPCReactProvider>
+
           <div
             className={cn(
               open_sans,
@@ -35,6 +38,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           >
             {children}
           </div>
+          </TRPCReactProvider>
         </ThemeProvider>
       </body>
     </html>

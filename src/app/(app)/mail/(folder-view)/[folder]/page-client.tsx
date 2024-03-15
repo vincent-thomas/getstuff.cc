@@ -11,6 +11,7 @@ import { Flex } from "packages/components/lib/flex";
 import { ScrollArea } from "packages/components/lib/scroll-area";
 import { useRouter } from "next/navigation";
 import { useThreadsQuery } from "@/data-access/get-threads-query";
+import { builtInFolder } from "packages/api/utils/folder";
 
 const headerHeight = 18 + 0.25 * 4 * 2 * 16;
 
@@ -26,9 +27,12 @@ export const PageClient = ({
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
     { initialData: threads as any }
   );
+  const folder = api.mail.folders.getFolder.useQuery({ folderId });
   const [selected, setSelected] = useAtom(messagesIdSelected);
   const router = useRouter();
   const utils = api.useUtils();
+
+  const folderName = builtInFolder(folderId) ? folderId : folder.data?.gsi2.split("|")[2] ?? "";
 
   return (
     <Flex col className="h-full">
@@ -55,7 +59,7 @@ export const PageClient = ({
           )}
         </button>
 
-        <h1 className="pb-1 text-xl text-foreground">{folderId}</h1>
+        <h1 className="pb-1 text-xl text-foreground">{folderName}</h1>
         <div className="ml-auto mr-5">
           {selected.length === 0 ? (
             <RefreshButton folderId={folderId} />

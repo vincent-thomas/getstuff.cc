@@ -53,6 +53,15 @@ export class ThingsTable extends Construct {
       },
       projectionType: ProjectionType.ALL
     });
+     this.table.addGlobalSecondaryIndex({
+      indexName: "gsi2",
+      partitionKey: {
+        name: "gsi2",
+        type: AttributeType.STRING
+      },
+
+      projectionType: ProjectionType.KEYS_ONLY
+    });
   }
 }
 

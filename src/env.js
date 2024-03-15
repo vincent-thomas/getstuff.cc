@@ -11,7 +11,8 @@ export const env = createEnv({
     REGION: z.string(),
     STAGE: z.string(),
     AWS_ACCOUNT_ID: z.string(),
-    DOMAIN: z.string()
+    DOMAIN: z.string(),
+    APP_URL:z.string().url(),
   },
 
   /**
@@ -32,7 +33,8 @@ export const env = createEnv({
     REGION: process.env.REGION,
     STAGE: process.env.STAGE,
     AWS_ACCOUNT_ID: process.env.AWS_ACCOUNT_ID,
-    DOMAIN: process.env.DOMAIN
+    DOMAIN: process.env.DOMAIN,
+    APP_URL:process.env.APP_URL,
 
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },

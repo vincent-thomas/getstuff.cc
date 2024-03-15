@@ -57,7 +57,7 @@ const MainPage = ({ threadId, folderId }: z.infer<typeof paramsInterface>) => {
         threadIds: [threadId]
       });
     }
-  }, [folderId, threadId, threadQuery.data?.thread.read, threadReadMutation]);
+  }, [folderId, threadId, threadQuery.data?.thread.read]);
   const isRunning = useRef(false);
 
   useEffect(() => {
