@@ -7,6 +7,15 @@ import { ComposeButton } from "./_components/compose-button";
 import { UserAvatar } from "./_components/user-avatar";
 import { ArchiveIcon, Inbox, Plus, SendIcon } from "lucide-react";
 import { Flex } from "packages/components/lib/flex";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger
+} from "packages/components/lib/sheet";
+import { Button } from "packages/components/lib";
 const Thing = ({ children }: { children: ReactNode }) => {
   return <div className="flex flex-col gap-1 p-1">{children}</div>;
 };
@@ -71,9 +80,33 @@ const Layout = async (props: LayoutProps) => {
         <Flex col gap={"0.5rem"} className="p-1">
           <div className="flex w-full items-center justify-between px-2">
             <h1 className="text-muted-foreground">Folders</h1>
-            <button className="rounded-full p-1 p-1 hover:bg-accent">
-              <Plus />
-            </button>
+            <Sheet>
+              <SheetTrigger asChild>
+                <button className="rounded-full p-1 p-1 hover:bg-accent">
+                  <Plus />
+                </button>
+              </SheetTrigger>
+              <SheetContent side="left">
+                <SheetHeader>
+                  <SheetTitle>Create Folder</SheetTitle>
+                  <SheetDescription>
+                    Folder is a place to store your emails. You can use it to
+                    categorize your emails.
+                  </SheetDescription>
+                </SheetHeader>
+                <Flex col gap="0.5rem" className="py-2">
+                  <label htmlFor="folder-name">Folder Name</label>
+                  <input
+                    placeholder="..."
+                    name="folder-name"
+                    className="rounded-md px-4 py-3 outline-none"
+                  />
+                  <div className="pt-2">
+                    <Button>Create folder</Button>
+                  </div>
+                </Flex>
+              </SheetContent>
+            </Sheet>
           </div>
           <div className="flex flex-col gap-2 overflow-y-auto">
             <Flex justify="start" className="pl-6 pt-1">

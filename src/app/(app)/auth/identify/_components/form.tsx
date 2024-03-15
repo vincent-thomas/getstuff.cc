@@ -17,6 +17,7 @@ import {
 } from "../../_utils";
 import { MailInput, PasswordInput } from "../../_components/inputs";
 import { useRouter } from "next/navigation";
+import { setPasswordDerivedSecret } from "@/lib/useUserPrivateKey";
 
 const validator = z.object({
   username: z.string(),
@@ -67,13 +68,11 @@ export const Form = () => {
         hashedPassword,
         salt
       );
-      sessionStorage.setItem(
-        "password_derived_secret",
-        passwordDerivedSecret.toString("hex")
-      );
+      setPasswordDerivedSecret(passwordDerivedSecret.toString("hex"));
 
       router.push("/mail/inbox");
     } catch (error) {
+      console.log(error);
       setInvalidCredentials(true);
       setLoading(false);
     }

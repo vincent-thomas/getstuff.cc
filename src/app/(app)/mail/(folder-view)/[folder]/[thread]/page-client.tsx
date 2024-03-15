@@ -2,9 +2,8 @@
 
 import { decryptAsymmetric } from "@/lib/asym-crypto";
 import { decryptSymmetric } from "@/lib/sym-crypto";
-import { useMasterPrivateKey } from "@/lib/useUserPrivateKey";
-import { api } from "@stuff/api-client/react";
-import { useEffect, useState } from "react";
+import { useDataKey } from "@/lib/useUserPrivateKey";
+import { useEffect, useRef, useState } from "react";
 import { z } from "zod";
 import { SelectedBar } from "../_components/selected-bar";
 import { Loading } from "packages/icons";
@@ -31,7 +30,7 @@ const MainPage = ({ threadId, folderId }: z.infer<typeof paramsInterface>) => {
     threadId
   });
   const threadReadMutation = useThreadsReadMutation();
-  const masterKey = useMasterPrivateKey();
+  const masterKey = useDataKey();
 
   const [formattedMails, setFormattedMails] = useState<
     {
@@ -59,8 +58,14 @@ const MainPage = ({ threadId, folderId }: z.infer<typeof paramsInterface>) => {
       });
     }
   }, [folderId, threadId, threadQuery.data?.thread.read, threadReadMutation]);
+  const isRunning = useRef(false);
 
   useEffect(() => {
+    if (!isRunning.current) {
+      isRunning.current = true;
+      return;
+    }
+
     async function main() {
       if (
         threadQuery.data === undefined ||
@@ -98,10 +103,13 @@ const MainPage = ({ threadId, folderId }: z.infer<typeof paramsInterface>) => {
             to: item.to
           }
         ]);
+
         setLoading(false);
       }
     }
     main(); // eslint-disable-line
+
+    return () => setFormattedMails([]);
   }, [threadQuery.data, masterKey, threadId]);
 
   if (isLoading) {

@@ -1,7 +1,7 @@
 import { api } from "@stuff/api-client/server";
 import { redirect } from "next/navigation";
 import { z } from "zod";
-import { Threads } from "./_components/threads";
+import { PageClient } from "./page-client";
 import { setupPage } from "@/lib/setupPage";
 
 export default setupPage({
@@ -20,19 +20,6 @@ export default setupPage({
       redirect("/mail/inbox");
     }
 
-    // const threads = await api.mail.threads.getThreads.query({
-    //   folderId: params.folder
-    // });
-
-    // if (threads.length === 0) {
-    //   return (
-    //     <div className="flex h-full w-full items-center justify-center">
-    //       <h1 className="text-2xl text-muted-foreground">
-    //         {params.folder} is empty!
-    //       </h1>
-    //     </div>
-    //   );
-    // }
-    return <Threads folderId={params.folder} threads={[]} />;
+    return <PageClient folderId={params.folder} threads={[]} />;
   }
 });

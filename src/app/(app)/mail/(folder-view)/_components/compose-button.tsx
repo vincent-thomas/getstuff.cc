@@ -17,7 +17,7 @@ import { Flex } from "packages/components/lib/flex";
 import { buttonVariants } from "packages/components/lib/variants";
 import { cn } from "packages/components/utils";
 import { useState } from "react";
-import Tiptap from "./tiptap";
+import Tiptap from "../[folder]/_components/tiptap";
 import { toast } from "sonner";
 import { z } from "zod";
 import { useForm } from "react-hook-form";

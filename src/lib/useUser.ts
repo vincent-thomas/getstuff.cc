@@ -6,6 +6,10 @@ import { api } from "@stuff/api-client/react";
 import { useAtom } from "jotai";
 import { useEffect, useRef } from "react";
 import { userAtom } from "./userStore";
+import {
+  clearDerivedSecretStore,
+  getPasswordDerivedSecret
+} from "./useUserPrivateKey";
 
 export const useUser = () => {
   const sessionQuery = api.user.session.useQuery();
@@ -18,9 +22,7 @@ export const useUser = () => {
   const logoutMutation = api.accounts.logout.useMutation();
 
   const passwordDerivedSecretHex =
-    typeof window !== "undefined"
-      ? sessionStorage.getItem("password_derived_secret")
-      : undefined;
+    typeof window !== "undefined" ? getPasswordDerivedSecret() : undefined;
 
   useEffect(() => {
     if (count.current == false) {
@@ -30,6 +32,7 @@ export const useUser = () => {
 
     if (passwordDerivedSecretHex === null) {
       logoutMutation.mutate();
+      clearDerivedSecretStore();
       setUser(null);
       return;
     }

@@ -2,13 +2,9 @@ import "../../styles/globals.css";
 
 import { Poppins } from "next/font/google";
 
-import { TRPCReactProvider } from "@stuff/api-client/react";
 import type { ReactNode } from "react";
 import { ThemeProvider } from "@/providers/theme";
 import { cn } from "packages/components/utils";
-import { JotaiProvider } from "@/providers/jotai";
-import { ToolTipProvider } from "@/providers/tooltip";
-import { ToastProvider } from "@/providers/sonner";
 
 const open_sans = Poppins({
   subsets: ["latin"],
@@ -31,23 +27,14 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           enableSystem
           disableTransitionOnChange
         >
-          <JotaiProvider>
-            <ToastProvider>
-              <ToolTipProvider>
-                <TRPCReactProvider>
-                  <div
-                    vaul-drawer-wrapper=""
-                    className={cn(
-                      open_sans.className,
-                      `h-screen bg-background font-sans antialiased`
-                    )}
-                  >
-                    {children}
-                  </div>
-                </TRPCReactProvider>
-              </ToolTipProvider>
-            </ToastProvider>
-          </JotaiProvider>
+          <div
+            className={cn(
+              open_sans,
+              "min-h-screen bg-background font-sans antialiased"
+            )}
+          >
+            {children}
+          </div>
         </ThemeProvider>
       </body>
     </html>

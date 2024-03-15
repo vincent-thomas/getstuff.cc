@@ -8,7 +8,6 @@ import { useState } from "react";
 import { Checkbox } from "packages/components/lib/checkbox";
 import { api } from "@stuff/api-client/react";
 import { generateSalt, deriveVerifier } from "secure-remote-password/client";
-import { box } from "tweetnacl";
 import {
   createPasswordDerivedSecret,
   createSRPPrivateKey,

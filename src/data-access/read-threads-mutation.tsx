@@ -1,4 +1,4 @@
-import { messagesIdSelected } from "@/app/mail/(folder-view)/[folder]/store/messages-id-selected";
+import { messagesIdSelected } from "@/app/(app)/mail/(folder-view)/[folder]/store/messages-id-selected";
 import { api } from "@stuff/api-client/react";
 import { useAtom } from "jotai";
 

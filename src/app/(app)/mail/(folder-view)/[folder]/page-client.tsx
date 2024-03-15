@@ -1,12 +1,12 @@
 "use client";
 import { cn } from "packages/components/utils";
 import { Checked, UnChecked } from "packages/icons/lib/unchecked";
-import { RefreshButton } from "./refresh-button";
+import { RefreshButton } from "./_components/refresh-button";
 import { api } from "@stuff/api-client/react";
 import { formatDistanceToNow } from "date-fns";
 import { useAtom } from "jotai";
-import { messagesIdSelected } from "../store/messages-id-selected";
-import { SelectedBar } from "./selected-bar";
+import { messagesIdSelected } from "./store/messages-id-selected";
+import { SelectedBar } from "./_components/selected-bar";
 import { Flex } from "packages/components/lib/flex";
 import { ScrollArea } from "packages/components/lib/scroll-area";
 import { useRouter } from "next/navigation";
@@ -14,7 +14,7 @@ import { useThreadsQuery } from "@/data-access/get-threads-query";
 
 const headerHeight = 18 + 0.25 * 4 * 2 * 16;
 
-export const Threads = ({
+export const PageClient = ({
   folderId,
   threads
 }: {

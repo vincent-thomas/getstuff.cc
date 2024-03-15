@@ -3,6 +3,7 @@
 import { useState, type ReactNode } from "react";
 import { UserChecker } from "./userChecker";
 import { Spinner } from "./icons/spinner";
+import Link from "next/link";
 
 const Layout = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
@@ -21,7 +22,11 @@ const Layout = ({ children }: { children: ReactNode }) => {
           {children}
           <p className="text-muted-foreground">
             By clicking submit you agree to the <br />
-            terms and conditions
+            terms and conditions and our{" "}
+            <Link href="/privacy-policy" className="underline" target="_blank">
+              privacy policy
+            </Link>
+            .
           </p>
         </div>
       </div>
