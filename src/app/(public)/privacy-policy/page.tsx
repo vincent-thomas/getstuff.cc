@@ -2,6 +2,7 @@ import { setupPage } from "@/lib/setupPage";
 import { Section } from "../_components/section";
 import { PageHeador } from "../_components/header";
 import type { ReactNode } from "react";
+import { SharedLayout } from "../layout-client";
 
 const H2 = ({ children }: { children: ReactNode }) => {
   return <h2 className="mb-2 text-2xl font-bold">{children}</h2>;
@@ -14,7 +15,7 @@ const P = ({ children }: { children: ReactNode }) => {
 export default setupPage({
   Component() {
     return (
-      <>
+      <SharedLayout>
         <PageHeador
           title="Stuff Privacy Policy"
           comment={
@@ -88,7 +89,7 @@ export default setupPage({
             agree to its Terms and Conditions.
           </P>
         </Section>
-      </>
+      </SharedLayout>
     );
   }
 });

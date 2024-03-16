@@ -30,8 +30,6 @@ export const useUser = () => {
       return;
     }
 
-    console.log(passwordDerivedSecretHex)
-
     if (passwordDerivedSecretHex === null) {
       async function logout() {
         try {

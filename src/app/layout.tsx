@@ -7,6 +7,7 @@ import { ThemeProvider } from "@/providers/theme";
 import { cn } from "packages/components/utils";
 import { TRPCReactProvider } from "@stuff/api-client/react";
 import type { Metadata, Viewport } from "next";
+import { CookieTeller } from "./_components/cookie-teller";
 
 const open_sans = Poppins({
   subsets: ["latin"],
@@ -63,6 +64,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
               "min-h-screen bg-background font-sans antialiased"
             )}
           >
+            {/* <CookieTeller /> */}
             {children}
           </div>
           </TRPCReactProvider>

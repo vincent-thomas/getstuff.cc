@@ -4,17 +4,18 @@ import { Flex } from "packages/components/lib/flex";
 import { Card } from "../_components/card";
 import { PageHeador } from "../_components/header";
 import { CheckoutButton } from "./_components/button-checkout";
+import { SharedLayout } from "../layout-client";
 
 export default setupPage({
   Component() {
     return (
-      <>
+      <SharedLayout>
         <PageHeador
           title="Stuff Pricing"
           comment="Simple pricing for simple services."
         />
         <Section>
-          <div className="grid w-full grid-cols-2 gap-4">
+          <div className="grid w-full grid-rows-2 md:grid-rows-1 md:grid-cols-2 gap-4">
             <Card className="flex flex-col gap-2" noPadding>
               <div className="p-4">
                 <Flex align="center" justify="between">
@@ -69,7 +70,7 @@ export default setupPage({
             </Card>
           </div>
         </Section>
-      </>
+      </SharedLayout>
     );
   }
 });

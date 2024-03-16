@@ -4,7 +4,7 @@ import { Button } from "packages/components/lib/button";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Checkbox } from "packages/components/lib/checkbox";
 import { api } from "@stuff/api-client/react";
 import { generateSalt, deriveVerifier } from "secure-remote-password/client";
@@ -32,6 +32,8 @@ export const Form = () => {
     register,
     handleSubmit,
     setError,
+    watch,
+    clearErrors,
     formState: { errors }
   } = useForm<z.infer<typeof validator>>({
     resolver: zodResolver(validator)
@@ -88,19 +90,30 @@ export const Form = () => {
       passwordDerivedSecret
     );
 
-    await createAccountMutation.mutateAsync({
-      username: data.username,
-      name: data.name,
-      verifier,
-      salt,
-      encryptedDataKey: encryptedPrivateKey,
-      encryptedUserData: encryptedData,
-      publicKey
-    });
+    try {
+      await createAccountMutation.mutateAsync({
+        username: data.username,
+        name: data.name,
+        verifier,
+        salt,
+        encryptedDataKey: encryptedPrivateKey,
+        encryptedUserData: encryptedData,
+        publicKey
+      });
+    } catch(e) {
+      setError("username", {
+        message: "Invalid credentials"
+      });
+    }
+
+
   });
 
   return (
     <form className="flex flex-col gap-4" onSubmit={onSubmit}>
+      {errors.username?.message && (
+        <div className="rounded-md bg-red-500 p-4">{errors.username.message}</div>
+      )}
       <MailInput {...register("username")} autoComplete="username" />
       <NameInput {...register("name")} autoComplete="given-name" />
       <PasswordInput {...register("password")} autoComplete="new-password" />
@@ -123,7 +136,7 @@ export const Form = () => {
           <span className="text-red-400">{errors.checkbox.message}</span>
         )}
       </div>
-      <Button variant="default">Submit</Button>
+      <Button variant="default" disabled={!!errors.root}>Submit</Button>
     </form>
   );
 };

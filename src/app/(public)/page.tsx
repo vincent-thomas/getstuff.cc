@@ -13,6 +13,7 @@ import { Section } from "./_components/section";
 import { Card } from "./_components/card";
 import { PageHeador } from "./_components/header";
 import { Button } from "packages/components/lib";
+import { SharedLayout } from "./layout-client";
 
 export default setupPage({
   query: z.object({
@@ -29,7 +30,7 @@ export default setupPage({
     }
 
     return (
-      <>
+      <SharedLayout>
         <PageHeador
           title="Focus on what matters with Stuff"
           comment="Stuff mail for the productive"
@@ -37,7 +38,7 @@ export default setupPage({
         <Section>
           <img
             src={"/hero-image.svg"}
-            className="mx-auto w-full max-w-[700px] px-4 md:px-10"
+            className="mx-auto w-full max-w-[600px] px-4 md:px-10"
             alt="Hero image of a computer with a mail client open"
           />
         </Section>
@@ -130,7 +131,7 @@ export default setupPage({
             </Card>
           </div>
         </Section>
-      </>
+      </SharedLayout>
     );
   }
 });

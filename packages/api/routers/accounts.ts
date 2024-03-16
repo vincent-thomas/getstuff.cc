@@ -187,7 +187,6 @@ export const accountsRouter = router({
             serverProof: serverSession.proof
           };
         } catch (e) {
-          console.log(e);
           throw { code: "NOT_FOUND", message: "Invalid credentials" };
         }
       }

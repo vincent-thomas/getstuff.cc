@@ -1,9 +1,10 @@
 import { setupPage } from "@/lib/setupPage";
+import { SharedLayout } from "../layout-client";
 
 export default setupPage({
   Component() {
     return (
-      <>
+      <SharedLayout>
         <h1>Cookie Policy for Stuff</h1>
 
         <p>
@@ -132,7 +133,7 @@ export default setupPage({
         <ul>
           <li>Email: vincent@getstuff.cc</li>
         </ul>
-      </>
+      </SharedLayout>
     );
   }
 });
