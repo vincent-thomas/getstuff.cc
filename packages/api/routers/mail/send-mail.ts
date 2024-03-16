@@ -50,6 +50,9 @@ export const sendMailRouter = router({
         Source: `${ctx.session.username}@${ctx.env.DOMAIN}`
       });
 
+      try {
+
+
       const { MessageId } = await ctx.ses.send(command);
 
       const threadId = await createThread(
@@ -102,5 +105,10 @@ export const sendMailRouter = router({
         ctx.session.username,
         encryptedUserKey
       );
+      }
+      catch (e) {
+        console.error(e);
+        throw e;
+      }
     })
 });

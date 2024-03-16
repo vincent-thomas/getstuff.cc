@@ -33,6 +33,7 @@ export const getRedis = async () => {
   const token = await getRedisToken(ssm);
 
   return new Redis({
+    
     url,
     token,
   });

@@ -7,7 +7,7 @@ const getStripeKey = (ssm: SSMClient) =>
   ssm
     .send(
       new GetParameterCommand({
-        Name: `/stuff/api/${process.env.STAGE}/stripe-key`,
+        Name: `/stuff/api/${env.STAGE}/stripe-key`,
         WithDecryption: true,
       }),
     )

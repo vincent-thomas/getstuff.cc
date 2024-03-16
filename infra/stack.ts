@@ -1,4 +1,4 @@
-import { type App, Stack, type StackProps, RemovalPolicy } from "aws-cdk-lib";
+import { type App, Stack, type StackProps, RemovalPolicy, CfnOutput } from "aws-cdk-lib";
 import { CustomersTable, ThingsTable, UsersTable } from "./constructs/table";
 
 import { Bucket } from "aws-cdk-lib/aws-s3";
@@ -10,7 +10,8 @@ import {
   Identity,
   MailFromBehaviorOnMxFailure
 } from "aws-cdk-lib/aws-ses";
-import { HostedZone, MxRecord } from "aws-cdk-lib/aws-route53";
+import { ARecord, CnameRecord, HostedZone, MxRecord } from "aws-cdk-lib/aws-route53";
+import { CfnAccessKey, Effect, Policy, PolicyDocument, PolicyStatement, User } from "aws-cdk-lib/aws-iam";
 
 interface AccountStackProps extends StackProps {
   stage: string;
@@ -31,15 +32,15 @@ export class DataApiInfra extends Stack {
   ) {
     super(scope, id, { ...props, crossRegionReferences: true });
 
-    new ThingsTable(this, "stuff-data-table", {
+    const {table: dataTable} = new ThingsTable(this, "stuff-data-table", {
       stage
     });
 
-    new UsersTable(this, "stuff-users-table", {
+    const {table: userTable} = new UsersTable(this, "stuff-users-table", {
       stage
     });
 
-    new CustomersTable(this, "stuff-customers-table", {
+    const {table: customerTable} = new CustomersTable(this, "stuff-customers-table", {
       stage
     });
 
@@ -60,6 +61,10 @@ export class DataApiInfra extends Stack {
       mailFromBehaviorOnMxFailure: MailFromBehaviorOnMxFailure.REJECT_MESSAGE
     });
 
+    const zone = HostedZone.fromLookup(this, "stuff-zone", {
+        domainName: zoneName
+      })
+
     new MxRecord(this, "stuff-mx-record", {
       values: [
         {
@@ -67,11 +72,69 @@ export class DataApiInfra extends Stack {
           priority: 10
         }
       ],
-      zone: HostedZone.fromLookup(this, "stuff-zone", {
-        domainName: zoneName
-      }),
+      zone,
       recordName: domain + "."
     });
+
+    new CnameRecord(this, "stuff-email-cname-record", {
+      zone,
+      recordName: `wwww`,
+      domainName: `cname.vercel-dns.com`
+    })
+
+    new ARecord(this, "stuff-email-a-record", {
+      zone,
+      target: {
+        values: ["76.76.21.21"]
+      }
+    })
+
+
+
+    const parameterStatement = new PolicyStatement({
+      effect: Effect.ALLOW,
+      actions: ["ssm:GetParameter"],
+      resources: [
+        `arn:aws:ssm:${props.env.region}:${props.env.account}:parameter/stuff/api/${stage}/*`,
+        `arn:aws:ssm:${props.env.region}:${props.env.account}:parameter/stuff/api/${stage}/prices/*`
+      ]
+    });
+
+    const emailSendingStatement = new PolicyStatement({
+      effect: Effect.ALLOW,
+      actions: ["ses:SendEmail"],
+      resources: [
+        `arn:aws:ses:${props.env.region}:${props.env.account}:identity/${domain}`,
+      ]
+    });
+
+
+    const inlinePolicy = new PolicyDocument({
+      statements: [
+        parameterStatement,
+        emailSendingStatement
+      ]
+    });
+    const user = new User(this, "app-external-user", {
+      userName: `${stage}-stuff-app-user`,
+    })
+    user.attachInlinePolicy(new Policy(this, 'CustomPolicy', {
+      policyName: 'MyCustomPolicy',
+      document: inlinePolicy
+    }))
+
+    userTable.grantReadWriteData(user);
+    customerTable.grantReadWriteData(user);
+    dataTable.grantReadWriteData(user);
+
+    const userAccessKey = new CfnAccessKey(this, "stuff-access-key", {
+      userName: user.userName
+    });
+
+    new CfnOutput(this, "userUsername", {value: user.userName})
+    new CfnOutput(this, "AppAccessKeyId", {value: userAccessKey.ref})
+    new CfnOutput(this, "AppAccessSecretKey", {value: userAccessKey.attrSecretAccessKey})
+
 
     Stack.of(this).tags.setTag("STAGE", stage);
     Stack.of(this).tags.setTag("scope", "stuff-api");
