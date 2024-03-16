@@ -4,7 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "concurrently \"next build\" \"pnpm build:mail-reciever\"",
+    "build": "concurrently \"pnpm build:app\" \"pnpm build:mail-reciever\"",
+    "build:app": "next",
     "build:mail-reciever": "node ./packages/mail-reciever/esbuild.js",
     "dev": "next dev",
     "lint": "next lint",
