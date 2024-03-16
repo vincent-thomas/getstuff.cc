@@ -6,15 +6,12 @@
  */
 await import("./src/env.js");
 
-import nextPwa from "@ducanh2912/next-pwa";
-
-const withPwa = nextPwa({
-  dest: "public",
-  aggressiveFrontEndNavCaching: true,
-  cacheOnFrontEndNav: true,
-  reloadOnOnline: true,
-
-})
+// import withSerwistInit from "@serwist/next";
+      
+// const withPwa = withSerwistInit({
+//     swSrc: "src/app/sw.ts",
+//     swDest: "public/sw.js",
+// });
 
 /** @type {import("next").NextConfig} */
 const config = {
@@ -43,4 +40,4 @@ const config = {
   }
 };
 
-export default withPwa(config);
+export default config;
