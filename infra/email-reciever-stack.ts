@@ -21,13 +21,14 @@ interface MailApiStackProps extends StackProps {
   };
   formattedEmailBucket: Bucket;
   stage: string;
+  appUrl:string;
 }
 
 export class EmailReciever extends Stack {
   constructor(
     scope: App,
     id: string,
-    { stage, emailDomain, formattedEmailBucket, ...props }: MailApiStackProps
+    { stage, emailDomain, formattedEmailBucket,appUrl, ...props }: MailApiStackProps
   ) {
     super(scope, id, props);
 
@@ -83,7 +84,8 @@ export class EmailReciever extends Stack {
         AWS_ACCOUNT_ID: z.string().parse(props.env.account),
         REGION: z.string().parse(props.env.region),
         NODE_ENV: "production",
-        NODE_OPTIONS: "--enable-source-maps"
+        NODE_OPTIONS: "--enable-source-maps",
+        APP_URL: appUrl
       }
     });
 

@@ -1,7 +1,7 @@
 import { type App, Stack, type StackProps, RemovalPolicy, CfnOutput } from "aws-cdk-lib";
 import { CustomersTable, ThingsTable, UsersTable } from "./constructs/table";
 
-import { Bucket } from "aws-cdk-lib/aws-s3";
+import { Bucket, HttpMethods } from "aws-cdk-lib/aws-s3";
 import { getEmailContentBucket } from "@stuff/infra-constants";
 import {
   DkimIdentity,
@@ -46,7 +46,11 @@ export class DataApiInfra extends Stack {
 
     this.formattedEmailBucket = new Bucket(this, "stuff-emails-bucket", {
       bucketName: getEmailContentBucket(stage),
-      removalPolicy: RemovalPolicy.DESTROY
+      removalPolicy: RemovalPolicy.DESTROY,
+      cors: [{
+        allowedMethods: [HttpMethods.GET],
+        allowedOrigins: ["http://localhost:3000", `https://${domain}`],
+      }]
     });
 
     new EmailIdentity(this, "stuff-email-identity", {
@@ -108,11 +112,21 @@ export class DataApiInfra extends Stack {
       ]
     });
 
+      const storageStatement = new PolicyStatement({
+      effect: Effect.ALLOW,
+      actions: ["s3:PutObject"],
+      resources: [
+        this.formattedEmailBucket.bucketArn + "/*"
+      ]
+    });
+
+
 
     const inlinePolicy = new PolicyDocument({
       statements: [
         parameterStatement,
-        emailSendingStatement
+        emailSendingStatement,
+        storageStatement
       ]
     });
     const user = new User(this, "app-external-user", {

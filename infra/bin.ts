@@ -24,6 +24,7 @@ new EmailReciever(app, `${env.STAGE}-stuff-email-reciever`, {
     region: env.REGION,
     account: env.AWS_ACCOUNT_ID
   },
+  appUrl: env.APP_URL,
   formattedEmailBucket: dataApiStack.formattedEmailBucket,
   stage: env.STAGE
 });
