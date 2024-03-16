@@ -30,10 +30,21 @@ export const useUser = () => {
       return;
     }
 
+    console.log(passwordDerivedSecretHex)
+
     if (passwordDerivedSecretHex === null) {
-      logoutMutation.mutate();
-      clearDerivedSecretStore();
-      setUser(null);
+      async function logout() {
+        try {
+          await logoutMutation.mutateAsync();
+        }
+        catch {}
+        clearDerivedSecretStore();
+        setUser(null);
+      }
+
+
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      logout();
       return;
     }
 

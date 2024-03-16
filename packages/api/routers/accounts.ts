@@ -175,12 +175,12 @@ export const accountsRouter = router({
           cookies().set("stuff-token-" + username, jwt, {
             sameSite: "strict",
             secure: true,
-            httpOnly: true
+            httpOnly: true,
           });
           cookies().set("stuff-active", username, {
             sameSite: "strict",
             secure: true,
-            httpOnly: true
+            httpOnly: true,
           });
 
           return {

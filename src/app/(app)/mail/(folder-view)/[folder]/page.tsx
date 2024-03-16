@@ -12,14 +12,22 @@ export default setupPage({
       redirect("/auth/identify");
     }
 
-    const doesFolderExist = await api.mail.folders.folderExists.query({
+    const folderResult = await api.mail.folders.getFolder.query({
       folderId: params.folder
-    });
+    })
 
-    if (!doesFolderExist) {
+    if (folderResult === undefined) {
       redirect("/mail/inbox");
     }
+    const threads = await api.mail.threads.getThreads.query({
+      folderId: params.folder
+    })
 
-    return <PageClient folderId={params.folder} threads={[]} />;
+    const folder = {
+      name: z.string().parse(folderResult === null ? params.folder : folderResult.gsi2.split("|")[2]),
+      folderId: params.folder
+    }
+
+    return <PageClient folderId={params.folder} threads={threads} folder={folder} />;
   }
 });

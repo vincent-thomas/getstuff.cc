@@ -10,6 +10,6 @@ export const UserAvatar = () => {
   }
 
   return (
-    <img src={user?.avatar_url} className="h-[38px] w-[38px] rounded-full" />
+    <img src={user?.avatar_url} className="h-[38px] w-[38px] rounded-full" alt="User selected avatar" />
   );
 };

@@ -122,7 +122,7 @@ export const threadsRouter = router({
 
         const contentUrl = await getSignedUrl(ctx.s3, command);
         niceMessages.push({
-          messageId,
+          messageId: z.string().parse(messageId),
           to: message.to,
           from: message.from,
           subject: message.subject,

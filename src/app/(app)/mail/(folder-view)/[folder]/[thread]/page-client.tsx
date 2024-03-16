@@ -3,26 +3,59 @@
 import { decryptAsymmetric } from "@/lib/asym-crypto";
 import { decryptSymmetric } from "@/lib/sym-crypto";
 import { useDataKey } from "@/lib/useUserPrivateKey";
-import { useEffect, useRef, useState } from "react";
+import { useEffect } from "react";
 import { z } from "zod";
 import { SelectedBar } from "../_components/selected-bar";
-import { Loading } from "packages/icons";
-import { ArrowLeftCircleIcon, LockIcon, ShieldCheckIcon } from "lucide-react";
+import { ArrowLeftCircleIcon, ShieldCheckIcon } from "lucide-react";
 import { Flex } from "packages/components/lib/flex";
 import { useRouter } from "next/navigation";
-import { Button } from "packages/components/lib";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger
-} from "packages/components/lib/tooltip";
 import { useThreadsReadMutation } from "@/data-access/read-threads-mutation";
 import { useThreadQuery } from "@/data-access/get-threads-query";
+import { useQueries } from "@tanstack/react-query";
+import { Tooltip, TooltipContent, TooltipTrigger } from "packages/components/lib/tooltip";
+import { Loading } from "packages/icons";
+import { Button } from "packages/components/lib";
+import { api } from "@stuff/api-client/react";
 
 const paramsInterface = z.object({
   threadId: z.string(),
   folderId: z.string()
 });
+
+interface ProcessMessageInterface {
+  messageId: string;
+  subject:string;
+  content: {
+    text:string;
+    html:string
+  };
+  to: {
+    address:string;
+    name:string;
+  }[];
+  from: {
+    address:string;
+    name:string
+  }
+}
+
+const processMessage = async (message: ProcessMessageInterface, userKey: Buffer) => {
+
+  const htmlContent = decryptSymmetric(message.content.html, userKey);
+  const textContent = decryptSymmetric(message.content.text, userKey);
+
+  return {
+    messageId: message.messageId,
+    content: {
+      text: textContent,
+      html: htmlContent
+    },
+    subject: message.subject,
+    from: message.from,
+    to: message.to
+  }
+}
+
 
 const MainPage = ({ threadId, folderId }: z.infer<typeof paramsInterface>) => {
   const threadQuery = useThreadQuery({
@@ -32,22 +65,29 @@ const MainPage = ({ threadId, folderId }: z.infer<typeof paramsInterface>) => {
   const threadReadMutation = useThreadsReadMutation();
   const masterKey = useDataKey();
 
-  const [formattedMails, setFormattedMails] = useState<
-    {
-      content: {
-        text: string;
-        html: string;
-      };
-      subject: string;
-      from: {
-        address: string;
-        name?: string;
-      };
-      messageId: string;
-      to: { address: string; name?: string }[];
-    }[]
-  >([]);
-  const [isLoading, setLoading] = useState(true);
+  const messages = useQueries({
+    queries: (threadQuery.data?.messages ?? []).map(message => ({
+      queryKey: ["message", {messageId: message.messageId}],
+      queryFn: async () => {
+        const threadEncryptionKey = z.string().parse(threadQuery.data?.thread.encryptionKey);
+        const content = await fetch(message.contentUrl, {
+          cache: "force-cache"
+        }).then(async v => z.object({ html: z.string(), text: z.string() }).parse(await v.json()));
+        const userKey = decryptAsymmetric(
+          threadEncryptionKey,
+          z.string().parse(masterKey)
+        );
+
+        return processMessage({
+          content,
+          messageId: message.messageId,
+          subject: message.subject,
+          to: message.to,
+          from: message.from
+        }, userKey);
+      }
+    }))
+  });
 
   useEffect(() => {
     if (threadQuery.data?.thread.read === false) {
@@ -58,67 +98,7 @@ const MainPage = ({ threadId, folderId }: z.infer<typeof paramsInterface>) => {
       });
     }
   }, [folderId, threadId, threadQuery.data?.thread.read]);
-  const isRunning = useRef(false);
 
-  useEffect(() => {
-    if (!isRunning.current) {
-      isRunning.current = true;
-      return;
-    }
-
-    async function main() {
-      if (
-        threadQuery.data === undefined ||
-        threadQuery.data === null ||
-        masterKey === undefined
-      ) {
-        return;
-      }
-      setLoading(true);
-
-      setFormattedMails([]);
-      for (const item of threadQuery.data.messages) {
-        const result = await fetch(item.contentUrl).then(async v =>
-          z.object({ html: z.string(), text: z.string() }).parse(await v.json())
-        );
-
-        const userKey = decryptAsymmetric(
-          threadQuery.data.thread.encryptionKey,
-          masterKey
-        );
-
-        const decryptedHtml = decryptSymmetric(result.html, userKey);
-        const decryptedText = decryptSymmetric(result.text, userKey);
-
-        setFormattedMails(e => [
-          ...e,
-          {
-            messageId: z.string().parse(item.messageId),
-            content: {
-              text: decryptedText,
-              html: decryptedHtml
-            },
-            subject: item.subject,
-            from: item.from,
-            to: item.to
-          }
-        ]);
-
-        setLoading(false);
-      }
-    }
-    main(); // eslint-disable-line
-
-    return () => setFormattedMails([]);
-  }, [threadQuery.data, masterKey, threadId]);
-
-  if (isLoading) {
-    return (
-      <div className="flex h-full w-full items-center justify-center">
-        <Loading size={24} color="hsl(var(--muted-foreground))" />
-      </div>
-    );
-  }
   return (
     <Flex col className="px-4">
       <Flex gap="0.75rem" className="py-5" align="center" justify="between">
@@ -144,22 +124,28 @@ const MainPage = ({ threadId, folderId }: z.infer<typeof paramsInterface>) => {
         </div>
       </Flex>
 
-      {formattedMails.map(mail => (
-        <Flex
-          col
-          className="overflow-hidden rounded-md border border-border"
-          key={mail.messageId}
-        >
-          <Flex col gap="1px" className="bg-muted p-4">
-            <h2 className="text-xl">{mail.from.name}</h2>
-            <p className="text-md text-muted-foreground">{mail.from.address}</p>
+      {messages.map(({data: mail}, index) => {
+        if (mail === undefined) {
+          return <Loading size={24} color="text-primary" key={index} />
+        }
+
+        return (
+          <Flex
+            col
+            className="overflow-hidden rounded-md border border-border"
+            key={mail.messageId}
+          >
+            <Flex col gap="1px" className="bg-muted p-4">
+              <h2 className="text-xl">{mail.from.name}</h2>
+              <p className="text-md text-muted-foreground">{mail.from.address}</p>
+            </Flex>
+            <div className="min-h-[170px] p-4">{mail.content.text}</div>
+            <Flex className="border-t border-border p-4">
+              <Button className="font-semibold">Svara</Button>
+            </Flex>
           </Flex>
-          <div className="min-h-[170px] p-4">{mail.content.text}</div>
-          <Flex className="border-t border-border p-4">
-            <Button className="font-semibold">Svara</Button>
-          </Flex>
-        </Flex>
-      ))}
+        )
+      })}
     </Flex>
   );
 };
@@ -171,7 +157,9 @@ export function Page({
   folderId: string;
   threadId: string;
 }) {
+
   const router = useRouter();
+  const utils = api.useUtils();
 
   return (
     <>
@@ -179,6 +167,11 @@ export function Page({
         <button
           className="rounded-full p-[calc(0.5rem+2px)] hover:bg-accent"
           onClick={() => router.push(".")}
+          onMouseOver={async () => 
+            await utils.mail.threads.getThreads.prefetch({folderId}, {
+              cacheTime: 1000 * 10
+            })
+          }
         >
           <ArrowLeftCircleIcon size={22} />
         </button>

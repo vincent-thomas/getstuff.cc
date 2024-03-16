@@ -4,10 +4,11 @@ import { api } from "@stuff/api-client/react";
 import { Plus } from "lucide-react"
 import { Button } from "packages/components/lib"
 import { Flex } from "packages/components/lib/flex"
-import { SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger,Sheet } from "packages/components/lib/sheet"
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "packages/components/lib/dialog";
+
 
 const formInterface = z.object({
   folderName: z.string().min(3)
@@ -24,20 +25,20 @@ export const CreateFolderButton = () => {
   })
 
   return (
-    <Sheet open={open}>
-      <SheetTrigger asChild onClick={() => setOpen(true)}>
+    <Dialog open={open}>
+      <DialogTrigger asChild onClick={() => setOpen(true)}>
         <button className="rounded-full p-1 p-1 hover:bg-accent">
           <Plus />
         </button>
-      </SheetTrigger>
-      <SheetContent side="left" onClosePress={() => setOpen(false)}>
-        <SheetHeader>
-          <SheetTitle>Create Folder</SheetTitle>
-          <SheetDescription>
+      </DialogTrigger>
+      <DialogContent onClosePress={() => {setOpen(false)}}>
+        <DialogHeader>
+          <DialogTitle>Create Folder</DialogTitle>
+          <DialogDescription>
             Folder is a place to store your emails. You can use it to
             categorize your emails.
-          </SheetDescription>
-        </SheetHeader>
+          </DialogDescription>
+        </DialogHeader>
         <form onSubmit={onSubmit}>
         <Flex col gap="0.5rem" className="py-2">
           <label htmlFor="folder-name">Folder Name</label>
@@ -51,7 +52,7 @@ export const CreateFolderButton = () => {
         </Flex>
         </form>
 
-      </SheetContent>
-    </Sheet>
+      </DialogContent>
+    </Dialog>
   )
 }

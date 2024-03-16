@@ -1,9 +1,7 @@
 import { setupPage } from "@/lib/setupPage";
-import { Navbar } from "../_components/navbar";
 import { Section } from "../_components/section";
 import { Flex } from "packages/components/lib/flex";
 import { Card } from "../_components/card";
-import { Button } from "packages/components/lib";
 import { PageHeador } from "../_components/header";
 import { CheckoutButton } from "./_components/button-checkout";
 
@@ -11,7 +9,6 @@ export default setupPage({
   Component() {
     return (
       <>
-        <Navbar />
         <PageHeador
           title="Stuff Pricing"
           comment="Simple pricing for simple services."

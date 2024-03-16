@@ -30,117 +30,106 @@ export default setupPage({
 
     return (
       <>
-        <Navbar />
-        <main>
-          <PageHeador
-            title="Focus on what matters with Stuff"
-            comment="Stuff mail for the productive"
+        <PageHeador
+          title="Focus on what matters with Stuff"
+          comment="Stuff mail for the productive"
+        />
+        <Section>
+          <img
+            src={"/hero-image.svg"}
+            className="mx-auto w-full max-w-[700px] px-4 md:px-10"
+            alt="Hero image of a computer with a mail client open"
           />
-          <Section>
-            <img
-              src={"/hero-image.svg"}
-              className="mx-auto w-full max-w-[700px] px-4 md:px-10"
-            />
-          </Section>
-          <div className="my-6 w-full border-b border-border"></div>
-          <Section className="flex flex-col gap-6">
-            <h2 className="text-4xl font-bold">Stuff stands for</h2>
-            <div className="flex flex-col gap-4">
-              <Card>
-                <h1 className="text-3xl font-semibold">Most Secure Mail</h1>
-                <p className="max-w-[50ch]">
-                  We keep your account safe to the extreme with protocols such
-                  as SRP (secure remote password)
-                </p>
-                <Link
-                  href="#"
-                  className={cn(
-                    "ml-auto block font-semibold",
-                    buttonVariants({ variant: "link" })
-                  )}
-                >
-                  Learn more
-                </Link>
-              </Card>
-              <Card>
-                <h1 className="text-3xl font-semibold">Private</h1>
-                <p className="max-w-[50ch]">
-                  All your user information and emails are end-to-end encrypted
-                  and is only viewable by you, we can't even see it.
-                </p>
-                <Link
-                  href="#"
-                  className={cn(
-                    "ml-auto block font-semibold",
-                    buttonVariants({ variant: "link" })
-                  )}
-                >
-                  Learn more
-                </Link>
-              </Card>
-              <Card>
-                <h1 className="text-3xl font-semibold">Polished</h1>
-                <p className="max-w-[50ch]">
-                  With its polished user experience, you can be sure to get the
-                  most out of a mail service
-                </p>
-              </Card>
-            </div>
-          </Section>
-          <Section className="flex flex-col gap-6">
-            <h2 className="text-4xl font-bold">Makes your life easier</h2>
-            <div className="grid grid-cols-2 gap-4">
-              <Card>
-                <h1 className="text-3xl font-semibold">Most Secure Mail</h1>
-                <p className="max-w-[50ch]">
-                  We keep your account safe to the extreme with protocols such
-                  as SRP (secure remote password)
-                </p>
-                <Link
-                  href="#"
-                  className={cn(
-                    "ml-auto block font-semibold",
-                    buttonVariants({ variant: "link" })
-                  )}
-                >
-                  Learn more
-                </Link>
-              </Card>
-              <Card>
-                <h1 className="text-3xl font-semibold">Private</h1>
-                <p className="max-w-[50ch]">
-                  All your user information and emails are end-to-end encrypted
-                  and is only viewable by you, we can't even see it.
-                </p>
-                <Link
-                  href="#"
-                  className={cn(
-                    "ml-auto block font-semibold",
-                    buttonVariants({ variant: "link" })
-                  )}
-                >
-                  Learn more
-                </Link>
-              </Card>
-              <Card>
-                <h1 className="text-3xl font-semibold">Polished</h1>
-                <p className="max-w-[50ch]">
-                  With its polished user experience, you can be sure to get the
-                  most out of a mail service
-                </p>
-              </Card>
-            </div>
-          </Section>
-        </main>
-        <footer>
-          <div className="my-6 w-full border-b border-border"></div>
-          <Section className="flex flex-col items-start gap-4">
-            <h2 className="text-4xl font-bold">Want to try?</h2>
-            <h3 className="text-2xl font-bold">Start a free trial here:</h3>
-
-            <Button size="lg">Start trail</Button>
-          </Section>
-        </footer>
+        </Section>
+        <div className="my-6 w-full border-b border-border"></div>
+        <Section className="flex flex-col gap-6">
+          <h2 className="text-4xl font-bold">Stuff stands for</h2>
+          <div className="flex flex-col gap-4">
+            <Card>
+              <h1 className="text-3xl font-semibold">Most Secure Mail</h1>
+              <p className="max-w-[50ch]">
+                We keep your account safe to the extreme with protocols such
+                as SRP (secure remote password)
+              </p>
+              <Link
+                href="#"
+                className={cn(
+                  "ml-auto block font-semibold",
+                  buttonVariants({ variant: "link" })
+                )}
+              >
+                Learn more
+              </Link>
+            </Card>
+            <Card>
+              <h1 className="text-3xl font-semibold">Private</h1>
+              <p className="max-w-[50ch]">
+                All your user information and emails are end-to-end encrypted
+                and is only viewable by you, we can&apos;t even see it.
+              </p>
+              <Link
+                href="#"
+                className={cn(
+                  "ml-auto block font-semibold",
+                  buttonVariants({ variant: "link" })
+                )}
+              >
+                Learn more
+              </Link>
+            </Card>
+            <Card>
+              <h1 className="text-3xl font-semibold">Polished</h1>
+              <p className="max-w-[50ch]">
+                With its polished user experience, you can be sure to get the
+                most out of a mail service
+              </p>
+            </Card>
+          </div>
+        </Section>
+        <Section className="flex flex-col gap-6">
+          <h2 className="text-4xl font-bold">Makes your life easier</h2>
+          <div className="grid grid-cols-2 gap-4">
+            <Card>
+              <h1 className="text-3xl font-semibold">Most Secure Mail</h1>
+              <p className="max-w-[50ch]">
+                We keep your account safe to the extreme with protocols such
+                as SRP (secure remote password)
+              </p>
+              <Link
+                href="#"
+                className={cn(
+                  "ml-auto block font-semibold",
+                  buttonVariants({ variant: "link" })
+                )}
+              >
+                Learn more
+              </Link>
+            </Card>
+            <Card>
+              <h1 className="text-3xl font-semibold">Private</h1>
+              <p className="max-w-[50ch]">
+                All your user information and emails are end-to-end encrypted
+                and is only viewable by you, we can&apos;t even see it.
+              </p>
+              <Link
+                href="#"
+                className={cn(
+                  "ml-auto block font-semibold",
+                  buttonVariants({ variant: "link" })
+                )}
+              >
+                Learn more
+              </Link>
+            </Card>
+            <Card>
+              <h1 className="text-3xl font-semibold">Polished</h1>
+              <p className="max-w-[50ch]">
+                With its polished user experience, you can be sure to get the
+                most out of a mail service
+              </p>
+            </Card>
+          </div>
+        </Section>
       </>
     );
   }

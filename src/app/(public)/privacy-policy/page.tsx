@@ -1,12 +1,12 @@
 import { setupPage } from "@/lib/setupPage";
-import { Navbar } from "../_components/navbar";
 import { Section } from "../_components/section";
 import { PageHeador } from "../_components/header";
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 
 const H2 = ({ children }: { children: ReactNode }) => {
   return <h2 className="mb-2 text-2xl font-bold">{children}</h2>;
 };
+
 const P = ({ children }: { children: ReactNode }) => {
   return <p className="text-accent-foreground">{children}</p>;
 };
@@ -15,7 +15,6 @@ export default setupPage({
   Component() {
     return (
       <>
-        <Navbar />
         <PageHeador
           title="Stuff Privacy Policy"
           comment={

@@ -8,18 +8,24 @@ import { UserAvatar } from "./_components/user-avatar";
 import { ArchiveIcon, Inbox, SendIcon } from "lucide-react";
 import { Flex } from "packages/components/lib/flex";
 
+
 import { CreateFolderButton } from "./_components/create-folder-button";
+import { Folder } from "./_components/folder";
+import { unstable_noStore } from "next/cache";
 const Thing = ({ children }: { children: ReactNode }) => {
   return <div className="flex flex-col gap-1 p-1">{children}</div>;
 };
 
 const Layout = async (props: LayoutProps) => {
+  unstable_noStore()
+
   const session = await api.user.session.query();
   if (session === null) {
     redirect("/auth/identify");
   }
 
   const folders = await api.mail.folders.listFolders.query();
+
 
   return (
     <div className="flex h-full min-w-[400px] overflow-hidden">
@@ -81,7 +87,7 @@ const Layout = async (props: LayoutProps) => {
           <div className="flex flex-col gap-2 overflow-y-auto">
             {folders.length === 0 ? (<Flex justify="start" className="pl-6 pt-1">
               No Folders!
-            </Flex>) : (folders.map(folder => (<Link href={`./${folder.sk.split("|")[1]}`} key={folder.sk.split("|")[1]} className="px-4 py-2">{folder.gsi2.split("|")[2]}</Link>)))}
+            </Flex>) : (folders.map(folder => <Folder folder={folder} key={folder.sk}/>))}
 
           </div>
         </Flex>

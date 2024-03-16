@@ -1,5 +1,5 @@
 import { cn } from "packages/components/utils";
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 
 export const Card = ({
   children,
@@ -14,6 +14,7 @@ export const Card = ({
     <div
       className={cn(
         "flex flex-col rounded-md border border-border bg-muted",
+        className,
         !noPadding && "p-4"
       )}
     >

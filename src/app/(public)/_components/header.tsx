@@ -1,6 +1,6 @@
 import { Flex } from "packages/components/lib/flex";
 import { Section } from "./section";
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 
 export const PageHeador = ({
   title,

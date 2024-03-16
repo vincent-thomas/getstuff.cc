@@ -54,8 +54,12 @@ export const foldersRouter = router({
 
     })
 
-    const result = await ctx.dyn.send(command);
+    const {Items} = await ctx.dyn.send(command);
 
-    return z.array(folderInterface).parse(result.Items)
+    const folders = z.array(folderInterface).parse(Items)
+
+    folders?.sort((a, b) => a.gsi2.localeCompare(b.gsi2))
+
+    return folders;
   })
 });

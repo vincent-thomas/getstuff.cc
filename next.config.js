@@ -6,6 +6,16 @@
  */
 await import("./src/env.js");
 
+import nextPwa from "@ducanh2912/next-pwa";
+
+const withPwa = nextPwa({
+  dest: "public",
+  aggressiveFrontEndNavCaching: true,
+  cacheOnFrontEndNav: true,
+  reloadOnOnline: true,
+
+})
+
 /** @type {import("next").NextConfig} */
 const config = {
   webpack: config => {
@@ -33,4 +43,4 @@ const config = {
   }
 };
 
-export default config;
+export default withPwa(config);
