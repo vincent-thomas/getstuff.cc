@@ -1,54 +1,37 @@
-"use client";
 
+import { cookies } from "next/headers";
+import Link from "next/link";
 import { Button } from "packages/components/lib";
-import { useState } from "react";
-import { z } from "zod";
+import { Flex } from "packages/components/lib/flex";
 
-const useLocalStorage = (key:string, initialValue: string) => {
-  const [state, setState] = useState(() => {
-    // Initialize the state
-    try {
-      if (typeof window === "undefined") {
-        return initialValue
-      }
-
-      const value = localStorage.getItem(key)
-      // Check if the local storage already has any values,
-      // otherwise initialize it with the passed initialValue
-      return value
-    } catch (error) {
-      return initialValue
-    }
-  })
-  const setValue = (value: ((thing: string) => string) | string) => {
-    try {
-      // If the passed value is a callback function,
-      //  then call it with the existing state.
-      const valueToStore = value instanceof Function ? value(z.string().parse( state)) : value
-      localStorage.setItem(key, valueToStore)
-      setState(valueToStore)
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  return [state, setValue]
-}
 
 
 export const CookieTeller = () => {
 
-  const [has, setHas] = useLocalStorage('agnolished-cookies', "1");
-  
-  if (has === "1") {
+  const hasDoneIt = cookies().get("agnolished-cookies")?.value ?? null;
+
+  if (hasDoneIt === "true") {
     return null;
   }
 
+  const test = async () => {
+    "use server";
+
+    cookies().set("agnolished-cookies", "true", {
+      expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365),
+    })
+  }
 
   return (
-    <div className="p-4 bg-muted">
-      test
-      <Button onClick={() => setHas("1")}>Accep</Button>
-    </div>
+    <Flex className="p-4 bg-muted sticky" gap="2rem" align="center">
+      <span>
+        Stuff Mail use cookies only to make sure you are you. Please click here to accept our cookies policy.
+        {" "}<Link href="/cookies" className="underline">Read more here</Link>.
+      </span>
+      <form action={test}>
+        <Button>Accep</Button>
+      </form>
+
+    </Flex>
   )
 }

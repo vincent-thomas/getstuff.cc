@@ -1,16 +1,10 @@
 import { setupPage } from "@/lib/setupPage";
 import { Section } from "../_components/section";
 import { PageHeador } from "../_components/header";
-import type { ReactNode } from "react";
 import { SharedLayout } from "../layout-client";
+import { P } from "@/components/typography/paragraph";
+import { H2 } from "@/components/typography/headers";
 
-const H2 = ({ children }: { children: ReactNode }) => {
-  return <h2 className="mb-2 text-2xl font-bold">{children}</h2>;
-};
-
-const P = ({ children }: { children: ReactNode }) => {
-  return <p className="text-accent-foreground">{children}</p>;
-};
 
 export default setupPage({
   Component() {

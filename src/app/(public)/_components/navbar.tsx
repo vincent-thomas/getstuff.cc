@@ -11,14 +11,20 @@ export const Navbar = () => (
       </Link>
       <nav>
         <Flex gap="1rem" align="center" justify="between">
-          <Link href="/pricing" className={buttonVariants({ variant: "link" })}>
-            Pricing
+        <Link
+            href="/cookies"
+            className={buttonVariants({ variant: "link" })}
+          >
+            Cookies
           </Link>
           <Link
             href="/privacy-policy"
             className={buttonVariants({ variant: "link" })}
           >
             Privacy policy
+          </Link>
+          <Link href="/pricing" className={buttonVariants({ variant: "link" })}>
+            Pricing
           </Link>
           <Link
             href="/mail/inbox"

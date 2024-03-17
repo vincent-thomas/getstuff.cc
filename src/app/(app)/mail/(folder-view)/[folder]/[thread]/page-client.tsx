@@ -71,7 +71,8 @@ const MainPage = ({ threadId, folderId }: z.infer<typeof paramsInterface>) => {
       queryFn: async () => {
         const threadEncryptionKey = z.string().parse(threadQuery.data?.thread.encryptionKey);
         const content = await fetch(message.contentUrl, {
-          cache: "force-cache"
+          cache: "force-cache",
+          
         }).then(async v => z.object({ html: z.string(), text: z.string() }).parse(await v.json()));
         const userKey = decryptAsymmetric(
           threadEncryptionKey,
