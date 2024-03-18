@@ -1,6 +1,3 @@
-import { env } from "@/env";
-
-import { getDataTable, getUserTable } from "@stuff/infra-constants";
 import { messageValidator } from "./validators";
 import { mailHandler } from "./handler";
 
@@ -30,8 +27,6 @@ export const handler = async (event: { Records: MailRecord[] }) => {
     }
 
     await mailHandler(
-      getDataTable(env.STAGE),
-      getUserTable(env.STAGE),
       messageValidator.parse(mail)
     );
   }

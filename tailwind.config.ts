@@ -1,4 +1,5 @@
 import { type Config } from "tailwindcss";
+import tailwindAnimate from "tailwindcss-animate";
 
 export default {
   content: ["./src/**/*.tsx", "packages/**/*.tsx", "packages/**/*.ts"],
@@ -47,5 +48,5 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [tailwindAnimate],
 } satisfies Config;

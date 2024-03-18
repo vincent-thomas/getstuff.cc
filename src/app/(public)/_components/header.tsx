@@ -1,4 +1,4 @@
-import { Flex } from "packages/components/lib/flex";
+import { Flex } from "@/components/structure/flex";
 import { Section } from "./section";
 import type { ReactNode } from "react";
 

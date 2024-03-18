@@ -65,7 +65,7 @@ export const parseEmail = async (mimeEmail: string) => {
     returnPath: returnPath.value[0]?.address,
     body: {
       text: parsedEmailContent.text,
-      html: parsedEmailContent.html
+      html: parsedEmailContent.html,
     }
   };
 };

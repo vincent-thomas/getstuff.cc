@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { decryptSymmetric } from "./sym-crypto";
+import { decryptSymmetric } from "./crypto/sym-crypto";
 import { api } from "@stuff/api-client/react";
 import SessionKeystore from "session-keystore";
 

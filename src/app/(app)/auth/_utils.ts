@@ -1,4 +1,4 @@
-import { symKeyLength } from "@/lib/sym-crypto";
+import { symKeyLength } from "@stuff/lib/crypto";
 
 export const generateMasterSecret = async (pass: string, salt: string) => {
   const { hash } = await import("argon2-browser");

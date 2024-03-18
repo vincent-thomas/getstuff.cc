@@ -1,6 +1,6 @@
 import { env } from "@/env";
-import type { PageProps } from "@/types/router";
 import type { FC, JSX } from "react";
+import type { PageProps } from "src/types/router";
 import type { z, ZodSchema } from "zod";
 
 type Page<T, C> = ({

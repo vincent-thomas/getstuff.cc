@@ -1,7 +1,7 @@
 "use client";
 
 import { api } from "@stuff/api-client/react"
-import { Button } from "packages/components/lib";
+import { Button } from "@stuff/ui/button";
 
 
 export const CheckoutButton = () => {

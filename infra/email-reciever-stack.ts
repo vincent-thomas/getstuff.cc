@@ -1,4 +1,3 @@
-import { env } from "@/env";
 import { getDataTable, getUserTable } from "@stuff/infra-constants";
 import { type App, Duration, Stack, type StackProps } from "aws-cdk-lib";
 import { Table } from "aws-cdk-lib/aws-dynamodb";
@@ -11,7 +10,8 @@ import { S3 as S3Action } from "aws-cdk-lib/aws-ses-actions";
 import { Topic } from "aws-cdk-lib/aws-sns";
 import { SqsSubscription } from "aws-cdk-lib/aws-sns-subscriptions";
 import { Queue } from "aws-cdk-lib/aws-sqs";
-import { z } from "zod";
+import type { envInterface } from "packages/mail-reciever/src/env";
+import type { z } from "zod";
 
 interface MailApiStackProps extends StackProps {
   emailDomain: string;
@@ -21,14 +21,18 @@ interface MailApiStackProps extends StackProps {
   };
   formattedEmailBucket: Bucket;
   stage: string;
-  appUrl:string;
+}
+
+interface LambdaOptions {
+  NODE_OPTIONS?: string;
+  AWS_REGION: string;
 }
 
 export class EmailReciever extends Stack {
   constructor(
     scope: App,
     id: string,
-    { stage, emailDomain, formattedEmailBucket,appUrl, ...props }: MailApiStackProps
+    { stage, emailDomain, formattedEmailBucket, ...props }: MailApiStackProps
   ) {
     super(scope, id, props);
 
@@ -52,40 +56,42 @@ export class EmailReciever extends Stack {
           scanEnabled: true
         }
       ]
-    });
+    })
 
     topic.addSubscription(new SqsSubscription(sqs));
 
     const table = Table.fromTableArn(
       this,
       "EntitiesTable",
-      `arn:aws:dynamodb:${props.env.region}:${props.env.account}:table/${getDataTable(env.STAGE)}`
+      `arn:aws:dynamodb:${props.env.region}:${props.env.account}:table/${getDataTable(stage)}`
     );
     const tableGSI1 = Table.fromTableArn(
       this,
       "EntitiesTableGSI1",
-      `arn:aws:dynamodb:${props.env.region}:${props.env.account}:table/${getDataTable(env.STAGE)}/index/gsi1`
+      `arn:aws:dynamodb:${props.env.region}:${props.env.account}:table/${getDataTable(stage)}/index/gsi1`
     );
 
     const usersTable = Table.fromTableArn(
       this,
       "usersTable",
-      `arn:aws:dynamodb:${props.env.region}:${props.env.account}:table/${getUserTable(env.STAGE)}`
+      `arn:aws:dynamodb:${props.env.region}:${props.env.account}:table/${getUserTable(stage)}`
     );
+
+    // AWS_REGION: Builtin in the runtime
+    const lambdaEnv = {
+      STAGE: stage,
+      EMAIL_DOMAIN: emailDomain,
+    } satisfies Omit<z.infer<typeof envInterface>, "AWS_REGION">;
 
     const lambda = new Function(this, "MailApiFunction", {
       code: Code.fromAsset("packages/mail-reciever/dist"),
       handler: "main.handler",
+      functionName: `${stage}-stuff-mail-reciever-function`,
       runtime: Runtime.NODEJS_20_X,
       timeout: Duration.seconds(20),
       environment: {
-        STAGE: z.string().parse(stage),
-        DOMAIN: emailDomain,
-        AWS_ACCOUNT_ID: z.string().parse(props.env.account),
-        REGION: z.string().parse(props.env.region),
-        NODE_ENV: "production",
+        ...lambdaEnv, 
         NODE_OPTIONS: "--enable-source-maps",
-        APP_URL: appUrl
       }
     });
 
@@ -93,6 +99,9 @@ export class EmailReciever extends Stack {
     usersTable.grant(lambda, "dynamodb:GetItem");
 
     table.grant(lambda, "dynamodb:PutItem");
+    table.grant(lambda, "dynamodb:Query");
+    table.grant(lambda, "dynamodb:GetItem");
+    table.grant(lambda, "dynamodb:DeleteItem");
     tableGSI1.grant(lambda, "dynamodb:Query");
 
     lambda.addToRolePolicy(
@@ -107,6 +116,6 @@ export class EmailReciever extends Stack {
         batchSize: 10
       })
     );
-    RAW_emailsBucket.grantReadWrite(lambda);
+    RAW_emailsBucket.grantRead(lambda);
   }
 }

@@ -2,13 +2,12 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { api } from "@stuff/api-client/react";
 import { Plus } from "lucide-react"
-import { Button } from "packages/components/lib"
-import { Flex } from "packages/components/lib/flex"
+import { Flex } from "@stuff/structure/flex";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "packages/components/lib/dialog";
-
+import { Button } from "@stuff/ui/button";
 
 const formInterface = z.object({
   folderName: z.string().min(3)

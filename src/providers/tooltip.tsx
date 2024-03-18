@@ -1,4 +1,4 @@
-import { TooltipProvider } from "packages/components/lib/tooltip";
+import { TooltipProvider } from "@stuff/ui/tooltip";
 import type { ReactNode } from "react";
 
 export const ToolTipProvider = ({ children }: { children: ReactNode }) => {

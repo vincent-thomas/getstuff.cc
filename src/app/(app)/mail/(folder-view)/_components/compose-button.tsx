@@ -13,8 +13,6 @@ import {
   DrawerTitle,
   DrawerTrigger
 } from "packages/components/lib/drawer";
-import { Flex } from "packages/components/lib/flex";
-import { buttonVariants } from "packages/components/lib/variants";
 import { cn } from "packages/components/utils";
 import { useState } from "react";
 import Tiptap from "../[folder]/_components/tiptap";
@@ -24,11 +22,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { api } from "@stuff/api-client/react";
 import { ScrollArea } from "packages/components/lib/scroll-area";
-
-const promise = () =>
-  new Promise(resolve =>
-    setTimeout(() => resolve({ name: "Sonner" } as const), 2000)
-  );
+import { Flex } from "@stuff/structure/flex";
+import { buttonVariants } from "@stuff/ui/button/variants";
 
 const mailSendInterface = z.object({
   to: z.string().email(),

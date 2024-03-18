@@ -1,21 +1,20 @@
 "use client";
 
-import { decryptAsymmetric } from "@/lib/asym-crypto";
-import { decryptSymmetric } from "@/lib/sym-crypto";
-import { useDataKey } from "@/lib/useUserPrivateKey";
 import { useEffect } from "react";
 import { z } from "zod";
 import { SelectedBar } from "../_components/selected-bar";
 import { ArrowLeftCircleIcon, ShieldCheckIcon } from "lucide-react";
-import { Flex } from "packages/components/lib/flex";
 import { useRouter } from "next/navigation";
-import { useThreadsReadMutation } from "@/data-access/read-threads-mutation";
-import { useThreadQuery } from "@/data-access/get-threads-query";
 import { useQueries } from "@tanstack/react-query";
-import { Tooltip, TooltipContent, TooltipTrigger } from "packages/components/lib/tooltip";
-import { Loading } from "packages/icons";
-import { Button } from "packages/components/lib";
-import { api } from "@stuff/api-client/react";
+import { decryptAsymmetric, decryptSymmetric } from "@stuff/lib/crypto";
+import { useThreadQuery } from "@stuff/data-access/get-threads-query";
+import { useThreadsReadMutation } from "@stuff/data-access/read-threads-mutation";
+import { useDataKey } from "@stuff/lib/useUserPrivateKey";
+import { Flex } from "@stuff/structure/flex";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@stuff/ui/tooltip";
+import { Button } from "@stuff/ui/button";
+import { Loading } from "@stuff/icons/loading";
+import purify from "dompurify"
 
 const paramsInterface = z.object({
   threadId: z.string(),
@@ -69,7 +68,8 @@ const MainPage = ({ threadId, folderId }: z.infer<typeof paramsInterface>) => {
     queries: (threadQuery.data?.messages ?? []).map(message => ({
       queryKey: ["message", {messageId: message.messageId}],
       queryFn: async () => {
-        const threadEncryptionKey = z.string().parse(threadQuery.data?.thread.encryptionKey);
+        
+        const threadEncryptionKey = z.string().parse(message.messageEncryptionKey);
         const content = await fetch(message.contentUrl, {
           cache: "force-cache",
           
@@ -140,7 +140,7 @@ const MainPage = ({ threadId, folderId }: z.infer<typeof paramsInterface>) => {
               <h2 className="text-xl">{mail.from.name}</h2>
               <p className="text-md text-muted-foreground">{mail.from.address}</p>
             </Flex>
-            <div className="min-h-[170px] p-4">{mail.content.text}</div>
+            <div className="min-h-[170px] p-4" dangerouslySetInnerHTML={{__html: purify().sanitize(mail.content.html)}} />
             <Flex className="border-t border-border p-4">
               <Button className="font-semibold">Svara</Button>
             </Flex>
@@ -160,7 +160,6 @@ export function Page({
 }) {
 
   const router = useRouter();
-  const utils = api.useUtils();
 
   return (
     <>
@@ -168,11 +167,6 @@ export function Page({
         <button
           className="rounded-full p-[calc(0.5rem+2px)] hover:bg-accent"
           onClick={() => router.push(".")}
-          onMouseOver={async () => 
-            await utils.mail.threads.getThreads.prefetch({folderId}, {
-              cacheTime: 1000 * 10
-            })
-          }
         >
           <ArrowLeftCircleIcon size={22} />
         </button>

@@ -1,10 +1,9 @@
 "use client";
 
-import { Button } from "packages/components/lib/button";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Checkbox } from "packages/components/lib/checkbox";
 import { api } from "@stuff/api-client/react";
 import { generateSalt, deriveVerifier } from "secure-remote-password/client";
@@ -13,11 +12,11 @@ import {
   createSRPPrivateKey,
   generateMasterSecret
 } from "../../_utils";
-import { deserializeData, encryptSymmetric } from "@/lib/sym-crypto";
-import { userDataInterface } from "@/interfaces/userData";
 import { MailInput, NameInput, PasswordInput } from "../../_components/inputs";
 import { randomBytes } from "crypto";
-import { genKeyPair } from "@/lib/asym-crypto";
+import { userDataInterface } from "@stuff/client/interfaces";
+import { deserializeData, encryptSymmetric, genKeyPair } from "@stuff/lib/crypto";
+import { Button } from "@stuff/ui/button";
 
 const validator = z.object({
   username: z.string(),
@@ -32,8 +31,6 @@ export const Form = () => {
     register,
     handleSubmit,
     setError,
-    watch,
-    clearErrors,
     formState: { errors }
   } = useForm<z.infer<typeof validator>>({
     resolver: zodResolver(validator)

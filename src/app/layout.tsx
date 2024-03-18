@@ -3,10 +3,10 @@ import "../../styles/globals.css";
 import { Poppins } from "next/font/google";
 
 import type { ReactNode } from "react";
-import { ThemeProvider } from "@/providers/theme";
 import { cn } from "packages/components/utils";
 import { TRPCReactProvider } from "@stuff/api-client/react";
 import type { Metadata, Viewport } from "next";
+import { ThemeProvider } from "src/providers/theme";
 
 const poppins = Poppins({
   subsets: ["latin"],

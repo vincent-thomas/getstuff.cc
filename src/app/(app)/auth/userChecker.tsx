@@ -1,6 +1,6 @@
 "use client";
 
-import { useUser } from "@/lib/useUser";
+import { useUser } from "@stuff/lib/useUser";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 export const UserChecker = ({ whenDone }: { whenDone: () => void }) => {

@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "packages/components/lib/button";
+import { Button } from "@stuff/ui/button";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -17,7 +17,7 @@ import {
 } from "../../_utils";
 import { MailInput, PasswordInput } from "../../_components/inputs";
 import { useRouter } from "next/navigation";
-import { setPasswordDerivedSecret } from "@/lib/useUserPrivateKey";
+import { setPasswordDerivedSecret } from "@stuff/lib/useUserPrivateKey";
 
 const validator = z.object({
   username: z.string(),

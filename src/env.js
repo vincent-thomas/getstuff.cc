@@ -8,7 +8,7 @@ export const env = createEnv({
    */
   server: {
     NODE_ENV: z.enum(["development", "test", "production"]),
-    REGION: z.string(),
+    AWS_REGION: z.string(),
     STAGE: z.string(),
     AWS_ACCOUNT_ID: z.string(),
     DOMAIN: z.string(),
@@ -30,7 +30,7 @@ export const env = createEnv({
    */
   runtimeEnv: {
     NODE_ENV: process.env.NODE_ENV,
-    REGION: process.env.REGION,
+    AWS_REGION: process.env.AWS_REGION,
     STAGE: process.env.STAGE,
     AWS_ACCOUNT_ID: process.env.AWS_ACCOUNT_ID,
     DOMAIN: process.env.DOMAIN,

@@ -2,7 +2,7 @@ import { api } from "@stuff/api-client/server";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { PageClient } from "./page-client";
-import { setupPage } from "@/lib/setupPage";
+import { setupPage } from "@stuff/lib/setupPage";
 
 export default setupPage({
   params: z.object({ folder: z.string() }),
@@ -19,15 +19,12 @@ export default setupPage({
     if (folderResult === undefined) {
       redirect("/mail/inbox");
     }
-    const threads = await api.mail.threads.getThreads.query({
-      folderId: params.folder
-    })
 
     const folder = {
       name: z.string().parse(folderResult === null ? params.folder : folderResult.gsi2.split("|")[2]),
       folderId: params.folder
     }
 
-    return <PageClient folderId={params.folder} threads={threads} folder={folder} />;
+    return <PageClient folderId={params.folder} folder={folder} />;
   }
 });

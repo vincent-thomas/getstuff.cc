@@ -1,3 +1,4 @@
+import { Flex } from "@stuff/structure/flex";
 import { type InputHTMLAttributes, type Ref, forwardRef } from "react";
 
 export const MailInput = forwardRef(function MailInput(
@@ -5,7 +6,7 @@ export const MailInput = forwardRef(function MailInput(
   ref: Ref<HTMLInputElement>
 ) {
   return (
-    <div className="flex rounded-md border border-border">
+    <Flex className="rounded-md border border-border" justify="between">
       <input
         ref={ref}
         placeholder="Enter email..."
@@ -15,7 +16,7 @@ export const MailInput = forwardRef(function MailInput(
       <p className="border-l border-border bg-muted p-3 text-muted-foreground">
         @getstuff.cc
       </p>
-    </div>
+    </Flex>
   );
 });
 

@@ -1,29 +1,35 @@
-import { env } from "@/env";
 import { PutObjectCommand, type S3Client } from "@aws-sdk/client-s3";
 import {
   type DynamoDBDocumentClient,
   PutCommand,
-  QueryCommand
+  QueryCommand,
 } from "@aws-sdk/lib-dynamodb";
 import { getEmailContentBucket } from "@stuff/infra-constants";
 import { randomUUID } from "crypto";
 import { z } from "zod";
+import { getDataTable } from "@stuff/infra-constants";
+import { addressAliasInterface } from "backend/interfaces/addressAlias";
+import { getUser } from "backend/utils/getUser";
+import { threadViewInterface } from "backend/interfaces/threadView";
+import type { messageViewInterface } from "backend/interfaces/messageView";
+import { messageInterface } from "backend/interfaces/message";
 
 export const uploadEmailContent = async (
   s3: S3Client,
+  stage:string,
   contentId: string,
   { html, text }: { html?: string; text: string }
 ) => {
   await s3.send(
     new PutObjectCommand({
-      Bucket: getEmailContentBucket(env.STAGE),
+      Bucket: getEmailContentBucket(stage),
       Key: contentId,
       Body: JSON.stringify({ html, text })
     })
   );
 };
 
-export const getThreadFromMsgId = async (
+export const getThreadIdFromMsgId = async (
   dyn: DynamoDBDocumentClient,
   tableName: string,
   messageId: string
@@ -40,11 +46,13 @@ export const getThreadFromMsgId = async (
 
   const { Items } = await dyn.send(command);
 
-  if (Items === undefined || Items?.length !== 1) {
+  const message =  messageInterface.optional().parse(Items?.[0]);
+
+  if (message === undefined) {
     return undefined;
   }
 
-  return z.string().parse(Items?.[0]?.pk).split("|")[1];
+  return z.string().parse(message.pk.split("|")[1]);
 };
 
 export async function createThread(
@@ -68,16 +76,14 @@ export async function createThread(
   return threadId;
 }
 
-import { getDataTable } from "@stuff/infra-constants";
-import { addressAliasInterface } from "packages/api/interfaces/addressAlias";
-import { getUser } from "packages/api/utils/getUser";
 
 export const getUserFromAlias = async (
   dyn: DynamoDBDocumentClient,
+  stage:string,
   alias: string
 ) => {
   const command = new QueryCommand({
-    TableName: getDataTable(env.STAGE),
+    TableName: getDataTable(stage),
 
     KeyConditionExpression: "sk = :sk and begins_with(pk, :pk)",
     ExpressionAttributeValues: {
@@ -97,17 +103,17 @@ export const getUserFromAlias = async (
   if (existingAlias == undefined) {
     return undefined;
   }
-  return await getUser(dyn, z.string().parse(existingAlias.pk.split("|")[1]));
+  return await getUser(dyn, stage, z.string().parse(existingAlias.pk.split("|")[1]));
 };
 
-type Contact = {
-  address: string;
-  name: string;
-};
+export const contactInterface = z.object({ name: z.string(), address: z.string() });
+
+type Contact = z.infer<typeof contactInterface>
 
 export const uploadMessage = async (
   s3: S3Client,
   dyn: DynamoDBDocumentClient,
+  stage:string,
   messageId: string,
   threadId: string,
   {
@@ -125,14 +131,14 @@ export const uploadMessage = async (
   },
   replyToMessageId?: string
 ) => {
-  await uploadEmailContent(s3, messageId, {
+  await uploadEmailContent(s3, stage, messageId, {
     html,
     text
   });
 
   await dyn.send(
     new PutCommand({
-      TableName: getDataTable(env.STAGE),
+      TableName: getDataTable(stage),
       Item: {
         pk: `mail|${threadId}`,
         sk: `message|${messageId}`,
@@ -142,27 +148,58 @@ export const uploadMessage = async (
         repliedToId: replyToMessageId ?? null,
         to: to,
         cc
-      }
+      } satisfies z.infer<typeof messageInterface>
     })
   );
 };
 
 export const createThreadView = (
   dyn: DynamoDBDocumentClient,
+  stage:string,
   folderId: string,
   threadId: string,
   username: string,
-  encryptedUserKey: string
-) =>
-  dyn.send(
+) =>{
+  return dyn.send(
     new PutCommand({
-      TableName: getDataTable(env.STAGE),
+      TableName: getDataTable(stage),
       Item: {
         pk: `mail|${threadId}`,
-        sk: `thread-view|${folderId}|${username}`,
+        sk: `thread-view|${username}|${folderId}`,
         last_active: Date.now(),
         read: false,
-        encryptedKey: encryptedUserKey
+      } satisfies z.infer<typeof threadViewInterface>
+    })
+  );
+}
+
+export const getThreadView = async (
+  dyn: DynamoDBDocumentClient,
+  stage:string,
+  threadId:string,
+  username:string
+) =>{
+  const result = await dyn.send(
+    new QueryCommand({
+      TableName: getDataTable(stage),
+      KeyConditionExpression: "pk = :pk and begins_with(sk, :sk)",
+      ExpressionAttributeValues: {
+        ":pk": `mail|${threadId}`,
+        ":sk": `thread-view|${username}`
       }
     })
   );
+
+  return threadViewInterface.optional().parse(result.Items?.[0]);
+}
+
+export const createMessageView = async (dyn: DynamoDBDocumentClient, stage:string, {messageId,encryptedMessageEncryptionKey}: {messageId: string, encryptedMessageEncryptionKey: string}) => {
+  await dyn.send(new PutCommand({
+    TableName: getDataTable(stage),
+    Item: {
+      pk: `mail|${messageId}`,
+      sk: `message-view|${Date.now()}`,
+      encryptedMessageEncryptionKey
+    } satisfies z.infer<typeof messageViewInterface>
+  }))
+}

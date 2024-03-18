@@ -7,7 +7,8 @@ await build({
   outdir: resolve("packages/mail-reciever/dist"),
   platform: "node",
   format: "cjs",
-  minify: true,
-  treeShaking: true,
+  external: ["@/env"],
+  minify: false,
+  treeShaking: false,
   sourcemap: true
 });

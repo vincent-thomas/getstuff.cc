@@ -1,10 +1,10 @@
-import { setupPage } from "@/lib/setupPage";
 import { Section } from "../_components/section";
-import { Flex } from "packages/components/lib/flex";
 import { Card } from "../_components/card";
 import { PageHeador } from "../_components/header";
 import { CheckoutButton } from "./_components/button-checkout";
 import { SharedLayout } from "../layout-client";
+import { setupPage } from "@stuff/lib/setupPage";
+import { Flex } from "@stuff/structure/flex";
 
 export default setupPage({
   Component() {

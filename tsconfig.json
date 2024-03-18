@@ -32,17 +32,41 @@
     /* Path Aliases */
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "./src/*"
+      "@/env": [
+        "./src/env.js"
       ],
       "@stuff/api-client/react": [
-        "./packages/api/client/react.tsx"
+        "./backend/client/react.tsx"
       ],
       "@stuff/api-client/server": [
-        "./packages/api/client/server.ts"
+        "./backend/client/server.ts"
       ],
       "@stuff/infra-constants": [
         "./packages/infra-constants/index.ts"
+      ],
+      "@stuff/data-access/*": [
+        "./src/data-access/*"
+      ],
+      "@stuff/structure/*": [
+        "./src/components/structure/*"
+      ],
+      "@stuff/typography": [
+        "./src/components/typography/index.ts"
+      ],
+      "@stuff/ui/*": [
+        "./src/components/ui/*"
+      ],
+      "@stuff/icons/*": [
+        "./src/components/icons/*"
+      ],
+      "@stuff/lib/*": [
+        "./src/lib/*"
+      ],
+      "@stuff/components/utils": [
+        "./src/components/utils.ts"
+      ],
+      "@stuff/client/interfaces": [
+        "./src/interfaces/index.ts"
       ],
     }
   },

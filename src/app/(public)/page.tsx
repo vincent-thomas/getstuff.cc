@@ -2,18 +2,15 @@ import { unstable_noStore as noStore } from "next/cache";
 
 import { api } from "@stuff/api-client/server";
 import { redirect } from "next/navigation";
-import { Flex } from "packages/components/lib/flex";
 import Link from "next/link";
-import { buttonVariants } from "packages/components/lib/variants";
-import { cn } from "packages/components/utils";
-import { setupPage } from "@/lib/setupPage";
 import { z } from "zod";
-import { Navbar } from "./_components/navbar";
 import { Section } from "./_components/section";
 import { Card } from "./_components/card";
 import { PageHeador } from "./_components/header";
-import { Button } from "packages/components/lib";
 import { SharedLayout } from "./layout-client";
+import { cn } from "@stuff/components/utils"
+import { setupPage } from "@stuff/lib/setupPage";
+import { buttonVariants } from "@stuff/ui/button/variants";
 
 export default setupPage({
   query: z.object({

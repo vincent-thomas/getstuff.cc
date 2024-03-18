@@ -1,10 +1,9 @@
-import type { LayoutProps } from "@/types/router";
 import { ScrollArea } from "packages/components/lib/scroll-area";
 import { Navbar } from "./_components/navbar";
 import { Section } from "./_components/section";
-import { Button } from "packages/components/lib";
-import { CookieTeller } from "../_components/cookie-teller";
-
+import { CookieTeller } from "./_components/cookie-teller";
+import type { LayoutProps } from "src/types/router";
+import { Button } from "@stuff/ui/button";
 
 export const SharedLayout = (props: LayoutProps) => (
   <ScrollArea className="h-screen">

@@ -1,7 +1,8 @@
-import { buttonVariants } from "packages/components/lib/variants";
+import { buttonVariants } from "@stuff/ui/button/variants";
 import { Form } from "./_components/form";
 import Link from "next/link";
-import { cn } from "packages/components/utils";
+import { cn } from "@stuff/components/utils";
+
 const Page = () => {
   return (
     <>

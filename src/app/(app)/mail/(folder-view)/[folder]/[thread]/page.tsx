@@ -1,6 +1,6 @@
-import { setupPage } from "@/lib/setupPage";
 import { z } from "zod";
 import { Page } from "./page-client";
+import { setupPage } from "@stuff/lib/setupPage";
 
 export default setupPage({
   params: z.object({

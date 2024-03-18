@@ -1,6 +1,7 @@
 "use client";
 
-import { useUser } from "@/lib/useUser";
+import { useUser } from "@stuff/lib/useUser";
+
 
 export const UserAvatar = () => {
   const user = useUser();

@@ -3,20 +3,17 @@ import { CustomersTable, ThingsTable, UsersTable } from "./constructs/table";
 
 import { Bucket, HttpMethods } from "aws-cdk-lib/aws-s3";
 import { getEmailContentBucket } from "@stuff/infra-constants";
-import {
-  DkimIdentity,
-  EasyDkimSigningKeyLength,
-  EmailIdentity,
-  Identity,
-  MailFromBehaviorOnMxFailure
-} from "aws-cdk-lib/aws-ses";
-import { ARecord, CnameRecord, HostedZone, MxRecord } from "aws-cdk-lib/aws-route53";
+
+import { ARecord, CnameRecord, HostedZone, type IHostedZone } from "aws-cdk-lib/aws-route53";
 import { CfnAccessKey, Effect, Policy, PolicyDocument, PolicyStatement, User } from "aws-cdk-lib/aws-iam";
+import type { EmailIdentity } from "aws-cdk-lib/aws-ses";
+import { CfnParameter } from "aws-cdk-lib/aws-ssm";
 
 interface AccountStackProps extends StackProps {
   stage: string;
   domain: string;
-  zoneName: string;
+  zone: IHostedZone;
+  emailIdentity: EmailIdentity;
   env: {
     account: string;
     region: string;
@@ -28,7 +25,7 @@ export class DataApiInfra extends Stack {
   constructor(
     scope: App,
     id: string,
-    { stage, domain, zoneName, ...props }: AccountStackProps
+    { stage, domain, zone,emailIdentity, ...props }: AccountStackProps
   ) {
     super(scope, id, { ...props, crossRegionReferences: true });
 
@@ -53,46 +50,20 @@ export class DataApiInfra extends Stack {
       }]
     });
 
-    new EmailIdentity(this, "stuff-email-identity", {
-      identity: Identity.domain(domain),
-      dkimIdentity: DkimIdentity.easyDkim(
-        EasyDkimSigningKeyLength.RSA_2048_BIT
-      ),
-
-      dkimSigning: true,
-      feedbackForwarding: false,
-      mailFromDomain: `mail.${domain}`,
-      mailFromBehaviorOnMxFailure: MailFromBehaviorOnMxFailure.REJECT_MESSAGE
-    });
-
-    const zone = HostedZone.fromLookup(this, "stuff-zone", {
-        domainName: zoneName
+    if (stage === "prod") {
+      new CnameRecord(this, "stuff-email-cname-record", {
+        zone,
+        recordName: `wwww`,
+        domainName: `cname.vercel-dns.com`
       })
 
-    new MxRecord(this, "stuff-mx-record", {
-      values: [
-        {
-          hostName: `inbound-smtp.${props.env.region}.amazonaws.com`,
-          priority: 10
+      new ARecord(this, "stuff-email-a-record", {
+        zone,
+        target: {
+          values: ["76.76.21.21"]
         }
-      ],
-      zone,
-      recordName: domain + "."
-    });
-
-    new CnameRecord(this, "stuff-email-cname-record", {
-      zone,
-      recordName: `wwww`,
-      domainName: `cname.vercel-dns.com`
-    })
-
-    new ARecord(this, "stuff-email-a-record", {
-      zone,
-      target: {
-        values: ["76.76.21.21"]
-      }
-    })
-
+      })
+    }
 
 
     const parameterStatement = new PolicyStatement({
@@ -104,13 +75,13 @@ export class DataApiInfra extends Stack {
       ]
     });
 
-    const emailSendingStatement = new PolicyStatement({
-      effect: Effect.ALLOW,
-      actions: ["ses:SendEmail"],
-      resources: [
-        `arn:aws:ses:${props.env.region}:${props.env.account}:identity/${domain}`,
-      ]
-    });
+    // const emailSendingStatement = new PolicyStatement({
+    //   effect: Effect.ALLOW,
+    //   actions: ["ses:SendEmail"],
+    //   resources: [
+    //     `arn:aws:ses:${props.env.region}:${props.env.account}:identity/${domain}`,
+    //   ]
+    // });
 
       const storageStatement = new PolicyStatement({
       effect: Effect.ALLOW,
@@ -125,13 +96,15 @@ export class DataApiInfra extends Stack {
     const inlinePolicy = new PolicyDocument({
       statements: [
         parameterStatement,
-        emailSendingStatement,
+        // emailSendingStatement,
         storageStatement
       ]
     });
     const user = new User(this, "app-external-user", {
       userName: `${stage}-stuff-app-user`,
     })
+
+    emailIdentity.grantSendEmail(user);
     user.attachInlinePolicy(new Policy(this, 'CustomPolicy', {
       policyName: 'MyCustomPolicy',
       document: inlinePolicy

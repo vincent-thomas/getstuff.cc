@@ -1,6 +1,6 @@
+import { Flex } from "@stuff/structure/flex";
+import { buttonVariants } from "@stuff/ui/button/variants";
 import Link from "next/link";
-import { Flex } from "packages/components/lib/flex";
-import { buttonVariants } from "packages/components/lib/variants";
 import { cn } from "packages/components/utils";
 
 export const Navbar = () => (

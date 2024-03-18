@@ -1,10 +1,8 @@
 import { z } from "zod";
 import type { messageValidator } from "./validators";
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
-import { env } from "@/env";
 import {
   DynamoDBDocumentClient,
-  GetCommand,
   PutCommand
 } from "@aws-sdk/lib-dynamodb";
 import { SESClient, SendEmailCommand } from "@aws-sdk/client-ses";
@@ -15,22 +13,22 @@ import {
   PutObjectCommand
 } from "@aws-sdk/client-s3";
 import { parseEmail } from "./emailParser";
-import { encryptSymmetric, genSymmetricKey } from "@/lib/sym-crypto";
 import {
+  contactInterface,
+  createMessageView,
   createThread,
-  createThreadView,
-  getThreadFromMsgId,
+  getThreadIdFromMsgId,
+  getThreadView,
   getUserFromAlias,
-  uploadEmailContent,
   uploadMessage
 } from "./util";
 import { getDataTable } from "@stuff/infra-constants";
-import { getUser } from "packages/api/utils/getUser";
-import { encryptAsymmetric } from "@/lib/asym-crypto";
+import { getEnv } from "./env";
+import { getUser } from "backend/utils/getUser";
+import { encryptAsymmetric, encryptSymmetric, genSymmetricKey } from "@stuff/lib/crypto";
+import { moveThread } from "backend/utils/moveThread";
 
 export const mailHandler = async (
-  tableName: string,
-  usersTableName: string,
   {
     mail: {
       commonHeaders: { messageId }
@@ -44,9 +42,11 @@ export const mailHandler = async (
     }
   }: z.infer<typeof messageValidator>
 ) => {
-  const dynClient = new DynamoDBClient({ region: env.REGION });
+  const env = getEnv();
+  const dynClient = new DynamoDBClient({ region: env.AWS_REGION });
   const dyn = DynamoDBDocumentClient.from(dynClient);
-  const ses = new SESClient({ region: env.REGION });
+  const ses = new SESClient({ region: env.AWS_REGION });
+  const tableName = getDataTable(env.STAGE);
 
   if (
     !(await mailHandlerGuard(
@@ -62,7 +62,7 @@ export const mailHandler = async (
     return;
   }
 
-  const s3 = new S3Client({ region: env.REGION });
+  const s3 = new S3Client({ region: env.AWS_REGION });
 
   const emailFromBucketUnparsed = await s3
     .send(
@@ -74,17 +74,18 @@ export const mailHandler = async (
     .then(data => data.Body?.transformToString());
 
   const parsed = await parseEmail(z.string().parse(emailFromBucketUnparsed));
+
   if (parsed?.recievedByAddresses === undefined) {
     return;
   }
 
   for (const address of parsed.recievedByAddresses
-    .filter(({ address }) => address.endsWith("@getstuff.cc"))
+    .filter(({ address }) => address.endsWith(`@${env.EMAIL_DOMAIN}`))
     .map(v => v.address.split("@")[0])) {
-    let result = await getUser(dyn, z.string().parse(address));
+    let result = await getUser(dyn, env.STAGE, z.string().parse(address));
 
     if (result === undefined) {
-      result = await getUserFromAlias(dyn, z.string().parse(address));
+      result = await getUserFromAlias(dyn,env.STAGE, z.string().parse(address));
     }
     if (result === undefined) {
       if (parsed.returnPath !== undefined) {
@@ -109,36 +110,36 @@ export const mailHandler = async (
           })
         );
       }
+
+      // TODO: Alla ska inte 'inte' processeras
       return;
     }
-  }
-  const encryptionKey = genSymmetricKey();
-
-  const htmlContent =
-    parsed.body.html === false
-      ? undefined
-      : encryptSymmetric(parsed.body.html, Buffer.from(encryptionKey));
-
-  const textContent =
-    parsed.body.text === undefined
-      ? undefined
-      : encryptSymmetric(parsed.body.text, Buffer.from(encryptionKey));
-
-  if (textContent === undefined) {
-    return;
   }
 
   let threadId: string | undefined;
 
   if (parsed.messageIdReplyingTo) {
-    threadId = await getThreadFromMsgId(
+    threadId = await getThreadIdFromMsgId(
       dyn,
       tableName,
       parsed.messageIdReplyingTo
-    );
+    )
   }
 
-  if (!threadId) {
+  console.debug("EXISTING THREAD ID?", threadId);
+
+  console.debug("PARSED", parsed)
+
+  const encryptionKey = genSymmetricKey();
+
+  if (parsed.body.text === undefined) {
+    return;
+  }
+
+  const textContent = encryptSymmetric(parsed.body.text, Buffer.from(encryptionKey));
+  const htmlContent = parsed.body.html === false ? undefined : encryptSymmetric(parsed.body.html, Buffer.from(encryptionKey));
+
+  if (threadId === undefined) {
     threadId = await createThread(
       dyn,
       tableName,
@@ -146,65 +147,81 @@ export const mailHandler = async (
     );
   }
 
-  const contactInterface = z.object({ name: z.string(), address: z.string() });
+  // Singular per conversation
+  const uploadEmailContent = async () => {
+    await uploadMessage(s3, dyn, env.STAGE, messageId, z.string().parse(threadId), {
+      subject: parsed.subject ?? "",
+      to: z.array(contactInterface).parse(parsed.recievedByAddresses),
+      cc: z.array(contactInterface).parse(parsed.cc),
+      content: {
+        html: htmlContent,
+        text: textContent
+      },
+      from: contactInterface.parse(parsed.sentFromAddress)
+    },parsed.messageIdReplyingTo);
 
-  await uploadMessage(s3, dyn, messageId, threadId, {
-    subject: parsed.subject ?? "No Subject",
-    to: parsed.recievedByAddresses,
-    cc: z.array(contactInterface).parse(parsed.cc),
-    content: {
-      html: htmlContent,
-      text: textContent
-    },
-    from: contactInterface.parse(parsed.sentFromAddress)
-  });
+    for (const att of parsed.attachments) {
+      await dyn.send(
+        new PutCommand({
+          TableName: tableName,
+          Item: {
+            pk: `mail|${messageId}`,
+            sk: `attachment|${att.contentId}`,
+            created_at: Date.now(),
+            filename: att.filename,
+            mimeType: att.mimeType,
+            size: att.size,
+            shouldBeDownloadable: att.shouldBeDownloaded
+          }
+        })
+      );
 
-  for (const att of parsed.attachments) {
-    await dyn.send(
-      new PutCommand({
-        TableName: tableName,
-        Item: {
-          pk: `mail|${messageId}`,
-          sk: `attachment|${att.contentId}`,
-          created_at: Date.now(),
-          filename: att.filename,
-          mimeType: att.mimeType,
-          size: att.size,
-          shouldBeDownloadable: att.shouldBeDownloaded
-        }
-      })
-    );
-
-    await s3.send(
-      new PutObjectCommand({
-        Bucket: getDataTable(env.STAGE),
-        Key: att.contentId,
-        Body: att.content
-      })
-    );
+      await s3.send(
+        new PutObjectCommand({
+          Bucket: getDataTable(env.STAGE),
+          Key: att.contentId,
+          Body: att.content
+        })
+      );
+    }
   }
+  await uploadEmailContent()
 
-  for (let username of parsed.recievedByAddresses
-    .filter(address => address.address?.endsWith(`@${env.DOMAIN}`))
+  // Adds proper metadata for users to be accessable
+  for (const username of parsed.recievedByAddresses
+    .filter(address => address.address?.endsWith(`@${env.EMAIL_DOMAIN}`))
     .map(v => v.address.split("@")[0])) {
     if (username === undefined) {
       return;
     }
-    let user = await getUser(dyn, username);
+
+    let user = await getUser(dyn, env.STAGE, username);
 
     if (user === undefined) {
-      user = await getUserFromAlias(dyn, username);
-    }
-    if (user === undefined) {
-      return;
+      user = await getUserFromAlias(dyn, env.STAGE, username);
     }
 
-    username = user.user_id;
+    if (user === undefined) {
+      continue;
+    }
 
     const encryptedUserKey = encryptAsymmetric(
       Buffer.from(encryptionKey),
       user.publicKey
     );
-    await createThreadView(dyn, "inbox", threadId, username, encryptedUserKey);
+
+    const threadView = await getThreadView(dyn, env.STAGE, threadId, username);
+
+    console.debug("THREAD VIEW", threadView)
+
+    if (threadView?.sk.split("|")?.[2] === "sent") {
+      const response = await moveThread(dyn, env.STAGE, username, threadId, {folderId: "sent", newFolderId: "inbox"});
+      console.log(response)
+    }
+
+    await createMessageView(dyn, env.STAGE, {
+      messageId,
+      encryptedMessageEncryptionKey: encryptedUserKey
+    })
   }
 };

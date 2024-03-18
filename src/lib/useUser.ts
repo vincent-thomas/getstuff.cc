@@ -1,7 +1,5 @@
 "use client";
 
-import { userDataInterface } from "@/interfaces/userData";
-import { decryptSymmetric } from "@/lib/sym-crypto";
 import { api } from "@stuff/api-client/react";
 import { useAtom } from "jotai";
 import { useEffect, useRef } from "react";
@@ -10,6 +8,8 @@ import {
   clearDerivedSecretStore,
   getPasswordDerivedSecret
 } from "./useUserPrivateKey";
+import { decryptSymmetric } from "./crypto";
+import { userDataInterface } from "../interfaces";
 
 export const useUser = () => {
   const sessionQuery = api.user.session.useQuery();
