@@ -1,9 +1,9 @@
-import type { LayoutProps } from "@/types/router";
+import type { LayoutProps } from "src/types/router";
 import { unstable_noStore } from "next/cache";
 import { Sidebar } from "./views/sidebar";
- 
+
 const Layout = async (props: LayoutProps) => {
-  unstable_noStore()
+  unstable_noStore();
 
   return (
     <div className="flex h-full min-w-[400px] overflow-hidden">

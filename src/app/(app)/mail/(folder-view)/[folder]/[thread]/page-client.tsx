@@ -14,7 +14,7 @@ import { Flex } from "@stuff/structure/flex";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@stuff/ui/tooltip";
 import { Button } from "@stuff/ui/button";
 import { Loading } from "@stuff/icons/loading";
-import purify from "dompurify"
+import purify from "dompurify";
 
 const paramsInterface = z.object({
   threadId: z.string(),
@@ -23,23 +23,25 @@ const paramsInterface = z.object({
 
 interface ProcessMessageInterface {
   messageId: string;
-  subject:string;
+  subject: string;
   content: {
-    text:string;
-    html:string
+    text: string;
+    html: string;
   };
   to: {
-    address:string;
-    name:string;
+    address: string;
+    name: string;
   }[];
   from: {
-    address:string;
-    name:string
-  }
+    address: string;
+    name: string;
+  };
 }
 
-const processMessage = async (message: ProcessMessageInterface, userKey: Buffer) => {
-
+const processMessage = async (
+  message: ProcessMessageInterface,
+  userKey: Buffer
+) => {
   const htmlContent = decryptSymmetric(message.content.html, userKey);
   const textContent = decryptSymmetric(message.content.text, userKey);
 
@@ -52,9 +54,8 @@ const processMessage = async (message: ProcessMessageInterface, userKey: Buffer)
     subject: message.subject,
     from: message.from,
     to: message.to
-  }
-}
-
+  };
+};
 
 const MainPage = ({ threadId, folderId }: z.infer<typeof paramsInterface>) => {
   const threadQuery = useThreadQuery({
@@ -64,28 +65,40 @@ const MainPage = ({ threadId, folderId }: z.infer<typeof paramsInterface>) => {
   const threadReadMutation = useThreadsReadMutation();
   const masterKey = useDataKey();
 
+  useEffect(() => {
+    navigator.registerProtocolHandler(
+      "mailto",
+      "http://localhost:3000/mail/compose?to=%s"
+    );
+  }, []);
+
   const messages = useQueries({
     queries: (threadQuery.data?.messages ?? []).map(message => ({
-      queryKey: ["message", {messageId: message.messageId}],
+      queryKey: ["message", { messageId: message.messageId }],
       queryFn: async () => {
-        
-        const threadEncryptionKey = z.string().parse(message.messageEncryptionKey);
+        const threadEncryptionKey = z
+          .string()
+          .parse(message.messageEncryptionKey);
         const content = await fetch(message.contentUrl, {
-          cache: "force-cache",
-          
-        }).then(async v => z.object({ html: z.string(), text: z.string() }).parse(await v.json()));
+          cache: "force-cache"
+        }).then(async v =>
+          z.object({ html: z.string(), text: z.string() }).parse(await v.json())
+        );
         const userKey = decryptAsymmetric(
           threadEncryptionKey,
           z.string().parse(masterKey)
         );
 
-        return processMessage({
-          content,
-          messageId: message.messageId,
-          subject: message.subject,
-          to: message.to,
-          from: message.from
-        }, userKey);
+        return processMessage(
+          {
+            content,
+            messageId: message.messageId,
+            subject: message.subject,
+            to: message.to,
+            from: message.from
+          },
+          userKey
+        );
       }
     }))
   });
@@ -101,8 +114,8 @@ const MainPage = ({ threadId, folderId }: z.infer<typeof paramsInterface>) => {
   }, [folderId, threadId, threadQuery.data?.thread.read]);
 
   return (
-    <Flex col className="px-4">
-      <Flex gap="0.75rem" className="py-5" align="center" justify="between">
+    <Flex col className="px-4 h-[calc(100vh-50px)] overflow-auto">
+      <Flex gap="0.75rem" className="pt-4" align="center" justify="between">
         <h1 className="text-3xl text-foreground">
           {threadQuery.data?.thread.title}
         </h1>
@@ -124,29 +137,38 @@ const MainPage = ({ threadId, folderId }: z.infer<typeof paramsInterface>) => {
           </div>
         </div>
       </Flex>
+      <Flex col gap="1rem" className="py-4">
 
-      {messages.map(({data: mail}, index) => {
+      {messages.map(({ data: mail }, index) => {
         if (mail === undefined) {
-          return <Loading size={24} color="text-primary" key={index} />
+          return <Loading size={24} color="text-primary" key={index} />;
         }
 
         return (
           <Flex
             col
-            className="overflow-hidden rounded-md border border-border"
+            className="rounded-md border border-border"
             key={mail.messageId}
           >
             <Flex col gap="1px" className="bg-muted p-4">
               <h2 className="text-xl">{mail.from.name}</h2>
-              <p className="text-md text-muted-foreground">{mail.from.address}</p>
+              <p className="text-md text-muted-foreground">
+                {mail.from.address}
+              </p>
             </Flex>
-            <div className="min-h-[170px] p-4" dangerouslySetInnerHTML={{__html: purify().sanitize(mail.content.html)}} />
+            <div
+              className="min-h-[170px] p-4"
+              dangerouslySetInnerHTML={{
+                __html: purify().sanitize(mail.content.html)
+              }}
+            />
             <Flex className="border-t border-border p-4">
               <Button className="font-semibold">Svara</Button>
             </Flex>
           </Flex>
-        )
+        );
       })}
+      </Flex>
     </Flex>
   );
 };
@@ -158,7 +180,6 @@ export function Page({
   folderId: string;
   threadId: string;
 }) {
-
   const router = useRouter();
 
   return (

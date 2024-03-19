@@ -3,6 +3,7 @@ import { UserAvatar } from "./user-avatar"
 import { api } from "@stuff/api-client/server"
 import { redirect } from "next/navigation"
 import { Thing } from "./things"
+import { Outlogger } from "./outlogger"
 
 
 export const AccountViewer = async () => {
@@ -49,9 +50,12 @@ export const AccountViewer = async () => {
         <DropdownMenuItem>Support</DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem>
-          Log out
-          <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
+          <Outlogger>
+            <p>Log out</p>
+            <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
+          </Outlogger>
         </DropdownMenuItem>
+
       </DropdownMenuContent>
     </DropdownMenu>
   )

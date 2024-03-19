@@ -7,6 +7,7 @@ export const userInterface = z.object({
   encryptedDataKey: z.string(),
   salt: z.string(),
   name: z.string(),
+  totpToken: z.string().optional(),
   customerId: z.string(),
   verifier: z.string(),
   publicKey: z.string(),
