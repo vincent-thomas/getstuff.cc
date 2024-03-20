@@ -2,6 +2,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem,
 import { UserAvatar } from "./user-avatar"
 import { api } from "@stuff/api-client/server"
 import { redirect } from "next/navigation"
+import { Outlogger } from "./outlogger"
 import { H3 } from "@stuff/typography"
 
 
@@ -50,10 +51,13 @@ export const AccountViewer = async () => {
         </DropdownMenuGroup>
         <DropdownMenuItem>Support</DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem className="p-3">
-          Log out
-          <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
+        <DropdownMenuItem>
+          <Outlogger>
+            <p>Log out</p>
+            <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
+          </Outlogger>
         </DropdownMenuItem>
+
       </DropdownMenuContent>
     </DropdownMenu>
   )

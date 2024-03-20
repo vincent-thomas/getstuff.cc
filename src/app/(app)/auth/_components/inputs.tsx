@@ -1,16 +1,18 @@
+import { cn } from "@stuff/components/utils";
 import { Flex } from "@stuff/structure";
 import { type InputHTMLAttributes, type Ref, forwardRef } from "react";
 
 export const MailInput = forwardRef(function MailInput(
-  props: InputHTMLAttributes<HTMLInputElement>,
+  {locked, ...props}: InputHTMLAttributes<HTMLInputElement> & { locked?: boolean},
   ref: Ref<HTMLInputElement>
 ) {
   return (
     <Flex className="rounded-md border border-border" justify="between">
       <input
+        disabled={locked}
         ref={ref}
         placeholder="Enter email..."
-        className="bg-transparent p-3 pr-0 outline-none focus:bg-muted"
+        className={cn("p-3 pr-0 outline-none", locked ? "bg-muted" : "focus:bg-muted bg-transparent")}
         {...props}
       />
       <p className="border-l border-border bg-muted p-3 text-muted-foreground">

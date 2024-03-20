@@ -155,6 +155,9 @@ dependencies:
   node-forge:
     specifier: ^1.3.1
     version: 1.3.1
+  otpauth:
+    specifier: ^9.2.2
+    version: 9.2.2
   pbkdf2:
     specifier: ^3.1.2
     version: 3.1.2
@@ -167,6 +170,9 @@ dependencies:
   react-hook-form:
     specifier: ^7.51.0
     version: 7.51.0(react@18.2.0)
+  react-hook-qrcode-svg:
+    specifier: ^1.5.0
+    version: 1.5.0(react@18.2.0)
   secure-remote-password:
     specifier: ^0.3.1
     version: 0.3.1
@@ -7355,6 +7361,10 @@ packages:
       semver: 7.6.0
     dev: false
 
+  /jssha@3.3.1:
+    resolution: {integrity: sha512-VCMZj12FCFMQYcFLPRm/0lOBbLi8uM2BhXPTqw3U4YAfs4AZfiApOoBLoN8cQE60Z50m1MYMTQVCfgF/KaCVhQ==}
+    dev: false
+
   /jsx-ast-utils@3.3.5:
     resolution: {integrity: sha512-ZZow9HBI5O6EPgSJLUb8n2NKgmVWTwCvHGwFuJlMjvLFqlGG6pjirPhtdsseaLZjSibD8eegzmYpUZwoIlj2cQ==}
     engines: {node: '>=4.0'}
@@ -7907,6 +7917,12 @@ packages:
     resolution: {integrity: sha512-TvAWxi0nDe1j/rtMcWcIj94+Ffe6n7zhow33h40SKxmsmozs6dz/e+EajymfoFcHd7sxNn8yHM8839uixMOV6g==}
     dev: false
 
+  /otpauth@9.2.2:
+    resolution: {integrity: sha512-2VcnYRUmq1dNckIfySNYP32ITWp1bvTeAEW0BSCR6G3GBf3a5zb9E+ubY62t3Dma9RjoHlvd7QpmzHfJZRkiNg==}
+    dependencies:
+      jssha: 3.3.1
+    dev: false
+
   /p-limit@2.3.0:
     resolution: {integrity: sha512-//88mFWSJx8lxCzwdAABTJL2MyWB12+eIY7MDL2SqLmAkeKU9qxRvWuSyTjm3FUmpBEMuFfckAIqEaVGUDxb6w==}
     engines: {node: '>=6'}
@@ -8423,6 +8439,14 @@ packages:
     engines: {node: '>=12.22.0'}
     peerDependencies:
       react: ^16.8.0 || ^17 || ^18
+    dependencies:
+      react: 18.2.0
+    dev: false
+
+  /react-hook-qrcode-svg@1.5.0(react@18.2.0):
+    resolution: {integrity: sha512-+ZdOMR0OM5bJKfGzfS/A/6PUj4grqDuAqNp42FzgttUAOCRQgzL722NaIPqfbk61pjZLE3GzNfkkZUSaY0NaZg==}
+    peerDependencies:
+      react: '>=18.0.0'
     dependencies:
       react: 18.2.0
     dev: false
