@@ -1,4 +1,4 @@
-import { Flex } from "@stuff/structure/flex";
+import { Flex } from "@stuff/structure";
 import { buttonVariants } from "@stuff/ui/button/variants";
 import Link from "next/link";
 import { cn } from "packages/components/utils";

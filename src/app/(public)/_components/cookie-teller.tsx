@@ -1,5 +1,5 @@
 
-import { Flex } from "@stuff/structure/flex";
+import { Flex } from "@stuff/structure";
 import { Button } from "@stuff/ui/button";
 import { cookies } from "next/headers";
 import Link from "next/link";

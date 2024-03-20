@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { z } from "zod";
 import { SelectedBar } from "../_components/selected-bar";
-import { ArrowLeftCircleIcon, ShieldCheckIcon } from "lucide-react";
+import { ArrowLeftCircleIcon, Scroll, ShieldCheckIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useQueries } from "@tanstack/react-query";
 import { decryptAsymmetric, decryptSymmetric } from "@stuff/lib/crypto";
@@ -15,13 +15,16 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@stuff/ui/tooltip";
 import { Button } from "@stuff/ui/button";
 import { Loading } from "@stuff/icons/loading";
 import purify from "dompurify";
+import { ScrollArea } from "packages/components/lib/scroll-area";
+import { threadOpen } from "../store/thread-open";
+import { useAtom } from "jotai";
 
 const paramsInterface = z.object({
   threadId: z.string(),
   folderId: z.string()
 });
 
-interface ProcessMessageInterface {
+export interface ProcessMessageInterface {
   messageId: string;
   subject: string;
   content: {
@@ -114,8 +117,8 @@ const MainPage = ({ threadId, folderId }: z.infer<typeof paramsInterface>) => {
   }, [folderId, threadId, threadQuery.data?.thread.read]);
 
   return (
-    <Flex col className="px-4 h-[calc(100vh-50px)] overflow-auto">
-      <Flex gap="0.75rem" className="pt-4" align="center" justify="between">
+    <>
+      <Flex gap="0.75rem" className="p-4" align="center" justify="between">
         <h1 className="text-3xl text-foreground">
           {threadQuery.data?.thread.title}
         </h1>
@@ -137,13 +140,11 @@ const MainPage = ({ threadId, folderId }: z.infer<typeof paramsInterface>) => {
           </div>
         </div>
       </Flex>
-      <Flex col gap="1rem" className="py-4">
-
+      <Flex col gap="1rem" className="px-4 pb-4">
         {messages.map(({ data: mail }, index) => {
           if (mail === undefined) {
             return <Loading size={24} color="text-primary" key={index} />;
           }
-
           return (
             <Flex
               col
@@ -169,36 +170,54 @@ const MainPage = ({ threadId, folderId }: z.infer<typeof paramsInterface>) => {
           );
         })}
       </Flex>
-    </Flex>
+    </>
   );
 };
 
 export function Page({
   folderId,
-  threadId
+  threadId,
+  determineWidth
 }: {
   folderId: string;
   threadId: string;
+  determineWidth?: (width: number) => void;
 }) {
   const router = useRouter();
+  const [isThreadOpen, setThreadOpen] = useAtom(threadOpen);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (ref.current?.clientWidth) {
+      determineWidth?.(ref.current?.clientWidth)
+    }
+  }, [ref.current?.clientWidth])
+
 
   return (
-    <>
-      <Flex className="p-1" align="center" gap="0.5rem">
-        <button
-          className="rounded-full p-[calc(0.5rem+2px)] hover:bg-accent"
-          onClick={() => router.push(".")}
-        >
-          <ArrowLeftCircleIcon size={22} />
-        </button>
+      <div className="grid grid-rows-[auto,auto,1fr] max-h-full" ref={ref}>
+        <Flex className="p-1" align="center" gap="0.5rem">
+          <button
+            className="rounded-full p-[calc(0.5rem+2px)] hover:bg-muted"
+            onClick={() =>{
+              setThreadOpen(null);
+              window.history.replaceState(null, '', `/mail/${folderId}`)
+              // router.replace()
+              // router.push(".")
+            }}
+          >
+            <ArrowLeftCircleIcon size={22} />
+          </button>
 
-        <div className="block h-[calc(50px/1.6)] border-r border-border"></div>
+          <div className="block h-[calc(50px/1.6)] border-r border-border"></div>
 
-        <SelectedBar threadIds={[threadId]} folderId={folderId} />
-        <div className="block h-[calc(50px/1.6)] border-r border-border"></div>
-      </Flex>
-      <div className="mx-auto block h-[1px] w-full border-t border-border"></div>
-      <MainPage folderId={folderId} threadId={threadId} />
-    </>
+          <SelectedBar threadIds={[threadId]} folderId={folderId} />
+          <div className="block h-[calc(50px/1.6)] border-r border-border"></div>
+        </Flex>
+        <div className="mx-auto block h-[1px] w-full border-t border-border"></div>
+        <div className="overflow-y-auto w-full h-full">
+          <MainPage folderId={folderId} threadId={threadId} />
+        </div>
+      </div>
   );
 }

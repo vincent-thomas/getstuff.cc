@@ -10,8 +10,11 @@ import autoAnimate from "@formkit/auto-animate";
 import { Loading } from "packages/icons";
 import { Flex } from "@stuff/structure";
 import { H2, P } from "@stuff/typography";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { prefetchThreadQuery } from "@stuff/data-access/prefetch-thread-query";
+import { useDataKey } from "@stuff/lib/useUserPrivateKey";
+import { useQueryClient } from "@tanstack/react-query";
+import { threadOpen } from "../store/thread-open";
 
 interface FolderHeader {
   folderId: string;
@@ -19,9 +22,11 @@ interface FolderHeader {
 
 const MailRow = ({
   thread,
-  folderId
+  folderId,
+  whenPrefetching
 }: {
   folderId: string;
+  whenPrefetching: () => Promise<void>;
   thread: {
     threadId: string;
     read: boolean;
@@ -32,6 +37,8 @@ const MailRow = ({
   const [selected, setSelected] = useAtom(messagesIdSelected);
   const utils = api.useUtils();
   const router = useRouter();
+  const [isThreadOpen, setThreadOpen] = useAtom(threadOpen);
+
 
   return (
     <div
@@ -72,10 +79,14 @@ const MailRow = ({
               staleTime: 10_000
             }
           );
+          await whenPrefetching();
         }}
-        onClick={async () => {
-          router.push("/mail/" + folderId + "/" + thread.threadId);
-        }}
+        onClick={
+           () => {
+            setThreadOpen(thread.threadId);
+            router.replace(`/mail/${folderId}?threadId=${thread.threadId}`)
+        }
+      }
       >
         <p
           className={cn(
@@ -102,6 +113,9 @@ export const MailTable: FC<FolderHeader> = ({ folderId }) => {
   const threadsQuery = api.mail.threads.getThreads.useQuery({ folderId });
 
   const parent = useRef(null);
+  const qC = useQueryClient();
+  const dataKey = useDataKey();
+  const utils = api.useUtils();
 
   useEffect(() => {
     parent.current && autoAnimate(parent.current);
@@ -132,17 +146,33 @@ export const MailTable: FC<FolderHeader> = ({ folderId }) => {
 
   return (
     <div className="grow overflow-y-auto">
-      <ScrollArea className="h-full">
+      <div className="h-full">
         <div ref={parent}>
           {threadsQuery.data.map(thread => (
             <MailRow
               key={thread.threadId}
               thread={thread}
               folderId={folderId}
+              whenPrefetching={async () => {
+                const cachedThread = utils.mail.threads.getThread.getData({
+                  folderId,
+                  threadId: thread.threadId
+                });
+      
+                if (cachedThread === undefined || cachedThread === null) {
+                  throw new Error("NO CACHE")
+                }
+      
+                if (dataKey === undefined) {
+                  throw new Error("NO DATA KEY")
+                }
+                
+                await prefetchThreadQuery({messages: cachedThread.messages, dataKey, queryClient: qC})
+              }}
             />
           ))}
         </div>
-      </ScrollArea>
+      </div>
     </div>
   );
 };
