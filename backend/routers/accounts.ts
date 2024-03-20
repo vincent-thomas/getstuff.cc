@@ -108,6 +108,9 @@ export const accountsRouter = router({
     .mutation(async ({ ctx: { redis }, input: { username } }) => {
       const dyn = getDyn();
       const user = await getUser(dyn, env.STAGE, username);
+
+      console.debug("USER", user);
+
       if (user === undefined) {
         // Random response to prevent knowing that username doesn't exist
         return {
@@ -117,7 +120,7 @@ export const accountsRouter = router({
       }
 
       const serverEphemeral = generateEphemeral(user.verifier);
-      await redis.set(username, serverEphemeral.secret, { ex: 5 });
+      await redis.set(username, serverEphemeral.secret, { ex: 60 * 5 });
 
       return {
         salt: user.salt,
@@ -142,7 +145,7 @@ export const accountsRouter = router({
         }
       }) => {
         const dyn = getDyn();
-        const user = await getUser(dyn, env.STAGE,username);
+        const user = await getUser(dyn, env.STAGE, username);
 
         try {
           if (user === undefined) {
@@ -187,6 +190,7 @@ export const accountsRouter = router({
             serverProof: serverSession.proof
           };
         } catch (e) {
+          console.error(e)
           throw { code: "NOT_FOUND", message: "Invalid credentials" };
         }
       }

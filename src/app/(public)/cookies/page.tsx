@@ -1,10 +1,9 @@
-import { setupPage } from "@/lib/setupPage";
 import { SharedLayout } from "../layout-client";
 import { PageHeador } from "../_components/header";
 import { Section } from "../_components/section";
-import { H2 } from "@/components/typography/headers";
-import { P } from "@/components/typography/paragraph";
 import Link from "next/link";
+import { setupPage } from "@stuff/lib/setupPage";
+import { H2, P } from "@stuff/typography";
 
 export default setupPage({
   Component() {

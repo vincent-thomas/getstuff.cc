@@ -1,5 +1,5 @@
-import { Flex } from "@/components/structure/flex";
 import { Section } from "./section";
+import {Flex} from "@stuff/structure"
 import type { ReactNode } from "react";
 
 export const PageHeador = ({

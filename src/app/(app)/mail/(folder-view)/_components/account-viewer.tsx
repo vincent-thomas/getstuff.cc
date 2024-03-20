@@ -2,7 +2,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem,
 import { UserAvatar } from "./user-avatar"
 import { api } from "@stuff/api-client/server"
 import { redirect } from "next/navigation"
-import { Thing } from "./things"
+import { H3 } from "@stuff/typography"
 
 
 export const AccountViewer = async () => {
@@ -15,40 +15,42 @@ export const AccountViewer = async () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <Thing>
-          <div className="hover:bg-accent p-3 rounded-md">
+          <div className="hover:bg-muted p-3 rounded-md">
             <div className="flex items-center gap-4 ">
               <UserAvatar />
               <div className="flex flex-col text-left">
-                <h1 className="text-lg leading-tight text-foreground">
-                  Stuff Mail{session.customerStatus === "active" ? "+" : ""}
+                <h1 className="text-lg leading-tight text-foreground font-semibold flex gap-1">
+                  Stuff{session.customerStatus === "active" ? "+" : ""}<p className="text-muted-foreground">Mail</p>
                 </h1>
                 <p className="text-muted-foreground">{session.username}</p>
               </div>
             </div>
           </div>
-        </Thing>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56">
-        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+      <DropdownMenuContent className="w-64 !border-border">
+        <DropdownMenuLabel className="pb-1">
+          <H3>
+            My Account
+          </H3>
+        </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem>
+          <DropdownMenuItem className="p-3">
             Manage account
             <DropdownMenuShortcut>⌘A</DropdownMenuShortcut>
           </DropdownMenuItem>
-          <DropdownMenuItem>
+          <DropdownMenuItem className="p-3">
             Billing
             <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
           </DropdownMenuItem>
-          <DropdownMenuItem>
+          <DropdownMenuItem className="p-3">
             Settings
             <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuItem>Support</DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
+        <DropdownMenuItem className="p-3">
           Log out
           <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
         </DropdownMenuItem>

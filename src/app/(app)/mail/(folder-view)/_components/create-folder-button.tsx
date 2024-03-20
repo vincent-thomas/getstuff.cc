@@ -2,7 +2,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { api } from "@stuff/api-client/react";
 import { Plus } from "lucide-react"
-import { Flex } from "@stuff/structure/flex";
+import { Flex } from "@stuff/structure";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";

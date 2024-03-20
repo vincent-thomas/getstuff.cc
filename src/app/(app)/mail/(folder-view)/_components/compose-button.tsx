@@ -22,7 +22,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { api } from "@stuff/api-client/react";
 import { ScrollArea } from "packages/components/lib/scroll-area";
-import { Flex } from "@stuff/structure/flex";
+import { Flex } from "@stuff/structure";
 import { buttonVariants } from "@stuff/ui/button/variants";
 
 const mailSendInterface = z.object({
@@ -84,14 +84,14 @@ export const ComposeButton = () => {
       open={open}
     >
       <DrawerTrigger
-        className="flex items-center gap-2 rounded-md px-3 py-2 hover:bg-accent hover:text-accent-foreground"
+        className="flex items-center gap-2 rounded-lg px-3 py-3 outline-border outline outline-[3px] outline-offset-[-3px] shadow-sm hover:bg-muted"
         onClick={() => setOpen(true)}
       >
         <PlusIcon color="hsl(var(--muted-foreground))" size={24} />
-        <span>Compose</span>
+        <span className="font-semibold text-lg">Compose</span>
       </DrawerTrigger>
 
-      <DrawerContent className="mx-auto flex w-screen   max-w-[800px] flex-col overflow-visible border border-gray-500">
+      <DrawerContent className="mx-auto flex w-screen max-w-[800px] flex-col overflow-visible border border-gray-500 bg-accent">
           <form onSubmit={onSubmit} className="pb-auto flex grow flex-col">
             <DrawerHeader>
               <Flex gap="1rem" align="center" justify="between">
@@ -137,7 +137,7 @@ export const ComposeButton = () => {
           </form>
           <DrawerFooter>
             <DrawerClose
-              className={cn(buttonVariants({ variant: "outline" }), "w-full")}
+              className={cn(buttonVariants({ variant: "outline" }), "w-full", "!border-border py-3")}
             >
               Cancel
             </DrawerClose>

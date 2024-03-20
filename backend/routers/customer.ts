@@ -11,7 +11,7 @@ import { z } from "zod";
 export const customerRouter = router({
   checkout: protectedProc.output(z.object({sessionUrl: z.string()})).mutation(async ({ctx}) => {
 
-    const customer = await getCustomer(ctx.dyn, ctx.session.customerId);
+    const customer = await getCustomer(ctx.dyn, env.STAGE, ctx.session.customerId);
     if (!customer) {
       throw new TRPCError({
         code: "FORBIDDEN"

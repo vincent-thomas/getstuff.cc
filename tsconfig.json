@@ -47,8 +47,8 @@
       "@stuff/data-access/*": [
         "./src/data-access/*"
       ],
-      "@stuff/structure/*": [
-        "./src/components/structure/*"
+      "@stuff/structure": [
+        "./src/components/structure/index.ts"
       ],
       "@stuff/typography": [
         "./src/components/typography/index.ts"

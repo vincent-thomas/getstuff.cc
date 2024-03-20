@@ -124,29 +124,30 @@ const MainPage = ({ threadId, folderId }: z.infer<typeof paramsInterface>) => {
           </div>
         </div>
       </Flex>
+      <Flex col gap="1rem">
+        {messages.map(({data: mail}, index) => {
+          if (mail === undefined) {
+            return <Loading size={24} color="text-primary" key={index} />
+          }
 
-      {messages.map(({data: mail}, index) => {
-        if (mail === undefined) {
-          return <Loading size={24} color="text-primary" key={index} />
-        }
-
-        return (
-          <Flex
-            col
-            className="overflow-hidden rounded-md border border-border"
-            key={mail.messageId}
-          >
-            <Flex col gap="1px" className="bg-muted p-4">
-              <h2 className="text-xl">{mail.from.name}</h2>
-              <p className="text-md text-muted-foreground">{mail.from.address}</p>
+          return (
+            <Flex
+              col
+              className="overflow-hidden rounded-md border border-border"
+              key={mail.messageId}
+            >
+              <Flex col gap="1px" className="bg-muted p-4">
+                <h2 className="text-xl">{mail.from.name}</h2>
+                <p className="text-md text-muted-foreground">{mail.from.address}</p>
+              </Flex>
+              <div className="min-h-[170px] p-4" dangerouslySetInnerHTML={{__html: purify().sanitize(mail.content.html)}} />
+              <Flex className="border-t border-border p-4">
+                <Button className="font-semibold">Svara</Button>
+              </Flex>
             </Flex>
-            <div className="min-h-[170px] p-4" dangerouslySetInnerHTML={{__html: purify().sanitize(mail.content.html)}} />
-            <Flex className="border-t border-border p-4">
-              <Button className="font-semibold">Svara</Button>
-            </Flex>
-          </Flex>
-        )
-      })}
+          )
+        })}
+      </Flex>
     </Flex>
   );
 };

@@ -5,6 +5,16 @@ export default {
   content: ["./src/**/*.tsx", "packages/**/*.tsx", "packages/**/*.ts"],
   theme: {
     extend: {
+      padding:{
+        "space-md": "var(--space-md)",
+        "space-sm": "var(--space-sm)",
+        "space-lg": "var(--space-lg)"
+      },
+      gap:{
+        "space-md": "var(--space-md)",
+        "space-sm": "var(--space-sm)",
+        "space-lg": "var(--space-lg)"
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

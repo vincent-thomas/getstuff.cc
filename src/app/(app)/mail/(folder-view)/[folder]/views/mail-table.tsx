@@ -9,12 +9,11 @@ import { useRouter } from "next/navigation";
 import { formatDistanceToNow } from "date-fns";
 import autoAnimate from '@formkit/auto-animate'
 import { Loading } from "packages/icons";
-import { Flex } from "@stuff/structure/flex";
+import { Flex } from "@stuff/structure";
 import { H2, P } from "@stuff/typography";
 
 interface FolderHeader {
   folderId: string;
-
 }
 
 const MailRow = ({thread, folderId}: {folderId:string;thread: {threadId: string, read: boolean, title: string, lastActive:number}}) => {
@@ -27,13 +26,13 @@ const MailRow = ({thread, folderId}: {folderId:string;thread: {threadId: string,
     key={thread.threadId}
     className={cn(
       "flex items-center border-b border-border",
-      thread.read ? "bg-muted" : "bg-background",
-      selected.includes(thread.threadId) && "bg-accent"
+      thread.read ? "bg-accent" : "bg-background",
+      selected.includes(thread.threadId) && "bg-muted"
     )}
   >
     <div className="p-1">
       <button
-        className="rounded-full p-3 hover:bg-accent"
+        className="rounded-full p-3 hover:bg-muted"
         onClick={() => {
           if (selected.includes(thread.threadId)) {
             setSelected(
@@ -100,7 +99,7 @@ export const MailTable:FC<FolderHeader> = ({folderId}) => {
     parent.current && autoAnimate(parent.current)
   }, [parent])
 
-  if (threadsQuery.isLoading ?? threadsQuery?.data === undefined) {
+  if (threadsQuery.isLoading) {
     return (
       <Flex justify="center" align="center" className="py-10 w-full">
         <Loading color="hsl(var(--primary))" size={24}/>
@@ -108,7 +107,7 @@ export const MailTable:FC<FolderHeader> = ({folderId}) => {
     )
   }
 
-  if (threadsQuery.data.length === 0) {
+  if (threadsQuery.data?.length === 0) {
     return (
       <Flex col gap="0.25rem" justify="center" align="center" className="py-10 w-full">
         <H2>No threads!</H2>
@@ -121,8 +120,8 @@ export const MailTable:FC<FolderHeader> = ({folderId}) => {
     <div className="grow overflow-y-auto">
     <ScrollArea className="h-full" >
       <div ref={parent}>
-        {threadsQuery.data.map(thread => <MailRow key={thread.threadId} thread={thread} folderId={folderId} />)}
-        </div>
+        {threadsQuery.data?.map(thread => <MailRow key={thread.threadId} thread={thread} folderId={folderId} />)}
+      </div>
     </ScrollArea>
   </div>
   )

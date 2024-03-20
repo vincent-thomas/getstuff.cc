@@ -4,7 +4,7 @@ import { PageHeador } from "../_components/header";
 import { CheckoutButton } from "./_components/button-checkout";
 import { SharedLayout } from "../layout-client";
 import { setupPage } from "@stuff/lib/setupPage";
-import { Flex } from "@stuff/structure/flex";
+import { Flex } from "@stuff/structure";
 
 export default setupPage({
   Component() {

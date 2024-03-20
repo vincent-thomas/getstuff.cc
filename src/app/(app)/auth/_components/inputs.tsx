@@ -1,4 +1,4 @@
-import { Flex } from "@stuff/structure/flex";
+import { Flex } from "@stuff/structure";
 import { type InputHTMLAttributes, type Ref, forwardRef } from "react";
 
 export const MailInput = forwardRef(function MailInput(

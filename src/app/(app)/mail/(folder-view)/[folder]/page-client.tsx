@@ -1,6 +1,6 @@
 "use client";
 
-import { Flex } from "@stuff/structure/flex";
+import { Flex } from "@stuff/structure";
 import { FolderHeader } from "./views/header";
 import { MailTable } from "./views/mail-table";
 

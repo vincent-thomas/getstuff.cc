@@ -8,7 +8,7 @@ import { messagesIdSelected } from "../store/messages-id-selected";
 import { useMemo } from "react";
 import { z } from "zod";
 import { H2 } from "@stuff/typography";
-import { Flex } from "@stuff/structure/flex";
+import { Flex } from "@stuff/structure";
 import { useThreadsMoveMutation } from "@stuff/data-access/move-threads-mutation";
 import { useThreadsReadMutation } from "@stuff/data-access/read-threads-mutation";
 
