@@ -41,7 +41,7 @@ export const SelectedBar = ({
           setSelected([])
         }}>
           <PopoverTrigger asChild>
-            <button className="rounded-full p-3 p-3 hover:bg-accent">
+            <button className="rounded-full p-3 p-3 hover:bg-muted">
               <FolderInput size={18} color="hsl(var(--foreground))" />
             </button>
           </PopoverTrigger>
@@ -68,7 +68,7 @@ export const SelectedBar = ({
         </Popover>
 
       <button
-        className="rounded-full p-3 p-3 hover:bg-accent"
+        className="rounded-full p-3 p-3 hover:bg-muted"
         onClick={async () => {
           await setReadMutation.mutateAsync({
             folderId,
@@ -82,7 +82,7 @@ export const SelectedBar = ({
 
     {folderId !== "archive" && (
       <button
-          className="rounded-full p-3 p-3 hover:bg-accent"
+          className="rounded-full p-3 p-3 hover:bg-muted"
           onClick={async () => {
             const successed = await moveThreads.mutateAsync({
               folderId,

@@ -5,12 +5,13 @@ import { useRef, type FC, useEffect } from "react";
 import { messagesIdSelected } from "../store/messages-id-selected";
 import { useAtom } from "jotai";
 import { Checked, UnChecked } from "packages/icons/lib/unchecked";
-import { useRouter } from "next/navigation";
 import { formatDistanceToNow } from "date-fns";
 import autoAnimate from "@formkit/auto-animate";
 import { Loading } from "packages/icons";
 import { Flex } from "@stuff/structure";
 import { H2, P } from "@stuff/typography";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 interface FolderHeader {
   folderId: string;
@@ -29,26 +30,51 @@ const MailRow = ({
   };
 }) => {
   const [selected, setSelected] = useAtom(messagesIdSelected);
+  const utils = api.useUtils();
+  const router = useRouter();
 
   return (
     <div
       key={thread.threadId}
       className={cn(
-        "flex items-center border-b border-border p-1",
+        "flex border-b border-border",
         thread.read ? "bg-accent" : "bg-background",
         selected.includes(thread.threadId) && "bg-muted"
       )}
     >
+      <div className="p-1">
+        <button
+          className="rounded-full p-3 hover:bg-muted"
+          onClick={() => {
+            if (selected.includes(thread.threadId)) {
+              setSelected(
+                selected.filter(id => id !== thread.threadId)
+              );
+            } else {
+              setSelected([...selected, thread.threadId]);
+            }
+          }}
+        >
+        {selected.includes(thread.threadId) ? <Checked size={18} /> : <UnChecked size={18} />}
+        </button>
+      </div>
+
       <button
-        className="rounded-full p-3 hover:bg-muted"
-        onClick={() => {
-          if (selected.includes(thread.threadId)) {
-            setSelected(
-              selected.filter(id => id !== thread.threadId)
-            );
-          } else {
-            setSelected([...selected, thread.threadId]);
-          }
+        key={thread.threadId}
+        className="flex grow items-center gap-8 py-3 pr-5 text-left"
+        onMouseOver={async () => {
+          await utils.mail.threads.getThread.prefetch(
+            {
+              folderId,
+              threadId: thread.threadId
+            },
+            {
+              staleTime: 10_000
+            }
+          );
+        }}
+        onClick={async () => {
+          router.push("/mail/" + folderId + "/" + thread.threadId);
         }}
       >
         <p
@@ -61,7 +87,7 @@ const MailRow = ({
         </p>
         <div className={cn("text-foreground")}>
           {formatDistanceToNow(new Date(thread.lastActive), {
-          addSuffix: true
+            addSuffix: true
           })}
         </div>
         <div className="w-16 text-right text-muted-foreground">

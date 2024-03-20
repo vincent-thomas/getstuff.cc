@@ -14,6 +14,7 @@ export const RefreshButton = ({ folderId }: { folderId: string }) => {
   return (
     <div className="flex items-center gap-2">
       <button
+      className="hover:bg-muted rounded-full p-2"
         disabled={isFetching}
         onClick={async () => {
           setFetching(true);

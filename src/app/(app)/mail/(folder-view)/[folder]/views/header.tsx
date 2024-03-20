@@ -45,7 +45,7 @@ export const FolderHeader: FC<FolderHeader> = ({folderId, folder}) => {
       </button>
 
       <h1 className="pb-1 text-xl text-foreground">{folder.name}</h1>
-      <div className="ml-auto mr-5">
+      <div className="flex justify-end w-full h-full px-3">
         {selected.length === 0 ? (
           <RefreshButton folderId={folderId} />
         ) : (
