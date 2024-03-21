@@ -92,59 +92,57 @@ export const ComposeButton = () => {
       </DrawerTrigger>
 
       <DrawerContent className="mx-auto flex w-screen max-w-[800px] flex-col overflow-visible border border-gray-500 bg-accent">
-          <form onSubmit={onSubmit} className="pb-auto flex grow flex-col">
-            <DrawerHeader>
-              <Flex gap="1rem" align="center" justify="between">
-                <DrawerTitle>Send Email</DrawerTitle>
-                <button className="rounded-full bg-primary p-1" type="submit">
-                  <ArrowUpIcon color="hsl(var(--background))" size={26} />
-                </button>
-              </Flex>
-              <DrawerDescription>
-                Sending an email cant be undone
-              </DrawerDescription>
-            </DrawerHeader>
-            <div className="border-t border-border">
-              <Flex
-                className="w-full border-b border-border px-6 py-3"
-                gap="1rem"
-                align="center"
-              >
-                <span className="text-muted-foreground">To:</span>
-
-                <input
-                  {...register("to")}
-                  className="h-full w-full bg-transparent outline-none"
-                />
-              </Flex>
-            </div>
-            <DrawerMainContent className="flex grow flex-col gap-4">
-              <input
-                type="text"
-                className="w-full bg-transparent text-2xl outline-none"
-                placeholder="Subject"
-                {...register("subject")}
-              />
-              <ScrollArea className="h-[calc(100vh-(8px+16px)-92px-50px-32px-70px-3rem-24px)]">
-                <Tiptap
-                  placeholder="Compose your email..."
-                  initialContent="<p></p>"
-                  className="h-full"
-                  onUpdate={({ text, html }) => setDefaultContent({ text, html })}
-                />
-              </ScrollArea>
-            </DrawerMainContent>
-          </form>
-          <DrawerFooter>
-            <DrawerClose
-              className={cn(buttonVariants({ variant: "outline" }), "w-full", "!border-border py-3")}
+        <form onSubmit={onSubmit} className="pb-auto flex grow flex-col">
+          <DrawerHeader>
+            <Flex gap="1rem" align="center" justify="between">
+              <DrawerTitle>Send Email</DrawerTitle>
+              <button className="rounded-full bg-primary p-1" type="submit">
+                <ArrowUpIcon color="hsl(var(--background))" size={26} />
+              </button>
+            </Flex>
+            <DrawerDescription>
+              Sending an email cant be undone
+            </DrawerDescription>
+          </DrawerHeader>
+          <div className="border-t border-border">
+            <Flex
+              className="w-full border-b border-border px-6 py-3"
+              gap="1rem"
+              align="center"
             >
-              Cancel
-            </DrawerClose>
-          </DrawerFooter>
+              <span className="text-muted-foreground">To:</span>
 
+              <input
+                {...register("to")}
+                className="h-full w-full bg-transparent outline-none"
+              />
+            </Flex>
+          </div>
+          <DrawerMainContent className="flex grow flex-col gap-4">
+            <input
+              type="text"
+              className="w-full bg-transparent text-2xl outline-none"
+              placeholder="Subject"
+              {...register("subject")}
+            />
+            <ScrollArea className="h-[calc(100vh-(8px+16px)-92px-50px-32px-70px-3rem-24px)]">
+              <Tiptap
+                placeholder="Compose your email..."
+                initialContent="<p></p>"
+                className="h-full"
+                onUpdate={({ text, html }) => setDefaultContent({ text, html })}
+              />
+            </ScrollArea>
+          </DrawerMainContent>
+        </form>
+        <DrawerFooter>
+          <DrawerClose
+            className={cn(buttonVariants({ variant: "outline" }), "w-full", "!border-border py-3")}
+          >
+            Cancel
+          </DrawerClose>
+        </DrawerFooter>
       </DrawerContent>
-
     </Drawer>
   );
 };

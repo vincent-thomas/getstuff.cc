@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import { z } from "zod";
 import { SelectedBar } from "../_components/selected-bar";
-import { ArrowLeftCircleIcon, CrossIcon, PlusIcon, ShieldCheckIcon } from "lucide-react";
+import { ArrowLeftCircleIcon, CrossIcon, MaximizeIcon, MinimizeIcon, PlusIcon, ShieldCheckIcon } from "lucide-react";
 import { useQueries } from "@tanstack/react-query";
 import { decryptAsymmetric, decryptSymmetric } from "@stuff/lib/crypto";
 import { useThreadQuery } from "@stuff/data-access/get-threads-query";
@@ -14,9 +14,10 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@stuff/ui/tooltip";
 import { Button } from "@stuff/ui/button";
 import { Loading } from "@stuff/icons/loading";
 import purify from "dompurify";
-import { threadOpen } from "../store/thread-open";
+import { shouldHideThread, threadOpen } from "../store/thread-open";
 import { useAtom } from "jotai";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { ResizableHandle, ResizablePanel } from "@stuff/ui/resizable";
 
 const paramsInterface = z.object({
   threadId: z.string(),
@@ -115,6 +116,7 @@ const MainPage = ({ threadId, folderId }: z.infer<typeof paramsInterface>) => {
     }
   }, [folderId, threadId, threadQuery.data?.thread.read]);
 
+
   return (
     <>
       <Flex gap="0.75rem" className="p-4" align="center" justify="between">
@@ -175,39 +177,44 @@ const MainPage = ({ threadId, folderId }: z.infer<typeof paramsInterface>) => {
 
 export function ThreadView({
   folderId,
-  threadId,
   determineWidth
 }: {
   folderId: string;
-  threadId: string;
   determineWidth?: (width: number) => void;
 }) {
-  const router = useRouter()
-  const [_, setThreadOpen] = useAtom(threadOpen);
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (ref.current?.clientWidth) {
       determineWidth?.(ref.current?.clientWidth)
     }
-  }, [ref.current?.clientWidth])
+  }, [ref.current?.clientWidth]);
 
+  const [threadId, setThreadOpen] = useAtom(threadOpen)
+  const query = useSearchParams();
+
+  useEffect(() => {
+    setThreadOpen(query.get("threadId") ?? null);
+  }, []);
+
+  if (threadId === null) {
+    return <></>
+  }
 
   return (
+    <div className="bg-background h-full border-l border-border min-w-[500px]">
       <div className="flex flex-col max-h-full" ref={ref}>
-        <Flex className="py-1 !h-[60px]" align="center">
+        <Flex className="py-1" align="center">
           <button
             className="rounded-full p-3 m-1 hover:bg-muted"
-            onClick={() =>{
-              setThreadOpen(null);
-              router.replace(`/mail/${folderId}`)
+            onClick={() => {
+              setThreadOpen(null)
+              window.history.replaceState({}, "", `/mail/${folderId}`)
             }}
           >
             <PlusIcon size={18} className="rotate-45" />
           </button>
-
           <div className="block h-[calc(50px/1.6)] border-r border-border mr-[0.25rem]"></div>
-
           <SelectedBar threadIds={[threadId]} folderId={folderId} />
           <div className="block h-[calc(50px/1.6)] border-r border-border ml-[0.25rem]"></div>
         </Flex>
@@ -216,5 +223,6 @@ export function ThreadView({
           <MainPage folderId={folderId} threadId={threadId} />
         </div>
       </div>
+    </div>
   );
 }

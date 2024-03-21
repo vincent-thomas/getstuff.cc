@@ -1,3 +1,5 @@
+"use client";
+
 import { useAtom } from "jotai";
 import { cn } from "packages/components/utils";
 import { messagesIdSelected } from "../store/messages-id-selected";
@@ -8,14 +10,12 @@ import { RefreshButton } from "../_components/refresh-button";
 import { SelectedBar } from "../_components/selected-bar";
 
 interface FolderHeader {
-  folderId: string;
   folder: {name: string; folderId:string;}
 }
 
-export const FolderHeader: FC<FolderHeader> = ({folderId, folder}) => {
 
-  const threadsQuery = api.mail.threads.getThreads.useQuery({ folderId });
-
+export const FolderHeader: FC<FolderHeader> = ({folder}) => {
+  const threadsQuery = api.mail.threads.getThreads.useQuery({ folderId: folder.folderId });
   const [selected, setSelected] = useAtom(messagesIdSelected);
 
   return (
@@ -44,9 +44,9 @@ export const FolderHeader: FC<FolderHeader> = ({folderId, folder}) => {
       <h1 className="pb-1 text-xl text-foreground">{folder.name}</h1>
       <div className="flex justify-end w-full h-full px-3">
         {selected.length === 0 ? (
-          <RefreshButton folderId={folderId} />
+          <RefreshButton folderId={folder.folderId} />
         ) : (
-          <SelectedBar threadIds={selected} folderId={folderId} />
+          <SelectedBar threadIds={selected} folderId={folder.folderId} />
         )}
       </div>
     </header>

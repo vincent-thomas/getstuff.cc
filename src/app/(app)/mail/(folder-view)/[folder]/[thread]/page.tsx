@@ -8,6 +8,6 @@ export default setupPage({
     thread: z.string()
   }),
   async Component({ params }) {
-    return <ThreadView folderId={params.folder} threadId={params.thread} />;
+    return <ThreadView folderId={params.folder} />;
   }
 });

@@ -46,7 +46,7 @@ export const prefetchThreadQuery = async ({messages, queryClient,dataKey}: {mess
           .string()
           .parse(message.messageEncryptionKey);
         const content = await fetch(message.contentUrl, {
-          cache: "force-cache"
+          cache: "force-cache",
         }).then(async v =>
           z.object({ html: z.string(), text: z.string() }).parse(await v.json())
         );

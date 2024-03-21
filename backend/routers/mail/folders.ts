@@ -19,7 +19,7 @@ export const foldersRouter = router({
       return !!userFolderExists;
     }),
 
-      getFolder: protectedProc
+  getFolder: protectedProc
     .input(z.object({ folderId: z.string() }))
     .query(async ({ input: { folderId }, ctx }) => {
 

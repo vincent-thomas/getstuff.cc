@@ -1,23 +1,27 @@
 import { api } from "@stuff/api-client/server";
-import { redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import { z } from "zod";
-import { PageClient } from "./page-client";
 import { setupPage } from "@stuff/lib/setupPage";
+import { Flex } from "@stuff/structure";
+import { FolderHeader } from "./views/header";
+import { MailTable } from "./views/mail-table";
+import { Suspense } from "react";
+import {
+  ResizablePanel,
+  ResizablePanelGroup,
+} from "@stuff/ui/resizable"
+import { ThreadView } from "./views/threads";
 
 export default setupPage({
   params: z.object({ folder: z.string() }),
-  async Component({ params }) {
-    const session = await api.user.session.query();
-    if (session === null) {
-      redirect("/auth/identify");
-    }
-
+  query: z.object({hide: z.string().optional()}),
+  async Component({ params,query }) {
     const folderResult = await api.mail.folders.getFolder.query({
       folderId: params.folder
     })
 
     if (folderResult === undefined) {
-      redirect("/mail/inbox");
+      notFound()
     }
 
     const folder = {
@@ -25,6 +29,20 @@ export default setupPage({
       folderId: params.folder
     }
 
-    return <PageClient folderId={params.folder} folder={folder} />;
+    const initialThreads = await api.mail.threads.getThreads.query({folderId: folder.folderId})
+
+    return (
+      <div className="flex h-full pb-space-md w-full overflow-x-auto">
+        <main className="bg-background rounded-lg border-border border flex w-full overflow-hidden">
+          <Flex col className="h-full grow">
+            <FolderHeader folder={folder} />
+            <Suspense>
+              <MailTable folderId={folder.folderId} initialThreadsData={initialThreads} />
+            </Suspense>
+          </Flex>
+          <ThreadView folderId={folder.folderId}/>
+        </main>
+      </div>
+    )
   }
 });
