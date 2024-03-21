@@ -3,8 +3,7 @@
 import { useEffect, useRef } from "react";
 import { z } from "zod";
 import { SelectedBar } from "../_components/selected-bar";
-import { ArrowLeftCircleIcon, Scroll, ShieldCheckIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { ArrowLeftCircleIcon, CrossIcon, PlusIcon, ShieldCheckIcon } from "lucide-react";
 import { useQueries } from "@tanstack/react-query";
 import { decryptAsymmetric, decryptSymmetric } from "@stuff/lib/crypto";
 import { useThreadQuery } from "@stuff/data-access/get-threads-query";
@@ -15,9 +14,9 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@stuff/ui/tooltip";
 import { Button } from "@stuff/ui/button";
 import { Loading } from "@stuff/icons/loading";
 import purify from "dompurify";
-import { ScrollArea } from "packages/components/lib/scroll-area";
 import { threadOpen } from "../store/thread-open";
 import { useAtom } from "jotai";
+import { useRouter } from "next/navigation";
 
 const paramsInterface = z.object({
   threadId: z.string(),
@@ -183,8 +182,8 @@ export function ThreadView({
   threadId: string;
   determineWidth?: (width: number) => void;
 }) {
-  const router = useRouter();
-  const [isThreadOpen, setThreadOpen] = useAtom(threadOpen);
+  const router = useRouter()
+  const [_, setThreadOpen] = useAtom(threadOpen);
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -196,26 +195,24 @@ export function ThreadView({
 
   return (
       <div className="flex flex-col max-h-full" ref={ref}>
-        <Flex className="p-1" align="center" gap="0.5rem">
+        <Flex className="py-1 !h-[60px]" align="center">
           <button
-            className="rounded-full p-[calc(0.5rem+2px)] hover:bg-muted"
+            className="rounded-full p-3 m-1 hover:bg-muted"
             onClick={() =>{
               setThreadOpen(null);
-              window.history.replaceState(null, '', `/mail/${folderId}`)
-              // router.replace()
-              // router.push(".")
+              router.replace(`/mail/${folderId}`)
             }}
           >
-            <ArrowLeftCircleIcon size={22} />
+            <PlusIcon size={18} className="rotate-45" />
           </button>
 
-          <div className="block h-[calc(50px/1.6)] border-r border-border"></div>
+          <div className="block h-[calc(50px/1.6)] border-r border-border mr-[0.25rem]"></div>
 
           <SelectedBar threadIds={[threadId]} folderId={folderId} />
-          <div className="block h-[calc(50px/1.6)] border-r border-border"></div>
+          <div className="block h-[calc(50px/1.6)] border-r border-border ml-[0.25rem]"></div>
         </Flex>
         <div className="mx-auto block h-[1px] w-full border-t border-border"></div>
-        <div className="overflow-y-auto w-full h-full">
+        <div className="overflow-y-auto w-full">
           <MainPage folderId={folderId} threadId={threadId} />
         </div>
       </div>

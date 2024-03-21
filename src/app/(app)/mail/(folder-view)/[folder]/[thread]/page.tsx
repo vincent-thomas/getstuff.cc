@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { Page } from "./page-client";
 import { setupPage } from "@stuff/lib/setupPage";
+import { ThreadView } from "../views/threads";
 
 export default setupPage({
   params: z.object({
@@ -8,6 +8,6 @@ export default setupPage({
     thread: z.string()
   }),
   async Component({ params }) {
-    return <Page folderId={params.folder} threadId={params.thread} />;
+    return <ThreadView folderId={params.folder} threadId={params.thread} />;
   }
 });

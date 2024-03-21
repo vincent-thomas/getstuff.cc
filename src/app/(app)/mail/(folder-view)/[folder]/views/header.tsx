@@ -7,8 +7,6 @@ import { Checked, UnChecked } from "packages/icons/lib/unchecked";
 import { RefreshButton } from "../_components/refresh-button";
 import { SelectedBar } from "../_components/selected-bar";
 
-const headerHeight = 18 + 0.25 * 4 * 2 * 16 + 10 // 10: padding;
-
 interface FolderHeader {
   folderId: string;
   folder: {name: string; folderId:string;}
@@ -22,11 +20,10 @@ export const FolderHeader: FC<FolderHeader> = ({folderId, folder}) => {
 
   return (
     <header
-      style={{ height: `${headerHeight}px` }}
-      className={cn("flex w-full items-center border-b border-border")}
+      className={cn("flex w-full items-center border-b border-border p-1")}
     >
       <button
-        className="m-1 rounded-full p-3 hover:bg-accent"
+        className="m-1 rounded-full p-3 hover:bg-muted"
         onClick={() => {
           setSelected([]);
           if (selected.length !== threadsQuery.data?.length) {
