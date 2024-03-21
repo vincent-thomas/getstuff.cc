@@ -1,5 +1,5 @@
 import { cn } from "packages/components/utils";
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 
 export const Section = ({
   children,

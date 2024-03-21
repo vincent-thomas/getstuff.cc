@@ -6,16 +6,11 @@ import { Flex } from "@stuff/structure";
 import { FolderHeader } from "./views/header";
 import { MailTable } from "./views/mail-table";
 import { Suspense } from "react";
-import {
-  ResizablePanel,
-  ResizablePanelGroup,
-} from "@stuff/ui/resizable"
 import { ThreadView } from "./views/threads";
 
 export default setupPage({
   params: z.object({ folder: z.string() }),
-  query: z.object({hide: z.string().optional()}),
-  async Component({ params,query }) {
+  async Component({ params }) {
     const folderResult = await api.mail.folders.getFolder.query({
       folderId: params.folder
     })

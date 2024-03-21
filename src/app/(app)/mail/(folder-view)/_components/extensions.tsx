@@ -7,7 +7,7 @@ import { H1, H2, P } from "@stuff/typography";
 import { Button } from "@stuff/ui/button";
 import { CheckIcon, PuzzleIcon } from "lucide-react"
 import { Dialog, DialogContent, DialogTrigger } from "packages/components/lib/dialog";
-import { Drawer, DrawerClose, DrawerContent, DrawerMainContent, DrawerTitle, DrawerTrigger } from "packages/components/lib/drawer";
+import { Drawer, DrawerClose, DrawerContent, DrawerMainContent, DrawerTrigger } from "packages/components/lib/drawer";
 
 
 const classNames="border border-border px-4 py-3 rounded-md flex flex-col hover:bg-muted w-full"

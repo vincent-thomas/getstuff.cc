@@ -10,7 +10,7 @@ const Page = () =>{
       <Flex col align="start">
         <H1 className="text-muted-foreground">Stuff Mail 404</H1>
         <H2>Page or resouce not found</H2>
-        <P>This page doesn't seem to exist, or maybe you don't have access to it?</P>
+        <P>This page doesn&apos;t seem to exist, or maybe you don&apos;t have access to it?</P>
         <Link href="/mail/inbox" className={cn("mt-4",buttonVariants({variant: "outline", size: "lg"}))}>Go to inbox</Link>
       </Flex>
       </div>

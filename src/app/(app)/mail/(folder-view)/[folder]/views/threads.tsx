@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import { z } from "zod";
 import { SelectedBar } from "../_components/selected-bar";
-import { ArrowLeftCircleIcon, CrossIcon, MaximizeIcon, MinimizeIcon, PlusIcon, ShieldCheckIcon } from "lucide-react";
+import { PlusIcon, ShieldCheckIcon } from "lucide-react";
 import { useQueries } from "@tanstack/react-query";
 import { decryptAsymmetric, decryptSymmetric } from "@stuff/lib/crypto";
 import { useThreadQuery } from "@stuff/data-access/get-threads-query";
@@ -14,10 +14,9 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@stuff/ui/tooltip";
 import { Button } from "@stuff/ui/button";
 import { Loading } from "@stuff/icons/loading";
 import purify from "dompurify";
-import { shouldHideThread, threadOpen } from "../store/thread-open";
+import { threadOpen } from "../store/thread-open";
 import { useAtom } from "jotai";
-import { useRouter, useSearchParams } from "next/navigation";
-import { ResizableHandle, ResizablePanel } from "@stuff/ui/resizable";
+import { useSearchParams } from "next/navigation";
 
 const paramsInterface = z.object({
   threadId: z.string(),

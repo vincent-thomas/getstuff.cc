@@ -34,7 +34,7 @@ const reducer = (previousState: State): State => {
 }
 
 export const Form = () => {
-  const [state, dispatch] = useReducer(reducer, "INPUT_CREDENTIALS"); 
+  const [state] = useReducer(reducer, "INPUT_CREDENTIALS"); 
   const initAccountSessionMutation = api.accounts.initAccountSession.useMutation();
   const requestSessionMutation = api.accounts.requestSession.useMutation();
   const router = useRouter();

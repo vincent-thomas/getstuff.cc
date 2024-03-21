@@ -74,11 +74,11 @@ export const Form = () => {
     }
     }>();
 
-  const createAccountMutation = api.accounts.createAccount.useMutation();
+  const _createAccountMutation = api.accounts.createAccount.useMutation();
 
   const [isClicked, setClicked] = useState(false);
 
-  const qrCodeRef = useRef<HTMLCanvasElement>(null);
+  const _qrCodeRef = useRef<HTMLCanvasElement>(null);
 
   const onSubmit = handleSubmit(async data => {
     if (!isClicked) {

@@ -3,8 +3,7 @@
 import { useEffect, useRef } from "react";
 import { z } from "zod";
 import { SelectedBar } from "../_components/selected-bar";
-import { ArrowLeftCircleIcon, Scroll, ShieldCheckIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { ArrowLeftCircleIcon, ShieldCheckIcon } from "lucide-react";
 import { useQueries } from "@tanstack/react-query";
 import { decryptAsymmetric, decryptSymmetric } from "@stuff/lib/crypto";
 import { useThreadQuery } from "@stuff/data-access/get-threads-query";
@@ -15,7 +14,6 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@stuff/ui/tooltip";
 import { Button } from "@stuff/ui/button";
 import { Loading } from "@stuff/icons/loading";
 import purify from "dompurify";
-import { ScrollArea } from "packages/components/lib/scroll-area";
 import { threadOpen } from "../store/thread-open";
 import { useAtom } from "jotai";
 
@@ -183,8 +181,7 @@ export function ThreadView({
   threadId: string;
   determineWidth?: (width: number) => void;
 }) {
-  const router = useRouter();
-  const [isThreadOpen, setThreadOpen] = useAtom(threadOpen);
+  const [_, setThreadOpen] = useAtom(threadOpen);
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

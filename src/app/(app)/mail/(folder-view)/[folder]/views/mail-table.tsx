@@ -1,13 +1,11 @@
 "use client";
 
-import { api as apiServer } from "@stuff/api-client/server";
-import {  useEffect, type FC } from "react";
+import type { FC } from "react";
 
 import { MailRow } from "./mail-row";
 import { Flex } from "@stuff/structure";
 import { H2, P } from "@stuff/typography";
 import { api } from "@stuff/api-client/react";
-import { useSearchParams } from "next/navigation";
 
 interface FolderHeader {
   folderId: string;

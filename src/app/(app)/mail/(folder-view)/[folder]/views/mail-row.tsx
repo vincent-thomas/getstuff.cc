@@ -6,7 +6,6 @@ import { messagesIdSelected } from "../store/messages-id-selected";
 import { useAtom } from "jotai";
 import { Checked, UnChecked } from "packages/icons/lib/unchecked";
 import { formatDistanceToNow } from "date-fns";
-import { useRouter } from "next/navigation";
 import { prefetchThreadQuery } from "@stuff/data-access/prefetch-thread-query";
 import { useDataKey } from "@stuff/lib/useUserPrivateKey";
 import { useQueryClient } from "@tanstack/react-query";
@@ -26,8 +25,7 @@ export const MailRow = ({
 }) => {
   const [selected, setSelected] = useAtom(messagesIdSelected);
   const utils = api.useUtils();
-  const router = useRouter();
-  const [threadId, setThreadId] = useAtom(threadOpen)
+  const [_, setThreadId] = useAtom(threadOpen)
   const dataKey = useDataKey();
   const qC = useQueryClient();
 

@@ -3,11 +3,13 @@
 import { useState } from "react";
 import { Refresh } from "../icons/refresh";
 import { Loading } from "packages/icons";
-import { useRouter } from "next/navigation";
+import { api } from "@stuff/api-client/react";
 
 export const RefreshButton = ({ folderId }: { folderId: string }) => {
   const [isFetching, setFetching] = useState(false);
-  const router = useRouter();
+  const { refetch } = api.mail.threads.getThreads.useQuery({
+    folderId
+  });
 
   return (
     <div className="flex items-center gap-2">
@@ -16,10 +18,9 @@ export const RefreshButton = ({ folderId }: { folderId: string }) => {
         disabled={isFetching}
         onClick={async () => {
           setFetching(true);
-          // revalidatePath(`/mail/${folderId}`);
-          router.refresh()
-          // // await refetch();
+          await refetch();
           setFetching(false);
+
         }}
       >
         {isFetching ? (
