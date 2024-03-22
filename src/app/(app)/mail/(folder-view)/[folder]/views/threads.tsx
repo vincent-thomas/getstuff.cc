@@ -176,19 +176,9 @@ const MainPage = ({ threadId, folderId }: z.infer<typeof paramsInterface>) => {
 
 export function ThreadView({
   folderId,
-  determineWidth
 }: {
   folderId: string;
-  determineWidth?: (width: number) => void;
 }) {
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (ref.current?.clientWidth) {
-      determineWidth?.(ref.current?.clientWidth)
-    }
-  }, [ref.current?.clientWidth]);
-
   const [threadId, setThreadOpen] = useAtom(threadOpen)
   const query = useSearchParams();
 
@@ -201,26 +191,24 @@ export function ThreadView({
   }
 
   return (
-    <div className="bg-background h-full border-l border-border min-w-[500px]">
-      <div className="flex flex-col max-h-full" ref={ref}>
-        <Flex className="py-1" align="center">
-          <button
-            className="rounded-full p-3 m-1 hover:bg-muted"
-            onClick={() => {
-              setThreadOpen(null)
-              window.history.replaceState({}, "", `/mail/${folderId}`)
-            }}
-          >
-            <PlusIcon size={18} className="rotate-45" />
-          </button>
-          <div className="block h-[calc(50px/1.6)] border-r border-border mr-[0.25rem]"></div>
-          <SelectedBar threadIds={[threadId]} folderId={folderId} />
-          <div className="block h-[calc(50px/1.6)] border-r border-border ml-[0.25rem]"></div>
-        </Flex>
-        <div className="mx-auto block h-[1px] w-full border-t border-border"></div>
-        <div className="overflow-y-auto w-full">
-          <MainPage folderId={folderId} threadId={threadId} />
-        </div>
+    <div className="bg-background border-l border-border md:min-w-[500px] w-full flex flex-col max-h-full">
+      <Flex className="py-1" align="center">
+        <button
+          className="rounded-full p-3 m-1 hover:bg-muted"
+          onClick={() => {
+            setThreadOpen(null)
+            window.history.replaceState({}, "", `/mail/${folderId}`)
+          }}
+        >
+          <PlusIcon size={18} className="rotate-45" />
+        </button>
+        <div className="block h-[calc(50px/1.6)] border-r border-border mr-[0.25rem]"></div>
+        <SelectedBar threadIds={[threadId]} folderId={folderId} />
+        <div className="block h-[calc(50px/1.6)] border-r border-border ml-[0.25rem]"></div>
+      </Flex>
+      <div className="mx-auto block h-[1px] w-full border-t border-border"></div>
+      <div className="overflow-y-auto w-full">
+        <MainPage folderId={folderId} threadId={threadId} />
       </div>
     </div>
   );

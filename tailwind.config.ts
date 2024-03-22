@@ -3,8 +3,11 @@ import tailwindAnimate from "tailwindcss-animate";
 
 export default {
   content: ["./src/**/*.tsx", "packages/**/*.tsx", "./src/**/*.ts"],
+  
   theme: {
+
     extend: {
+
       padding:{
         "space-md": "var(--space-md)",
         "space-sm": "var(--space-sm)",
@@ -15,6 +18,7 @@ export default {
         "space-sm": "var(--space-sm)",
         "space-lg": "var(--space-lg)"
       },
+      
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

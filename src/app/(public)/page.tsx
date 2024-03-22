@@ -7,7 +7,6 @@ import { z } from "zod";
 import { Section } from "./_components/section";
 import { Card } from "./_components/card";
 import { PageHeador } from "./_components/header";
-import { SharedLayout } from "./layout-client";
 import { cn } from "@stuff/components/utils"
 import { setupPage } from "@stuff/lib/setupPage";
 import { buttonVariants } from "@stuff/ui/button/variants";
@@ -27,7 +26,7 @@ export default setupPage({
     }
 
     return (
-      <SharedLayout>
+      <>
         <PageHeador
           title="Focus on what matters with Stuff"
           comment="Stuff mail for the productive"
@@ -37,6 +36,7 @@ export default setupPage({
             src={"/hero-image.svg"}
             className="mx-auto w-full max-w-[600px] px-4 md:px-10"
             alt="Hero image of a computer with a mail client open"
+            fetchPriority="high"
           />
         </Section>
         <div className="my-6 w-full border-b border-border"></div>
@@ -128,7 +128,7 @@ export default setupPage({
             </Card>
           </div>
         </Section>
-      </SharedLayout>
+      </>
     );
   }
 });

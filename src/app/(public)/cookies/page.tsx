@@ -1,4 +1,3 @@
-import { SharedLayout } from "../layout-client";
 import { PageHeador } from "../_components/header";
 import { Section } from "../_components/section";
 import Link from "next/link";
@@ -9,7 +8,7 @@ import { env } from "@/env";
 export default setupPage({
   Component() {
     return (
-      <SharedLayout>
+      <>
         <PageHeador
           title="Cookie policy for Stuff"
           comment={
@@ -120,7 +119,7 @@ export default setupPage({
             <li>Email: vincent@getstuff.cc</li>
           </ul>
         </Section>
-      </SharedLayout>
+      </>
     );
   }
 });

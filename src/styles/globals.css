@@ -2,10 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  overflow: auto;
-  scrollbar-color: hsl(var(--muted-foreground)) transparent;
+* {
   scrollbar-width: thin;
+  scrollbar-color: hsl(var(--muted-foreground)) transparent;
+}
+
+*[data-mobile] {
+  @apply md:hidden;
+}
+
+@media screen and (max-width: 767px) {
+  *[data-desktop] {
+    display: none;
+  }
 }
 
 :root {

@@ -1,13 +1,12 @@
 import { Section } from "../_components/section";
 import { PageHeador } from "../_components/header";
-import { SharedLayout } from "../layout-client";
 import { H2, P } from "@stuff/typography";
 import { setupPage } from "@stuff/lib/setupPage";
 
 export default setupPage({
   Component() {
     return (
-      <SharedLayout>
+      <>
         <PageHeador
           title="Stuff Privacy Policy"
           comment={
@@ -81,7 +80,7 @@ export default setupPage({
             agree to its Terms and Conditions.
           </P>
         </Section>
-      </SharedLayout>
+      </>
     );
   }
 });

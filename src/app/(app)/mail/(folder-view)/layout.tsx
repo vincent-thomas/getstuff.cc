@@ -10,11 +10,11 @@ const Layout = async (props: LayoutProps) => {
   }
 
   return (
-    <div className={`flex h-full overflow-hidden bg-accent`}>
-      <div className="p-space-md">
+    <div className={`flex h-full bg-accent flex-col-reverse md:flex-row`}>
+      <div className="p-space-md pr-0">
         <Sidebar />
       </div>
-      <div className="pt-space-md pr-space-md w-full">
+      <div className="md:p-space-md grow overflow-y-hidden">
         {props.children}
       </div>
     </div>

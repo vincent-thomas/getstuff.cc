@@ -2,14 +2,13 @@ import { Section } from "../_components/section";
 import { Card } from "../_components/card";
 import { PageHeador } from "../_components/header";
 import { CheckoutButton } from "./_components/button-checkout";
-import { SharedLayout } from "../layout-client";
 import { setupPage } from "@stuff/lib/setupPage";
 import { Flex } from "@stuff/structure";
 
 export default setupPage({
   Component() {
     return (
-      <SharedLayout>
+      <>
         <PageHeador
           title="Stuff Pricing"
           comment="Simple pricing for simple services."
@@ -70,7 +69,7 @@ export default setupPage({
             </Card>
           </div>
         </Section>
-      </SharedLayout>
+      </>
     );
   }
 });

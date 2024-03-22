@@ -13,7 +13,6 @@ interface FolderHeader {
   folder: {name: string; folderId:string;}
 }
 
-
 export const FolderHeader: FC<FolderHeader> = ({folder}) => {
   const threadsQuery = api.mail.threads.getThreads.useQuery({ folderId: folder.folderId });
   const [selected, setSelected] = useAtom(messagesIdSelected);

@@ -6,13 +6,6 @@
  */
 await import("./src/env.js");
 
-// import withSerwistInit from "@serwist/next";
-      
-// const withPwa = withSerwistInit({
-//     swSrc: "src/app/sw.ts",
-//     swDest: "public/sw.js",
-// });
-
 /** @type {import("next").NextConfig} */
 const config = {
   webpack: config => {

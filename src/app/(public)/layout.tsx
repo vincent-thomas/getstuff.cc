@@ -1,15 +1,16 @@
-import { ScrollArea } from "packages/components/lib/scroll-area";
 import { Navbar } from "./_components/navbar";
 import { Section } from "./_components/section";
 import { CookieTeller } from "./_components/cookie-teller";
 import type { LayoutProps } from "src/types/router";
 import { Button } from "@stuff/ui/button";
 
-export const SharedLayout = (props: LayoutProps) => (
-  <ScrollArea className="h-screen">
+const Layout = (props: LayoutProps) => (
+  <>
     <CookieTeller />
     <Navbar />
-    {props.children}
+    <main className="flex flex-col">
+      {props.children}
+    </main>
     <footer className="pb-6">
       <div className="my-6 w-full border-b border-border"></div>
       <Section className="flex flex-col items-start gap-4">
@@ -19,5 +20,7 @@ export const SharedLayout = (props: LayoutProps) => (
         <Button size="lg">Start trail</Button>
       </Section>
     </footer>
-  </ScrollArea>
+  </>
 )
+
+export default Layout;

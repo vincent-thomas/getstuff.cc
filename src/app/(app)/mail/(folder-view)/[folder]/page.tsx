@@ -2,11 +2,8 @@ import { api } from "@stuff/api-client/server";
 import { notFound } from "next/navigation";
 import { z } from "zod";
 import { setupPage } from "@stuff/lib/setupPage";
-import { Flex } from "@stuff/structure";
-import { FolderHeader } from "./views/header";
-import { MailTable } from "./views/mail-table";
-import { Suspense } from "react";
 import { ThreadView } from "./views/threads";
+import { MainMailView } from "./views/main-mail-file";
 
 export default setupPage({
   params: z.object({ folder: z.string() }),
@@ -24,20 +21,13 @@ export default setupPage({
       folderId: params.folder
     }
 
-    const initialThreads = await api.mail.threads.getThreads.query({folderId: folder.folderId})
+    const initialThreads = await api.mail.threads.getThreads.query({folderId: folder.folderId});
 
     return (
-      <div className="flex h-full pb-space-md w-full overflow-x-auto">
-        <main className="bg-background rounded-lg border-border border flex w-full overflow-hidden">
-          <Flex col className="h-full grow">
-            <FolderHeader folder={folder} />
-            <Suspense>
-              <MailTable folderId={folder.folderId} initialThreadsData={initialThreads} />
-            </Suspense>
-          </Flex>
-          <ThreadView folderId={folder.folderId}/>
-        </main>
-      </div>
+      <main className="flex h-full w-full overflow-y-auto bg-background rounded-lg border-border border">
+        <MainMailView folder={folder} initialThreads={initialThreads} />
+        <ThreadView folderId={folder.folderId}/>
+      </main>
     )
   }
 });

@@ -7,7 +7,7 @@ import { Flex } from "@stuff/structure";
 import { H2, P } from "@stuff/typography";
 import { api } from "@stuff/api-client/react";
 
-interface FolderHeader {
+export interface FolderHeader {
   folderId: string;
   initialThreadsData: {
     threadId: string;
@@ -19,7 +19,6 @@ interface FolderHeader {
 
 export const MailTable: FC<FolderHeader> =  ({ folderId, initialThreadsData }) => {
   const threadsQuery = api.mail.threads.getThreads.useQuery({ folderId });
-
 
   if (threadsQuery.data?.length === 0) {
     return (
@@ -37,7 +36,7 @@ export const MailTable: FC<FolderHeader> =  ({ folderId, initialThreadsData }) =
   }
 
   return (
-    <div className="grow overflow-y-auto">
+    <div className="grow overflow-y-auto h-full">
       <div className="h-full">
         <div>
           {(threadsQuery.data ?? initialThreadsData).map(thread => (
