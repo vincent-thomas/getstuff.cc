@@ -1,4 +1,4 @@
-FROM node:18-alpine
+FROM node:20-alpine
 
 WORKDIR /app
 
@@ -9,9 +9,6 @@ RUN corepack enable
 RUN apk add --no-cache aws-cli
 
 RUN apk add git
-
-# RUN pnpm install -g aws-cdk
-
 
 COPY ./package.json ./
 

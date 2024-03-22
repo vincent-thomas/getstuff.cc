@@ -4,10 +4,9 @@ import { CustomersTable, ThingsTable, UsersTable } from "./constructs/table";
 import { Bucket, HttpMethods } from "aws-cdk-lib/aws-s3";
 import { getEmailContentBucket } from "@stuff/infra-constants";
 
-import { ARecord, CnameRecord, HostedZone, type IHostedZone } from "aws-cdk-lib/aws-route53";
+import { ARecord, CnameRecord, type IHostedZone } from "aws-cdk-lib/aws-route53";
 import { CfnAccessKey, Effect, Policy, PolicyDocument, PolicyStatement, User } from "aws-cdk-lib/aws-iam";
 import type { EmailIdentity } from "aws-cdk-lib/aws-ses";
-import { CfnParameter } from "aws-cdk-lib/aws-ssm";
 
 interface AccountStackProps extends StackProps {
   stage: string;

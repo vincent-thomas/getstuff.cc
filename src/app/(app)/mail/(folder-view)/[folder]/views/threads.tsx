@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { z } from "zod";
 import { SelectedBar } from "../_components/selected-bar";
 import { PlusIcon, ShieldCheckIcon } from "lucide-react";
@@ -158,7 +158,7 @@ const MainPage = ({ threadId, folderId }: z.infer<typeof paramsInterface>) => {
                 </p>
               </Flex>
               <div
-                className="min-h-[170px] p-4"
+                className="min-h-[170px] p-4 overflow-x-auto"
                 dangerouslySetInnerHTML={{
                   __html: purify().sanitize(mail.content.html)
                 }}
