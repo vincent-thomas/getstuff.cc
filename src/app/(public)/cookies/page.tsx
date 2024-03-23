@@ -4,13 +4,14 @@ import Link from "next/link";
 import { setupPage } from "@stuff/lib/setupPage";
 import { H2, P } from "@stuff/typography";
 import { env } from "@/env";
+import { StuffBranding } from "../_components/stuff";
 
 export default setupPage({
   Component() {
     return (
       <>
         <PageHeador
-          title="Cookie policy for Stuff"
+          title={<>Cookie policy for <StuffBranding /></>}
           comment={
             <>
               This is the Cookie Policy for Stuff, accessible from{" "}

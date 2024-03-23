@@ -22,7 +22,7 @@ export const Extensions = () => {
     <Dialog>
       <DialogTrigger asChild>
         <button className="flex items-center gap-2 rounded-lg px-3 py-3 shadow-sm hover:bg-muted">
-          <PuzzleIcon color="hsl(var(--muted-foreground))" size={24} />
+          <PuzzleIcon color="var(--muted-foreground)" size={24} />
           <span className="font-semibold text-lg">
             Extensions
           </span>
@@ -47,6 +47,13 @@ export const Extensions = () => {
         ) : (
           <EnabledMailRelayButton />
         )}
+         <div className={cn(classNames)}>
+            <H2>Folder rules</H2>
+            <P>Redirect email elsewhere than inbox based on rules.</P>
+            <Flex justify="end">
+              <Button>Enable</Button>
+            </Flex>
+          </div>
       </DialogContent>
     </Dialog>
   )

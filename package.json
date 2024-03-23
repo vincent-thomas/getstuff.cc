@@ -99,6 +99,8 @@
     "@types/react-dom": "^18.2.19",
     "@typescript-eslint/eslint-plugin": "^7.0.2",
     "@typescript-eslint/parser": "^7.0.2",
+    "@vanilla-extract/css": "^1.14.1",
+    "@vanilla-extract/next-plugin": "^2.3.7",
     "aws-cdk": "^2.132.0",
     "base64-loader": "^1.0.0",
     "constructs": "^10.3.0",

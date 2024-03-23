@@ -13,9 +13,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <JotaiProvider>
       <ToastProvider>
         <ToolTipProvider>
-            <div vaul-drawer-wrapper="" className="h-screen">
-              {children}
-            </div>
+            {children}
         </ToolTipProvider>
       </ToastProvider>
     </JotaiProvider>

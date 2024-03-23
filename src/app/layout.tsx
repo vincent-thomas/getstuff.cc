@@ -1,6 +1,7 @@
+import "src/styles/themes.css";
 import "../styles/globals.css";
 
-import { Poppins } from "next/font/google";
+import { Inter } from "next/font/google";
 
 import type { ReactNode } from "react";
 import { cn } from "packages/components/utils";
@@ -8,9 +9,10 @@ import { TRPCReactProvider } from "@stuff/api-client/react";
 import type { Metadata, Viewport } from "next";
 import { ThemeProvider } from "src/providers/theme";
 
-const poppins = Poppins({
+const inter = Inter({
+  axes: ["slnt"],
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"]
+  preload: false
 });
 
 const APP_NAME = "Stuff Mail"
@@ -46,24 +48,19 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" dir="ltr">
+    <html lang="en" dir="ltr" suppressHydrationWarning>
       <head />
-      <body>
+      <body className={cn(
+        inter.className,
+        "min-h-screen antialiased bg-background"
+      )}>
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
+          defaultTheme="dark"
           enableSystem
-          disableTransitionOnChange
         >
           <TRPCReactProvider>
-          <div
-            className={cn(
-              poppins,
-              "min-h-screen bg-background font-sans antialiased"
-            )}
-          >
-              {children}
-          </div>
+            {children}
           </TRPCReactProvider>
         </ThemeProvider>
       </body>

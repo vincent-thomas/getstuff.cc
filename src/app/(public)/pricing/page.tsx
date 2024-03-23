@@ -4,18 +4,19 @@ import { PageHeador } from "../_components/header";
 import { CheckoutButton } from "./_components/button-checkout";
 import { setupPage } from "@stuff/lib/setupPage";
 import { Flex } from "@stuff/structure";
+import { StuffBranding } from "../_components/stuff";
 
 export default setupPage({
   Component() {
     return (
       <>
         <PageHeador
-          title="Stuff Pricing"
+          title={<><StuffBranding plus /> Pricing</>}
           comment="Simple pricing for simple services."
         />
         <Section>
           <div className="grid w-full grid-rows-2 md:grid-rows-1 md:grid-cols-2 gap-4">
-            <Card className="flex flex-col gap-2" noPadding>
+            <Card className="flex flex-col" noPadding>
               <div className="p-4">
                 <Flex align="center" justify="between">
                   <h2 className="text-3xl font-bold">Stuff free</h2>
@@ -27,9 +28,9 @@ export default setupPage({
                   Average consumers
                 </p>
               </div>
-              <div className="border-gray w-full border-t" />
+              <div className="border-border w-full border-t" />
 
-              <div className="p-4">
+              <div className="p-4 bg-background2">
                 <p className="text-lg font-semibold">
                   <em>Features included:</em>
                 </p>
@@ -41,7 +42,7 @@ export default setupPage({
                 </ul>
               </div>
             </Card>
-            <Card className="flex flex-col gap-2 rounded-md" noPadding>
+            <Card className="flex flex-col rounded-md" noPadding>
               <div className="p-4">
                 <Flex align="center" justify="between">
                   <h2 className="text-3xl font-bold">Stuff+</h2>
@@ -53,8 +54,8 @@ export default setupPage({
                   Average consumers
                 </p>
               </div>
-              <div className="border-gray w-full border-t" />
-              <div className="flex grow flex-col p-4">
+              <div className="border-border w-full border-t" />
+              <div className="flex grow flex-col p-4 bg-background2">
                 <p className="text-lg font-semibold">
                   <em>Features included:</em>
                 </p>

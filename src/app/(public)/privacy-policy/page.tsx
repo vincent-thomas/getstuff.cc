@@ -2,13 +2,14 @@ import { Section } from "../_components/section";
 import { PageHeador } from "../_components/header";
 import { H2, P } from "@stuff/typography";
 import { setupPage } from "@stuff/lib/setupPage";
+import { StuffBranding } from "../_components/stuff";
 
 export default setupPage({
   Component() {
     return (
       <>
         <PageHeador
-          title="Stuff Privacy Policy"
+          title={<><StuffBranding /> Privacy Policy</>}
           comment={
             <>
               For questions and concerns, please contact us at{" "}

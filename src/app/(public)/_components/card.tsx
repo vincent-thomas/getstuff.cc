@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 export const Card = ({
   children,
   className,
-  noPadding
+  noPadding,
 }: {
   children: ReactNode;
   noPadding?: boolean;
@@ -13,7 +13,7 @@ export const Card = ({
   return (
     <div
       className={cn(
-        "flex flex-col rounded-md border border-border bg-muted",
+        "flex flex-col rounded-md border border-border",
         className,
         !noPadding && "p-4"
       )}

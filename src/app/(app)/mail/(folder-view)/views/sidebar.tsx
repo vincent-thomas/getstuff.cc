@@ -26,24 +26,24 @@ export const Sidebar = async ({className}: {className?: string}) => {
       <div className="grid grid-cols-3" data-mobile>
         <Flex justify="center">
           <SidebarLink href="/mail/inbox">
-            <Inbox size={24} color="hsl(var(--muted-foreground))" />
+            <Inbox size={24} color="var(--muted-foreground)" />
             <span>Inbox</span>
           </SidebarLink>
         </Flex>
         <Flex justify="center">
           <SidebarLink href="/mail/archive">
-            <ArchiveIcon size={24} color="hsl(var(--muted-foreground))" />
+            <ArchiveIcon size={24} color="var(--muted-foreground)" />
             <span>Archive</span>
           </SidebarLink>
         </Flex>
         <Flex justify="center">
           <SidebarLink href="/mail/sent">
-            <SendIcon size={24} color="hsl(var(--muted-foreground))" />
+            <SendIcon size={24} color="var(--muted-foreground)" />
             <span>Sent</span>
           </SidebarLink>
         </Flex>
       </div>
-      <aside data-desktop className={cn("flex h-full w-[240px] flex-col bg-accent ", className)}>
+      <aside data-desktop className={cn("flex h-full w-[240px] flex-col", className)}>
         <Flex col gap="1.5rem">
           <Flex col gap="0.25rem">
             <div className="pb-3 w-full flex flex-col">
@@ -57,15 +57,15 @@ export const Sidebar = async ({className}: {className?: string}) => {
               <h1 className="text-muted-foreground font-semibold">INBOXES</h1>
             </div>
             <SidebarLink href="/mail/inbox">
-              <Inbox size={24} color="hsl(var(--muted-foreground))" />
+              <Inbox size={24} color="var(--muted-foreground)" />
               <span>Inbox</span>
             </SidebarLink>
             <SidebarLink href="/mail/archive">
-              <ArchiveIcon size={24} color="hsl(var(--muted-foreground))" />
+              <ArchiveIcon size={24} color="var(--muted-foreground)" />
               <span>Archive</span>
             </SidebarLink>
             <SidebarLink href="/mail/sent">
-              <SendIcon size={24} color="hsl(var(--muted-foreground))" />
+              <SendIcon size={24} color="var(--muted-foreground)" />
               <span>Sent</span>
             </SidebarLink>
           </Flex>

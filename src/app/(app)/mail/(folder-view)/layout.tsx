@@ -10,7 +10,7 @@ const Layout = async (props: LayoutProps) => {
   }
 
   return (
-    <div className={`flex h-full bg-accent flex-col-reverse md:flex-row`}>
+    <div className={`flex h-full bg-background2 flex-col-reverse md:flex-row`}>
       <div className="p-space-md pr-0">
         <Sidebar />
       </div>

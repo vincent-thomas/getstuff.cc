@@ -84,14 +84,14 @@ export const ComposeButton = () => {
       open={open}
     >
       <DrawerTrigger
-        className="flex items-center gap-2 rounded-lg px-3 py-3 outline-border outline outline-[3px] outline-offset-[-3px] shadow-sm hover:bg-muted"
+        className="flex items-center gap-2 rounded-lg px-3 py-3 outline-border outline outline-[2px] outline-offset-[-2px] shadow-sm hover:bg-accent"
         onClick={() => setOpen(true)}
       >
-        <PlusIcon color="hsl(var(--muted-foreground))" size={24} />
+        <PlusIcon color="var(--muted-foreground)" size={24} />
         <span className="font-semibold text-lg">Compose</span>
       </DrawerTrigger>
 
-      <DrawerContent className="mx-auto flex w-screen max-w-[800px] flex-col overflow-visible border border-gray-500 bg-accent">
+      <DrawerContent className="mx-auto flex w-screen max-w-[800px] flex-col overflow-visible border border-gray-500 bg-background2">
         <form onSubmit={onSubmit} className="pb-auto flex grow flex-col">
           <DrawerHeader>
             <Flex gap="1rem" align="center" justify="between">

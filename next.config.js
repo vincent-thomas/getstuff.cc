@@ -6,6 +6,10 @@
  */
 await import("./src/env.js");
 
+import {createVanillaExtractPlugin} from "@vanilla-extract/next-plugin";
+
+const withVE = createVanillaExtractPlugin();
+
 /** @type {import("next").NextConfig} */
 const config = {
   webpack: config => {
@@ -33,4 +37,4 @@ const config = {
   }
 };
 
-export default config;
+export default withVE(config);
