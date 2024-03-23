@@ -68,6 +68,9 @@
       "@stuff/client/interfaces": [
         "./src/interfaces/index.ts"
       ],
+      "contentlayer/generated": [
+        "./.contentlayer/generated"
+      ]
     }
   },
   "include": [
@@ -77,7 +80,8 @@
     "**/*.tsx",
     "**/*.cjs",
     "**/*.js",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
+    ".contentlayer/generated"
   ],
   "exclude": [
     "**/dist",

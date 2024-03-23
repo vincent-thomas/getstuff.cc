@@ -13,6 +13,9 @@ export const Navbar = () => (
         <Link href="/pricing" className={buttonVariants({ variant: "ghost", size: "sm" })}>
           Pricing
         </Link>
+        <Link href="/blog" className={buttonVariants({ variant: "ghost", size: "sm" })}>
+          Blog
+        </Link>
       </Flex>
       <nav>
         <Flex gap="1rem" align="center" justify="between">

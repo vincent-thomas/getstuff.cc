@@ -7,11 +7,13 @@
 await import("./src/env.js");
 
 import {createVanillaExtractPlugin} from "@vanilla-extract/next-plugin";
+import { withContentlayer } from "next-contentlayer"
 
 const withVE = createVanillaExtractPlugin();
 
 /** @type {import("next").NextConfig} */
 const config = {
+  reactStrictMode: true,
   webpack: config => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
     config?.module?.rules?.push({
@@ -37,4 +39,4 @@ const config = {
   }
 };
 
-export default withVE(config);
+export default withContentlayer(withVE(config));

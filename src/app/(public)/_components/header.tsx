@@ -26,15 +26,17 @@ export const PageHeador = ({
   title,
   comment,
   under,
-  containerClassName
+  containerClassName,
+  maxWOverride
 }: {
   title: string | JSX.Element;
   comment: string | JSX.Element;
   containerClassName?:string;
+  maxWOverride?: string;
   under?: JSX.Element;
 }) => {
   return (
-    <Section>
+    <Section style={maxWOverride ? {maxWidth: maxWOverride} : {}}>
       <Flex col className={cn("pt-28", containerClassName)}>
         <H1 className="!font-[800] w-full max-w-[400px] lg:max-w-[610px] lg:text-6xl">{title}</H1>
         <P className="text-lg font-semibold">{comment}</P>
