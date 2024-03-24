@@ -67,12 +67,7 @@ const MainPage = ({ threadId, folderId }: z.infer<typeof paramsInterface>) => {
   const threadReadMutation = useThreadsReadMutation();
   const masterKey = useDataKey();
 
-  useEffect(() => {
-    navigator.registerProtocolHandler(
-      "mailto",
-      "http://localhost:3000/mail/compose?to=%s"
-    );
-  }, []);
+
 
   const messages = useQueries({
     queries: (threadQuery.data?.messages ?? []).map(message => ({

@@ -17,7 +17,6 @@ export const Extensions = () => {
   const enabled = api.extensions.mailRelay.enabled.useQuery();
   const enableMutation = api.extensions.mailRelay.enable.useMutation();
 
-
   return (
     <Dialog>
       <DialogTrigger asChild>
