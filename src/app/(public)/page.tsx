@@ -68,7 +68,7 @@ export default setupPage({
                 <P className="max-w-[30ch] text-wrap">
                   In Stuff mail you can have conversations with other email users.
                 </P>
-                <img src="/conversation.png" alt="" className="rounded-xl shadow-md mt-4 md:skew-y-[-12deg] md:rotate-[8deg] md:w-[80%] w-full ml-auto mr-2 aspect-square border-border border" />
+                <img src="/conversationv2.png" alt="" className="rounded-xl shadow-md mt-4 md:skew-y-[-12deg] md:rotate-[8deg] md:w-[80%] w-full ml-auto mr-2 aspect-square border-border border" />
               </Card>
               <Card className={cn(folders,"shadow bg-background border-none p-8")} noPadding>
                 <P>Extension:</P>
