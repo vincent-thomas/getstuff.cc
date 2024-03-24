@@ -44,7 +44,7 @@ export async function generateMetadata({
   return {
     title: post.title,
     description: post.description,
-    keywords: post.tags as string[],
+    keywords: post.tags,
     authors: [{name: "Vincent Thomas"}],
     twitter: {
       card: "summary",
