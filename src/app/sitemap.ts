@@ -18,7 +18,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "daily"
     },
     {
-      url: 'https://acme.com/blog',
+      url: `${env.APP_URL}/blog`,
       lastModified: new Date(),
       changeFrequency: "weekly"
     },
