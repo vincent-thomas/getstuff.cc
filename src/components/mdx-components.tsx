@@ -1,13 +1,12 @@
 import {useMDXComponent} from "next-contentlayer/hooks"
 import { H2, H3, P } from "./typography";
+import { z } from "zod";
 
 const components = {
   h2: ({...props}) => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const id = props.children.toString().toLowerCase().replace(/\s/g, "-")
+    const id = z.string().parse(props.children).toString().toLowerCase().replace(/\s/g, "-");
     return (
       <a href={`#${id}`} className="mt-8 block">
-        {/* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment */}
         <H2 id={id} className="pb-2 scroll-m-14 border-b border-border text-3xl font-semibold tracking-tight transition-colors first:mt-0" {...props} />
       </a>
     )
