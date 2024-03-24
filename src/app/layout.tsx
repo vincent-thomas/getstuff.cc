@@ -8,6 +8,7 @@ import { cn } from "packages/components/utils";
 import { TRPCReactProvider } from "@stuff/api-client/react";
 import type { Metadata, Viewport } from "next";
 import { ThemeProvider } from "src/providers/theme";
+import { env } from "@/env";
 
 const inter = Inter({
   axes: ["slnt"],
@@ -36,9 +37,14 @@ export const metadata: Metadata = {
     siteName: APP_NAME,
     title: APP_TITLE,
     description: APP_DESCRIPTION,
-  
   },
-  
+  twitter: {
+    card: "summary",
+    creator: "Vincent Thomas",
+    site: env.APP_URL,
+    title: APP_TITLE,
+    description: APP_DESCRIPTION,
+  },
   icons: [{ rel: "icon", url: "/favicon.ico" }]
 };
 

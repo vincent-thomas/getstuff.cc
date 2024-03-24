@@ -19,6 +19,7 @@ interface PostPageProps {
   }
 }
 
+
 async function getPostFromParams(slug: string) {
   const post = allPosts.find((post) => post.id === slug)
 
@@ -40,37 +41,24 @@ export async function generateMetadata({
 
   const url = env.APP_URL
 
-  const ogUrl = new URL(`${url}/api/og`)
-  ogUrl.searchParams.set("heading", post.title)
-  ogUrl.searchParams.set("type", "Blog Post")
-  ogUrl.searchParams.set("mode", "dark")
-
   return {
     title: post.title,
-    // description: post.description,
-    // authors: post.authors.map((author) => ({
-    //   name: author,
-    // })),
-    // openGraph: {
-    //   title: post.title,
-    //   description: post.description,
-    //   type: "article",
-    //   url: absoluteUrl(post.slug),
-    //   images: [
-    //     {
-    //       url: ogUrl.toString(),
-    //       width: 1200,
-    //       height: 630,
-    //       alt: post.title,
-    //     },
-    //   ],
-    // },
-    // twitter: {
-    //   card: "summary_large_image",
-    //   title: post.title,
-    //   description: post.description,
-    //   images: [ogUrl.toString()],
-    // },
+    description: post.description,
+    keywords: post.tags as string[],
+    authors: [{name: "Vincent Thomas"}],
+    twitter: {
+      card: "summary",
+      title: post.title,
+      description: post.description,
+    },
+    openGraph: {
+      title: post.title,
+      description: post.description,
+      type: "article",
+      publishedTime: post.published ? post.date : undefined,
+      authors: ["Vincent Thomas"],
+      url: `${url}/blog/${post.id}`,
+    }
   }
 }
 
@@ -78,7 +66,6 @@ export async function generateStaticParams(): Promise<
   PostPageProps["params"][]
 > {
   return allPosts.map((post) => ({
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     slug: post.id.split("/"),
   }))
 }

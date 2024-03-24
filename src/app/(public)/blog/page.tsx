@@ -4,10 +4,12 @@ import { compareDesc, formatDate } from "date-fns"
 import { H2 } from "@stuff/typography"
 import { Section } from "../_components/section"
 import { PageHeador } from "../_components/header"
+import type { Metadata } from "next"
 
 
-export const metadata = {
-  title: "Blog",
+export const metadata: Metadata = {
+  title: "Stuff Blog",
+  description: "A blog by Stuff developers spreading messages of how security and privacy is important on the internet.",
 }
 
 export default async function BlogPage() {
