@@ -1,18 +1,5 @@
 /** @type {import('ts-jest').JestConfigWithTsJest} */
-export default {
-  // transform: {
-  //   // '^.+\\.[tj]sx?$' to process js/ts with `ts-jest`
-  //   // '^.+\\.m?[tj]sx?$' to process js/ts/mjs/mts with `ts-jest`
-  //   '^.+\\.js$': [
-  //     'ts-jest',
-  //     {
-  //       // ts-jest configuration goes here
-  //       useESM: true,
-  //     isolatedModules: true,
-
-  //     },
-  //   ],
-  // },
+const config = {
   preset: "ts-jest/presets/default-esm",
   testEnvironment: "node",
   extensionsToTreatAsEsm: [".ts"],
@@ -21,3 +8,4 @@ export default {
   },
   
 };
+export default config;

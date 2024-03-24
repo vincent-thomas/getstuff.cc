@@ -22,6 +22,21 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: new Date(),
       changeFrequency: "weekly"
     },
+       {
+      url: `${env.APP_URL}/pricing`,
+      lastModified: new Date(),
+      changeFrequency: "weekly"
+    },
+    {
+      url: `${env.APP_URL}/privacy-policy`,
+      lastModified: new Date(),
+      changeFrequency: "weekly"
+    },
+    {
+      url: `${env.APP_URL}/cookies`,
+      lastModified: new Date(),
+      changeFrequency: "weekly"
+    },
     ...posts.map(post => ({
       url: `${env.APP_URL}/blog/${post.id}`,
       changeFrequency: "weekly" as const,

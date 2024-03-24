@@ -3,22 +3,18 @@ import tailwindAnimate from "tailwindcss-animate";
 
 export default {
   content: ["./src/**/*.tsx", "packages/**/*.tsx", "./src/**/*.ts"],
-  
   theme: {
-
     extend: {
-
-      padding:{
+      padding: {
         "space-md": "var(--space-md)",
         "space-sm": "var(--space-sm)",
         "space-lg": "var(--space-lg)"
       },
-      gap:{
+      gap: {
         "space-md": "var(--space-md)",
         "space-sm": "var(--space-sm)",
         "space-lg": "var(--space-lg)"
       },
-      
       colors: {
         border: "var(--border)",
         input: "hsl(var(--input))",
@@ -39,11 +35,11 @@ export default {
           foreground: "hsl(var(--destructive-foreground) / <alpha-value>)",
         },
         muted: {
-          DEFAULT: "hsl(var(--muted))",
+          DEFAULT: "var(--muted)",
           foreground: "var(--muted-foreground)",
         },
         accent: {
-          DEFAULT: "hsl(var(--accent))",
+          DEFAULT: "var(--accent)",
           foreground: "hsl(var(--accent-foreground))",
         },
         popover: {

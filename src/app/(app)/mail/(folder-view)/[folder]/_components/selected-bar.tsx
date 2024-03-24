@@ -42,7 +42,7 @@ export const SelectedBar = ({
         }}>
           <PopoverTrigger asChild>
             <button className="rounded-full p-3 p-3 hover:bg-muted">
-              <FolderInput size={18} color="hsl(var(--foreground))" />
+              <FolderInput size={18} color="var(--foreground)" />
             </button>
           </PopoverTrigger>
           <PopoverContent className="p-2">
@@ -77,7 +77,7 @@ export const SelectedBar = ({
           });
         }}
       >
-        <MailOpen size={18} color="hsl(var(--foreground))" />
+        <MailOpen size={18} color="var(--foreground)" />
       </button>
 
     {folderId !== "archive" && (
@@ -96,7 +96,7 @@ export const SelectedBar = ({
             await utils.mail.threads.getThreads.invalidate({ folderId });
           }}
         >
-          <ArchiveIcon size={18} color="hsl(var(--foreground))" />
+          <ArchiveIcon size={18} color="var(--foreground)" />
         </button>
       )}
     </div>

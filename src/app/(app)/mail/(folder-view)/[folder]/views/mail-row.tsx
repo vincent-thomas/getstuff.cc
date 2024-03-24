@@ -34,8 +34,8 @@ export const MailRow = ({
       key={thread.threadId}
       className={cn(
         "flex border-b border-border",
-        thread.read ? "bg-accent" : "bg-background",
-        selected.includes(thread.threadId) && "bg-muted"
+        thread.read ? "bg-muted" : "bg-background",
+        selected.includes(thread.threadId) && "bg-accent"
       )}
     >
       <div className="p-1">
