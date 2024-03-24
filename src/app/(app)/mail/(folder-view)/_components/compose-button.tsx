@@ -37,7 +37,6 @@ const contentInterface = z.object({
 
 export const ComposeButton = () => {
   const [open, setOpen] = useState(false);
-
   const [defaultContent, setDefaultContent] = useState({ text: "", html: "" });
 
   const sendMailMutation = api.mail.sendMail.sendMail.useMutation();
@@ -84,10 +83,10 @@ export const ComposeButton = () => {
       open={open}
     >
       <DrawerTrigger
-        className="flex items-center gap-2 rounded-lg px-3 py-3 outline-border outline outline-[2px] outline-offset-[-2px] shadow-sm hover:bg-accent"
+        className="flex items-center gap-2 rounded-lg px-3 py-3 outline-border outline outline-[2px] outline-offset-[-2px] shadow-sm bg-hover"
         onClick={() => setOpen(true)}
       >
-        <PlusIcon color="var(--muted-foreground)" size={24} />
+        <PlusIcon color="var(--text)" size={24} />
         <span className="font-semibold text-lg">Compose</span>
       </DrawerTrigger>
 
@@ -97,7 +96,7 @@ export const ComposeButton = () => {
             <Flex gap="1rem" align="center" justify="between">
               <DrawerTitle>Send Email</DrawerTitle>
               <button className="rounded-full bg-primary p-1" type="submit">
-                <ArrowUpIcon color="hsl(var(--background))" size={26} />
+                <ArrowUpIcon color="var(--background)" size={26} />
               </button>
             </Flex>
             <DrawerDescription>

@@ -41,13 +41,19 @@ export async function generateMetadata({
 
   const url = env.APP_URL
 
+  const ogUrl = new URL(`${url}/api/og`)
+  ogUrl.searchParams.set("heading", post.title)
+  ogUrl.searchParams.set("type", "Blog Post")
+  ogUrl.searchParams.set("mode", "dark")
+
   return {
     title: post.title,
     description: post.description,
     keywords: post.tags,
     authors: [{name: "Vincent Thomas"}],
     twitter: {
-      card: "summary",
+      card: "summary_large_image",
+      images: [ogUrl],
       title: post.title,
       description: post.description,
     },
@@ -58,6 +64,14 @@ export async function generateMetadata({
       publishedTime: post.published ? post.date : undefined,
       authors: ["Vincent Thomas"],
       url: `${url}/blog/${post.id}`,
+      images: [
+        {
+          url: ogUrl.toString(),
+          width: 1200,
+          height: 630,
+          alt: post.title
+        }
+      ]
     }
   }
 }

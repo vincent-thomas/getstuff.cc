@@ -16,7 +16,7 @@ export const AccountViewer = async () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
-          <div className="hover:bg-muted p-3 rounded-md">
+          <div className="hover:bg-hover p-3 rounded-md hover:outline outline-2 outline-border">
             <div className="flex items-center gap-4 ">
               <UserAvatar />
               <div className="flex flex-col text-left">

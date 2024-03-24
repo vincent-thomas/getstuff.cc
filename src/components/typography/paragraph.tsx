@@ -2,5 +2,5 @@ import type { ReactNode } from "react";
 import { cn } from "../utils";
 
 export const P = ({ children,className }: { children?: ReactNode, className?:string }) => {
-  return <p className={cn("text-muted-foreground", className)}>{children}</p>;
+  return <p className={cn("text-text2", className)}>{children}</p>;
 };

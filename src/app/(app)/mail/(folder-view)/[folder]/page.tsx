@@ -1,7 +1,7 @@
 import { api } from "@stuff/api-client/server";
 import { notFound } from "next/navigation";
 import { z } from "zod";
-import { setupPage } from "@stuff/lib/setupPage";
+import { setupPage } from "@stuff/client/utils";
 import { ThreadView } from "./views/threads";
 import { MainMailView } from "./views/main-mail-file";
 

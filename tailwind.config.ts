@@ -21,7 +21,9 @@ export default {
         ring: "hsl(var(--ring))",
         background: "var(--background)",
         background2: "var(--background2)",
-        foreground: "var(--foreground)",
+        text: "var(--text)",
+        text2: "var(--text2)",
+        hover: "var(--hover)",
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
@@ -38,10 +40,13 @@ export default {
           DEFAULT: "var(--muted)",
           foreground: "var(--muted-foreground)",
         },
-        accent: {
-          DEFAULT: "var(--accent)",
-          foreground: "hsl(var(--accent-foreground))",
-        },
+        accent: "var(--accent)",
+        accent2: "var(--accent2)",
+        highlight: "var(--highlight)",
+        // accent: {
+        //   DEFAULT: "var(--accent)",
+        //   foreground: "hsl(var(--accent-foreground))",
+        // },
         popover: {
           DEFAULT: "hsl(var(--popover))",
           foreground: "hsl(var(--popover-foreground))",

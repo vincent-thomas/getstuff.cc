@@ -1,24 +1,43 @@
 import { cn } from "packages/components/utils";
-import type { ReactNode } from "react";
+import type { HTMLAttributes, ReactNode } from "react";
 
-export const Card = ({
-  children,
+interface CardProps extends HTMLAttributes<HTMLDivElement>{
+  p?: "sm" | "md" | "lg" | undefined;
+  children?: ReactNode;
+}
+
+function getPadding(p: CardProps["p"]) {
+  switch (p) {
+    case "sm":
+      return "0.5rem";
+    case "md":
+      return "1rem";
+    case "lg":
+      return "1.5rem";
+    case undefined:
+      return "none";
+  }
+}
+
+export function Card({
   className,
-  noPadding,
-}: {
-  children: ReactNode;
+  p,
+  ...props
+}: CardProps & {
   noPadding?: boolean;
   className?: string;
-}) => {
+})  {
+
   return (
     <div
       className={cn(
-        "flex flex-col rounded-md border border-border",
+        "rounded-md border border-border bg-[var(--card)]",
         className,
-        !noPadding && "p-4"
       )}
-    >
-      {children}
-    </div>
+      style={{
+        padding: getPadding(p)
+      }}
+      {...props}
+    />
   );
 };

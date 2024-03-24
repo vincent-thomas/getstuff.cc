@@ -11,6 +11,8 @@ import { H2 } from "@stuff/typography";
 import { Flex } from "@stuff/structure";
 import { useThreadsMoveMutation } from "@stuff/data-access/move-threads-mutation";
 import { useThreadsReadMutation } from "@stuff/data-access/read-threads-mutation";
+import { Button } from "@stuff/ui/button";
+import { threadOpen } from "../store/thread-open";
 
 export const SelectedBar = ({
   folderId,
@@ -32,8 +34,9 @@ export const SelectedBar = ({
     return (folders.data ?? []).map(folder => ({name: folder.gsi2.split("|")[2], id: z.string().parse(folder.sk.split("|")[1])})).filter(folder => folder.id !== folderId)
   }, [folders.data,folderId]);
 
-  const [selected, setSelected] = useAtom(messagesIdSelected)
+  const [selected, setSelected] = useAtom(messagesIdSelected);
 
+  const [_, setThreadId] = useAtom(threadOpen)
   return (
     <div className="flex items-center gap-1">
         <Popover onOpenChange={(test) => {
@@ -41,16 +44,16 @@ export const SelectedBar = ({
           setSelected([])
         }}>
           <PopoverTrigger asChild>
-            <button className="rounded-full p-3 p-3 hover:bg-muted">
-              <FolderInput size={18} color="var(--foreground)" />
-            </button>
+            <Button variant="icon" size="icon">
+              <FolderInput size={18} color="var(--text)" />
+            </Button>
           </PopoverTrigger>
           <PopoverContent className="p-2">
             <H2>Move to</H2>
             <Flex col gap="5px">
 
             {CONSTANT_folders.map(folder => (
-              <button key={folder.id} className="hover:bg-muted p-2 rounded-md" onClick={async () => {
+              <button key={folder.id} className="hover:bg-hover p-2 rounded-md" onClick={async () => {
                 await moveThreads.mutateAsync({folderId: folderId, newFolderId: folder.id, threadIds: selected});
                 setSelected([])
               }}>{folder.name}</button>
@@ -63,26 +66,23 @@ export const SelectedBar = ({
               }}>{folder.name}</button>
             ))}
             </Flex>
-
           </PopoverContent>
         </Popover>
+        <Button variant="icon" size="icon" onClick={async () => {
+          setThreadId(null);
+          window.history.replaceState({}, "", `/mail/${folderId}`)
 
-      <button
-        className="rounded-full p-3 p-3 hover:bg-muted"
-        onClick={async () => {
           await setReadMutation.mutateAsync({
             folderId,
             value: false,
             threadIds
           });
-        }}
-      >
-        <MailOpen size={18} color="var(--foreground)" />
-      </button>
+        }}>
+          <MailOpen size={18} color="var(--text)" />
+        </Button>
 
-    {folderId !== "archive" && (
-      <button
-          className="rounded-full p-3 p-3 hover:bg-muted"
+      {folderId !== "archive" && (
+        <Button variant="icon" size="icon"
           onClick={async () => {
             const successed = await moveThreads.mutateAsync({
               folderId,
@@ -96,8 +96,8 @@ export const SelectedBar = ({
             await utils.mail.threads.getThreads.invalidate({ folderId });
           }}
         >
-          <ArchiveIcon size={18} color="var(--foreground)" />
-        </button>
+          <ArchiveIcon size={18} color="var(--text)" />
+        </Button>
       )}
     </div>
   );

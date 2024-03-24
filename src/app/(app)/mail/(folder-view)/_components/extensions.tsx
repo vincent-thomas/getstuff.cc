@@ -10,7 +10,7 @@ import { Dialog, DialogContent, DialogTrigger } from "packages/components/lib/di
 import { Drawer, DrawerClose, DrawerContent, DrawerMainContent, DrawerTrigger } from "packages/components/lib/drawer";
 
 
-const classNames="border border-border px-4 py-3 rounded-md flex flex-col hover:bg-muted w-full"
+const classNames= "border border-border px-4 py-3 rounded-md flex flex-col hover:bg-hover w-full"
 
 export const Extensions = () => {
 
@@ -21,8 +21,8 @@ export const Extensions = () => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <button className="flex items-center gap-2 rounded-lg px-3 py-3 shadow-sm hover:bg-muted">
-          <PuzzleIcon color="var(--muted-foreground)" size={24} />
+        <button className={cn("p-3 flex items-center gap-2 rounded-lg shadow-sm hover:bg-hover hover:outline outline-1 outline-border")}>
+          <PuzzleIcon color="var(--text2)" size={24} />
           <span className="font-semibold text-lg">
             Extensions
           </span>

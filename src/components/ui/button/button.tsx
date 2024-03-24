@@ -29,7 +29,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         {loading && (
           <Loading
             color={
-              variant === "default"
+              variant === "primary"
                 ? "hsl(var(--muted-foreground))"
                 : "hsl(var(--foreground))"
             }

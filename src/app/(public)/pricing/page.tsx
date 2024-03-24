@@ -2,7 +2,7 @@ import { Section } from "../_components/section";
 import { Card } from "../_components/card";
 import { PageHeador } from "../_components/header";
 import { CheckoutButton } from "./_components/button-checkout";
-import { setupPage } from "@stuff/lib/setupPage";
+import { setupPage } from "@stuff/client/utils";
 import { Flex } from "@stuff/structure";
 import { StuffBranding } from "../_components/stuff";
 

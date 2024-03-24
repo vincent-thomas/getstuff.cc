@@ -3,10 +3,10 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { Checkbox } from "packages/components/lib/checkbox";
 import { api } from "@stuff/api-client/react";
-import { generateSalt, deriveVerifier } from "secure-remote-password/client";
+import { generateSalt, deriveVerifier, generateEphemeral, deriveSession } from "secure-remote-password/client";
 import {
   createPasswordDerivedSecret,
   createSRPPrivateKey,
@@ -17,28 +17,28 @@ import { randomBytes } from "crypto";
 import { userDataInterface } from "@stuff/client/interfaces";
 import { deserializeData, encryptSymmetric, genKeyPair } from "@stuff/lib/crypto";
 import { Button } from "@stuff/ui/button";
-import {TOTP, Secret} from "otpauth";
-import useQRCodeGenerator from "react-hook-qrcode-svg";
+import { setPasswordDerivedSecret } from "@stuff/lib/useUserPrivateKey";
+import { useRouter } from "next/navigation";
 
-const QRCODE_SIZE = "100%"
-const QRCODE_LEVEL = 'Q'
-const QRCODE_BORDER = 1
+// const QRCODE_SIZE = "100%"
+// const QRCODE_LEVEL = 'Q'
+// const QRCODE_BORDER = 1
 
-const QRCodeComponent = ({ value }: {value: string }) => {
-  const { path, viewBox } = useQRCodeGenerator(value, QRCODE_LEVEL, QRCODE_BORDER)
+// const QRCodeComponent = ({ value }: {value: string }) => {
+//   const { path, viewBox } = useQRCodeGenerator(value, QRCODE_LEVEL, QRCODE_BORDER)
 
-  return (
-    <svg
-      width={QRCODE_SIZE}
-      height={QRCODE_SIZE}
-      viewBox={viewBox}
-      stroke='none'
-    >
-      <rect width='100%' height='100%' fill='#ffffff' />
-      <path d={path} fill='#000000' />
-    </svg>
-  )
-}
+//   return (
+//     <svg
+//       width={QRCODE_SIZE}
+//       height={QRCODE_SIZE}
+//       viewBox={viewBox}
+//       stroke='none'
+//     >
+//       <rect width='100%' height='100%' fill='#ffffff' />
+//       <path d={path} fill='#000000' />
+//     </svg>
+//   )
+// }
 
 const validator = z.object({
   username: z.string(),
@@ -57,28 +57,29 @@ export const Form = () => {
   } = useForm<z.infer<typeof validator>>({
     resolver: zodResolver(validator)
   });
-
-  const [userToSignUp, setUserToSignUp] = useState<{
-    user: {
-      username: string,
-      name: string,
-      verifier: string,
-      salt: string,
-      encryptedDataKey: string,
-      encryptedUserData: string,
-      publicKey: string
-    },
-    totp: {
-      secret: string,
-      uri: string
-    }
-    }>();
+  // const [userToSignUp, setUserToSignUp] = useState<{
+  //   user: {
+  //     username: string,
+  //     name: string,
+  //     verifier: string,
+  //     salt: string,
+  //     encryptedDataKey: string,
+  //     encryptedUserData: string,
+  //     publicKey: string
+  //   },
+  //   totp: {
+  //     secret: string,
+  //     uri: string
+  //   }
+  //   }>();
 
   const _createAccountMutation = api.accounts.createAccount.useMutation();
+  const requestSessionMutation = api.accounts.requestSession.useMutation();
+  const initAccountSessionMutation = api.accounts.initAccountSession.useMutation();
 
   const [isClicked, setClicked] = useState(false);
-
-  const _qrCodeRef = useRef<HTMLCanvasElement>(null);
+  const  router = useRouter();
+  const [loading, setLoading] = useState(false);
 
   const onSubmit = handleSubmit(async data => {
     if (!isClicked) {
@@ -94,6 +95,7 @@ export const Form = () => {
       });
       return;
     }
+    setLoading(true)
 
     const salt = generateSalt();
 
@@ -127,37 +129,50 @@ export const Form = () => {
       passwordDerivedSecret
     );
 
-    const secret = new Secret()
-
-    const totp = new TOTP({
-      issuer: "Stuff",
-      label: data.username,
-      algorithm: "SHA1",
-      digits: 6,
-      period: 30,
-      secret: secret.base32
-    });
-
-    setUserToSignUp({
-      user: {
-        username: data.username,
-        name: data.name,
-        verifier,
-        salt,
-        encryptedDataKey: encryptedPrivateKey,
-        encryptedUserData: encryptedData,
-        publicKey
-      },
-      totp: {
-        secret: secret.base32,
-        uri: totp.toString()
-      }
+    await _createAccountMutation.mutateAsync({
+      username: data.username,
+      name: data.name,
+      verifier,
+      salt,
+      encryptedDataKey: encryptedPrivateKey,
+      encryptedUserData: encryptedData,
+      publicKey
     })
 
-    // await toCanvas(qrCodeRef.current, totp.toString(), {scale: 10});
+    const {serverEphemeralPublic} = await initAccountSessionMutation.mutateAsync({ username:data.username });
+  
 
-    // try {
-    //   await createAccountMutation.mutateAsync({
+    const clientEpheremal = generateEphemeral();
+ 
+
+    const clientSession = deriveSession(
+      clientEpheremal.secret,
+      serverEphemeralPublic,
+      salt,
+      data.username,
+      verifierPrivateKey
+    );
+
+    await requestSessionMutation.mutateAsync({
+      username: data.username,
+      clientEpheremalPublic: clientEpheremal.public,
+      clientSessionProof: clientSession.proof
+    });
+
+
+
+    setPasswordDerivedSecret(passwordDerivedSecret.toString("hex"));
+
+    router.push("/mail/inbox");
+
+    // const secret = generateSecret({
+    //   length: 20,
+    //   issuer: "Stuff",
+    //   name: data.username
+    // })
+
+    // setUserToSignUp({
+    //   user: {
     //     username: data.username,
     //     name: data.name,
     //     verifier,
@@ -165,24 +180,39 @@ export const Form = () => {
     //     encryptedDataKey: encryptedPrivateKey,
     //     encryptedUserData: encryptedData,
     //     publicKey
-    //   });
-    // } catch(e) {
-    //   setError("username", {
-    //     message: "Invalid credentials"
-    //   });
-    // }
+    //   },
+    //   totp: {
+    //     secret: secret.base32,
+    //     uri: secret.otpauth_url
+    //   }
+    // })
   });
 
-  if (userToSignUp !== undefined) {
-    return (
-      <>
-        <QRCodeComponent value={userToSignUp.totp.uri} />
-        <label htmlFor="test">Validate</label>
-        <input name="test" />
-        <Button>Create user</Button>
-      </>
-    )
-  }
+  // const {register: register2, handleSubmit: handleSubmit2} = useForm<{qr: string}>()
+
+
+
+  // if (userToSignUp !== undefined) {
+  //   return (
+  //     <>
+  //       <QRCodeComponent value={userToSignUp.totp.uri} />
+  //       <form onSubmit={handleSubmit2(async ({qr}) => {
+  //             const result = totp.verify({
+  //               token: qr,
+  //               secret: userToSignUp.totp.secret,
+  //               encoding: "base32"
+  //             });
+  //             console.log(result)
+  //       })}>
+  //         <Flex col gap="0.5rem" align="start">
+  //           <label htmlFor="test">Validate</label>
+  //           <input {...register2("qr")} className="p-2 bg-background2 rounded-md border-border border w-full outline-1 outline-offset-2 focus:outline outline-border" placeholder="2FA code" name="test" />
+  //         </Flex>
+  //         <Button variant="primary">Create user</Button>
+  //       </form>
+  //     </>
+  //   )
+  // }
 
   return (
     <form className="flex flex-col gap-4" onSubmit={onSubmit}>
@@ -211,7 +241,7 @@ export const Form = () => {
           <span className="text-red-400">{errors.checkbox.message}</span>
         )}
       </div>
-      <Button variant="default" disabled={!!errors.root}>Submit</Button>
+      <Button variant="primary" disabled={!!errors.root} loading={loading}>Submit</Button>
     </form>
   );
 };

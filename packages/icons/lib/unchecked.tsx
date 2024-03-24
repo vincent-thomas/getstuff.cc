@@ -21,7 +21,7 @@ export const UnChecked = ({
         width="28"
         height="28"
         rx="4"
-        className="stroke-muted-foreground"
+        className="stroke-text2"
         strokeWidth="4"
       />
     </svg>
@@ -49,7 +49,7 @@ export const Checked = ({
         y="2"
         width="28"
         height="28"
-        className="fill-muted-foreground stroke-muted-foreground"
+        className="fill-text2 stroke-text2"
         rx="4"
         strokeWidth="4"
       />

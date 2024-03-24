@@ -68,6 +68,9 @@
       "@stuff/client/interfaces": [
         "./src/interfaces/index.ts"
       ],
+      "@stuff/client/utils": [
+        "./src/utils/index.ts"
+      ],
       "contentlayer/generated": [
         "./.contentlayer/generated"
       ]

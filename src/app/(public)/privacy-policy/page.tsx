@@ -1,7 +1,7 @@
 import { Section } from "../_components/section";
 import { PageHeador } from "../_components/header";
 import { H2, P } from "@stuff/typography";
-import { setupPage } from "@stuff/lib/setupPage";
+import { setupPage } from "@stuff/client/utils";
 import { StuffBranding } from "../_components/stuff";
 
 export default setupPage({

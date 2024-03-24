@@ -1,4 +1,4 @@
-import { setupPage } from "@stuff/lib/setupPage";
+import { setupPage } from "@stuff/client/utils";
 
 export default setupPage({
   Component() {

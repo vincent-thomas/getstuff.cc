@@ -5,27 +5,30 @@ export const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/90",
+        primary: "bg-primary text-background hover:bg-primary/90",
         destructive:
           "bg-destructive text-destructive-foreground hover:bg-destructive/90",
         outline:
-          "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
+          "border border-input bg-background hover:bg-hover hover:text-accent-foreground",
+          accent: "bg-accent text-text hover:bg-accent2",
         secondary:
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-        ghost: "hover:bg-accent hover:text-accent-foreground",
-        link: "text-primary underline-offset-4 hover:underline"
+        ghost: "hover:bg-hover hover:text-accent-foreground",
+        link: "text-text underline-offset-4 hover:underline",
+        icon: "hover:bg-hover bg-transparent text-text rounded-full",
+        none: ""
       },
       size: {
-        default: "px-4 py-2",
+        md: "px-4 py-2",
         sm: "py-1.5 px-3",
         xs: "py-1.5 px-2",
-        lg: "px-6 py-3",
-        icon: "w-10"
+        lg: "px-5 py-3",
+        icon: "p-3"
       }
     },
     defaultVariants: {
-      variant: "default",
-      size: "default"
+      size: "md",
+      variant: "primary"
     }
   }
 );

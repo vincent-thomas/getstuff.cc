@@ -33,14 +33,14 @@ export const MailRow = ({
     <div
       key={thread.threadId}
       className={cn(
-        "flex border-b border-border",
-        thread.read ? "bg-muted" : "bg-background",
-        selected.includes(thread.threadId) && "bg-accent"
+        "flex border-b border-border hover:bg-hover",
+        thread.read ? "bg-background2" : "bg-background",
+        selected.includes(thread.threadId) && "!bg-highlight"
       )}
     >
       <div className="p-1">
         <button
-          className="rounded-full p-3 hover:bg-muted"
+          className="rounded-full p-3 hover:bg-hover"
           onClick={() => {
             if (selected.includes(thread.threadId)) {
               setSelected(
@@ -54,7 +54,6 @@ export const MailRow = ({
         {selected.includes(thread.threadId) ? <Checked size={18} /> : <UnChecked size={18} />}
         </button>
       </div>
-
       <button
         key={thread.threadId}
         className="flex grow items-center gap-8 py-3 pr-5 text-left"
@@ -86,7 +85,7 @@ export const MailRow = ({
         <p
           className={cn(
             "grow",
-            !thread.read ? "font-semibold" : "text-muted-foreground"
+            !thread.read ? "font-semibold" : "text-text2"
           )}
         >
           {thread.title}
@@ -96,7 +95,7 @@ export const MailRow = ({
             addSuffix: true
           })}
         </div>
-        <div className="w-16 text-right text-muted-foreground">
+        <div className="w-16 text-right text-text2">
           <i>{thread.read ? "read" : "not read"}</i>
         </div>
       </button>

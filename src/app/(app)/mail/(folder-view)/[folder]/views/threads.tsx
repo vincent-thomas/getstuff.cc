@@ -194,13 +194,13 @@ export function ThreadView({
     <div className="bg-background border-l border-border md:min-w-[500px] w-full flex flex-col max-h-full">
       <Flex className="py-1" align="center">
         <button
-          className="rounded-full p-3 m-1 hover:bg-muted"
+          className="rounded-full p-3 m-1 hover:bg-hover"
           onClick={() => {
             setThreadOpen(null)
             window.history.replaceState({}, "", `/mail/${folderId}`)
           }}
         >
-          <PlusIcon size={18} className="rotate-45" />
+          <PlusIcon size={18} className="rotate-45" color="var(--text2)" />
         </button>
         <div className="block h-[calc(50px/1.6)] border-r border-border mr-[0.25rem]"></div>
         <SelectedBar threadIds={[threadId]} folderId={folderId} />

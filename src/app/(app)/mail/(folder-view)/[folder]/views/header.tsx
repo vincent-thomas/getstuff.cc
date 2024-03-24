@@ -22,7 +22,7 @@ export const FolderHeader: FC<FolderHeader> = ({folder}) => {
       className={cn("flex w-full items-center border-b border-border p-1")}
     >
       <button
-        className="m-1 rounded-full p-3 hover:bg-muted"
+        className="m-1 rounded-full p-3 hover:bg-hover text-text"
         onClick={() => {
           setSelected([]);
           if (selected.length !== threadsQuery.data?.length) {

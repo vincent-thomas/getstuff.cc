@@ -2,6 +2,7 @@ import { cn } from "@stuff/components/utils";
 import { Section } from "./section";
 import {Flex} from "@stuff/structure"
 import { H1, P } from "@stuff/typography";
+import { Heading } from "@stuff/ui/title";
 
 export const HeroTitle = ({className, title, comment, under}: {
   className?:string, 
@@ -11,7 +12,7 @@ export const HeroTitle = ({className, title, comment, under}: {
 }) =>{ 
   return (
      <Flex col className={cn(className)}>
-        <H1 className="!font-[800] w-full max-w-[400px] lg:max-w-[610px] lg:text-6xl">{title}</H1>
+        <Heading weight="bold" className="w-full max-w-[400px] text-3xl lg:max-w-[610px] lg:text-6xl">{title}</Heading>
         <P className="text-lg font-semibold">{comment}</P>
         {!!under && (
           <div className="pt-2">

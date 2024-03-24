@@ -12,10 +12,10 @@ export const MailInput = forwardRef(function MailInput(
         disabled={locked}
         ref={ref}
         placeholder="Enter email..."
-        className={cn("p-3 pr-0 outline-none", locked ? "bg-muted" : "focus:bg-muted bg-transparent")}
+        className={cn("p-3 pr-0 outline-none", locked ? "bg-muted" : "focus:bg-background2 bg-transparent")}
         {...props}
       />
-      <p className="border-l border-border bg-muted p-3 text-muted-foreground">
+      <p className="border-l overflow-hidden border-border bg-background2 p-3 text-text2">
         @getstuff.cc
       </p>
     </Flex>

@@ -7,8 +7,8 @@ export const Navbar = () => (
   <header>
     <Flex className="p-3" justify="between" align="center">
       <Flex gap="1rem" align="center">
-        <Link href="/" className="rounded-md px-3 py-2 hover:bg-muted">
-          <h1 className={cn("text-lg font-semibold text-primary")}>Stuff Mail</h1>
+        <Link href="/" className={buttonVariants({variant: "ghost"})}>
+          <h1 className={cn("text-lg font-semibold text-text")}>Stuff Mail</h1>
         </Link>
         <Link href="/pricing" className={buttonVariants({ variant: "ghost", size: "sm" })}>
           Pricing
@@ -32,7 +32,7 @@ export const Navbar = () => (
           <Link
             href="/auth/init"
             className={cn(
-              buttonVariants({ }),
+              buttonVariants({ variant: "accent", size: "lg"}),
               "font-semibold"
             )}
           >

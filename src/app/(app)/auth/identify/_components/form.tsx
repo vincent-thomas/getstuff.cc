@@ -86,7 +86,7 @@ export const Form = () => {
       })} className="flex flex-col gap-4">
         <MailInput {...register("username")} />
         <PasswordInput {...register("password")} />
-        <Button variant="default" size="lg" loading={loading}>
+        <Button size="lg" loading={loading}>
           Submit
         </Button>
       </form>
@@ -148,21 +148,6 @@ export const Form = () => {
   //   }
   // });
   // const router = useRouter();
-
-
-  return (
-    <></>
-    // <form className="flex flex-col gap-4" onSubmit={onSubmit}>
-    //   {invalidCredentials && (
-    //     <div className="rounded-md bg-red-500 p-4">Invalid credentials</div>
-    //   )}
-    //   <MailInput {...register("username")} locked />
-    //   <PasswordInput {...register("password")} />
-    //   <Button variant="default" loading={isLoading} size="lg">
-    //     Submit
-    //   </Button>
-    // </form>
-  );
 };
 
 

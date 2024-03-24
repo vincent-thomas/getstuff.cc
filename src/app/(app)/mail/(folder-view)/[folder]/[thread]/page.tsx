@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { setupPage } from "@stuff/lib/setupPage";
+import { setupPage } from "@stuff/client/utils";
 import { ThreadView } from "../views/threads";
 
 export default setupPage({
