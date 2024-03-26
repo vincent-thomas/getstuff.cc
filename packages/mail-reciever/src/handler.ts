@@ -140,6 +140,7 @@ export const mailHandler = async (
   const htmlContent = parsed.body.html === false ? undefined : encryptSymmetric(parsed.body.html, Buffer.from(encryptionKey));
 
   if (threadId === undefined) {
+    console.debug("CREATING THREAD", parsed.subject ?? "Untitled Thread");
     threadId = await createThread(
       dyn,
       tableName,
@@ -185,6 +186,8 @@ export const mailHandler = async (
       );
     }
   }
+
+  console.debug("UPLOADING EMAIL CONTENT");
   await uploadEmailContent()
 
   // Adds proper metadata for users to be accessable
@@ -195,11 +198,17 @@ export const mailHandler = async (
       return;
     }
 
+    try {
+
+
+
     let user = await getUser(dyn, env.STAGE, username);
 
     if (user === undefined) {
       user = await getUserFromAlias(dyn, env.STAGE, username);
     }
+    console.debug("USERNAME to send", user.user_id)
+
 
     if (user === undefined) {
       continue;
@@ -223,5 +232,8 @@ export const mailHandler = async (
       messageId,
       encryptedMessageEncryptionKey: encryptedUserKey
     })
+  } catch (e) {
+    console.error("UNKNOWN ERROR", e)
+  }
   }
 };
