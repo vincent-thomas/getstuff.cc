@@ -4,6 +4,7 @@ import { api } from "@stuff/api-client/server"
 import { redirect } from "next/navigation"
 import { Outlogger } from "./outlogger"
 import { H3 } from "@stuff/typography"
+import { Logo } from "src/components/logo"
 
 
 export const AccountViewer = async () => {
@@ -17,11 +18,11 @@ export const AccountViewer = async () => {
     <DropdownMenu>
       <DropdownMenuTrigger>
           <div className="hover:bg-hover p-3 rounded-md hover:outline outline-2 outline-border">
-            <div className="flex items-center gap-4 ">
+            <div className="flex items-center gap-4">
               <UserAvatar />
               <div className="flex flex-col text-left">
-                <h1 className="text-lg leading-tight text-foreground font-semibold flex gap-1">
-                  Stuff{session.customerStatus === "active" ? "+" : ""}<p className="text-muted-foreground">Mail</p>
+                <h1 className="font-semibold flex gap-1 items-center">
+                  <Logo size={24} /><p className="text-text text-3xl">Mail</p>
                 </h1>
                 <p className="text-muted-foreground">{session.username}</p>
               </div>

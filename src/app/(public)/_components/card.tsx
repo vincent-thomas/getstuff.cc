@@ -24,7 +24,6 @@ export function Card({
   p,
   ...props
 }: CardProps & {
-  noPadding?: boolean;
   className?: string;
 })  {
 

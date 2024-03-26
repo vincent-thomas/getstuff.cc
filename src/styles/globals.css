@@ -4,7 +4,7 @@
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: var(--background2) transparent;
+  scrollbar-color: var(--background2);
 }
 
 *[data-mobile] {
@@ -26,7 +26,7 @@
 
 :root.light {
 
-  --background: #FCFCFC;
+  /* --background: #FCFCFC;
   --background2: #F0F0F0;
   --foreground: 240 3.33% 11.76%;
   --card: 0 0% 100%;
@@ -45,7 +45,7 @@
   --destructive-foreground: 60 9.1% 97.8%;
   --border: hsl(20 5.9% 90%);
   --input: 20 5.9% 90%;
-  --ring: 20 14.3% 4.1%;
+  --ring: 20 14.3% 4.1%; */
 }
 
 /* --background: 20 14.3% 4.1%; */
@@ -53,20 +53,20 @@
 :root.dark {
   /* --background: 0 0% 7%;
   --foreground: 60 9.1% 97.8%; */
-  --card-foreground: 60 9.1% 97.8%;
+  /* --card-foreground: 60 9.1% 97.8%;
   --popover: 20 14.3% 4.1%;
   --popover-foreground: 60 9.1% 97.8%;
   --primary: 0 0% 98%;
   --primary-foreground: 240 5.9% 10%;
   --secondary: 12 6.5% 15.1%;
   --secondary-foreground: 60 9.1% 97.8%;
-  --accent-foreground: 0 0% 98%;
+  --accent-foreground: 0 0% 98%; */
   /* --muted: 12 6.5% 15.1%;
   --muted-foreground: 24 5.4% 63.9%; */
   /* --accent: 12 6.5% 10%;
   --accent-foreground: 60 9.1% 97.8%; */
-  --destructive: 0 62.8% 30.6%;
+  /* --destructive: 0 62.8% 30.6%;
   --destructive-foreground: 60 9.1% 97.8%;
   --input: 12 6.5% 15.1%;
-  --ring: 24 5.7% 82.9%;
+  --ring: 24 5.7% 82.9%; */
 }

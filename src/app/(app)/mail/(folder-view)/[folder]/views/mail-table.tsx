@@ -1,26 +1,20 @@
-"use client";
-
 import type { FC } from "react";
 
 import { MailRow } from "./mail-row";
 import { Flex } from "@stuff/structure";
 import { H2, P } from "@stuff/typography";
-import { api } from "@stuff/api-client/react";
+import { api } from "@stuff/api-client/server";
 
 export interface FolderHeader {
   folderId: string;
-  initialThreadsData: {
-    threadId: string;
-    title: string;
-    lastActive: number;
-    read: boolean;
-  }[]
 }
 
-export const MailTable: FC<FolderHeader> =  ({ folderId, initialThreadsData }) => {
-  const threadsQuery = api.mail.threads.getThreads.useQuery({ folderId });
+export const MailTable: FC<FolderHeader> = async ({ folderId }) => {
+  const threads = await api.mail.threads.getThreads.query({folderId: folderId});
 
-  if (threadsQuery.data?.length === 0) {
+  // await new Promise(res => {setTimeout(() => res("test"), 2000)})
+
+  if (threads.length === 0) {
     return (
       <Flex
         col
@@ -39,7 +33,7 @@ export const MailTable: FC<FolderHeader> =  ({ folderId, initialThreadsData }) =
     <div className="grow overflow-y-auto h-full">
       <div className="h-full">
         <div>
-          {(threadsQuery.data ?? initialThreadsData).map(thread => (
+          {threads.map(thread => (
             <MailRow
               key={thread.threadId}
               thread={thread}

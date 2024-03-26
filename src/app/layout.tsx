@@ -9,6 +9,7 @@ import { TRPCReactProvider } from "@stuff/api-client/react";
 import type { Metadata, Viewport } from "next";
 import { ThemeProvider } from "src/providers/theme";
 import { env } from "@/env";
+import { TooltipProvider } from "@stuff/ui/tooltip";
 
 const inter = Inter({
   axes: ["slnt"],
@@ -65,9 +66,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           defaultTheme="dark"
           enableSystem
         >
-          <TRPCReactProvider>
-            {children}
-          </TRPCReactProvider>
+          <TooltipProvider>
+            <TRPCReactProvider>
+              {children}
+            </TRPCReactProvider>
+          </TooltipProvider>
         </ThemeProvider>
       </body>
     </html>

@@ -43,7 +43,7 @@ export const FolderHeader: FC<FolderHeader> = ({folder}) => {
       <h1 className="pb-1 text-xl text-foreground">{folder.name}</h1>
       <div className="flex justify-end w-full h-full px-3">
         {selected.length === 0 ? (
-          <RefreshButton folderId={folder.folderId} />
+          <RefreshButton />
         ) : (
           <SelectedBar threadIds={selected} folderId={folder.folderId} />
         )}

@@ -12,6 +12,11 @@ import { formatDate } from "date-fns"
 import { Section } from "../../_components/section"
 import { PageHeador } from "../../_components/header"
 import { Mdx } from "src/components/mdx-components"
+import { Button } from "@stuff/ui/button"
+import { ShareTwitter } from "../../_components/share-twitter"
+import { Flex } from "@stuff/structure"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@stuff/ui/tooltip"
+import { ShareFacebook } from "../../_components/share-facebook"
 
 interface PostPageProps {
   params: {
@@ -102,7 +107,31 @@ export default async function PostPage({ params }: PostPageProps) {
             Published on {formatDate(post.date, "MMMM dd, yyyy")}
           </time>
       }/>
+      <Flex className="max-w-[800px] mx-auto px-4">
+        <Tooltip>
+          <TooltipTrigger>
+            <ShareTwitter />
+          </TooltipTrigger>
+          <TooltipContent  className="bg-background2 shadow-lg">
+            Share on X/Twitter
+          </TooltipContent>
+        </Tooltip>
+
+        <Tooltip>
+          <TooltipTrigger>
+            <ShareFacebook />
+          </TooltipTrigger>
+          <TooltipContent  className="bg-background2 shadow-lg">
+            Share on Facebook
+          </TooltipContent>
+        </Tooltip>
+
+      </Flex>
+
+
       <Section className="max-w-[800px]">
+        {/* <Button variant="icon" size="icon">
+        </Button> */}
         <Mdx code={post.body.code} />
         <div className="flex justify-center py-6 lg:py-10">
           <Link href="/blog" className={cn(buttonVariants({ variant: "ghost" }))}>

@@ -16,7 +16,7 @@ export default setupPage({
         />
         <Section>
           <div className="grid w-full grid-rows-2 md:grid-rows-1 md:grid-cols-2 gap-4">
-            <Card className="flex flex-col" noPadding>
+            <Card className="flex flex-col">
               <div className="p-4">
                 <Flex align="center" justify="between">
                   <h2 className="text-3xl font-bold">Stuff free</h2>
@@ -42,7 +42,7 @@ export default setupPage({
                 </ul>
               </div>
             </Card>
-            <Card className="flex flex-col rounded-md" noPadding>
+            <Card className="flex flex-col rounded-md">
               <div className="p-4">
                 <Flex align="center" justify="between">
                   <h2 className="text-3xl font-bold">Stuff+</h2>

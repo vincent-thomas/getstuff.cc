@@ -1,19 +1,20 @@
 import { api } from "@stuff/api-client/server";
-import { notFound } from "next/navigation";
+import { redirect } from "next/navigation";
 import { z } from "zod";
 import { setupPage } from "@stuff/client/utils";
 import { ThreadView } from "./views/threads";
 import { MainMailView } from "./views/main-mail-file";
 
 export default setupPage({
-  params: z.object({ folder: z.string() }),
-  async Component({ params }) {
+  query: z.object({ threadId: z.string().optional() }),
+  params: z.object({ folder: z.string()}),
+  async Component({ params,query }) {
     const folderResult = await api.mail.folders.getFolder.query({
       folderId: params.folder
     })
 
     if (folderResult === undefined) {
-      notFound()
+      redirect("/mail/inbox")
     }
 
     const folder = {
@@ -21,11 +22,9 @@ export default setupPage({
       folderId: params.folder
     }
 
-    const initialThreads = await api.mail.threads.getThreads.query({folderId: folder.folderId});
-
     return (
       <main className="flex h-full w-full overflow-y-auto bg-background rounded-lg border-border border">
-        <MainMailView folder={folder} initialThreads={initialThreads} />
+        <MainMailView folder={folder} threadId={query.threadId} />
         <ThreadView folderId={folder.folderId}/>
       </main>
     )

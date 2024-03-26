@@ -15,6 +15,19 @@ export const theme = createGlobalThemeContract({
   highlight: "highlight"
 })
 
+createGlobalTheme(".light", theme, {
+  background: "#FCFCFC",
+  background2: "#F0F0F0",
+  border: "#D9D9D9",
+  card: "#F0F0F0",
+  hover: theme.card,
+  accent: "#E5484D",
+  accent2: "#DC3E42",
+  text: "#202020",
+  text2: "#646464",
+  highlight: "#E8E8E8"
+})
+
 createGlobalTheme(".dark", theme, {
   background: "#111111",
   background2: "#191919",

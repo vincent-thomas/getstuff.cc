@@ -207,7 +207,7 @@ export const mailHandler = async (
     if (user === undefined) {
       user = await getUserFromAlias(dyn, env.STAGE, username);
     }
-    console.debug("USERNAME to send", user.user_id)
+    console.debug("USERNAME to send", user?.user_id)
 
 
     if (user === undefined) {

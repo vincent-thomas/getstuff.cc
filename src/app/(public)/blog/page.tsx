@@ -5,6 +5,8 @@ import { H2 } from "@stuff/typography"
 import { Section } from "../_components/section"
 import { PageHeador } from "../_components/header"
 import type { Metadata } from "next"
+import { Logo } from "src/components/logo"
+import { Flex } from "@stuff/structure"
 
 
 export const metadata: Metadata = {
@@ -21,18 +23,18 @@ export default async function BlogPage() {
 
   return (
     <>
-      <PageHeador title={"Blog"} comment="A blog" />
+      <PageHeador title={<Flex gap="1rem"><Logo size={55}/>Blog</Flex>} comment={"A Blog"} />
       <Section>
         {posts?.length ? (
           <div className="grid gap-10 sm:grid-cols-2">
             {posts.map((post) => (
               <article
                 key={post._id}
-                className="group relative flex flex-col space-y-2"
+                className="group relative flex flex-col space-y-2 hover:bg-hover p-4 rounded-xl"
               >
-                <H2 className="text-2xl font-extrabold">{post.title}</H2>
+                <H2 className="text-2xl font-extrabold text-text">{post.title}</H2>
                 {post.description && (
-                  <p className="text-muted-foreground">{post.description}</p>
+                  <p className="text-text2">{post.description}</p>
                 )}
                 {post.date && (
                   <p className="text-sm text-muted-foreground">

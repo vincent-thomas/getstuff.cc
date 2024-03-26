@@ -27,7 +27,7 @@ export const CookieTeller = () => {
         {" "}<Link href="/cookies" className="underline">Read more here</Link>.
       </span>
       <form action={test}>
-        <Button>Accep</Button>
+        <Button>Accept</Button>
       </form>
 
     </Flex>
