@@ -26,7 +26,7 @@ export const CreateFolderButton = () => {
   return (
     <Dialog open={open}>
       <DialogTrigger asChild onClick={() => setOpen(true)}>
-        <button className="rounded-full p-1 p-1 hover:bg-accent">
+        <button className="rounded-full p-1 p-1 hover:bg-hover">
           <Plus />
         </button>
       </DialogTrigger>
