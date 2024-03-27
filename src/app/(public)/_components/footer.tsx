@@ -16,8 +16,7 @@ export const Footer = () => {
        </Flex>
        <Flex className="w-full flex" justify="between">
          <Flex align="center" gap="0.5rem" className="max-sm:hidden">
-           <img src="/me.jpg" width={30} height={30} className="rounded-full" alt="me who built the app" />
-           <p>© 2021 Stuff</p><span>•</span>
+           <p>Stuff © {new Date().getFullYear()}</p><span>•</span>
            <a href="https://github.com/vincent-thomas" target="_blank" className={cn("!pl-0",buttonVariants({variant: "link", size: "xs"}))}>Vincent Thomas</a>
          </Flex>
          <Flex gap="1rem">
