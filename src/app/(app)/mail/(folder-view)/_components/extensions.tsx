@@ -98,7 +98,7 @@ export const EnabledMailRelayButton = () => {
                                 <Heading weight="bold" className="text-lg">
                                   {alias.pk}
                                 </Heading>
-                                <P>{alias.sk}</P>
+                                <P>{alias.description === "" ? "No Description" : alias.description}</P>
                               </Card>
                             </button>
                           </DialogTrigger>

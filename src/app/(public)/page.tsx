@@ -19,7 +19,7 @@ export default setupPage({
   async Component() {
     return (
       <>
-        <Section className="flex justify-between items-center md:pt-20 max-md:flex-col max-md:items-center w-full">
+        <Section className="flex justify-between items-center max-md:flex-col max-md:items-center w-full">
           <HeroTitle
             className="pt-8 animate-in ease-out slide-in-from-left-10 duration-700 fade-in max-md:text-center "
             title={<>
