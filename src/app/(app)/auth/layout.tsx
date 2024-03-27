@@ -20,7 +20,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
       <div className="flex h-screen items-center justify-center">
         <div className="flex flex-col gap-4 rounded p-6 text-center">
           {children}
-          <p className="text-muted-foreground">
+          <p className="text-text2">
             By clicking submit you agree to the <br />
             terms and conditions and our{" "}
             <Link href="/privacy-policy" className="underline" target="_blank">

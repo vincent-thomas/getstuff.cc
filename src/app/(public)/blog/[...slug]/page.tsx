@@ -23,7 +23,6 @@ interface PostPageProps {
   }
 }
 
-
 async function getPostFromParams(slug: string) {
   const post = allPosts.find((post) => post.id === slug)
 
@@ -101,31 +100,31 @@ export default async function PostPage({ params }: PostPageProps) {
         title={post.title} comment={
           <time
             dateTime={post.date}
-            className="block text-sm text-muted-foreground"
+            className="block text-sm text-text2"
           >
             Published on {formatDate(post.date, "MMMM dd, yyyy")}
           </time>
       }/>
-      <Flex className="max-w-[800px] mx-auto px-4">
-        <Tooltip>
-          <TooltipTrigger>
-            <ShareTwitter />
-          </TooltipTrigger>
-          <TooltipContent  className="bg-background2 shadow-lg">
-            Share on X/Twitter
-          </TooltipContent>
-        </Tooltip>
-
-        <Tooltip>
-          <TooltipTrigger>
-            <ShareFacebook />
-          </TooltipTrigger>
-          <TooltipContent  className="bg-background2 shadow-lg">
-            Share on Facebook
-          </TooltipContent>
-        </Tooltip>
-
-      </Flex>
+      <div className="max-w-[800px] mx-auto flex px-2 md:px-4">
+        <Flex className="p-1 bg-background2 border-border border rounded-md">
+          <Tooltip>
+            <TooltipTrigger>
+              <ShareTwitter blogId={post.id} />
+            </TooltipTrigger>
+            <TooltipContent  className="bg-background2 shadow-lg">
+              Share on X/Twitter
+            </TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger>
+              <ShareFacebook blogId={post.id} />
+            </TooltipTrigger>
+            <TooltipContent  className="bg-background2 shadow-lg">
+              Share on Facebook
+            </TooltipContent>
+          </Tooltip>
+        </Flex>
+      </div>
 
 
       <Section className="max-w-[800px]">

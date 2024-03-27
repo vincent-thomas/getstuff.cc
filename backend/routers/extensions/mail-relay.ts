@@ -1,5 +1,6 @@
-import { GetCommand, PutCommand } from "@aws-sdk/lib-dynamodb";
+import { GetCommand, PutCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
 import { getDataTable } from "@stuff/infra-constants";
+import { addressAliasInterface } from "backend/interfaces/addressAlias";
 import { protectedProc, router } from "backend/trpc";
 
 
@@ -28,5 +29,19 @@ export const mailRelayRouter = router({
     })
 
     await ctx.dyn.send(command);
+  }),
+  listAliases: protectedProc.query(async ({ctx}) => {
+    const command = new QueryCommand({
+      TableName: getDataTable(ctx.env.STAGE),
+      KeyConditionExpression: "pk = :pk and begins_with(sk, :sk)",
+      ExpressionAttributeValues: {
+        ":pk": `mail|${ctx.session.username}`,
+        ":sk": `address-alias|enabled|`
+      }
+    })
+
+    const response = await ctx.dyn.send(command).then(v => addressAliasInterface.array().parse(v.Items));
+
+    return response;
   })
 })

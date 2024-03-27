@@ -7,8 +7,8 @@ import { cn } from "@stuff/components/utils"
 
 export const Footer = () => {
  return (
-   <footer className="bottom-0 relative">
-     <Section className="flex flex-col items-start gap-6 !max-w-[1000px]">
+   <footer className="bottom-0 relative w-full">
+     <Section className="flex flex-col items-start gap-6 !p-0">
        <Flex col gap="1rem" align="start">
          <h2 className="text-4xl font-bold">Want to try?</h2>
          <h3 className="text-2xl font-bold">Start a free trial here:</h3>

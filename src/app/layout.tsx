@@ -55,23 +55,23 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" dir="ltr" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <head />
       <body className={cn(
         inter.className,
         "min-h-screen antialiased bg-background"
       )}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem
-        >
-          <TooltipProvider>
-            <TRPCReactProvider>
+        <TooltipProvider>
+          <TRPCReactProvider>
+            <ThemeProvider
+              enableSystem
+              defaultTheme="dark"
+              attribute="class"
+            >
               {children}
-            </TRPCReactProvider>
-          </TooltipProvider>
-        </ThemeProvider>
+            </ThemeProvider>
+          </TRPCReactProvider>
+        </TooltipProvider>
       </body>
     </html>
   );

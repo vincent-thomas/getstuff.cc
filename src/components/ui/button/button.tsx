@@ -2,9 +2,9 @@
 
 import { type VariantProps } from "class-variance-authority";
 import { type ButtonHTMLAttributes, forwardRef } from "react";
-import { Loading } from "packages/icons/lib/loading";
 import { cn } from "@stuff/components/utils"
 import { buttonVariants } from "./variants";
+import { Loading } from "@stuff/icons/loading";
 
 export interface ButtonProps
   extends ButtonHTMLAttributes<HTMLButtonElement>,

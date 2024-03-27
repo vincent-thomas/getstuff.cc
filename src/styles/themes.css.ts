@@ -18,27 +18,33 @@ export const theme = createGlobalThemeContract({
 createGlobalTheme(".light", theme, {
   background: "#FCFCFC",
   background2: "#F0F0F0",
+
   border: "#D9D9D9",
   card: "#F0F0F0",
   hover: theme.card,
+  highlight: "#E8E8E8",
+
   accent: "#E5484D",
   accent2: "#DC3E42",
+
   text: "#202020",
   text2: "#646464",
-  highlight: "#E8E8E8"
 })
 
 createGlobalTheme(".dark", theme, {
   background: "#111111",
   background2: "#191919",
+
   card: "#222222",
   hover: theme.card,
-  text: "#EEEEEE",
-  text2: "#B4B4B4",
-  // muted: "hsl(12 6.5% 15.1%)",
-  // mutedForeground: "#B4B4B4",
   border: "#3A3A3A",
+  highlight: "#2A2A2A",
+
   accent: "#E5484D",
   accent2: "#EC5D5E",
-  highlight: "#2A2A2A"
+
+  text: "#EEEEEE",
+  text2: "#B4B4B4",
+  
+
 })

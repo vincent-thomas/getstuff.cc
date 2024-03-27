@@ -16,6 +16,7 @@ import { Loading } from "@stuff/icons/loading";
 import purify from "dompurify";
 import { threadOpen } from "../store/thread-open";
 import { useAtom } from "jotai";
+import { theme } from "src/styles/themes.css";
 
 const paramsInterface = z.object({
   threadId: z.string(),
@@ -110,25 +111,23 @@ const MainPage = ({ threadId, folderId }: z.infer<typeof paramsInterface>) => {
   return (
     <>
       <Flex gap="0.75rem" className="p-4" align="center" justify="between">
-        <h1 className="text-3xl text-foreground">
+        <h1 className="text-3xl text-text">
           {threadQuery.data?.thread.title}
         </h1>
         <div>
-          <div className="rounded-full p-2 hover:bg-accent">
-            <Tooltip>
-              <TooltipTrigger>
+          <Tooltip>
+            <TooltipTrigger className="rounded-full hover:bg-hover">
                 <ShieldCheckIcon
                   size={18}
-                  color="hsl(var(--muted-foreground))"
+                  color={theme.text2}
                 />
-              </TooltipTrigger>
-              <TooltipContent className="bg-muted shadow-lg">
-                <p className="text-sm text-muted-foreground">
-                  This thread is encrypted by Stuff, only you can read this
-                </p>
-              </TooltipContent>
-            </Tooltip>
-          </div>
+            </TooltipTrigger>
+            <TooltipContent className="bg-background2 shadow-lg">
+              <p className="text-sm text-text2">
+                This thread is encrypted by Stuff, only you can read this
+              </p>
+            </TooltipContent>
+          </Tooltip>
         </div>
       </Flex>
       <Flex col gap="1rem" className="px-4 pb-4">
@@ -142,7 +141,7 @@ const MainPage = ({ threadId, folderId }: z.infer<typeof paramsInterface>) => {
               className="rounded-md border border-border"
               key={mail.messageId}
             >
-              <Flex col gap="1px" className="bg-muted p-4">
+              <Flex col gap="1px" className="bg-background2 p-4">
                 <h2 className="text-xl">{mail.from.name}</h2>
                 <p className="text-md text-muted-foreground">
                   {mail.from.address}

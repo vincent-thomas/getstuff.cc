@@ -5,20 +5,9 @@ import { CreateFolderButton } from "../_components/create-folder-button"
 import { api } from "@stuff/api-client/server"
 import { Folder } from "../_components/folder"
 import { Flex } from "@stuff/structure";
-import type { ReactNode } from "react"
 import { cn } from "@stuff/components/utils"
 import { Extensions } from "../_components/extensions"
-import { Link } from "src/components/structure/link"
-
-const SidebarLink = ({ children, href, className }: {children: ReactNode, href: string,className?:string}) => (
-  <Link
-    activeClass="outline bg-hover"
-    className={cn("text-text hover:outline outline-1 outline-border flex items-center md:gap-2 rounded-md px-3 py-2 hover:bg-hover md:text-lg font-semibold flex-col md:flex-row", className)}
-    href={href}
-  >
-    {children}
-  </Link>
-)
+import { SidebarLink } from "./sidebar_component"
 
 export const Sidebar = async ({className}: {className?: string}) => {
   const folders = await api.mail.folders.listFolders.query();

@@ -8,7 +8,7 @@ export const MainMailView = ({folder,threadId}: {folder: {folderId:string; name:
   return (
     <div className={cn("h-full grow flex flex-col w-full", threadId !== undefined && S.removeMainMobile)}>
       <FolderHeader folder={folder} />
-      <Suspense fallback={"Loading..."}>
+      <Suspense>
         <MailTable folderId={folder.folderId} />
       </Suspense>
     </div>
