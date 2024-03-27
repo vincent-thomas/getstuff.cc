@@ -2,5 +2,6 @@ import { z } from "zod";
 
 export const addressAliasInterface = z.object({
   pk: z.string(),
-  sk: z.string()
+  sk: z.string(),
+  description: z.string()
 });
