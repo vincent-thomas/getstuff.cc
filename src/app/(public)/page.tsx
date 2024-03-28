@@ -74,7 +74,7 @@ export default setupPage({
                 <P className="max-w-[30ch] text-wrap">
                   In Stuff mail you can have conversations with other email users.
                 </P>
-                <img src="/conversationv2.png" alt="Conversations example from Stuff mail" className="rounded-xl shadow-xl mt-4 md:skew-y-[-12deg] md:rotate-[8deg] md:w-[80%] w-full ml-auto mr-2 aspect-square border-border border" />
+                <img src="/conversationv2.webp" alt="Conversations example from Stuff mail" className="rounded-xl shadow-xl mt-4 md:skew-y-[-12deg] md:rotate-[8deg] md:w-[80%] w-full ml-auto mr-2 aspect-square border-border border" />
               </Card>
               <Card className={cn(folders,"shadow-lg bg-background border-none p-8")}>
                 <P>Extension:</P>
@@ -100,7 +100,7 @@ export default setupPage({
                     With Stuff Extensions, behavior and features can be added and highly customised to Stuff.
                   </P>
                   </Flex>
-                  <img src="/extensions.png" alt="Available extensions" className="w-[70%] border-t border-l rounded-tl-lg border-border ml-auto mt-6" />
+                  <img src="/extensions.webp" alt="Available extensions" className="w-[70%] border-t border-l rounded-tl-lg border-border ml-auto mt-6" />
                 </Link>
               </Card>
             </div>
@@ -169,7 +169,6 @@ export default setupPage({
         <div className="mb-24">
           <Footer />
         </div>
-
       </Flex>
     );
   }
