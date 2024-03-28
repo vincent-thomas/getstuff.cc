@@ -7,6 +7,7 @@ import { Link } from "src/components/structure/link";
 import { formatDate } from "date-fns";
 import { H2 } from "@stuff/typography";
 import { useState } from "react";
+import { Flex } from "@stuff/structure";
 
 
 
@@ -17,15 +18,17 @@ export const BlogPosts =({posts}: {posts: Post[]}) => {
   const postsToUse = dynPosts.length ? dynPosts : posts;
 
   return (
-    <Section>
+    <Section maxWidth="md">
     <BlogSearch blogs={posts} setQuery={(posts) => setPosts(posts)} />
     {posts?.length ? (
       <div className="grid gap-10 sm:grid-cols-2 pt-14">
         {postsToUse.map((post) => (
+
           <article
             key={post._id}
             className="group relative flex flex-col space-y-2 hover:bg-hover p-4 rounded-xl"
           >
+            <Link href={`/blog/${post.id}`}>
             <H2 className="text-2xl font-extrabold text-text">{post.title}</H2>
             {post.description && (
               <p className="text-text2">{post.description}</p>
@@ -35,9 +38,9 @@ export const BlogPosts =({posts}: {posts: Post[]}) => {
                 {formatDate(post.date, "MMMM dd, yyyy")}
               </p>
             )}
-            <Link href={`/blog/${post.id}`} className="absolute inset-0">
-              <span className="sr-only">View Article</span>
+            <Flex gap="1rem" align="center">{post.tags.map(v => <p key={v}>#{v}</p>)}</Flex>
             </Link>
+
           </article>
         ))}
       </div>

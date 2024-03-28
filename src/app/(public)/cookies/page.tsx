@@ -5,11 +5,12 @@ import { setupPage } from "@stuff/client/utils";
 import { H2, P } from "@stuff/typography";
 import { env } from "@/env";
 import { StuffBranding } from "../_components/stuff";
+import { Flex } from "@stuff/structure";
 
 export default setupPage({
   Component() {
     return (
-      <>
+      <Flex gap="2rem" col className="pt-12">
         <PageHeador
           title={<>Cookie policy for <StuffBranding /></>}
           comment={
@@ -22,7 +23,7 @@ export default setupPage({
             </>
           }
         />
-        <Section>
+        <Section maxWidth="md">
           <H2>What are cookies</H2>
           <P>
             As is common practice with almost all professional websites this
@@ -34,7 +35,7 @@ export default setupPage({
             &apos;break&apos; certain elements of the sites functionality.
           </P>
         </Section>
-        <Section>
+        <Section maxWidth="md">
           <H2>How We Use Cookies</H2>
           <P>
             We use cookies for a variety of reasons detailed below.
@@ -45,7 +46,7 @@ export default setupPage({
             case they are used to provide a service that you use.
           </P>
         </Section>
-        <Section>
+        <Section maxWidth="md">
           <H2>Disabling Cookies</H2>
           <P>
             You can prevent the setting of cookies by adjusting the settings on
@@ -57,7 +58,7 @@ export default setupPage({
             cookies.
           </P>
         </Section>
-        <Section>
+        <Section maxWidth="md">
           <H2>The Cookies We Set</H2>
           <ul>
             <li>
@@ -82,7 +83,7 @@ export default setupPage({
             </li>
           </ul>
         </Section>
-        <Section>
+        <Section maxWidth="md">
           <H2>Third Party Cookies</H2>
           <P>
             In some special cases we also use cookies provided by trusted third
@@ -102,7 +103,7 @@ export default setupPage({
             </li>
           </ul>
         </Section>
-        <Section>
+        <Section maxWidth="md">
           <H2>More Information</H2>
           <P>
             Hopefully that has clarified things for you and as was previously
@@ -111,7 +112,7 @@ export default setupPage({
             case it does interact with one of the features you use on our site.
           </P>
         </Section>
-        <Section>
+        <Section maxWidth="md">
           <P>
             However if you are still looking for more information then you can
             contact us through one of our preferred contact methods:
@@ -120,7 +121,7 @@ export default setupPage({
             <li>Email: vincent@getstuff.cc</li>
           </ul>
         </Section>
-      </>
+      </Flex>
     );
   }
 });

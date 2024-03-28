@@ -9,27 +9,26 @@ import { StuffBranding } from "../_components/stuff";
 export default setupPage({
   Component() {
     return (
-      <>
+      <Flex gap="2rem" col className="pt-16">
         <PageHeador
           title={<><StuffBranding plus /> Pricing</>}
           comment="Simple pricing for simple services."
         />
-        <Section>
+        <Section maxWidth="md">
           <div className="grid w-full grid-rows-2 md:grid-rows-1 md:grid-cols-2 gap-4">
             <Card className="flex flex-col">
               <div className="p-4">
                 <Flex align="center" justify="between">
                   <h2 className="text-3xl font-bold">Stuff free</h2>
-                  <p className="text-lg font-semibold text-muted-foreground">
+                  <p className="text-lg font-semibold text-text2">
                     free
                   </p>
                 </Flex>
-                <p className="text-lg text-muted-foreground">
+                <p className="text-lg text-text2">
                   Average consumers
                 </p>
               </div>
               <div className="border-border w-full border-t" />
-
               <div className="p-4 bg-background2">
                 <p className="text-lg font-semibold">
                   <em>Features included:</em>
@@ -46,11 +45,11 @@ export default setupPage({
               <div className="p-4">
                 <Flex align="center" justify="between">
                   <h2 className="text-3xl font-bold">Stuff+</h2>
-                  <p className="text-lg font-semibold text-muted-foreground">
+                  <p className="text-lg font-semibold text-text2">
                     $2.99/mo
                   </p>
                 </Flex>
-                <p className="text-lg text-muted-foreground">
+                <p className="text-lg text-text2">
                   Average consumers
                 </p>
               </div>
@@ -70,7 +69,7 @@ export default setupPage({
             </Card>
           </div>
         </Section>
-      </>
+      </Flex>
     );
   }
 });

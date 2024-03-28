@@ -21,7 +21,7 @@ export const CookieTeller = () => {
   }
 
   return (
-    <Flex className="p-4 bg-muted sticky" gap="2rem" align="center">
+    <Flex className="p-4 bg-background2 sticky border-b border-border" gap="2rem" align="center">
       <span>
         Stuff Mail use cookies only to make sure you are you. Please click here to accept our cookies policy.
         {" "}<Link href="/cookies" className="underline">Read more here</Link>.

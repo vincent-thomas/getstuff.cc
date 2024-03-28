@@ -3,7 +3,7 @@ import { H2, H3, P } from "./typography";
 import { z } from "zod";
 
 const components = {
-  h2: ({...props}) => {
+  h1: ({...props}) => {
     const id = z.string().parse(props.children).toString().toLowerCase().replace(/\s/g, "-");
     return (
       <a href={`#${id}`} className="mt-8 block">
@@ -11,7 +11,7 @@ const components = {
       </a>
     )
   },
-  h3: ({...props}) => (
+  h2: ({...props}) => (
     <H3 className="mt-8 scroll-m-20 text-2xl font-semibold tracking-tight" {...props} />
   ),
   p: ({...props}) => (

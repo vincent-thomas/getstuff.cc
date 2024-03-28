@@ -64,9 +64,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <TooltipProvider>
           <TRPCReactProvider>
             <ThemeProvider
-              enableSystem
-              defaultTheme="dark"
               attribute="class"
+              disableTransitionOnChange
             >
               {children}
             </ThemeProvider>

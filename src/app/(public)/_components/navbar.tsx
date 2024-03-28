@@ -4,6 +4,7 @@ import Link from "next/link";
 import { cn } from "packages/components/utils";
 import { Logo } from "src/components/logo";
 import { StuffBranding } from "./stuff";
+import { ThemeBtn } from "./theme-icon";
 
 export const Navbar = () => (
   <header className="animate-in slide-in-from-top-2 duration-700 fade-in">
@@ -22,7 +23,7 @@ export const Navbar = () => (
       </Flex>
       <nav>
         <Flex gap="1rem" align="center" justify="between">
-
+          <ThemeBtn />
           <Link
             href="/auth/identify"
             className={cn(

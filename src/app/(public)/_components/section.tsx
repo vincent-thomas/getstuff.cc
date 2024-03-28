@@ -1,21 +1,34 @@
 import { cn } from "packages/components/utils";
 import type { ReactNode } from "react";
 
+
+const width = {
+  xs: "600px",
+  sm: "1000px",
+  md: "1200px",
+  lg: "1400px",
+  xl: "1600px",
+  custom: "none"
+}
+
 export const Section = ({
   children,
   className,
-  highSpace,
+  maxWidth = "custom",
   style
 }: {
   children: ReactNode;
   className?: string;
-  highSpace?: true;
+  maxWidth?: keyof typeof width;
   style?: React.CSSProperties;
 }) => {
   return (
     <section
-    style={style}
-      className={cn("mx-auto w-full max-w-[1100px] p-2 md:p-4", className, highSpace && "md:p-8 lg:p-16")}
+      style={{
+        ...style,
+        maxWidth: width[maxWidth]
+      }}
+      className={cn("mx-auto w-full", className)}
     >
       {children}
     </section>
