@@ -17,6 +17,8 @@ import purify from "dompurify";
 import { threadOpen } from "../store/thread-open";
 import { useAtom } from "jotai";
 import { useSearchParams } from "next/navigation";
+import { cn } from "@stuff/components/utils";
+import { css } from "styled-system/css";
 
 const paramsInterface = z.object({
   threadId: z.string(),
@@ -186,7 +188,7 @@ export function ThreadView({
   }
 
   return (
-    <div className="bg-background border-l border-border md:min-w-[500px] w-full flex flex-col max-h-full">
+    <div className={cn(css({bg: "background", w: "100%"}),"border-l border-border md:min-w-[500px] flex flex-col max-h-full")}>
       <Flex className="py-1" align="center">
         <button
           className="rounded-full p-3 m-1 hover:bg-hover"

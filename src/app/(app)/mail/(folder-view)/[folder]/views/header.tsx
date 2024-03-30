@@ -8,6 +8,8 @@ import type { FC } from "react";
 import { Checked, UnChecked } from "packages/icons/lib/unchecked";
 import { RefreshButton } from "../_components/refresh-button";
 import { SelectedBar } from "../_components/selected-bar";
+import { css } from "styled-system/css";
+import { Stack } from "styled-system/jsx";
 
 interface FolderHeader {
   folder: {name: string; folderId:string;}
@@ -18,27 +20,32 @@ export const FolderHeader: FC<FolderHeader> = ({folder}) => {
   const [selected, setSelected] = useAtom(messagesIdSelected);
 
   return (
-    <header
-      className={cn("flex w-full items-center border-b border-border p-1")}
+    <Stack
+      direction="row"
+      align="center"
+      gap="0"
+      className={cn(css({w: "100%"}), "border-b border-border")}
     >
-      <button
-        className="m-1 rounded-full p-3 hover:bg-hover text-text"
-        onClick={() => {
-          setSelected([]);
-          if (selected.length !== threadsQuery.data?.length) {
-            for (const thread of threadsQuery.data ?? []) {
-              setSelected(value => [...value, thread.threadId]);
+      <div className={css({p: "xs"})}>
+        <button
+          className={cn(css({color: "text.1", mt: 1, rounded: "full", _hover: {bg: "hover"}, p: "md"}))}
+          onClick={() => {
+            setSelected([]);
+            if (selected.length !== threadsQuery.data?.length) {
+              for (const thread of threadsQuery.data ?? []) {
+                setSelected(value => [...value, thread.threadId]);
+              }
             }
-          }
-        }}
-      >
-        {selected.length === threadsQuery.data?.length &&
-        threadsQuery.data.length !== 0 ? (
-          <Checked size={18} />
-        ) : (
-          <UnChecked size={18} />
-        )}
-      </button>
+          }}
+        >
+          {selected.length === threadsQuery.data?.length &&
+          threadsQuery.data.length !== 0 ? (
+            <Checked size={18} />
+          ) : (
+            <UnChecked size={18} />
+          )}
+        </button>
+      </div>
 
       <h1 className="pb-1 text-xl text-foreground">{folder.name}</h1>
       <div className="flex justify-end w-full h-full px-3">
@@ -48,6 +55,6 @@ export const FolderHeader: FC<FolderHeader> = ({folder}) => {
           <SelectedBar threadIds={selected} folderId={folder.folderId} />
         )}
       </div>
-    </header>
+    </Stack>
   )
 }

@@ -191,8 +191,6 @@ export function ThreadView({
             onClick={() =>{
               setThreadOpen(null);
               window.history.replaceState(null, '', `/mail/${folderId}`)
-              // router.replace()
-              // router.push(".")
             }}
           >
             <ArrowLeftCircleIcon size={22} />

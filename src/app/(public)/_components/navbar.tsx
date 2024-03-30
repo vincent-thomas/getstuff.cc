@@ -5,14 +5,16 @@ import { cn } from "packages/components/utils";
 import { Logo } from "src/components/logo";
 import { StuffBranding } from "./stuff";
 import { ThemeBtn } from "./theme-icon";
+import { css } from "styled-system/css";
+import { Stack } from "styled-system/jsx";
 
 export const Navbar = () => (
   <header className="animate-in slide-in-from-top-2 duration-700 fade-in">
     <Flex className="p-3" justify="between" align="center">
-      <Flex gap="1rem" align="center">
-        <Link href="/" className={buttonVariants({variant: "ghost"})}>
+      <Stack direction="row" gap="xl" align="center">
+        <Link href="/" className={buttonVariants({variant: "ghost", size: "md"})}>
           <Logo size={24} color />
-          <h1 className={cn("text-3xl font-bold text-text")}><StuffBranding /></h1>
+          <h1 className={cn(css({fontWeight: "bold", color: "text.1"}),"text-3xl")}><StuffBranding /></h1>
         </Link>
         <Link href="/pricing" className={buttonVariants({ variant: "ghost", size: "sm" })}>
           Pricing
@@ -20,14 +22,14 @@ export const Navbar = () => (
         <Link href="/blog" className={buttonVariants({ variant: "ghost", size: "sm" })}>
           Blog
         </Link>
-      </Flex>
+      </Stack>
       <nav>
-        <Flex gap="1rem" align="center" justify="between">
+        <Stack direction="row" gap="xl" align="center">
           <ThemeBtn />
           <Link
             href="/auth/identify"
             className={cn(
-              buttonVariants({ variant: "outline" }),
+              buttonVariants({ variant: "outline", size: "sm" }),
               "font-semibold"
             )}
           >
@@ -37,12 +39,12 @@ export const Navbar = () => (
             href="/auth/init"
             className={cn(
               buttonVariants({ variant: "accent", size: "lg"}),
-              "font-semibold"
+              css({ fontWeight: 'semibold' })
             )}
           >
             Get Stuff free
           </Link>
-        </Flex>
+        </Stack>
       </nav>
     </Flex>
   </header>

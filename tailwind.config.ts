@@ -3,6 +3,9 @@ import tailwindAnimate from "tailwindcss-animate";
 
 export default {
   content: ["./src/**/*.tsx", "packages/**/*.tsx", "./src/**/*.ts"],
+  corePlugins: {
+    preflight: false,
+  },
   theme: {
     extend: {
       padding: {

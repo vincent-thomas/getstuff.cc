@@ -20,7 +20,7 @@ export default setupPage({
   async Component() {
     return (
       <Flex col gap="3rem">
-        <Section className="w-full" maxWidth="md">
+        <Section maxWidth="md">
           <Flex justify="between" align="center" className="max-md:flex-col max-md:items-center">
             <HeroTitle
               className="pt-8 animate-in ease-out slide-in-from-left-10 duration-700 fade-in max-md:text-center "

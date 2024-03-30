@@ -1,14 +1,16 @@
 "use client";
 
-import { type VariantProps } from "class-variance-authority";
 import { type ButtonHTMLAttributes, forwardRef } from "react";
 import { cn } from "@stuff/components/utils"
 import { buttonVariants } from "./variants";
 import { Loading } from "@stuff/icons/loading";
+import { theme } from "src/styles/themes.css";
+import type { RecipeVariantProps } from "styled-system/types";
+
+type ButtonVariants = Exclude<RecipeVariantProps<typeof buttonVariants>, undefined>;
 
 export interface ButtonProps
-  extends ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {
+  extends ButtonHTMLAttributes<HTMLButtonElement>, ButtonVariants {
   loading?: boolean;
 }
 
@@ -21,7 +23,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       <button
         disabled={disabled ?? loading}
         ref={ref}
-        className={cn(buttonVariants({ variant, size, className }))}
+        className={cn(buttonVariants({ variant, size }), className)}
         {...props}
       >
         {children}
@@ -30,8 +32,8 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           <Loading
             color={
               variant === "primary"
-                ? "hsl(var(--muted-foreground))"
-                : "hsl(var(--foreground))"
+                ? theme.text2
+                : theme.text
             }
             size={20}
           />

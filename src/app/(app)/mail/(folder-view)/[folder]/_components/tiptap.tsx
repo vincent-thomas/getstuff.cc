@@ -50,7 +50,7 @@ const Tiptap = ({
     ],
     editorProps: {
       attributes: {
-        class: "pb-auto outline-none tiptap-root w-full h-full"
+        class: "outline-none tiptap-root w-full h-full pb-32"
       }
     },
     onUpdate: ({ editor }) => {

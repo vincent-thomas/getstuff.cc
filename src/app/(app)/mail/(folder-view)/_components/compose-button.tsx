@@ -8,8 +8,6 @@ import {
   DrawerContent,
   DrawerDescription,
   DrawerFooter,
-  DrawerHeader,
-  DrawerMainContent,
   DrawerTitle,
   DrawerTrigger
 } from "packages/components/lib/drawer";
@@ -24,6 +22,10 @@ import { api } from "@stuff/api-client/react";
 import { ScrollArea } from "packages/components/lib/scroll-area";
 import { Flex } from "@stuff/structure";
 import { buttonVariants } from "@stuff/ui/button/variants";
+import { css } from "styled-system/css";
+import { theme } from "src/styles/themes.css";
+import { Button } from "@stuff/ui/button";
+import { Box, Stack } from "styled-system/jsx";
 
 const mailSendInterface = z.object({
   to: z.string().email(),
@@ -86,61 +88,60 @@ export const ComposeButton = () => {
         className="flex items-center gap-2 rounded-lg px-3 py-3 outline-border outline outline-[2px] outline-offset-[-2px] shadow-sm bg-hover"
         onClick={() => setOpen(true)}
       >
-        <PlusIcon color="var(--text)" size={24} />
-        <span className="font-semibold text-lg">Compose</span>
+        <PlusIcon color={theme.text} size={24} />
+        <span className={cn(css({fontWeight: "semibold", fontSize: "large"}))}>Compose</span>
       </DrawerTrigger>
 
-      <DrawerContent className="mx-auto flex w-screen max-w-[800px] flex-col overflow-visible border border-gray-500 bg-background2">
-        <form onSubmit={onSubmit} className="pb-auto flex grow flex-col">
-          <DrawerHeader>
-            <Flex gap="1rem" align="center" justify="between">
-              <DrawerTitle>Send Email</DrawerTitle>
-              <button className="rounded-full bg-primary p-1" type="submit">
-                <ArrowUpIcon color="var(--background)" size={26} />
-              </button>
-            </Flex>
-            <DrawerDescription>
-              Sending an email cant be undone
-            </DrawerDescription>
-          </DrawerHeader>
-          <div className="border-t border-border">
-            <Flex
-              className="w-full border-b border-border px-6 py-3"
-              gap="1rem"
-              align="center"
-            >
-              <span className="text-muted-foreground">To:</span>
-
+      <DrawerContent asChild className={css({maxW: "800px", maxH: "1000px", display: 'grid', gridTemplateRows: "auto 1fr auto"})}>
+        <form onSubmit={onSubmit}>
+          <Box>
+            <Stack justify="space-between" direction="row" align="center" p="xl">
+              <Stack>
+                <DrawerTitle>Send Email</DrawerTitle>
+                <DrawerDescription>
+                  Sending an email cant be undone
+                </DrawerDescription>
+              </Stack>
+              <Button className={cn(css({rounded: "full", bg: "text.1", padding: "0.25rem"}))} type="submit">
+                <ArrowUpIcon color={theme.background} size={26} />
+              </Button>
+            </Stack>
+            <Box className={css({borderTopColor: "border",borderTopWidth: '1px'})}>
+              <Flex
+                className="w-full border-b border-border px-6 py-3"
+                gap="1rem"
+                align="center"
+              >
+                <span className={css({color: "text.2"})}>To:</span>
+                <input
+                  {...register("to")}
+                  className="h-full w-full bg-transparent outline-none"
+                />
+              </Flex>
               <input
-                {...register("to")}
-                className="h-full w-full bg-transparent outline-none"
+                type="text"
+                className={cn("w-full bg-transparent text-2xl outline-none", css({p: "xl"}))}
+                placeholder="Subject"
+                {...register("subject")}
               />
-            </Flex>
-          </div>
-          <DrawerMainContent className="flex grow flex-col gap-4">
-            <input
-              type="text"
-              className="w-full bg-transparent text-2xl outline-none"
-              placeholder="Subject"
-              {...register("subject")}
+            </Box>
+          </Box>
+          <ScrollArea className={css({h: "100%", px: "xl"})}>
+            <Tiptap
+              placeholder="Compose your email..."
+              initialContent="<p></p>"
+              onUpdate={({ text, html }) => setDefaultContent({ text, html })}
             />
-            <ScrollArea className="h-[calc(100vh-(8px+16px)-92px-50px-32px-70px-3rem-24px)]">
-              <Tiptap
-                placeholder="Compose your email..."
-                initialContent="<p></p>"
-                className="h-full"
-                onUpdate={({ text, html }) => setDefaultContent({ text, html })}
-              />
-            </ScrollArea>
-          </DrawerMainContent>
+          </ScrollArea>
+          <DrawerFooter>
+            <DrawerClose
+              className={cn(buttonVariants({ variant: "outline" }), "w-full", "!border-border py-3")}
+              type="button"
+            >
+              Cancel
+            </DrawerClose>
+          </DrawerFooter>
         </form>
-        <DrawerFooter>
-          <DrawerClose
-            className={cn(buttonVariants({ variant: "outline" }), "w-full", "!border-border py-3")}
-          >
-            Cancel
-          </DrawerClose>
-        </DrawerFooter>
       </DrawerContent>
     </Drawer>
   );

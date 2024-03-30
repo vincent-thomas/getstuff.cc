@@ -9,6 +9,7 @@
     "build:mail-reciever": "node ./packages/mail-reciever/esbuild.js",
     "dev": "next dev",
     "lint": "next lint",
+    "prepare": "panda codegen",
     "test": "jest",
     "start": "next start",
     "cdk:synth": "dotenv -- cdk synth",
@@ -92,6 +93,7 @@
   },
   "devDependencies": {
     "@jest/globals": "^29.7.0",
+    "@pandacss/dev": "^0.36.1",
     "@serwist/next": "^8.4.4",
     "@types/argon2-browser": "^1.18.4",
     "@types/dompurify": "^3.0.5",

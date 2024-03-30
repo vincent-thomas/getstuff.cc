@@ -10,6 +10,7 @@ import { CheckIcon, PuzzleIcon } from "lucide-react"
 import { Dialog, DialogContent, DialogTrigger } from "packages/components/lib/dialog";
 import { Drawer, DrawerClose, DrawerContent, DrawerMainContent, DrawerTrigger } from "packages/components/lib/drawer";
 import { Card } from "src/app/(public)/_components/card";
+import { css } from "styled-system/css";
 
 
 const classNames= "border border-border px-4 py-3 rounded-md flex flex-col hover:bg-hover w-full"
@@ -24,7 +25,10 @@ export const Extensions = () => {
       <DialogTrigger asChild>
         <button className={cn("p-3 flex items-center gap-2 rounded-lg shadow-sm hover:bg-hover hover:outline outline-1 outline-border")}>
           <PuzzleIcon color="var(--text2)" size={24} />
-          <span className="font-semibold text-lg">
+          <span className={css({
+            fontWeight: "semibold",
+            fontSize: "large"
+          })}>
             Extensions
           </span>
         </button>
@@ -105,7 +109,7 @@ export const EnabledMailRelayButton = () => {
                           <DialogContent className="flex flex-col">
                             <Heading weight="bold" className="text-2xl">Alias: {alias.sk.split("|")[2]}</Heading>
                             <div>
-                              <Button variant="destructive">testing</Button>
+                              <Button variant="ghost">testing</Button>
                               <Button variant="primary">testing</Button>
                             </div>
                           </DialogContent>
