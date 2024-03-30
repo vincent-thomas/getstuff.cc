@@ -8,6 +8,7 @@
 # testing
 /coverage
 
+# styled-system
 # next.js
 /.next/
 next-env.d.ts
