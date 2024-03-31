@@ -3,6 +3,7 @@
 import { api } from "@stuff/api-client/react";
 import type { api as apiServer } from "@stuff/api-client/server"
 import Link from "next/link"
+import { css, cx } from "styled-system/css";
 import { z } from "zod";
 
 
@@ -22,7 +23,7 @@ export const Folder = ({folder}: {folder: Awaited<ReturnType<typeof apiServer.ma
     <Link
       href={`./${folder.sk.split("|")[1]}`}
       key={folder.sk.split("|")[1]}
-      className="px-4 py-2 hover:bg-accent rounded-md"
+      className={cx(css({px: "md", py: "sm", _hover: {bg: "hover"}, rounded: "radius"}))}
       onMouseOver={mouseOver}
     >
       {folder.gsi2.split("|")[2]}

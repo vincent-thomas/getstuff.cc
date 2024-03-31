@@ -1,18 +1,60 @@
 import { defineConfig } from "@pandacss/dev"
- 
+
 export default defineConfig({
   preflight: true,
-
   jsxFramework: "react",
   hash: false,
   lightningcss: true,
   include: ["./src/**/*.{ts,tsx}","./packages/components/**/*.{ts,tsx}"],
+  cssVarRoot: "body",
+  strictTokens: true,
+  patterns: {
+    extend: {
+      stack: {
+        defaultValues: {
+          gap: "md"
+        }
+      },
+    }
+  },
   theme: {
     tokens: {
+      sizes: {
+        full: {
+          value: "100%",
+          description: "Full width or height"
+        }
+      },
+      spacing: {
+        xs: {
+          value: "4px"
+        },
+        sm: {
+          value: "6px"
+        },
+        md: {
+          value: "10px"
+        },
+        lg: {
+          value: "14px"
+        },
+        xl: {
+          value: "16px"
+        },
+        none: {
+          value: "0px"
+        }
+      },
+ 
       colors: {
+        transparent: {value: "transparent"},
         border: {
           value: "var(--border)",
           description: "Border color"
+        },
+        card: {
+          value: "var(--background2)",
+          description: "Card color"
         },
         text: {
           1: {
@@ -60,9 +102,24 @@ export default defineConfig({
         }
       },
       borders: {
+        none: {
+          value: "none"
+        },
         border: {
-          value: "var(--border)",
-          description: "Border color"
+          border: {
+            color: {
+              value: "var(--border)",
+              description: "Border color"
+            },
+            width: {
+              value: "1px",
+              description: "Border width"
+            },
+            style: {
+              value: "solid",
+              description: "Border style"
+            }
+          },
         }
       },
       fontWeights: {
@@ -79,23 +136,6 @@ export default defineConfig({
           description: "Bold font weight"
         }
       },
-      spacing: {
-        xs: {
-          value: "4px"
-        },
-        sm: {
-          value: "8px"
-        },
-        md: {
-          value: "12px"
-        },
-        lg: {
-          value: "16px"
-        },
-        xl: {
-          value: "20px"
-        }
-      }
     },
     breakpoints: {
       sm: "640px",

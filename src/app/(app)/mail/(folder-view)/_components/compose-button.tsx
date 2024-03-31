@@ -8,9 +8,10 @@ import {
   DrawerContent,
   DrawerDescription,
   DrawerFooter,
+  DrawerHeader,
   DrawerTitle,
   DrawerTrigger
-} from "packages/components/lib/drawer";
+} from "@stuff/ui/drawer/drawer";
 import { cn } from "packages/components/utils";
 import { useState } from "react";
 import Tiptap from "../[folder]/_components/tiptap";
@@ -95,17 +96,19 @@ export const ComposeButton = () => {
       <DrawerContent asChild className={css({maxW: "800px", maxH: "1000px", display: 'grid', gridTemplateRows: "auto 1fr auto"})}>
         <form onSubmit={onSubmit}>
           <Box>
-            <Stack justify="space-between" direction="row" align="center" p="xl">
-              <Stack>
-                <DrawerTitle>Send Email</DrawerTitle>
-                <DrawerDescription>
-                  Sending an email cant be undone
-                </DrawerDescription>
+            <DrawerHeader>
+              <Stack justify="space-between" direction="row" align="center">
+                <Stack>
+                  <DrawerTitle>Send Email</DrawerTitle>
+                  <DrawerDescription>
+                      Sending an email cant be undone
+                  </DrawerDescription>
+                </Stack>
+                <Button className={cn(css({rounded: "full", bg: "text.1", padding: "0.25rem"}))} type="submit">
+                  <ArrowUpIcon color={theme.background} size={26} />
+                </Button>
               </Stack>
-              <Button className={cn(css({rounded: "full", bg: "text.1", padding: "0.25rem"}))} type="submit">
-                <ArrowUpIcon color={theme.background} size={26} />
-              </Button>
-            </Stack>
+            </DrawerHeader>
             <Box className={css({borderTopColor: "border",borderTopWidth: '1px'})}>
               <Flex
                 className="w-full border-b border-border px-6 py-3"
@@ -135,7 +138,7 @@ export const ComposeButton = () => {
           </ScrollArea>
           <DrawerFooter>
             <DrawerClose
-              className={cn(buttonVariants({ variant: "outline" }), "w-full", "!border-border py-3")}
+              className={cn(buttonVariants({ variant: "outline", size: "lg" }), css({w: "100%"}))}
               type="button"
             >
               Cancel

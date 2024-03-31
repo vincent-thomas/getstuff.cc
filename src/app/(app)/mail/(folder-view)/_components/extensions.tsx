@@ -6,11 +6,15 @@ import { Flex } from "@stuff/structure";
 import { H1, H2, P } from "@stuff/typography";
 import { Button } from "@stuff/ui/button";
 import { Heading } from "@stuff/ui/title";
-import { CheckIcon, PuzzleIcon } from "lucide-react"
+import { format } from "date-fns";
+import { CheckIcon, PlusIcon, PuzzleIcon } from "lucide-react"
 import { Dialog, DialogContent, DialogTrigger } from "packages/components/lib/dialog";
-import { Drawer, DrawerClose, DrawerContent, DrawerMainContent, DrawerTrigger } from "packages/components/lib/drawer";
+import { Drawer, DrawerClose, DrawerContent, DrawerTrigger } from "@stuff/ui/drawer";
+import { toast } from "sonner";
 import { Card } from "src/app/(public)/_components/card";
 import { css } from "styled-system/css";
+import { Stack } from "styled-system/jsx";
+import { ScrollArea } from "packages/components/lib/scroll-area";
 
 
 const classNames= "border border-border px-4 py-3 rounded-md flex flex-col hover:bg-hover w-full"
@@ -68,7 +72,8 @@ export const EnabledMailRelayButton = () => {
 
 
   const {data: aliases} = api.extensions.mailRelay.listAliases.useQuery();
-
+  // const deleteRelayMutation = api.extensions.mailRelay.removeAlias.useMutation();
+  const createAliasMutation = api.extensions.mailRelay.createAlias.useMutation();
 
   return (
     <Drawer>
@@ -82,48 +87,64 @@ export const EnabledMailRelayButton = () => {
         </Flex>
 
       </DrawerTrigger>
-      <DrawerContent className="h-[calc(100vh-50px)] !w-[clamp(400px,100%,800px)] mx-auto bg-background2">
-        <DrawerMainContent className="h-full flex flex-col px-6 py-2 gap-4">
-          <H1>Mail relays</H1>
-          {aliases === undefined ? (<div className="grow"></div>) : (
-            aliases?.length === 0
-              ? (
-                  <Flex justify="center" align="center" className="grow">
-                    <H2 className="text-text2">You have no relays</H2>
-                  </Flex>
-                )
-              : (
-                <div className="grow overflow-y-auto">
-                    {aliases.map(alias => (
+      <DrawerContent asChild>
+        <Stack p="lg" className={css({maxW: "800px", maxH: "1000px", display: 'grid', gridTemplateRows: "auto auto 1fr auto"})} gap="md">
+          <Stack justify="space-between" direction="row">
+            <H1>Mail relays</H1>
+            <Button variant="ghost" className={css({p: "sm", rounded: "full"})} onClick={() => {{
+              createAliasMutation.mutate({label: "google.com"})
+            }}}>
+              <PlusIcon size={24} />
+            </Button>
+          </Stack>
+          <input placeholder="Search..." className={css({p: "md", borderColor: "border", borderWidth: "1px", bg: "background.2", rounded: "radius"})} />
+            {aliases === undefined ? (<div className="grow"></div>) : (
+              aliases?.length === 0
+                ? (
+                    <Flex justify="center" align="center" className="grow">
+                      <H2 className="text-text2">You have no relays</H2>
+                    </Flex>
+                  )
+                : (
+                  <ScrollArea className="h-full">
+                    <Stack>
+                      {aliases.map(alias => (
                         <Dialog key={alias.sk}>
                           <DialogTrigger asChild>
-                            <button className="w-full hover:bg-hover">
+                            <button className={css({w: "100%", cursor: "pointer", "&:hover": {bg: "hover"}})}>
                               <Card p="md" className="text-left">
                                 <Heading weight="bold" className="text-lg">
-                                  {alias.pk}
+                                  {alias.label}
                                 </Heading>
-                                <P>{alias.description === "" ? "No Description" : alias.description}</P>
+                                <P>{alias.sk.split("|")[1]}@getstuff.cc</P>
                               </Card>
                             </button>
                           </DialogTrigger>
-                          <DialogContent className="flex flex-col">
-                            <Heading weight="bold" className="text-2xl">Alias: {alias.sk.split("|")[2]}</Heading>
-                            <div>
-                              <Button variant="ghost">testing</Button>
-                              <Button variant="primary">testing</Button>
-                            </div>
+                          <DialogContent>
+                            <Stack align="center" gap="5px">
+                              <img width={50} height={50} src={`https://www.gentlentapis.com/tools/v1/getFavicon?url=https://${alias.label}&format=image`} />
+                              <Heading weight="bold" className="text-2xl">{alias.label}</Heading>
+                              <P>Created at {format(alias.created_at, "dd MMMM, yyyy")}</P>
+                              <Stack direction="row" className={css({mt: "md"})} align="center">
+                                <Button variant="outline" size="md">Disable address</Button>
+                                <Button variant="primary" size="md" onClick={async () => {
+                                  await navigator.clipboard.writeText(alias.sk.split("|")[1] + "@getstuff.cc");
+                                  toast.info("Address copied to clipboard")
+                                }}>Copy address</Button>
+                              </Stack>
+                            </Stack>
                           </DialogContent>
                         </Dialog>
-
-                    ))}
-                </div>
-              )
-          )}
+                      ))}
+                    </Stack>
+                  </ScrollArea>
+                )
+            )}
           <DrawerClose asChild>
-            <Button variant="outline" className="bg-background py-3">Close</Button>
+            <Button variant="outline" size="lg" className={css({mt: "auto"})}>Close</Button>
           </DrawerClose>
-        </DrawerMainContent>
+        </Stack>
       </DrawerContent>
-      </Drawer>
+    </Drawer>
   )
 }

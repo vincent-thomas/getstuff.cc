@@ -14,12 +14,14 @@ import { boxGrid, conversations, extensions, folders } from "./page.css";
 import { Logo } from "src/components/logo";
 import { Footer } from "./_components/footer";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@stuff/ui/accortion";
+import { Stack } from "@stuff/styling/jsx";
+import { css } from "@stuff/styling/css";
 
 
 export default setupPage({
   async Component() {
     return (
-      <Flex col gap="3rem">
+      <Stack gap="xl">
         <Section maxWidth="md">
           <Flex justify="between" align="center" className="max-md:flex-col max-md:items-center">
             <HeroTitle
@@ -85,7 +87,7 @@ export default setupPage({
                 <Link
                   href="#"
                   className={cn(
-                    "ml-auto block font-semibold",
+                    css({fontWeight: "semibold", display: "block", ml: "auto"}),
                     buttonVariants({ variant: "link" })
                   )}
                 >
@@ -169,7 +171,7 @@ export default setupPage({
         <div className="mb-24">
           <Footer />
         </div>
-      </Flex>
+      </Stack>
     );
   }
 });

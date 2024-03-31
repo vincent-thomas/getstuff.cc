@@ -10,6 +10,7 @@ import type { Metadata, Viewport } from "next";
 import { ThemeProvider } from "src/providers/theme";
 import { env } from "@/env";
 import { TooltipProvider } from "@stuff/ui/tooltip";
+import { css } from "@stuff/styling/css";
 
 const inter = Inter({
   axes: ["slnt"],
@@ -59,7 +60,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <head />
       <body className={cn(
         inter.className,
-        "min-h-screen antialiased bg-background"
+        css({minH: "screen", bg: "background.1"}),
       )}>
         <TooltipProvider>
           <TRPCReactProvider>

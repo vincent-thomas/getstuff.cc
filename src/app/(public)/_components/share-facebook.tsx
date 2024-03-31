@@ -1,10 +1,11 @@
 import { buttonVariants } from "@stuff/ui/button/variants";
+import { css, cx } from "styled-system/css";
 
 export const ShareFacebook =({blogId}: {blogId: string}) => {
   const url = encodeURIComponent(`getstuff.cc/blog/${blogId}`);
   return (
     <a
-      className={buttonVariants({size: "icon", variant: "icon"})}
+      className={cx(buttonVariants({variant: "ghost"}), css({p: "md"}))}
       href={`http://www.facebook.com/share.php?u=${url}`}
       target="_blank"
     >

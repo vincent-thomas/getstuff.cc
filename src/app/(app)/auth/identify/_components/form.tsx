@@ -86,7 +86,7 @@ export const Form = () => {
       })} className="flex flex-col gap-4">
         <MailInput {...register("username")} />
         <PasswordInput {...register("password")} />
-        <Button size="lg" loading={loading}>
+        <Button size="lg" loading={loading} variant="primary">
           Submit
         </Button>
       </form>

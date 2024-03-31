@@ -1,4 +1,4 @@
-import { cva } from "styled-system/css";
+import { cva } from "@stuff/styling/css";
 
 export const buttonVariants = cva({
   base: {
@@ -10,25 +10,23 @@ export const buttonVariants = cva({
     fontWeight: "medium",
     transition: "colors",
     outline: "none",
-    gap: "2",
+    gap: "md",
     "&:disabled": {
       pointerEvents: "none",
-      opacity: 0.75,
+      opacity: 0.5,
     },
     cursor: "pointer"
   },
   variants: {
     variant: {
       primary: {
-        bg: "text",
+        bg: "text.1",
         color: "background.1",
-        "&:hover": {
-          bg: "text.1",
-        },
       },
       outline: {
-        border: "1px solid border",
-        bg: "background.1",
+        borderColor: "border",
+        borderWidth: "border",
+        borderStyle: "border",
         "&:hover": {
           bg: "hover",
           color: "text.2"
@@ -64,22 +62,14 @@ export const buttonVariants = cva({
       },
     },
     size: {
-      xs: {
-        py: 1.5 * 2.5,
-        px: 2 * 2.5,
-      },
       sm: {
-        py: "0.325rem",
-        px: "0.75rem",
+        p: "sm"
       },
       md: {
-        py: '0.5rem',
-        px: "1rem",
+        p: "md"
       },
- 
       lg: {
-        py: "0.75rem",
-        px: "1.25rem",
+        p: "lg"
       },
     }
   },

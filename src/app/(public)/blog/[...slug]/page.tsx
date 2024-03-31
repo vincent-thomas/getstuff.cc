@@ -16,6 +16,7 @@ import { Flex } from "@stuff/structure"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@stuff/ui/tooltip"
 import { ShareFacebook } from "../../_components/share-facebook"
 import { H2 } from "@stuff/typography"
+import { Loading } from "@stuff/icons/loading"
 
 interface PostPageProps {
   params: {
@@ -164,11 +165,10 @@ export default async function PostPage({ params }: PostPageProps) {
                   </Tooltip>
                 </Flex>
               </Flex>
-
             </div>
             <div className="flex justify-center py-6 lg:py-10">
-              <Link href="/blog" className={cn(buttonVariants({ variant: "ghost" }))}>
-                <ChevronLeft className="mr-2 h-4 w-4" />
+              <Link href="/blog" className={cn(buttonVariants({ variant: "ghost", size: "md" }))}>
+                <ChevronLeft className="h-4 w-4" />
                 See all posts
               </Link>
             </div>

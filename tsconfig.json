@@ -68,6 +68,9 @@
       "@stuff/client/interfaces": [
         "./src/interfaces/index.ts"
       ],
+      "@stuff/styling/*": [
+        "./styled-system/*"
+      ],
       "@stuff/client/utils": [
         "./src/utils/index.ts"
       ],

@@ -1,3 +1,4 @@
+import { css } from "@stuff/styling/css";
 import { cn } from "packages/components/utils";
 import type { HTMLAttributes, ReactNode } from "react";
 
@@ -30,7 +31,12 @@ export function Card({
   return (
     <div
       className={cn(
-        "rounded-md border border-border bg-[var(--card)]",
+        css({
+          bg: "card", 
+          rounded: "radius",
+          borderColor: "border",
+          borderWidth: "1px"
+        }),
         className,
       )}
       style={{

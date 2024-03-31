@@ -2,9 +2,10 @@
 
 import * as React from "react";
 import { Drawer as DrawerPrimitive } from "vaul";
-import { cn } from "../utils";
+import { cn } from "../../../../packages/components/utils";
 import { css } from "styled-system/css";
-import "./global.css"
+import "./drawer.css"
+import { box } from "styled-system/patterns";
 const Drawer = ({
   shouldScaleBackground = true,
   ...props
@@ -28,7 +29,7 @@ const DrawerOverlay = React.forwardRef<
 >(({ className, ...props } , ref) => (
   <DrawerPrimitive.Overlay
     ref={ref}
-    className={cn("fixed inset-0 z-50 bg-black/80", className)}
+    className={cn(css({position: "fixed", inset: 0, zIndex: 50, bg: "black/80"}), className)}
     {...props}
   />
 ));
@@ -61,8 +62,7 @@ const DrawerContent = React.forwardRef<
     })}>
       <DrawerPrimitive.Content
         ref={ref}
-        className={cn(css({bg: "background.1", h: "100%", w: "100%"}),
-          "rounded-t-[10px] border border-border",
+        className={cn(css({bg: "background.1", h: "100%", w: "100%", roundedTop: "10px", borderWidth: "1px", borderColor: "border" }),
           className
         )}
         {...props}
@@ -79,7 +79,7 @@ const DrawerHeader = ({
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
-    className={cn("grid gap-1.5 px-6 py-4 text-center sm:text-left", className)}
+    className={cn(box({p: "xl"}), className)}
     {...props}
   />
 );
@@ -90,10 +90,11 @@ const DrawerFooter = ({
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
-    className={cn("mt-auto flex flex-col gap-2 px-6 py-4", className)}
+    className={cn(box({ p: "xl" }), className)}
     {...props}
   />
 );
+
 DrawerFooter.displayName = "DrawerFooter";
 
 const DrawerTitle = React.forwardRef<
@@ -103,7 +104,8 @@ const DrawerTitle = React.forwardRef<
   <DrawerPrimitive.Title
     ref={ref}
     className={cn(
-      "text-2xl font-semibold leading-none tracking-tight",
+      css({fontWeight: "semibold"}),
+      "text-2xl leading-none tracking-tight",
       className
     )}
     {...props}
@@ -117,17 +119,11 @@ const DrawerDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DrawerPrimitive.Description
     ref={ref}
-    className={cn("text-sm text-muted-foreground", className)}
+    className={cn(css({color: "text.2"}),"text-sm", className)}
     {...props}
   />
 ));
 
-const DrawerMainContent: React.FC<{
-  className?: string;
-  children: React.ReactNode;
-}> = ({ className, children }) => (
-  <div className={cn("text-md px-6 py-4", className)}>{children}</div>
-);
 DrawerDescription.displayName = DrawerPrimitive.Description.displayName;
 
 export {
@@ -138,7 +134,6 @@ export {
   DrawerClose,
   DrawerContent,
   DrawerHeader,
-  DrawerMainContent,
   DrawerFooter,
   DrawerTitle,
   DrawerDescription
