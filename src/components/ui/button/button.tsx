@@ -1,15 +1,11 @@
 "use client";
 
 import { type ButtonHTMLAttributes, forwardRef } from "react";
-import { buttonVariants } from "./variants";
+import { type ButtonVariants, button } from "./button.css";
 import { Loading } from "@stuff/icons/loading";
-import { cx } from "@stuff/styling/css";
-import type { RecipeVariantProps } from "@stuff/styling/types";
+import { cn } from "@stuff/components/utils";
 
-type ButtonVariants = Exclude<RecipeVariantProps<typeof buttonVariants>, undefined>;
-
-export interface ButtonProps
-  extends ButtonHTMLAttributes<HTMLButtonElement>, ButtonVariants {
+export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & ButtonVariants & {
   loading?: boolean;
 }
 
@@ -22,7 +18,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       <button
         disabled={disabled ?? loading}
         ref={ref}
-        className={cx(buttonVariants({ variant, size }), className)}
+        className={cn(button({ variant, size }), className)}
         {...props}
       >
         {children}

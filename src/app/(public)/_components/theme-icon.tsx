@@ -12,17 +12,18 @@ export const ThemeBtn =() => {
   const theme = useTheme();
   const [mounted, setMounted] = useState(false)
 
-    useEffect(() => {
-      setMounted(true)
-    }, [])
-  
-    if (!mounted) {
-      return null
-    }
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  if (!mounted) {
+    return null
+  }
+
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-        <Button size="icon" variant="icon" onClick={() => theme.setTheme(theme.resolvedTheme === "dark" ? "light" : "dark")}>
+        <Button size="sm" variant="ghost" rounded="medium" onClick={() => theme.setTheme(theme.resolvedTheme === "dark" ? "light" : "dark")}>
           {theme.resolvedTheme === "dark" ? <SunIcon /> : <MoonIcon />}
         </Button>
       </TooltipTrigger>

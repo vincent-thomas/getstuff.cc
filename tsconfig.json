@@ -87,7 +87,8 @@
     "**/*.cjs",
     "**/*.js",
     ".next/types/**/*.ts",
-    ".contentlayer/generated"
+    ".contentlayer/generated",
+    "./styled-system"
   ],
   "exclude": [
     "**/dist",

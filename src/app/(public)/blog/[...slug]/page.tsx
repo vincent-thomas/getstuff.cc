@@ -6,7 +6,7 @@ import Link from "next/link"
 
 import { env } from "@/env"
 import { cn } from "@stuff/components/utils"
-import { buttonVariants } from "@stuff/ui/button/variants"
+import { button } from "@stuff/ui/button/button.css"
 import { ChevronLeft } from "lucide-react"
 import { formatDate } from "date-fns"
 import { PageHeador } from "../../_components/header"
@@ -16,7 +16,6 @@ import { Flex } from "@stuff/structure"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@stuff/ui/tooltip"
 import { ShareFacebook } from "../../_components/share-facebook"
 import { H2 } from "@stuff/typography"
-import { Loading } from "@stuff/icons/loading"
 
 interface PostPageProps {
   params: {
@@ -167,7 +166,7 @@ export default async function PostPage({ params }: PostPageProps) {
               </Flex>
             </div>
             <div className="flex justify-center py-6 lg:py-10">
-              <Link href="/blog" className={cn(buttonVariants({ variant: "ghost", size: "md" }))}>
+              <Link href="/blog" className={cn(button({ variant: "ghost", size: "md" }))}>
                 <ChevronLeft className="h-4 w-4" />
                 See all posts
               </Link>

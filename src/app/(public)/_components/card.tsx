@@ -1,6 +1,7 @@
-import { css } from "@stuff/styling/css";
 import { cn } from "packages/components/utils";
 import type { HTMLAttributes, ReactNode } from "react";
+import { border } from "src/components/recipies";
+import { theme } from "src/styles/themes.css";
 
 interface CardProps extends HTMLAttributes<HTMLDivElement>{
   p?: "sm" | "md" | "lg" | undefined;
@@ -31,16 +32,12 @@ export function Card({
   return (
     <div
       className={cn(
-        css({
-          bg: "card", 
-          rounded: "radius",
-          borderColor: "border",
-          borderWidth: "1px"
-        }),
+        border({rounded: "radius"}),
         className,
       )}
       style={{
-        padding: getPadding(p)
+        padding: getPadding(p),
+        background: theme.card
       }}
       {...props}
     />

@@ -3,9 +3,10 @@
 import * as React from "react";
 import { Drawer as DrawerPrimitive } from "vaul";
 import { cn } from "../../../../packages/components/utils";
-import { css } from "styled-system/css";
 import "./drawer.css"
-import { box } from "styled-system/patterns";
+import { css } from "src/components/styler.css";
+import { contentWrapper, drawerOverlay } from "./drawer.css";
+import { stack } from "src/components/recipies";
 const Drawer = ({
   shouldScaleBackground = true,
   ...props
@@ -29,7 +30,7 @@ const DrawerOverlay = React.forwardRef<
 >(({ className, ...props } , ref) => (
   <DrawerPrimitive.Overlay
     ref={ref}
-    className={cn(css({position: "fixed", inset: 0, zIndex: 50, bg: "black/80"}), className)}
+    className={cn(drawerOverlay, className)}
     {...props}
   />
 ));
@@ -41,28 +42,17 @@ const DrawerContent = React.forwardRef<
 >(({ className, children,...props }, ref) => (
   <DrawerPortal>
     <DrawerOverlay />
-    <div className={css({
-      position: "fixed",
-      top: 0,
-      bottom: 0,
-      insetX: 0,
-      zIndex: 50,
-      display: "flex",
-      alignItems: "end",
-      justifyContent:"center",
-      pt: {
-        base: "md",
-        md: "lg",
-        lg: "xl"
-      },
-      px: {
-        base: "sm",
-        md: "xl"
-      }
-    })}>
+    <div className={cn(
+      contentWrapper,
+      stack({align: "flex-end", justify: "center"}),
+      css({
+        paddingTop: "medium",
+        pX: "medium"
+    }))}>
       <DrawerPrimitive.Content
         ref={ref}
-        className={cn(css({bg: "background.1", h: "100%", w: "100%", roundedTop: "10px", borderWidth: "1px", borderColor: "border" }),
+        style={{height: "100%", width: "100%", borderTopLeftRadius: '10px', borderTopRightRadius: '10px', borderWidth: "1px"}}
+        className={cn(css({bg: "bg", borderColor: "border" }),
           className
         )}
         {...props}
@@ -79,7 +69,7 @@ const DrawerHeader = ({
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
-    className={cn(box({p: "xl"}), className)}
+    className={cn(css({p: "x-large"}), className)}
     {...props}
   />
 );
@@ -90,7 +80,7 @@ const DrawerFooter = ({
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
-    className={cn(box({ p: "xl" }), className)}
+    className={cn(css({ p: "x-large" }), className)}
     {...props}
   />
 );
@@ -119,7 +109,7 @@ const DrawerDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DrawerPrimitive.Description
     ref={ref}
-    className={cn(css({color: "text.2"}),"text-sm", className)}
+    className={cn(css({color: "text2"}),"text-sm", className)}
     {...props}
   />
 ));

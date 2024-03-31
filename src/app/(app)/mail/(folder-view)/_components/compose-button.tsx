@@ -22,11 +22,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { api } from "@stuff/api-client/react";
 import { ScrollArea } from "packages/components/lib/scroll-area";
 import { Flex } from "@stuff/structure";
-import { buttonVariants } from "@stuff/ui/button/variants";
-import { css } from "styled-system/css";
+import { button } from "@stuff/ui/button/button.css";
 import { theme } from "src/styles/themes.css";
 import { Button } from "@stuff/ui/button";
-import { Box, Stack } from "styled-system/jsx";
+import { css } from "src/components/styler.css";
+import { stack } from "src/components/recipies";
 
 const mailSendInterface = z.object({
   to: z.string().email(),
@@ -93,23 +93,28 @@ export const ComposeButton = () => {
         <span className={cn(css({fontWeight: "semibold", fontSize: "large"}))}>Compose</span>
       </DrawerTrigger>
 
-      <DrawerContent asChild className={css({maxW: "800px", maxH: "1000px", display: 'grid', gridTemplateRows: "auto 1fr auto"})}>
+      <DrawerContent asChild style={{
+        display: 'grid',
+        gridTemplateRows: "auto 1fr auto",
+        maxHeight: '1000px',
+        maxWidth: "800px"
+      }}>
         <form onSubmit={onSubmit}>
-          <Box>
+          <div>
             <DrawerHeader>
-              <Stack justify="space-between" direction="row" align="center">
-                <Stack>
+              <div className={stack({justify: "between", direction: "row", align: "center"})}>
+                <div className={stack({direction: "col", gap: "md"})}>
                   <DrawerTitle>Send Email</DrawerTitle>
                   <DrawerDescription>
                       Sending an email cant be undone
                   </DrawerDescription>
-                </Stack>
-                <Button className={cn(css({rounded: "full", bg: "text.1", padding: "0.25rem"}))} type="submit">
+                </div>
+                <Button className={cn(css({bg: "text1", padding: "small"}))} type="submit">
                   <ArrowUpIcon color={theme.background} size={26} />
                 </Button>
-              </Stack>
+              </div>
             </DrawerHeader>
-            <Box className={css({borderTopColor: "border",borderTopWidth: '1px'})}>
+            <div className={''/*css({borderTopColor: "border",borderTopWidth: '1px'})*/}>
               <Flex
                 className="w-full border-b border-border px-6 py-3"
                 gap="1rem"
@@ -127,9 +132,9 @@ export const ComposeButton = () => {
                 placeholder="Subject"
                 {...register("subject")}
               />
-            </Box>
-          </Box>
-          <ScrollArea className={css({h: "100%", px: "xl"})}>
+            </div>
+          </div>
+          <ScrollArea style={{height: "100%", }} className={css({pX: "large"})}>
             <Tiptap
               placeholder="Compose your email..."
               initialContent="<p></p>"
@@ -138,7 +143,7 @@ export const ComposeButton = () => {
           </ScrollArea>
           <DrawerFooter>
             <DrawerClose
-              className={cn(buttonVariants({ variant: "outline", size: "lg" }), css({w: "100%"}))}
+              className={cn(button({ variant: "outline", size: "lg" }))}
               type="button"
             >
               Cancel

@@ -9,7 +9,8 @@ await import("./src/env.js");
 import {createVanillaExtractPlugin} from "@vanilla-extract/next-plugin";
 import { withContentlayer } from "next-contentlayer"
 
-const withVE = createVanillaExtractPlugin();
+const withVE = createVanillaExtractPlugin({
+});
 
 /** @type {import("next").NextConfig} */
 const config = {

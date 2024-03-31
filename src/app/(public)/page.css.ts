@@ -1,14 +1,12 @@
 import { style } from "@vanilla-extract/css";
 
-
-
 export const boxGrid = style({
   display: "grid",
   gridTemplateAreas: `
   "conversations conversations"
   "folders extensions"
   `,
-  gap: "var(--space-md)",
+  gap: "14px",
   paddingTop: "1rem",
 
   "@media": {

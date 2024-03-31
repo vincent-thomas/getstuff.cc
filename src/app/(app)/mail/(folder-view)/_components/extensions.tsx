@@ -12,9 +12,9 @@ import { Dialog, DialogContent, DialogTrigger } from "packages/components/lib/di
 import { Drawer, DrawerClose, DrawerContent, DrawerTrigger } from "@stuff/ui/drawer";
 import { toast } from "sonner";
 import { Card } from "src/app/(public)/_components/card";
-import { css } from "styled-system/css";
-import { Stack } from "styled-system/jsx";
 import { ScrollArea } from "packages/components/lib/scroll-area";
+import { css } from "src/components/styler.css";
+import { stack } from "src/components/recipies";
 
 
 const classNames= "border border-border px-4 py-3 rounded-md flex flex-col hover:bg-hover w-full"
@@ -89,14 +89,14 @@ export const EnabledMailRelayButton = () => {
       </DrawerTrigger>
       <DrawerContent asChild>
         <Stack p="lg" className={css({maxW: "800px", maxH: "1000px", display: 'grid', gridTemplateRows: "auto auto 1fr auto"})} gap="md">
-          <Stack justify="space-between" direction="row">
+          <div className={stack({justify: "between", direction: 'row'})}>
             <H1>Mail relays</H1>
             <Button variant="ghost" className={css({p: "sm", rounded: "full"})} onClick={() => {{
               createAliasMutation.mutate({label: "google.com"})
             }}}>
               <PlusIcon size={24} />
             </Button>
-          </Stack>
+          </div>
           <input placeholder="Search..." className={css({p: "md", borderColor: "border", borderWidth: "1px", bg: "background.2", rounded: "radius"})} />
             {aliases === undefined ? (<div className="grow"></div>) : (
               aliases?.length === 0
@@ -107,36 +107,36 @@ export const EnabledMailRelayButton = () => {
                   )
                 : (
                   <ScrollArea className="h-full">
-                    <Stack>
+                    <div className={stack({direction: "col"})}>
                       {aliases.map(alias => (
                         <Dialog key={alias.sk}>
                           <DialogTrigger asChild>
-                            <button className={css({w: "100%", cursor: "pointer", "&:hover": {bg: "hover"}})}>
+                            <Button variant="ghost" size="md" rounded="medium">
                               <Card p="md" className="text-left">
                                 <Heading weight="bold" className="text-lg">
                                   {alias.label}
                                 </Heading>
                                 <P>{alias.sk.split("|")[1]}@getstuff.cc</P>
                               </Card>
-                            </button>
+                            </Button>
                           </DialogTrigger>
                           <DialogContent>
-                            <Stack align="center" gap="5px">
+                            <div className={stack({align: "center", gap: "md", direction: "col"})}>
                               <img width={50} height={50} src={`https://www.gentlentapis.com/tools/v1/getFavicon?url=https://${alias.label}&format=image`} />
                               <Heading weight="bold" className="text-2xl">{alias.label}</Heading>
                               <P>Created at {format(alias.created_at, "dd MMMM, yyyy")}</P>
-                              <Stack direction="row" className={css({mt: "md"})} align="center">
+                              <div className={cn(stack({direction: "row", align: "center"}), css({marginTop: "medium"}))}>
                                 <Button variant="outline" size="md">Disable address</Button>
                                 <Button variant="primary" size="md" onClick={async () => {
                                   await navigator.clipboard.writeText(alias.sk.split("|")[1] + "@getstuff.cc");
                                   toast.info("Address copied to clipboard")
                                 }}>Copy address</Button>
-                              </Stack>
-                            </Stack>
+                              </div>
+                            </div>
                           </DialogContent>
                         </Dialog>
                       ))}
-                    </Stack>
+                    </div>
                   </ScrollArea>
                 )
             )}

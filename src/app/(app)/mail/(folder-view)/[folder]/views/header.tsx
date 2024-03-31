@@ -23,12 +23,12 @@ export const FolderHeader: FC<FolderHeader> = ({folder}) => {
     <Stack
       direction="row"
       align="center"
-      gap="0"
-      className={cn(css({w: "100%"}), "border-b border-border")}
+      gap="none"
+      className={cn(css({w: "full"}), "border-b border-border")}
     >
       <div className={css({p: "xs"})}>
         <button
-          className={cn(css({color: "text.1", mt: 1, rounded: "full", _hover: {bg: "hover"}, p: "md"}))}
+          className={cn(css({color: "text.1", rounded: "full", _hover: {bg: "hover"}, p: "md"}))}
           onClick={() => {
             setSelected([]);
             if (selected.length !== threadsQuery.data?.length) {

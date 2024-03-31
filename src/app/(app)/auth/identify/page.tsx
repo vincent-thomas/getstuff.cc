@@ -1,4 +1,4 @@
-import { buttonVariants } from "@stuff/ui/button/variants";
+import { button } from "@stuff/ui/button/button.css";
 import { Form } from "./_components/form";
 import Link from "next/link";
 import { cn } from "@stuff/components/utils";
@@ -11,7 +11,7 @@ const Page = () => {
         <Link
           href="/auth/init"
           className={cn(
-            buttonVariants({ variant: "link" }),
+            button({ variant: "link" }),
             "text-sm font-medium leading-none"
           )}
         >

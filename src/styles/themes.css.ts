@@ -1,18 +1,40 @@
-import {createGlobalTheme, createGlobalThemeContract} from "@vanilla-extract/css"
+import {createGlobalTheme, createThemeContract, createVar, style} from "@vanilla-extract/css"
 
-export const theme = createGlobalThemeContract({
-  background: "background",
-  background2: "background2",
+// export const theme = createGlobalThemeContract({
+//   background: "background",
+//   background2: "background2",
+//   // muted: "muted",
+//   // mutedForeground: "muted-foreground",
+//   border: "border",
+//   accent: "accent",
+//   accent2:"accent2",
+//   text: "text",
+//   text2: "text2",
+//   card: "card",
+//   hover: "hover",
+//   highlight: "highlight"
+// })
+
+export const borderRadius = createVar("borderRadius");
+export const globalStyleClass = style({
+  vars: {
+    [borderRadius]: "4px"
+  }
+})
+
+export const theme = createThemeContract({
+  background: null,
+  background2: null,
   // muted: "muted",
   // mutedForeground: "muted-foreground",
-  border: "border",
-  accent: "accent",
-  accent2:"accent2",
-  text: "text",
-  text2: "text2",
-  card: "card",
-  hover: "hover",
-  highlight: "highlight"
+  border: null,
+  accent: null,
+  accent2:null,
+  text: null,
+  text2: null,
+  card: null,
+  hover: null,
+  highlight: null
 })
 
 createGlobalTheme(".light", theme, {

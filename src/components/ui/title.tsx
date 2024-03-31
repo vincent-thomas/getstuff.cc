@@ -1,6 +1,6 @@
 import type { FC, HTMLAttributes } from "react";
 import { cn } from "../utils";
-import { css } from "styled-system/css";
+import { css } from "../styler.css";
 
 
 interface HeadingProps extends HTMLAttributes<HTMLHeadingElement> {
@@ -8,5 +8,5 @@ interface HeadingProps extends HTMLAttributes<HTMLHeadingElement> {
 }
 
 export const Heading: FC<HeadingProps> = ({className,weight, ...props}) => (
-  <h1 {...props} style={{fontWeight: weight}} className={cn(`tracking-tight`, css({color: "text"}), className)} />
+  <h1 {...props} style={{fontWeight: weight}} className={cn(`tracking-tight`, css({color: "text1"}), className)} />
 )

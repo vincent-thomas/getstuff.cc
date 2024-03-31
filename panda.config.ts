@@ -2,12 +2,7 @@ import { defineConfig } from "@pandacss/dev"
 
 export default defineConfig({
   preflight: true,
-  jsxFramework: "react",
-  hash: false,
-  lightningcss: true,
-  include: ["./src/**/*.{ts,tsx}","./packages/components/**/*.{ts,tsx}"],
-  cssVarRoot: "body",
-  strictTokens: true,
+  include: ["./src/**/*.ts","./src/**/*.tsx","./packages/components/**/*.{ts,tsx}"],
   patterns: {
     extend: {
       stack: {
@@ -45,7 +40,7 @@ export default defineConfig({
           value: "0px"
         }
       },
- 
+
       colors: {
         transparent: {value: "transparent"},
         border: {
@@ -146,5 +141,6 @@ export default defineConfig({
     }
   },
   exclude: [],
+  strictTokens: true,
   outdir: "styled-system",
 })

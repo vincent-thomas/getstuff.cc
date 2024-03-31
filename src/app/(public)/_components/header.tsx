@@ -3,7 +3,7 @@ import { Section } from "./section";
 import {Flex} from "@stuff/structure"
 import { H1, P } from "@stuff/typography";
 import { Heading } from "@stuff/ui/title";
-import { css, cx } from "@stuff/styling/css";
+import { css } from "src/components/styler.css";
 
 export const HeroTitle = ({className, title, comment, under}: {
   className?:string, 
@@ -13,14 +13,11 @@ export const HeroTitle = ({className, title, comment, under}: {
 }) =>{ 
   return (
      <Flex col className={cn(className)}>
-        <Heading weight="bold" className={cx(css({w: "full", fontSize: "[3rem]", maxW: "[400px]", lg: {
-          maxW: "[610px]",
-          lineHeight: "[1.1]",
-          fontSize: "[3.9rem]"
-        }}))}>{title}</Heading>
-        <P className={css({fontSize: "[1.1rem]",fontWeight: "semibold"})}>{comment}</P>
+        <Heading weight="bold" style={{width: "100%", maxWidth: "400px", fontSize: "3.9rem"}}
+        >{title}</Heading>
+        <P className={css({fontSize: "medium",fontWeight: "semibold"})}>{comment}</P>
         {!!under && (
-          <div className={css({pt: "sm"})}>
+          <div className={css({paddingTop: "small"})}>
             {under}
           </div>
         )}

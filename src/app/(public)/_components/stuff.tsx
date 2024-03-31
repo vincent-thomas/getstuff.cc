@@ -1,14 +1,13 @@
 import { cn } from "@stuff/components/utils"
-import { css } from "@stuff/styling/css"
 
 
 export const StuffBranding = ({className, plus}: {className?: string, plus?: true}) => {
   return (
-    <span className={cn(css({
+    <span className={cn(/*css({
       textGradient: "to-r",
       gradientFrom: "accent.1",
       gradientTo: "accent.2",
-    }), className)}>
+    })*/ className)}>
       Stuff{plus && "+"}
     </span>
   )

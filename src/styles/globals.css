@@ -1,9 +1,6 @@
-@layer reset, base, tokens, recipes, utilities;
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
 
 *[data-mobile] {
   @apply md:hidden;
@@ -15,12 +12,12 @@
   }
 }
 
-:root {
+/* :root {
   --space-sm: 8px;
   --space-md: 12px;
   --space-lg: 16px;
   --radius: 0.35rem;
-}
+} */
 
 /* :root.light { */
 
@@ -68,3 +65,37 @@
   --input: 12 6.5% 15.1%;
   --ring: 24 5.7% 82.9%; */
 /* } */
+
+@layer reset {
+
+  *,
+  *::before,
+  *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    color: inherit;
+  }
+
+  button {
+    background: none;
+    border: none;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
+    outline: inherit;
+  }
+}

@@ -1,7 +1,7 @@
 import { Flex } from "@stuff/structure"
 import { Section } from "./section"
 import Link from "next/link"
-import { buttonVariants } from "@stuff/ui/button/variants"
+import { button } from "@stuff/ui/button/button.css"
 import { cn } from "@stuff/components/utils"
 
 export const Footer = () => {
@@ -19,18 +19,18 @@ export const Footer = () => {
         <Flex className="w-full flex" justify="between">
          <Flex align="center" gap="0.5rem" className="max-sm:hidden">
            <p>Stuff © {new Date().getFullYear()}</p><span>•</span>
-           <a href="https://github.com/vincent-thomas" target="_blank" className={cn("!pl-0",buttonVariants({variant: "link", size: "xs"}))}>Vincent Thomas</a>
+           <a href="https://github.com/vincent-thomas" target="_blank" className={cn("!pl-0",button({variant: "link", size: "sm"}))}>Vincent Thomas</a>
          </Flex>
          <Flex gap="1rem">
            <Link
              href="/cookies"
-             className={buttonVariants({ variant: "link" })}
+             className={button({ variant: "link" })}
            >
              Cookies
            </Link>
            <Link
              href="/privacy-policy"
-             className={buttonVariants({ variant: "link" })}
+             className={button({ variant: "link" })}
            >
              Privacy policy
            </Link>

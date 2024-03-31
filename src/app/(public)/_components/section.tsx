@@ -1,6 +1,6 @@
 import { cn } from "packages/components/utils";
 import type { ReactNode } from "react";
-import { css } from "@stuff/styling/css";
+import { css } from "src/components/styler.css";
 
 
 const width = {
@@ -27,9 +27,10 @@ export const Section = ({
     <section
       style={{
         ...style,
-        maxWidth: width[maxWidth]
+        maxWidth: width[maxWidth],
+        width: "100%"
       }}
-      className={cn(css({marginX: "auto", width: "full"}), className)}
+      className={cn(css({mX: "push"}), className)}
     >
       {children}
     </section>

@@ -10,7 +10,8 @@ import type { Metadata, Viewport } from "next";
 import { ThemeProvider } from "src/providers/theme";
 import { env } from "@/env";
 import { TooltipProvider } from "@stuff/ui/tooltip";
-import { css } from "@stuff/styling/css";
+import { css } from "src/components/styler.css";
+import { globalStyleClass } from "src/styles/themes.css";
 
 const inter = Inter({
   axes: ["slnt"],
@@ -58,9 +59,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head />
-      <body className={cn(
+      <body style={{minHeight: "100vh"}} className={cn(
         inter.className,
-        css({minH: "screen", bg: "background.1"}),
+        css({bg: "bg"}),
+        globalStyleClass
       )}>
         <TooltipProvider>
           <TRPCReactProvider>
