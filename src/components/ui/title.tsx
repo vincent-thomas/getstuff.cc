@@ -1,6 +1,6 @@
 import type { FC, HTMLAttributes } from "react";
 import { cn } from "../utils";
-import { css } from "../styler.css";
+;
 
 
 interface HeadingProps extends HTMLAttributes<HTMLHeadingElement> {

@@ -1,5 +1,5 @@
 import type { FC } from "react";
-import { spinKeyFrame } from "../styler.css";
+import {spinKeyFrame} from "../../../packages/ui/keyframes"
 
 interface Props {
   size: number;

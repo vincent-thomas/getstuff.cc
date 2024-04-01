@@ -1,6 +1,6 @@
 import { recipe } from "@vanilla-extract/recipes";
 import { themeMode } from "packages/ui/theme";
-import { borderRadius } from "src/styles/themes.css";
+import { rounding } from "packages/ui/variables";
 
 
 export const border = recipe({
@@ -17,9 +17,9 @@ export const border = recipe({
       }
     },
     rounded: {
-      radius: {
-        borderRadius: borderRadius
-      },
+      radius: rounding.md,
+      lg: rounding.lg,
+      xl: rounding.xl,
       circle: {
         borderRadius: "50%"
       }

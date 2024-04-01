@@ -6,7 +6,8 @@ import { Logo } from "src/components/logo"
 import { BlogPosts } from "./posts"
 import { stack } from "src/components/recipies"
 import { cn } from "@stuff/components/utils"
-import { css } from "src/components/styler.css"
+import { BlogIcon } from "./blog.icon"
+
 
 
 export const metadata: Metadata = {
@@ -22,21 +23,26 @@ export default async function BlogPage() {
     })
 
   return (
-    <>
+    <div className={css({paddingTop: "2xlarge"})}>
+      <div className={stack({justify: "between", align: "center"})}>
+
       <PageHeador
         title={
           <div className={cn(
-              css({fontSize: "large"}),
+              css({fontSize: "4xlarge"}),
               stack({gap: "md"})
             )}
           >
-            <Logo size={80}/>
+            <Logo size={58}/>
             Blog
           </div>
         }
         comment={"A Blog"}
       />
+      <BlogIcon />
+      </div>
+
       <BlogPosts posts={posts} />
-    </>
+    </div>
   )
 }

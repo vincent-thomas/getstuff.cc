@@ -1,4 +1,5 @@
 import { style } from "@vanilla-extract/css";
+import { spacing } from "packages/ui/variables";
 
 export const boxGrid = style({
   display: "grid",
@@ -6,8 +7,8 @@ export const boxGrid = style({
   "conversations conversations"
   "folders extensions"
   `,
-  gap: "14px",
-  paddingTop: "1rem",
+  gap: spacing.large,
+  paddingTop: spacing.xlarge,
 
   "@media": {
     "(max-width: 768px)": {

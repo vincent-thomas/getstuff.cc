@@ -6,7 +6,7 @@ import { ThreadView } from "./views/threads";
 import { MainMailView } from "./views/main-mail-file";
 import { cn } from "@stuff/components/utils";
 import { border, stack } from "src/components/recipies";
-import { css } from "src/components/styler.css";
+;
 
 export default setupPage({
   query: z.object({ threadId: z.string().optional() }),

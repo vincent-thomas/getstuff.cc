@@ -1,6 +1,6 @@
 import { cn } from "packages/components/utils";
 import type { ReactNode } from "react";
-import { css } from "src/components/styler.css";
+;
 
 
 const width = {

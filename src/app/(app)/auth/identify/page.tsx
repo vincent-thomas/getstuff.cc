@@ -3,7 +3,7 @@ import { Form } from "./_components/form";
 import Link from "next/link";
 import { cn } from "@stuff/components/utils";
 import { stack } from "src/components/recipies";
-import { css } from "src/components/styler.css";
+
 
 const Page = () => {
   return (
@@ -17,8 +17,7 @@ const Page = () => {
         <Link
           href="/auth/init"
           className={cn(
-            button({ variant: "link" }),
-            "text-sm font-medium leading-none"
+            button({ variant: "link" })
           )}
         >
           Sign up

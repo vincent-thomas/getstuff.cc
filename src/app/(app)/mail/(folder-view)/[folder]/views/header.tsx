@@ -9,7 +9,7 @@ import { Checked, UnChecked } from "packages/icons/lib/unchecked";
 import { RefreshButton } from "../_components/refresh-button";
 import { SelectedBar } from "../_components/selected-bar";
 import { stack } from "src/components/recipies";
-import { css } from "src/components/styler.css";
+;
 import { themeMode } from "packages/ui/theme";
 
 interface FolderHeader {

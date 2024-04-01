@@ -13,7 +13,7 @@ import { Drawer, DrawerClose, DrawerContent, DrawerTrigger } from "@stuff/ui/dra
 import { toast } from "sonner";
 import { Card } from "src/app/(public)/_components/card";
 import { ScrollArea } from "packages/components/lib/scroll-area";
-import { css } from "src/components/styler.css";
+;
 import { stack } from "src/components/recipies";
 
 

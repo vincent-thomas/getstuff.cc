@@ -11,7 +11,7 @@ import { useDataKey } from "@stuff/lib/useUserPrivateKey";
 import { useQueryClient } from "@tanstack/react-query";
 import { threadOpen } from "../store/thread-open";
 import { stack } from "src/components/recipies";
-import { css } from "src/components/styler.css";
+;
 import { Button } from "@stuff/ui/button";
 
 export const MailRow = ({

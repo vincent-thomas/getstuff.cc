@@ -1,6 +1,5 @@
 import { cn } from "@stuff/components/utils";
 import { button } from "@stuff/ui/button/button.css";
-import { css } from "src/components/styler.css";
 
 export const ShareFacebook =({blogId}: {blogId: string}) => {
   const url = encodeURIComponent(`getstuff.cc/blog/${blogId}`);

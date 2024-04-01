@@ -18,7 +18,7 @@ import { threadOpen } from "../store/thread-open";
 import { useAtom } from "jotai";
 import { useSearchParams } from "next/navigation";
 import { cn } from "@stuff/components/utils";
-import { css } from "src/components/styler.css";
+;
 
 const paramsInterface = z.object({
   threadId: z.string(),

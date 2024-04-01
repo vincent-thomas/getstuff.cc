@@ -1,7 +1,7 @@
 import { cn } from "@stuff/components/utils";
 import { type InputHTMLAttributes, type Ref, forwardRef } from "react";
 import { border, stack } from "src/components/recipies";
-import { css } from "src/components/styler.css";
+;
 
 export const MailInput = forwardRef(function MailInput(
   {locked, ...props}: InputHTMLAttributes<HTMLInputElement> & { locked?: boolean},

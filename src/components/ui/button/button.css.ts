@@ -3,14 +3,14 @@ import { recipe, type RecipeVariants } from "@vanilla-extract/recipes";
 import { colors, themeMode } from "packages/ui/theme";
 import { rounding, spacing } from "packages/ui/variables";
 import { border, stack } from "src/components/recipies";
-import { css } from "src/components/styler.css";
+;
 
 export const button = recipe({
   base: [
-    stack({direction: "row", align: "center", justify: "center", gap: "sm"}),
+    stack({direction: "row", align: "center", justify: "center", gap: "sm", inline: 1}),
     style({
       whiteSpace: "nowrap",
-      fontWeight: "semibold",
+      fontWeight: 600,
       transition: "colors",
       cursor: "pointer",
       outline: "none",
@@ -66,7 +66,9 @@ export const button = recipe({
     },
     rounded: {
       medium: rounding.md,
-      icon: rounding.icon,
+      icon: {
+        borderRadius: "50%",
+      },
     }
   },
 })

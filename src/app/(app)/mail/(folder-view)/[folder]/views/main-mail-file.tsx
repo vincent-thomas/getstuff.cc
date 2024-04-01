@@ -4,7 +4,7 @@ import { FolderHeader } from "./header";
 import { cn } from "@stuff/components/utils";
 import S from "./main-mail-file.module.css"
 import { stack } from "src/components/recipies";
-import { css } from "src/components/styler.css";
+;
 
 export const MainMailView = ({folder,threadId}: {folder: {folderId:string; name:string},threadId?:string}) => {
   return (

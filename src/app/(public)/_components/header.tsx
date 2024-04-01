@@ -1,9 +1,8 @@
 import { cn } from "@stuff/components/utils";
 import { Section } from "./section";
-import {Flex} from "@stuff/structure"
 import { H1, P } from "@stuff/typography";
 import { Heading } from "@stuff/ui/title";
-import { css } from "src/components/styler.css";
+;
 import { stack } from "src/components/recipies";
 
 export const HeroTitle = ({className, title, comment, under}: {
@@ -12,9 +11,9 @@ export const HeroTitle = ({className, title, comment, under}: {
   under?: JSX.Element;
   comment: string | JSX.Element;
 }) => (
-  <div className={cn(stack({direction: "col", align: "start"}),className)}>
+  <div className={cn(stack({direction: "col", align: {desktop: "start", mobile: "center"}}),className)}>
     <Heading weight="bold" style={{width: "100%"}}
-    className={css({fontSize: "large"})}
+    className={css({fontSize: {mobile: "large", desktop: "3xlarge"}})}
     >{title}</Heading>
     <P className={css({fontSize: "medium",fontWeight: "semibold"})}>{comment}</P>
     {!!under && (
@@ -38,15 +37,15 @@ export const PageHeador = ({
 }) => {
   return (
     <Section maxWidth="md">
-      <Flex col className={cn(containerClassName)}>
-        <H1 className="!font-[800] w-full max-w-[400px] lg:max-w-[610px] lg:text-6xl">{title}</H1>
+      <div className={cn(stack({direction: "col"}),containerClassName)}>
+        <H1 className={css({fontSize: {desktop: "4xlarge", mobile: "xlarge"}, fontWeight: "semibold"})}>{title}</H1>
         <P className="text-lg font-semibold">{comment}</P>
         {!!under && (
           <div className="pt-2">
             {under}
           </div>
         )}
-      </Flex>
+      </div>
     </Section>
   );
 };

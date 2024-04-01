@@ -1,5 +1,3 @@
-import { css } from "src/components/styler.css";
-
 export const UnChecked = ({
   className,
   size

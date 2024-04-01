@@ -77,6 +77,9 @@
       ],
       "contentlayer/generated": [
         "./.contentlayer/generated"
+      ],
+      "@style-system/css": [
+        "./packages/ui/css/index.css.ts"
       ]
     }
   },
@@ -87,7 +90,7 @@
     "src/**/*.tsx",
     ".next/types/**/*.ts",
     ".contentlayer/generated",
-    "./auto-imports.d.ts"
+    "./unimport.d.ts"
   ],
   "exclude": [
     "**/dist",

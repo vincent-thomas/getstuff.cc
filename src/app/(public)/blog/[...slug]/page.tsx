@@ -15,7 +15,7 @@ import { Flex } from "@stuff/structure"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@stuff/ui/tooltip"
 import { ShareFacebook } from "../../_components/share-facebook"
 import { H2 } from "@stuff/typography"
-import { css } from "src/components/styler.css"
+
 import { stack } from "src/components/recipies"
 
 interface PostPageProps {
@@ -128,9 +128,9 @@ export default async function PostPage({ params }: PostPageProps) {
             </Flex>
           </div>
         </aside>
-        <article className="max-w-[900px]">
+        <article style={{maxWidth: "800px"}}>
           <PageHeador
-            title={post.title} comment={<>
+            title={<span className={css({color: "accent"})}>{post.title}</span>} comment={<>
               <time
               dateTime={post.date}
               className="block text-sm text-text2"
@@ -168,7 +168,7 @@ export default async function PostPage({ params }: PostPageProps) {
             </div>
             <div className={cn(
               stack({justify: "start"}),
-              css({pY: "x-large"})
+              css({pY: "xlarge"})
             )}>
               <Link href="/blog" className={cn(button({ variant: "ghost", size: "md", rounded: "medium" }))}>
                 <ChevronLeft size={16} />

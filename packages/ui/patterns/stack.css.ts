@@ -1,12 +1,10 @@
 import { createSprinkles, defineProperties } from "@vanilla-extract/sprinkles";
 import { style } from "@vanilla-extract/css";
+import { screenConditions } from "../conditions"
+import { spacing } from "../variables";
 
 const structureRecipe = defineProperties({
-  conditions: {
-    mobile: {},
-    tablet: { "@media": "screen and (min-width: 678px)" },
-    desktop: { "@media": "screen and (min-width: 1024px)" },
-  },
+  ...screenConditions,
   defaultCondition: "mobile",
   responsiveArray: ["mobile", "tablet", "desktop"],
   properties: {
@@ -20,13 +18,17 @@ const structureRecipe = defineProperties({
       center: "center", 
       between: "space-between",
       start: "flex-start",
-      end: "flex-end"
+      end: "flex-end",
+      unset: "unset"
     },
     alignItems:{
       center: "center", 
       between: "space-between",
       start: "flex-start",
       end: "flex-end"
+    },
+    display: {
+      1: "inline-flex !important"
     },
     flexGrow: {
       1: 1
@@ -36,16 +38,16 @@ const structureRecipe = defineProperties({
         gap: "4px"
       },
       sm: {
-        gap: "6px"
+        gap: spacing.small
       },
       md: {
-        gap: "10px"
+        gap: spacing.medium
       },
       lg: {
-        gap: "14px"
+        gap: spacing.large
       },
       xl: {
-        gap: "16px"
+        gap: spacing.xlarge
       }
     },
   },
@@ -54,6 +56,7 @@ const structureRecipe = defineProperties({
     justify: ["justifyContent"],
     align: ["alignItems"],
     grow: ["flexGrow"],
+    inline: ["display"]
   }
 })
 

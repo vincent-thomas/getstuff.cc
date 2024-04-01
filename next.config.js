@@ -8,7 +8,7 @@ await import("./src/env.js");
 
 import {createVanillaExtractPlugin} from "@vanilla-extract/next-plugin";
 import { withContentlayer } from "next-contentlayer"
-import unimport from "unplugin-auto-import"
+import unimport from "unimport/unplugin"
 
 const withVE = createVanillaExtractPlugin();
 
@@ -30,10 +30,15 @@ const config = {
     });
 
     config.plugins.push(unimport.webpack({
+      dts: true,
       imports: [
         {
           from: "@/env",
-          imports: ["env"],
+          name: "env",
+        },
+        {
+          from: "@style-system/css",
+          name: "css",
         }
       ]
     }))

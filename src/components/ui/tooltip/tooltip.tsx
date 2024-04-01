@@ -7,9 +7,9 @@ import {
   forwardRef
 } from "react";
 import { cn } from "../../utils";
-import { css } from "../../styler.css";
 import { border } from "../../recipies";
 import { toolTipContentStyles } from "./tooltip.css";
+;
 
 const TooltipProvider = TooltipPrimitive.Provider;
 

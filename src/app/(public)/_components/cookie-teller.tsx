@@ -1,8 +1,11 @@
 
-import { Flex } from "@stuff/structure";
-import { Button } from "@stuff/ui/button";
+import { cn } from "@stuff/components/utils";
+import { Button, button } from "@stuff/ui/button";
 import { cookies } from "next/headers";
 import Link from "next/link";
+import { themeMode } from "packages/ui/theme";
+import { stack } from "src/components/recipies";
+;
 
 export const CookieTeller = () => {
 
@@ -21,15 +24,14 @@ export const CookieTeller = () => {
   }
 
   return (
-    <Flex className="p-4 bg-background2 sticky border-b border-border" gap="2rem" align="center">
-      <span>
+    <div className={cn( css({position: "sticky", bg: "bg2", p: "medium"}), stack({gap: "md", align: "center"}))} style={{top: 0, borderBottom: "1px solid " + themeMode.border}}>
+      <div >
         Stuff Mail use cookies only to make sure you are you. Please click here to accept our cookies policy.
-        {" "}<Link href="/cookies" className="underline">Read more here</Link>.
-      </span>
+        {" "}<Link href="/cookies" className={button({variant: "link"})}>Read more here</Link>.
+      </div>
       <form action={test}>
-        <Button>Accept</Button>
+        <Button variant="ghost" size="sm" rounded="medium">Accept</Button>
       </form>
-
-    </Flex>
+    </div>
   )
 }

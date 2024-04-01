@@ -1,10 +1,10 @@
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import { cn } from "../utils";
-import { css } from "../styler.css";
 import { shared } from "./headers.css";
+;
 
-export const H1 = ({ children, className, id }: { children?: ReactNode;className?:string, id?:string }) => {
-  return <h1 id={id} className={cn(css({fontWeight: "bold", color: "text1"}),shared,"text-4xl", className)}>{children}</h1>;
+export const H1 = ({ children, className, id, style }: { children?: ReactNode;className?:string, id?:string, style?: CSSProperties }) => {
+  return <h1 style={style} id={id} className={cn(css({fontWeight: "bold", color: "text1"}),shared,"text-4xl", className)}>{children}</h1>;
 };
 
 export const H2 = ({ children,className, ...props }: { children?: ReactNode;className?:string; id?:string }) => {

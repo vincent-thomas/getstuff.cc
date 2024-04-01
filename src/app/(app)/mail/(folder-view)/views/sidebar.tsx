@@ -9,7 +9,7 @@ import { cn } from "@stuff/components/utils"
 import { Extensions } from "../_components/extensions"
 import { SidebarLink } from "./sidebar_component"
 import { stack } from "src/components/recipies"
-import { css } from "src/components/styler.css"
+
 
 export const Sidebar = async ({className}: {className?: string}) => {
   const folders = await api.mail.folders.listFolders.query();

@@ -5,15 +5,15 @@ import { Logo } from "src/components/logo";
 import { StuffBranding } from "./stuff";
 import { ThemeBtn } from "./theme-icon";
 import { stack } from "src/components/recipies";
-import { css } from "src/components/styler.css";
+;
 
 export const Navbar = () => (
   <header className="animate-in slide-in-from-top-2 duration-700 fade-in">
     <div className={cn(css({ padding: "medium" }), stack({direction: "row", align: "center", justify: "between"}))}>
-      <div className={stack({direction: "row", gap: "xl", align: "center"})}>
+      <div className={stack({direction: "row", gap: "md", align: "center"})}>
         <Link href="/" className={button({variant: "ghost", size: "md", rounded: "medium"})}>
           <Logo size={24} color />
-          <h1 className={cn(css({color: "text1", fontWeight: "bold"}),/*css({fontWeight: "bold", color: "text.1"}),*/"text-3xl")}><StuffBranding /></h1>
+          <h1 className={cn(css({color: "text1", fontWeight: "bold", fontSize: "large"}))}><StuffBranding /></h1>
         </Link>
         <Link href="/pricing" className={button({ variant: "ghost", size: "md", rounded: "medium"  })}>
           Pricing

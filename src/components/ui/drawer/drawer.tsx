@@ -4,7 +4,7 @@ import * as React from "react";
 import { Drawer as DrawerPrimitive } from "vaul";
 import { cn } from "../../../../packages/components/utils";
 import "./drawer.css"
-import { css } from "src/components/styler.css";
+;
 import { contentWrapper, drawerOverlay } from "./drawer.css";
 import { stack } from "src/components/recipies";
 const Drawer = ({
@@ -44,7 +44,7 @@ const DrawerContent = React.forwardRef<
     <DrawerOverlay />
     <div className={cn(
       contentWrapper,
-      stack({align: "flex-end", justify: "center"}),
+      stack({align: "end", justify: "center"}),
       css({
         paddingTop: "medium",
         pX: "medium"
@@ -69,7 +69,7 @@ const DrawerHeader = ({
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
-    className={cn(css({p: "x-large"}), className)}
+    className={cn(css({p: "xlarge"}), className)}
     {...props}
   />
 );
@@ -80,7 +80,7 @@ const DrawerFooter = ({
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
-    className={cn(css({ p: "x-large" }), className)}
+    className={cn(css({ p: "xlarge" }), className)}
     {...props}
   />
 );

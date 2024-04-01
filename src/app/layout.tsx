@@ -1,5 +1,6 @@
 import "src/styles/themes.css";
 import "../styles/globals.css";
+import "./globals.css";
 
 import { Inter } from "next/font/google";
 
@@ -9,14 +10,13 @@ import { TRPCReactProvider } from "@stuff/api-client/react";
 import type { Metadata, Viewport } from "next";
 import { ThemeProvider } from "src/providers/theme";
 import { TooltipProvider } from "@stuff/ui/tooltip";
-import { css } from "src/components/styler.css";
 import "packages/ui/theme/mode.css";
 import "packages/ui/theme/color.css"
 import { spacingDefiningClass } from "packages/ui/variables";
+import { THEME } from "packages/ui/theme/color.css";
 const inter = Inter({
   axes: ["slnt"],
   subsets: ["latin"],
-  preload: false
 });
 
 const APP_NAME = "Stuff Mail"
@@ -63,7 +63,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         inter.className,
         css({bg: "bg", minHeight: "screen"}),
         spacingDefiningClass,
-        "indigo"
+        THEME.AMBER
       )}>
         <TooltipProvider>
           <TRPCReactProvider>

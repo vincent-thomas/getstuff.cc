@@ -25,7 +25,7 @@ import { Flex } from "@stuff/structure";
 import { button } from "@stuff/ui/button/button.css";
 import { theme } from "src/styles/themes.css";
 import { Button } from "@stuff/ui/button";
-import { css } from "src/components/styler.css";
+;
 import { stack } from "src/components/recipies";
 
 const mailSendInterface = z.object({
@@ -128,7 +128,7 @@ export const ComposeButton = () => {
               </Flex>
               <input
                 type="text"
-                className={cn("w-full bg-transparent text-2xl outline-none", css({p: "x-large"}))}
+                className={cn("w-full bg-transparent text-2xl outline-none", css({p: "xlarge"}))}
                 placeholder="Subject"
                 {...register("subject")}
               />
