@@ -1,4 +1,3 @@
-import { env } from '@/env'
 import { allPosts } from 'contentlayer/generated'
 import { compareDesc } from 'date-fns'
 import type { MetadataRoute } from 'next'

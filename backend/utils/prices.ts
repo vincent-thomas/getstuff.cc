@@ -1,4 +1,3 @@
-import { env } from "@/env";
 import { GetParameterCommand, SSMClient } from "@aws-sdk/client-ssm";
 import { z } from "zod";
 

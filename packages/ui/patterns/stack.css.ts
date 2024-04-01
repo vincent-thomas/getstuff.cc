@@ -13,6 +13,8 @@ const structureRecipe = defineProperties({
     flexDirection: {
       row: "row",
       col: "column",
+      "reverse-col": "column-reverse",
+      "reverse-row": "row-reverse"
     },
     justifyContent: {
       center: "center", 
@@ -20,7 +22,15 @@ const structureRecipe = defineProperties({
       start: "flex-start",
       end: "flex-end"
     },
-    alignItems: ["center", "flex-start", "flex-end"],
+    alignItems:{
+      center: "center", 
+      between: "space-between",
+      start: "flex-start",
+      end: "flex-end"
+    },
+    flexGrow: {
+      1: 1
+    },
     gap: {
       xs: {
         gap: "4px"
@@ -43,6 +53,7 @@ const structureRecipe = defineProperties({
     direction: ["flexDirection"],
     justify: ["justifyContent"],
     align: ["alignItems"],
+    grow: ["flexGrow"],
   }
 })
 
@@ -51,47 +62,3 @@ export const flexSprinkle = createSprinkles(structureRecipe);
 export type FlexSprinkles = Parameters<typeof flexSprinkle>[0];
 
 export const defaultFlex = style({display: "flex"});
-
-
-// export const stackRecipe = recipe({
-//   base: {
-//     display: "flex",
-//   },
-//   variants: {
-//     inline: {
-//       1: {
-//         display: "inline-flex"
-//       }
-//     },
-//     dir: {
-//       horizontal: {
-//         flexDirection: "row",
-//       },
-//       vertical: {
-//         flexDirection: "column",
-//       },
-//     },
-//     align: alignings("alignItems"),
-//     justify: alignings("justifyContent"),
-//     space: {
-//       xs: {
-//         gap: "4px"
-//       },
-//       sm: {
-//         gap: "6px"
-//       },
-//       md: {
-//         gap: "10px"
-//       },
-//       lg: {
-//         gap: "14px"
-//       },
-//       xl: {
-//         gap: "16px"
-//       }
-//     }
-//   },
-//   defaultVariants: {
-//     dir: "vertical"
-//   }
-// })

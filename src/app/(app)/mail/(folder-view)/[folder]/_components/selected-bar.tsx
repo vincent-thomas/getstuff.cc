@@ -13,7 +13,6 @@ import { useThreadsMoveMutation } from "@stuff/data-access/move-threads-mutation
 import { useThreadsReadMutation } from "@stuff/data-access/read-threads-mutation";
 import { Button } from "@stuff/ui/button";
 import { threadOpen } from "../store/thread-open";
-import { css } from "styled-system/css";
 
 export const SelectedBar = ({
   folderId,
@@ -45,7 +44,7 @@ export const SelectedBar = ({
           setSelected([])
         }}>
           <PopoverTrigger asChild>
-            <Button className={css({p: "sm", _hover: {bg: "hover"}})}>
+            <Button variant="ghost" size="md">
               <FolderInput size={18} color="var(--text)" />
             </Button>
           </PopoverTrigger>
@@ -69,7 +68,7 @@ export const SelectedBar = ({
             </Flex>
           </PopoverContent>
         </Popover>
-        <Button  className={css({p: "sm", _hover: {bg: "hover"}})} onClick={async () => {
+        <Button variant="ghost" size="md" onClick={async () => {
           setThreadId(null);
           window.history.replaceState({}, "", `/mail/${folderId}`)
 
@@ -83,7 +82,7 @@ export const SelectedBar = ({
         </Button>
 
       {folderId !== "archive" && (
-        <Button  className={css({p: "sm", _hover: {bg: "hover"}})} 
+        <Button size="sm" variant="ghost"
           onClick={async () => {
             const successed = await moveThreads.mutateAsync({
               folderId,

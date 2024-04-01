@@ -1,9 +1,7 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-*[data-mobile] {
-  @apply md:hidden;
+@media screen and (min-width: 767px) {
+  *[data-mobile] {
+    display: none;
+  }
 }
 
 @media screen and (max-width: 767px) {
@@ -88,6 +86,7 @@
   h5,
   h6 {
     color: inherit;
+    font: inherit;
   }
 
   button {
@@ -96,6 +95,13 @@
     padding: 0;
     font: inherit;
     cursor: pointer;
+    outline: inherit;
+  }
+
+  input {
+    background: none;
+    border: none;
+    padding: 0;
     outline: inherit;
   }
 }

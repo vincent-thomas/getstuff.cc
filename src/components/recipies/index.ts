@@ -1,9 +1,10 @@
 import { cn } from "../utils";
-import {type FlexSprinkles, defaultFlex, flexSprinkle} from "./stack.css"
+import {type FlexSprinkles, defaultFlex, flexSprinkle} from "../../../packages/ui/patterns/stack.css"
 
-export * from "./stack.css"
+export * from "../../../packages/ui/patterns/stack.css"
 export * from "./border.css";
+export * from "./shadow.css";
 
-export const stack = ({flexDirection, ...props}: FlexSprinkles) => {
-  return cn(defaultFlex, flexSprinkle({flexDirection, ...props }))
+export const stack = (props: FlexSprinkles) => {
+  return cn(defaultFlex, flexSprinkle(props))
 }

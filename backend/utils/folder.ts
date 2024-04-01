@@ -1,4 +1,3 @@
-import { env } from "@/env"
 import { GetCommand } from "@aws-sdk/lib-dynamodb"
 import { getDataTable } from "@stuff/infra-constants"
 import { getDyn } from "../sdks/dyn"

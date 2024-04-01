@@ -1,3 +1,5 @@
+import { css } from "src/components/styler.css";
+
 export const UnChecked = ({
   className,
   size
@@ -21,7 +23,7 @@ export const UnChecked = ({
         width="28"
         height="28"
         rx="4"
-        className="stroke-text2"
+        className={css({stroke: "text2", fill: "transparent"})}
         strokeWidth="4"
       />
     </svg>
@@ -49,7 +51,7 @@ export const Checked = ({
         y="2"
         width="28"
         height="28"
-        className="fill-text2 stroke-text2"
+        className={css({fill: "text2", stroke: "text2"})}
         rx="4"
         strokeWidth="4"
       />
@@ -60,7 +62,7 @@ export const Checked = ({
         height="13.6664"
         rx="2"
         transform="rotate(-45 4 16.2681)"
-        className="fill-background"
+        className={css({fill: "bg"})}
       />
       <rect
         x="25.2285"
@@ -69,7 +71,7 @@ export const Checked = ({
         height="20.8576"
         rx="2"
         transform="rotate(45 25.2285 8)"
-        className="fill-background"
+        className={css({fill: "bg"})}
       />
     </svg>
   );

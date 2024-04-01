@@ -1,4 +1,3 @@
-import { env } from "@/env";
 import { QueryCommand } from "@aws-sdk/lib-dynamodb";
 import { getDataTable } from "@stuff/infra-constants";
 import { addressAliasInterface } from "backend/interfaces/addressAlias";

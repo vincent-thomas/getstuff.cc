@@ -4,7 +4,6 @@ import { allPosts } from "contentlayer/generated"
 import type { Metadata } from "next"
 import Link from "next/link"
 
-import { env } from "@/env"
 import { cn } from "@stuff/components/utils"
 import { button } from "@stuff/ui/button/button.css"
 import { ChevronLeft } from "lucide-react"
@@ -16,6 +15,8 @@ import { Flex } from "@stuff/structure"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@stuff/ui/tooltip"
 import { ShareFacebook } from "../../_components/share-facebook"
 import { H2 } from "@stuff/typography"
+import { css } from "src/components/styler.css"
+import { stack } from "src/components/recipies"
 
 interface PostPageProps {
   params: {
@@ -117,10 +118,10 @@ export default async function PostPage({ params }: PostPageProps) {
 
 
   return (
-    <Flex col className="max-w-[1200px] mx-auto">
-      <Flex className="pt-14" justify="between" gap="1rem">
+    <div style={{maxWidth: "1200px"}} className={cn(stack({direction: "col"}),css({mX: "auto"}))}>
+      <div className={cn(stack({justify:"center", gap: "md", direction: "row" }))}>
         <aside className="px-4 flex flex-col gap-[3.5rem] hidden xl:block">
-          <div className="sticky top-[132px] pt-4">
+          <div className="sticky top-[50px] pt-4">
             <H2>Table of contents</H2>
             <Flex col gap="0.5rem">
               {toc.map(v => <Link key={v.slug} href={`#${v.slug}`} className="block text-text2 hover:underline">{v.title}</Link>)}
@@ -165,15 +166,18 @@ export default async function PostPage({ params }: PostPageProps) {
                 </Flex>
               </Flex>
             </div>
-            <div className="flex justify-center py-6 lg:py-10">
-              <Link href="/blog" className={cn(button({ variant: "ghost", size: "md" }))}>
-                <ChevronLeft className="h-4 w-4" />
-                See all posts
+            <div className={cn(
+              stack({justify: "start"}),
+              css({pY: "x-large"})
+            )}>
+              <Link href="/blog" className={cn(button({ variant: "ghost", size: "md", rounded: "medium" }))}>
+                <ChevronLeft size={16} />
+                <span>See all posts</span>
               </Link>
             </div>
           </Flex>
         </article>
-      </Flex>
-    </Flex>
+      </div>
+    </div>
   )
 }

@@ -23,7 +23,7 @@ export const ThemeBtn =() => {
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-        <Button size="sm" variant="ghost" rounded="medium" onClick={() => theme.setTheme(theme.resolvedTheme === "dark" ? "light" : "dark")}>
+        <Button size="icon" variant="ghost" rounded="medium" onClick={() => theme.setTheme(theme.resolvedTheme === "dark" ? "light" : "dark")}>
           {theme.resolvedTheme === "dark" ? <SunIcon /> : <MoonIcon />}
         </Button>
       </TooltipTrigger>

@@ -88,16 +88,16 @@ export const EnabledMailRelayButton = () => {
 
       </DrawerTrigger>
       <DrawerContent asChild>
-        <Stack p="lg" className={css({maxW: "800px", maxH: "1000px", display: 'grid', gridTemplateRows: "auto auto 1fr auto"})} gap="md">
+        <div style={{maxWidth: "800px",  maxHeight: "800px",display: 'grid', gridTemplateRows: "auto auto 1fr auto"}} className={cn(stack({direction: "col", gap: "md"}))}>
           <div className={stack({justify: "between", direction: 'row'})}>
             <H1>Mail relays</H1>
-            <Button variant="ghost" className={css({p: "sm", rounded: "full"})} onClick={() => {{
+            <Button variant="ghost" rounded="medium" className={css({p: "small"})} onClick={() => {{
               createAliasMutation.mutate({label: "google.com"})
             }}}>
               <PlusIcon size={24} />
             </Button>
           </div>
-          <input placeholder="Search..." className={css({p: "md", borderColor: "border", borderWidth: "1px", bg: "background.2", rounded: "radius"})} />
+          <input style={{borderWidth: "1px"}} placeholder="Search..." className={css({p: "medium", borderColor: "border", bg: "bg2"})} />
             {aliases === undefined ? (<div className="grow"></div>) : (
               aliases?.length === 0
                 ? (
@@ -141,9 +141,9 @@ export const EnabledMailRelayButton = () => {
                 )
             )}
           <DrawerClose asChild>
-            <Button variant="outline" size="lg" className={css({mt: "auto"})}>Close</Button>
+            <Button variant="outline" size="lg" className={css({marginTop: "auto"})}>Close</Button>
           </DrawerClose>
-        </Stack>
+        </div>
       </DrawerContent>
     </Drawer>
   )

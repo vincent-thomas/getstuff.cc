@@ -4,16 +4,22 @@ import { useState } from "react";
 import { Refresh } from "../icons/refresh";
 import { useRouter } from "next/navigation";
 import { Loading } from "@stuff/icons/loading";
+import { cn } from "@stuff/components/utils";
+import { stack } from "src/components/recipies";
+import { Button } from "@stuff/ui/button";
+import { theme } from "src/styles/themes.css";
 
 export const RefreshButton = () => {
   const [isFetching, setFetching] = useState(false);
   const router = useRouter();
 
   return (
-    <div className="flex items-center gap-2">
-      <button
-      className="hover:bg-muted rounded-full p-2"
+    <div className={cn(stack({align: "center", gap: "sm"}))}>
+      <Button
+        variant="ghost"
         disabled={isFetching}
+        rounded="medium"
+        size="sm"
         onClick={async () => {
           router.refresh();
           setFetching(true);
@@ -23,11 +29,11 @@ export const RefreshButton = () => {
         }}
       >
         {isFetching ? (
-          <Loading size={24} color="var(--text2)" />
+          <Loading size={24} color={theme.text2} />
         ) : (
           <Refresh />
         )}
-      </button>
+      </Button>
     </div>
   );
 };

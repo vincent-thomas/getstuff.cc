@@ -3,7 +3,6 @@ import { protectedProc, pubProc, router } from "../trpc";
 import { userInterface } from "../interfaces/user";
 import { customerInterface } from "../interfaces/customer";
 import { getCustomerTable, getUserTable } from "@stuff/infra-constants";
-import { env } from "@/env";
 
 export const userRouter = router({
   encryptedData: protectedProc.query(async ({ ctx: { session, dyn } }) => {

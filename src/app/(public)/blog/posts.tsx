@@ -8,8 +8,9 @@ import { formatDate } from "date-fns";
 import { H2 } from "@stuff/typography";
 import { useState } from "react";
 import { Flex } from "@stuff/structure";
-
-
+import { cn } from "@stuff/components/utils";
+import { button } from "@stuff/ui/button";
+import { stack } from "src/components/recipies";
 
 export const BlogPosts =({posts}: {posts: Post[]}) => {
 
@@ -21,12 +22,13 @@ export const BlogPosts =({posts}: {posts: Post[]}) => {
     <Section maxWidth="md">
     <BlogSearch blogs={posts} setQuery={(posts) => setPosts(posts)} />
     {posts?.length ? (
-      <div className="grid gap-10 sm:grid-cols-2 pt-14">
+      <div style={{display:"grid", gridTemplateColumns: "1fr 1fr",gap:"2.5rem"}}>
         {postsToUse.map((post) => (
 
           <article
             key={post._id}
-            className="group relative flex flex-col space-y-2 hover:bg-hover p-4 rounded-xl"
+            style={{whiteSpace: "wrap"}}
+            className={cn(stack({direction: "col"}),button({variant: "ghost", size: "md", rounded: "medium"}),"relative space-y-2 p-4")}
           >
             <Link href={`/blog/${post.id}`}>
             <H2 className="text-2xl font-extrabold text-text">{post.title}</H2>

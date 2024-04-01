@@ -1,24 +1,35 @@
 import { cn } from "@stuff/components/utils";
-import { Flex } from "@stuff/structure";
 import { type InputHTMLAttributes, type Ref, forwardRef } from "react";
+import { border, stack } from "src/components/recipies";
+import { css } from "src/components/styler.css";
 
 export const MailInput = forwardRef(function MailInput(
   {locked, ...props}: InputHTMLAttributes<HTMLInputElement> & { locked?: boolean},
   ref: Ref<HTMLInputElement>
 ) {
   return (
-    <Flex className="rounded-md border border-border" justify="between">
+    <div
+      className={cn(
+        border({rounded: "radius"}),
+        stack({justify: "between", gap: "sm"}),
+        css({background: "transparent"})
+      )}
+    >
       <input
         disabled={locked}
         ref={ref}
         placeholder="Enter email..."
-        className={cn("p-3 pr-0 outline-none", locked ? "bg-muted" : "focus:bg-background2 bg-transparent")}
+        className={cn(css({p: "medium", paddingRight: "none", bg: locked ? "text2" : undefined }))}
         {...props}
       />
-      <p className="border-l overflow-hidden border-border bg-background2 p-3 text-text2">
+      <p style={{overflow: "hidden", borderBlock: "none", borderRight: "none"}} className={cn(
+          css({ background: "bg2", color: "text2", p: "medium" }),
+          border({}),
+        )}
+      >
         @getstuff.cc
       </p>
-    </Flex>
+    </div>
   );
 });
 
@@ -33,7 +44,7 @@ export const PasswordInput = forwardRef(function PasswordInput(
     <input
       ref={ref}
       placeholder={repeat ? "Repeat password..." : "Enter password..."}
-      className="rounded-md border border-border bg-transparent p-3 outline-none focus:bg-muted"
+      className={cn(border({rounded: "radius", thickness: "normal"}), css({bg: "transparent", p: "medium"}),"focus:bg-muted")}
       type="password"
       {...props}
     />

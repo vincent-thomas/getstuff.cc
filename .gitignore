@@ -36,3 +36,5 @@ cdk.out
 .contentlayer
 
 *storybook.log
+
+auto-imports.d.ts

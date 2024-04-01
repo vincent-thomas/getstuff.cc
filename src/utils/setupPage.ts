@@ -1,4 +1,3 @@
-import { env } from "@/env";
 import type { FC, JSX } from "react";
 import type { PageProps } from "src/types/router";
 import type { z, ZodSchema } from "zod";

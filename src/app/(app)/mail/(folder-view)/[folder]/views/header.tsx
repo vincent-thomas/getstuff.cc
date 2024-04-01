@@ -8,8 +8,9 @@ import type { FC } from "react";
 import { Checked, UnChecked } from "packages/icons/lib/unchecked";
 import { RefreshButton } from "../_components/refresh-button";
 import { SelectedBar } from "../_components/selected-bar";
-import { css } from "styled-system/css";
-import { Stack } from "styled-system/jsx";
+import { stack } from "src/components/recipies";
+import { css } from "src/components/styler.css";
+import { themeMode } from "packages/ui/theme";
 
 interface FolderHeader {
   folder: {name: string; folderId:string;}
@@ -20,15 +21,15 @@ export const FolderHeader: FC<FolderHeader> = ({folder}) => {
   const [selected, setSelected] = useAtom(messagesIdSelected);
 
   return (
-    <Stack
-      direction="row"
-      align="center"
-      gap="none"
-      className={cn(css({w: "full"}), "border-b border-border")}
+    <div
+      style={{
+        borderBottom: "1px solid " + themeMode.border
+      }}
+      className={cn(stack({direction: "row", align: "center"}), css({width: "full"}))}
     >
-      <div className={css({p: "xs"})}>
+      <div className={css({p: "small"})}>
         <button
-          className={cn(css({color: "text.1", rounded: "full", _hover: {bg: "hover"}, p: "md"}))}
+          className={cn(css({color: "text1", p: "medium"}))}
           onClick={() => {
             setSelected([]);
             if (selected.length !== threadsQuery.data?.length) {
@@ -47,14 +48,14 @@ export const FolderHeader: FC<FolderHeader> = ({folder}) => {
         </button>
       </div>
 
-      <h1 className="pb-1 text-xl text-foreground">{folder.name}</h1>
-      <div className="flex justify-end w-full h-full px-3">
+      <h1 className={cn(css({fontSize: "medium", color: "text1"}))}>{folder.name}</h1>
+      <div className={cn(stack({justify: "end"}), css({width: 'full', height: 'full', pX: "small"}))}>
         {selected.length === 0 ? (
           <RefreshButton />
         ) : (
           <SelectedBar threadIds={selected} folderId={folder.folderId} />
         )}
       </div>
-    </Stack>
+    </div>
   )
 }

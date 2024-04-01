@@ -1,6 +1,7 @@
 "use client";
 
 import { useUser } from "@stuff/lib/useUser";
+import { border } from "src/components/recipies";
 
 
 export const UserAvatar = () => {
@@ -11,6 +12,6 @@ export const UserAvatar = () => {
   }
 
   return (
-    <img src={user?.avatar_url} className="h-[38px] w-[38px] rounded-full" alt="User selected avatar" />
+    <img src={user?.avatar_url} height={38} width={38} className={border({rounded: "circle"})} alt="User selected avatar" />
   );
 };

@@ -4,6 +4,9 @@ import { z } from "zod";
 import { setupPage } from "@stuff/client/utils";
 import { ThreadView } from "./views/threads";
 import { MainMailView } from "./views/main-mail-file";
+import { cn } from "@stuff/components/utils";
+import { border, stack } from "src/components/recipies";
+import { css } from "src/components/styler.css";
 
 export default setupPage({
   query: z.object({ threadId: z.string().optional() }),
@@ -23,7 +26,7 @@ export default setupPage({
     }
 
     return (
-      <main className="flex h-full w-full overflow-y-auto bg-background rounded-lg border-border border">
+      <main className={cn(stack({}),css({width: "full", height: "full", bg: "bg"}), border({rounded: "radius"}))}>
         <MainMailView folder={folder} threadId={query.threadId} />
         <ThreadView folderId={folder.folderId}/>
       </main>

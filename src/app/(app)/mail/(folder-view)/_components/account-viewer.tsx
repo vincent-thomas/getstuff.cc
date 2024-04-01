@@ -5,6 +5,8 @@ import { redirect } from "next/navigation"
 import { Outlogger } from "./outlogger"
 import { H3 } from "@stuff/typography"
 import { Logo } from "src/components/logo"
+import { cn } from "@stuff/components/utils"
+import { stack } from "src/components/recipies"
 
 
 export const AccountViewer = async () => {
@@ -18,9 +20,9 @@ export const AccountViewer = async () => {
     <DropdownMenu>
       <DropdownMenuTrigger>
           <div className="hover:bg-hover p-3 rounded-md hover:outline outline-2 outline-border">
-            <div className="flex items-center gap-4">
+            <div className={cn(stack({gap: "md", align: "center"}))}>
               <UserAvatar />
-              <div className="flex flex-col text-left">
+              <div className={cn(stack({direction: "col"}),"text-left")}>
                 <h1 className="font-semibold flex gap-1 items-center">
                   <Logo size={24} /><p className="text-text text-3xl">Mail</p>
                 </h1>

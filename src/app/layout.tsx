@@ -8,11 +8,11 @@ import { cn } from "packages/components/utils";
 import { TRPCReactProvider } from "@stuff/api-client/react";
 import type { Metadata, Viewport } from "next";
 import { ThemeProvider } from "src/providers/theme";
-import { env } from "@/env";
 import { TooltipProvider } from "@stuff/ui/tooltip";
 import { css } from "src/components/styler.css";
-import { globalStyleClass } from "src/styles/themes.css";
-
+import "packages/ui/theme/mode.css";
+import "packages/ui/theme/color.css"
+import { spacingDefiningClass } from "packages/ui/variables";
 const inter = Inter({
   axes: ["slnt"],
   subsets: ["latin"],
@@ -59,10 +59,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head />
-      <body style={{minHeight: "100vh"}} className={cn(
+      <body className={cn(
         inter.className,
-        css({bg: "bg"}),
-        globalStyleClass
+        css({bg: "bg", minHeight: "screen"}),
+        spacingDefiningClass,
+        "indigo"
       )}>
         <TooltipProvider>
           <TRPCReactProvider>

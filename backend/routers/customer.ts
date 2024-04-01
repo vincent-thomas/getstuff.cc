@@ -4,7 +4,6 @@ import { getCustomer } from "../utils/getUser";
 import { getStripe } from "../sdks/stripe";
 import { getStuffPlusPriceId } from "../utils/prices";
 import type Stripe from "stripe";
-import { env } from "@/env";
 import { z } from "zod";
 
 export const customerRouter = router({

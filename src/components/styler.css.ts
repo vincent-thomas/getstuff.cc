@@ -1,5 +1,30 @@
+import { keyframes } from "@vanilla-extract/css";
 import {createSprinkles, defineProperties} from "@vanilla-extract/sprinkles"
-import { theme } from "src/styles/themes.css"
+import { colors, themeMode } from "packages/ui/theme";
+import { theme } from "src/styles/themes.css";
+
+
+
+const size = defineProperties({
+  properties: {
+    height: {
+      screen: "100vh",
+      full: "100%",
+    },
+    width: {
+      screen: "100vw",
+      full: "100%"
+    },
+    minWidth: {
+      screen: "100vh",
+      full: "100%"
+    },
+    minHeight: {
+      screen: "100vh",
+      full: '100%'
+    }
+  },
+})
 
 const space = {
   none: 0,
@@ -7,6 +32,7 @@ const space = {
   medium: "12px",
   large: "16px",
   "x-large": "20px",
+  auto: "auto"
 }
 
 const padding = defineProperties({
@@ -28,8 +54,8 @@ const margin = defineProperties({
   properties: {
     marginTop: space,
     marginBottom: space,
-    marginLeft: {...space, push: "auto"},
-    marginRight: {...space, push: "auto"}
+    marginLeft: space,
+    marginRight: space
   },
   shorthands: {
     m: ["marginTop", "marginRight", "marginBottom", "marginLeft"],
@@ -39,30 +65,37 @@ const margin = defineProperties({
   }
 })
 
-export const colors = {
-  text1: theme.text,
-  text2: theme.text2,
+export const anotherColors = {
+  text1: themeMode.text1,
+  text2: themeMode.text2,
   hover: theme.hover,
-  bg: theme.background,
-  bg2: theme.background2,
-  accent: theme.accent,
-  accent2: theme.accent2,
+  bg: themeMode.background1,
+  bg2: themeMode.background2,
+  accent: colors.accent1,
+  accent2: colors.accent2,
+  highlight: theme.highlight,
+  transparent: "transparent",
 }
 
 export const color = defineProperties({
   properties: {
-    color: colors,
-    background: colors,
+    color: anotherColors,
+    background: anotherColors,
     borderColor: {
       border: theme.border,
-    }
+    },
+    fill: anotherColors,
+    stroke: anotherColors,
   },
   shorthands: {
     bg: ["background"],
   }
 })
 
-const multi = 1.2
+const multi = 1.4;
+const base = 16;
+
+
 
 export const fonts = defineProperties({
   properties: {
@@ -73,11 +106,19 @@ export const fonts = defineProperties({
       bold: "700",
     },
     fontSize: {
-      small: `${16}px`,
-      medium: `${16*multi^1}px`,
-      large: `${16*multi^2}px`,
+      xsmall: `${base}px`,
+      small: `${base*multi}px`,
+      medium: `${base*Math.pow(multi,2)}px`,
+      large: `${base*Math.pow(multi,3)}px`,
+      "xlarge": `${base*Math.pow(multi,4)}px`,
+      "2xlarge": `${base*Math.pow(multi,5)}px`,
     }
   }
 })
 
-export const css = createSprinkles(padding, margin, color, fonts)
+export const css = createSprinkles(padding, margin, color, fonts, size)
+
+export const spinKeyFrame = keyframes({
+  "0%": { transform: "rotate(0deg)" },
+  "100%": { transform: "rotate(360deg)" }
+})

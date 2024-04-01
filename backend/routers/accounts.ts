@@ -15,7 +15,6 @@ import { randomBytes } from "crypto";
 import { createJwt } from "../utils/jwt";
 import { cookies } from "next/headers";
 import { getCustomerTable, getUserTable } from "packages/infra-constants/table";
-import { env } from "@/env";
 import { protectedProc, pubProc, router } from "backend/trpc";
 
 export const accountsRouter = router({

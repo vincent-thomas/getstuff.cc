@@ -1,4 +1,5 @@
 import type { FC } from "react";
+import { spinKeyFrame } from "../styler.css";
 
 interface Props {
   size: number;
@@ -12,7 +13,11 @@ export const Loading: FC<Props> = ({ size, color }) => {
       viewBox="0 -960 960 960"
       height={size}
       width={size}
-      className={"animate-spin"}
+      style={{
+        animationName: spinKeyFrame,
+        animationDuration: "1s",
+        animationIterationCount: "infinite"
+      }}
     >
       <path
         fill={color}

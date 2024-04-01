@@ -3,7 +3,6 @@ import { Section } from "../_components/section";
 import Link from "next/link";
 import { setupPage } from "@stuff/client/utils";
 import { H2, P } from "@stuff/typography";
-import { env } from "@/env";
 import { StuffBranding } from "../_components/stuff";
 import { Flex } from "@stuff/structure";
 

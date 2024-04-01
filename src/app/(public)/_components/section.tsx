@@ -30,7 +30,7 @@ export const Section = ({
         maxWidth: width[maxWidth],
         width: "100%"
       }}
-      className={cn(css({mX: "push"}), className)}
+      className={cn(css({mX: "auto"}), className)}
     >
       {children}
     </section>

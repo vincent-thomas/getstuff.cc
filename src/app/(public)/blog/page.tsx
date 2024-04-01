@@ -3,8 +3,10 @@ import { compareDesc } from "date-fns"
 import { PageHeador } from "../_components/header"
 import type { Metadata } from "next"
 import { Logo } from "src/components/logo"
-import { Flex } from "@stuff/structure"
 import { BlogPosts } from "./posts"
+import { stack } from "src/components/recipies"
+import { cn } from "@stuff/components/utils"
+import { css } from "src/components/styler.css"
 
 
 export const metadata: Metadata = {
@@ -21,7 +23,19 @@ export default async function BlogPage() {
 
   return (
     <>
-      <PageHeador title={<Flex gap="1rem"><Logo size={55}/>Blog</Flex>} comment={"A Blog"} />
+      <PageHeador
+        title={
+          <div className={cn(
+              css({fontSize: "large"}),
+              stack({gap: "md"})
+            )}
+          >
+            <Logo size={80}/>
+            Blog
+          </div>
+        }
+        comment={"A Blog"}
+      />
       <BlogPosts posts={posts} />
     </>
   )

@@ -10,6 +10,9 @@ import { prefetchThreadQuery } from "@stuff/data-access/prefetch-thread-query";
 import { useDataKey } from "@stuff/lib/useUserPrivateKey";
 import { useQueryClient } from "@tanstack/react-query";
 import { threadOpen } from "../store/thread-open";
+import { stack } from "src/components/recipies";
+import { css } from "src/components/styler.css";
+import { Button } from "@stuff/ui/button";
 
 export const MailRow = ({
   thread,
@@ -33,14 +36,16 @@ export const MailRow = ({
     <div
       key={thread.threadId}
       className={cn(
-        "flex border-b border-border hover:bg-hover",
-        thread.read ? "bg-background2" : "bg-background",
-        selected.includes(thread.threadId) && "!bg-highlight"
+        stack({}),
+        css({bg: selected.includes(thread.threadId) ? "highlight" : (thread.read ? "bg2" : "bg")}),
+        "border-b border-border hover:bg-hover",
       )}
     >
-      <div className="p-1">
-        <button
-          className="rounded-full p-3 hover:bg-hover"
+      <div className={css({p: "small"})}>
+        <Button
+          variant="ghost"
+          size="icon"
+          rounded="icon"
           onClick={() => {
             if (selected.includes(thread.threadId)) {
               setSelected(
@@ -52,7 +57,7 @@ export const MailRow = ({
           }}
         >
         {selected.includes(thread.threadId) ? <Checked size={18} /> : <UnChecked size={18} />}
-        </button>
+        </Button>
       </div>
       <button
         key={thread.threadId}

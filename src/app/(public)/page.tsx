@@ -69,7 +69,7 @@ export default setupPage({
             <a href="#features" className={cn("ml-auto", button({variant: "link"}))}>Show features</a>
           </Card>
         </Section>
-        <Section maxWidth="lg" className="animate-in ease-out slide-in-from-bottom-40 duration-700 fade-in bg-background2 rounded-[50px] w-full mx-auto">
+        <Section maxWidth="lg" className={cn(css({bg: "bg2"}),"animate-in ease-out slide-in-from-bottom-40 duration-700 fade-in rounded-[50px] w-full mx-auto")}>
           <Section maxWidth="md" className={stack({direction: "col", align: "center"})} style={{overflow: "hidden", padding: "1rem"}}>
             <P>Stuff is a mail service</P>
             <H1 id="features">Stuff Features</H1>

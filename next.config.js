@@ -8,9 +8,9 @@ await import("./src/env.js");
 
 import {createVanillaExtractPlugin} from "@vanilla-extract/next-plugin";
 import { withContentlayer } from "next-contentlayer"
+import unimport from "unplugin-auto-import"
 
-const withVE = createVanillaExtractPlugin({
-});
+const withVE = createVanillaExtractPlugin();
 
 /** @type {import("next").NextConfig} */
 const config = {
@@ -29,6 +29,15 @@ const config = {
       type: "javascript/auto"
     });
 
+    config.plugins.push(unimport.webpack({
+      imports: [
+        {
+          from: "@/env",
+          imports: ["env"],
+        }
+      ]
+    }))
+
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
     config.resolve.fallback = {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
@@ -37,6 +46,9 @@ const config = {
     };
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return config;
+  },
+  images: {
+    domains: ["api.dicebear.com"]
   }
 };
 

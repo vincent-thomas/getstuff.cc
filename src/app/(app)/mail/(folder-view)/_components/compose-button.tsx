@@ -120,7 +120,7 @@ export const ComposeButton = () => {
                 gap="1rem"
                 align="center"
               >
-                <span className={css({color: "text.2"})}>To:</span>
+                <span className={css({color: "text2"})}>To:</span>
                 <input
                   {...register("to")}
                   className="h-full w-full bg-transparent outline-none"
@@ -128,7 +128,7 @@ export const ComposeButton = () => {
               </Flex>
               <input
                 type="text"
-                className={cn("w-full bg-transparent text-2xl outline-none", css({p: "xl"}))}
+                className={cn("w-full bg-transparent text-2xl outline-none", css({p: "x-large"}))}
                 placeholder="Subject"
                 {...register("subject")}
               />

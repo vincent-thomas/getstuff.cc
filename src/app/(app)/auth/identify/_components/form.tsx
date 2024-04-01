@@ -18,6 +18,8 @@ import {
 import { MailInput, PasswordInput } from "../../_components/inputs";
 import { useRouter } from "next/navigation";
 import { setPasswordDerivedSecret } from "@stuff/lib/useUserPrivateKey";
+import { cn } from "@stuff/components/utils";
+import { stack } from "src/components/recipies";
 
 const validator = z.object({
   username: z.string(),
@@ -83,7 +85,7 @@ export const Form = () => {
           setLoading(false);
         }
         setLoading(false)
-      })} className="flex flex-col gap-4">
+      })} className={cn(stack({direction: "col", gap: "md"}))}>
         <MailInput {...register("username")} />
         <PasswordInput {...register("password")} />
         <Button size="lg" loading={loading} variant="primary">

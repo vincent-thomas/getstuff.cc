@@ -12,7 +12,6 @@ import  { ZodError, type z } from "zod";
 import { jwtPayloadValidator } from "./utils/jwt";
 import { getRedis, getDyn, getS3,getSes } from "./sdks";
 import type { NextRequest } from "next/server";
-import { env } from "@/env";
 import { getUserFromHeader } from "./utils/getUserFromHeaders";
 
 const sessionType = jwtPayloadValidator.nullable();

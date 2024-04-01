@@ -4,26 +4,26 @@ import {Flex} from "@stuff/structure"
 import { H1, P } from "@stuff/typography";
 import { Heading } from "@stuff/ui/title";
 import { css } from "src/components/styler.css";
+import { stack } from "src/components/recipies";
 
 export const HeroTitle = ({className, title, comment, under}: {
   className?:string, 
   title: string | JSX.Element;
   under?: JSX.Element;
   comment: string | JSX.Element;
-}) =>{ 
-  return (
-     <Flex col className={cn(className)}>
-        <Heading weight="bold" style={{width: "100%", maxWidth: "400px", fontSize: "3.9rem"}}
-        >{title}</Heading>
-        <P className={css({fontSize: "medium",fontWeight: "semibold"})}>{comment}</P>
-        {!!under && (
-          <div className={css({paddingTop: "small"})}>
-            {under}
-          </div>
-        )}
-      </Flex>
-  )
-}
+}) => (
+  <div className={cn(stack({direction: "col", align: "start"}),className)}>
+    <Heading weight="bold" style={{width: "100%"}}
+    className={css({fontSize: "large"})}
+    >{title}</Heading>
+    <P className={css({fontSize: "medium",fontWeight: "semibold"})}>{comment}</P>
+    {!!under && (
+      <div className={css({paddingTop: "small"})}>
+        {under}
+      </div>
+    )}
+  </div>
+)
 
 export const PageHeador = ({
   title,
