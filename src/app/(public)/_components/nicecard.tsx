@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { Card } from "./card";
-import { stack } from "src/components/recipies";
+import { border, stack } from "src/components/recipies";
 import { Button } from "@stuff/ui/button";
 import { H2, P } from "@stuff/typography";
 import { cn } from "@stuff/components/utils";
@@ -19,6 +19,10 @@ export const NiceCard = ({
 			<Card
 				p="xlarge"
 				className={cn(
+					border({
+						color: "interactive",
+						rounded: "radius",
+					}),
 					stack({ direction: "col", gap: "md", align: "start" }),
 					css({
 						cursor: "pointer",

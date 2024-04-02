@@ -22,7 +22,7 @@ const Tier: FC<TierProps> = ({ title, desc, price, features }) => {
 			<div
 				className={css({ p: "large" })}
 				style={{
-					borderBottom: `1px solid ${themeMode.border}`,
+					borderBottom: `1px solid ${themeMode.borderSubtle}`,
 					width: "100%",
 				}}
 			>
