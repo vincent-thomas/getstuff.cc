@@ -8,6 +8,8 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "packages/components/lib/dialog";
 import { Button } from "@stuff/ui/button";
+import { Loading } from "@stuff/icons/loading";
+import { colors } from "packages/ui/theme";
 
 const formInterface = z.object({
   folderName: z.string().min(3)
@@ -46,7 +48,10 @@ export const CreateFolderButton = () => {
             {...register("folderName")}            className="rounded-md px-4 py-3 outline-none"
           />
           <div className="pt-2">
-            <Button type="submit" loading={createFolderMutation.isLoading}>Create folder</Button>
+            <Button type="submit">Create folder {
+              createFolderMutation.isLoading && <Loading size={16} color={colors.accentForeground} />
+            
+            }</Button>
           </div>
         </Flex>
         </form>

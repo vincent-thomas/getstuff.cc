@@ -33,7 +33,8 @@ export const button = recipe({
           ":hover": {
             background: themeMode.hover,
             color: themeMode.text2
-          }
+          },
+          color: themeMode.text1
         })
       ],
       accent: {

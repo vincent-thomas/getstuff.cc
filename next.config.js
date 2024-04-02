@@ -1,5 +1,3 @@
-// @ts-check
-
 /**
  * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially useful
  * for Docker builds.
@@ -15,6 +13,10 @@ const withVE = createVanillaExtractPlugin();
 /** @type {import("next").NextConfig} */
 const config = {
   reactStrictMode: true,
+  poweredByHeader: false,
+  experimental: {
+    useLightningcss: true
+  },
   webpack: config => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
     config?.module?.rules?.push({
@@ -39,6 +41,10 @@ const config = {
         {
           from: "@style-system/css",
           name: "css",
+        },
+        {
+          from: "@style-system/utils",
+          name: "cn",
         }
       ]
     }))

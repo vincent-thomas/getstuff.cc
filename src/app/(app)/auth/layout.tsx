@@ -6,7 +6,6 @@ import { Spinner } from "./icons/spinner";
 import Link from "next/link";
 import { cn } from "@stuff/components/utils";
 import { border, stack } from "src/components/recipies";
-import { css } from "
 import { P } from "@stuff/typography";
 
 const Layout = ({ children }: { children: ReactNode }) => {

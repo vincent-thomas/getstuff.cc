@@ -19,7 +19,7 @@ export const Footer = () => {
         <Flex className="w-full flex" justify="between">
          <Flex align="center" gap="0.5rem" className="max-sm:hidden">
            <p>Stuff © {new Date().getFullYear()}</p><span>•</span>
-           <a href="https://github.com/vincent-thomas" target="_blank" className={cn("!pl-0",button({variant: "link", size: "sm"}))}>Vincent Thomas</a>
+           <a href="https://github.com/vincent-thomas" target="_blank" className={cn("!pl-0",button({variant: "link", size: "sm"}))} rel="noreferrer">Vincent Thomas</a>
          </Flex>
          <Flex gap="1rem">
            <Link

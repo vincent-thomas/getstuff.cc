@@ -19,6 +19,8 @@ import { deserializeData, encryptSymmetric, genKeyPair } from "@stuff/lib/crypto
 import { Button } from "@stuff/ui/button";
 import { setPasswordDerivedSecret } from "@stuff/lib/useUserPrivateKey";
 import { useRouter } from "next/navigation";
+import { Loading } from "@stuff/icons/loading";
+import { colors } from "packages/ui/theme";
 
 // const QRCODE_SIZE = "100%"
 // const QRCODE_LEVEL = 'Q'
@@ -241,7 +243,7 @@ export const Form = () => {
           <span className="text-red-400">{errors.checkbox.message}</span>
         )}
       </div>
-      <Button variant="primary" disabled={!!errors.root} loading={loading}>Submit</Button>
+      <Button variant="primary" disabled={!!errors.root}>Submit {loading && <Loading size={18} color={colors.accentForeground}/>}</Button>
     </form>
   );
 };

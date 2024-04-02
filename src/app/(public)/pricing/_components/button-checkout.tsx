@@ -1,7 +1,9 @@
 "use client";
 
 import { api } from "@stuff/api-client/react"
+import { Loading } from "@stuff/icons/loading";
 import { Button } from "@stuff/ui/button";
+import { colors } from "packages/ui/theme";
 
 
 export const CheckoutButton = () => {
@@ -10,5 +12,5 @@ export const CheckoutButton = () => {
   return <Button onClick={async () => {
     const result = await checkoutMutation.mutateAsync();
     window.location.href = result.sessionUrl;
-  }} loading={checkoutMutation.isLoading}>Get Stuff+</Button>
+  }} >Get Stuff+ {checkoutMutation.isLoading && <Loading size={18} color={colors.accentForeground}/>}</Button>
 }

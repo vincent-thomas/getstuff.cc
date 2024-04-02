@@ -1,5 +1,5 @@
 import { decryptAsymmetric, decryptSymmetric } from "@stuff/lib/crypto";
-import { type QueryClient } from "@tanstack/react-query";
+import type { QueryClient } from "@tanstack/react-query";
 import type { ProcessMessageInterface } from "src/app/(app)/mail/(folder-view)/[folder]/[thread]/page-client";
 import { z } from "zod";
 

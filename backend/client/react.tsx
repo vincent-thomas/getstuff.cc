@@ -5,7 +5,7 @@ import { httpBatchLink, loggerLink } from "@trpc/client";
 import { createTRPCReact } from "@trpc/react-query";
 import { useState } from "react";
 
-import { type AppRouter } from "..";
+import type { AppRouter } from "..";
 import { getUrl, transformer } from "./shared";
 
 const createQueryClient = () => new QueryClient();

@@ -91,9 +91,8 @@ export const EnabledMailRelayButton = () => {
         <div style={{maxWidth: "800px",  maxHeight: "800px",display: 'grid', gridTemplateRows: "auto auto 1fr auto"}} className={cn(stack({direction: "col", gap: "md"}))}>
           <div className={stack({justify: "between", direction: 'row'})}>
             <H1>Mail relays</H1>
-            <Button variant="ghost" rounded="medium" className={css({p: "small"})} onClick={() => {{
-              createAliasMutation.mutate({label: "google.com"})
-            }}}>
+            <Button variant="ghost" rounded="medium" className={css({p: "small"})} onClick={() => {
+              createAliasMutation.mutate({label: "google.com"})}}>
               <PlusIcon size={24} />
             </Button>
           </div>

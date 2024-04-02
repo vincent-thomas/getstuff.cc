@@ -20,6 +20,8 @@ import { useRouter } from "next/navigation";
 import { setPasswordDerivedSecret } from "@stuff/lib/useUserPrivateKey";
 import { cn } from "@stuff/components/utils";
 import { stack } from "src/components/recipies";
+import { Loading } from "@stuff/icons/loading";
+import { colors } from "packages/ui/theme";
 
 const validator = z.object({
   username: z.string(),
@@ -88,8 +90,9 @@ export const Form = () => {
       })} className={cn(stack({direction: "col", gap: "md"}))}>
         <MailInput {...register("username")} />
         <PasswordInput {...register("password")} />
-        <Button size="lg" loading={loading} variant="primary">
+        <Button size="lg" variant="primary">
           Submit
+          {loading && <Loading size={16} color={colors.accentForeground} />}
         </Button>
       </form>
     )

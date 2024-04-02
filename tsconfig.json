@@ -80,6 +80,9 @@
       ],
       "@style-system/css": [
         "./packages/ui/css/index.css.ts"
+      ],
+      "@style-system/utils": [
+        "./packages/ui/utils/index.ts"
       ]
     }
   },
@@ -88,6 +91,8 @@
     "next-env.d.ts",
     "src/**/*.ts",
     "src/**/*.tsx",
+    "./packages/**/*.ts",
+    "./packages/**/*.tsx",
     ".next/types/**/*.ts",
     ".contentlayer/generated",
     "./unimport.d.ts"
