@@ -1,10 +1,9 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { Card } from "./card";
 import { border, stack } from "src/components/recipies";
 import { Button } from "@stuff/ui/button";
-import { H2, P } from "@stuff/typography";
+import { H2 } from "@stuff/typography";
 import { cn } from "@stuff/components/utils";
 import { Text2 } from "packages/ui/atoms";
 import { Link } from "src/components/structure/link";

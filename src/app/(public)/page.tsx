@@ -7,7 +7,6 @@ import { setupPage } from "@stuff/client/utils";
 import { button } from "@stuff/ui/button/button.css";
 import { StuffBranding } from "./_components/stuff";
 import { H1, H2, P } from "@stuff/typography";
-import { Flex } from "@stuff/structure";
 import "./style.css";
 import { boxGrid, conversations, extensions, folders } from "./page.css";
 import { Logo } from "src/components/logo";

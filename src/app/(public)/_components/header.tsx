@@ -3,7 +3,7 @@ import { Section } from "./section";
 import { H1, P } from "@stuff/typography";
 import { Heading } from "@stuff/ui/title";
 import { stack } from "src/components/recipies";
-import { Text1, Text2 } from "packages/ui/atoms";
+import { Text2 } from "packages/ui/atoms";
 
 export const HeroTitle = ({
 	className,

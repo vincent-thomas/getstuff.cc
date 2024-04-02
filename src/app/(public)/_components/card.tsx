@@ -2,7 +2,6 @@ import { cn } from "packages/components/utils";
 import { spacing } from "packages/ui/variables";
 import type { HTMLAttributes, ReactNode } from "react";
 import { border } from "src/components/recipies";
-import { theme } from "src/styles/themes.css";
 
 interface CardProps extends HTMLAttributes<HTMLDivElement> {
 	p?: keyof typeof spacing;
@@ -22,7 +21,7 @@ export function Card({
 				border({ rounded: "lg" }),
 				css({
 					overflow: "hidden",
-					padding: p === undefined ? "none" : p,
+					padding: p ?? "none",
 				}),
 				className,
 			)}
