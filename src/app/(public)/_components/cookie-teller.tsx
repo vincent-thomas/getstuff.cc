@@ -23,7 +23,7 @@ export const CookieTeller = () => {
 	return (
 		<div
 			className={cn(
-				css({ position: "sticky", bg: "bg2", p: "medium" }),
+				css({ position: "sticky", bg: "bgSubtle", p: "medium" }),
 				stack({ gap: "md", align: "center" }),
 			)}
 			style={{ top: 0, borderBottom: "1px solid " + themeMode.borderSubtle }}

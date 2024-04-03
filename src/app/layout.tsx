@@ -63,9 +63,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 			<body
 				className={cn(
 					inter.className,
-					css({ bg: "bg", minHeight: "screen" }),
+					css({ bg: "bgApp", minHeight: "screen" }),
 					spacingDefiningClass,
-					THEME.AMBER,
+					THEME.BLUE,
 				)}
 			>
 				<TooltipProvider>

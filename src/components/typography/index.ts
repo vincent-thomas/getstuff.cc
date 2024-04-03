@@ -1,2 +1,2 @@
-export * from "./headers"
-export * from "./paragraph"
+export * from "./headers";
+export * from "./paragraph";

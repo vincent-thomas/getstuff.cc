@@ -10,30 +10,26 @@ import { Button } from "@stuff/ui/button";
 import { theme } from "src/styles/themes.css";
 
 export const RefreshButton = () => {
-  const [isFetching, setFetching] = useState(false);
-  const router = useRouter();
+	const [isFetching, setFetching] = useState(false);
+	const router = useRouter();
 
-  return (
-    <div className={cn(stack({align: "center", gap: "sm"}))}>
-      <Button
-        variant="ghost"
-        disabled={isFetching}
-        rounded="medium"
-        size="sm"
-        onClick={async () => {
-          router.refresh();
-          setFetching(true);
-          setTimeout(() => {
-            setFetching(false);
-          }, 2300)
-        }}
-      >
-        {isFetching ? (
-          <Loading size={24} color={theme.text2} />
-        ) : (
-          <Refresh />
-        )}
-      </Button>
-    </div>
-  );
+	return (
+		<div className={cn(stack({ align: "center", gap: "sm" }))}>
+			<Button
+				variant="ghost"
+				disabled={isFetching}
+				rounded="medium"
+				size="sm"
+				onClick={async () => {
+					router.refresh();
+					setFetching(true);
+					setTimeout(() => {
+						setFetching(false);
+					}, 2300);
+				}}
+			>
+				{isFetching ? <Loading size={24} color={theme.text2} /> : <Refresh />}
+			</Button>
+		</div>
+	);
 };

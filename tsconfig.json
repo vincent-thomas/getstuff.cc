@@ -1,106 +1,62 @@
 {
-  "compilerOptions": {
-    /* Base Options: */
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "target": "es2022",
-    "allowJs": true,
-    "strictFunctionTypes": true,
-    "resolveJsonModule": true,
-    "moduleDetection": "force",
-    "isolatedModules": true,
-    /* Strictness */
-    "strict": true,
-    "noUncheckedIndexedAccess": true,
-    "checkJs": true,
-    /* Bundled projects */
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "ES2022",
-      "webworker"
-    ],
-    "noEmit": true,
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
-    "jsx": "preserve",
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ],
-    "incremental": true,
-    /* Path Aliases */
-    "baseUrl": ".",
-    "paths": {
-      "@/env": [
-        "./src/env.js"
-      ],
-      "@stuff/api-client/react": [
-        "./backend/client/react.tsx"
-      ],
-      "@stuff/api-client/server": [
-        "./backend/client/server.ts"
-      ],
-      "@stuff/infra-constants": [
-        "./packages/infra-constants/index.ts"
-      ],
-      "@stuff/data-access/*": [
-        "./src/data-access/*"
-      ],
-      "@stuff/structure": [
-        "./src/components/structure/index.ts"
-      ],
-      "@stuff/typography": [
-        "./src/components/typography/index.ts"
-      ],
-      "@stuff/ui/*": [
-        "./src/components/ui/*"
-      ],
-      "@stuff/icons/*": [
-        "./src/components/icons/*"
-      ],
-      "@stuff/lib/*": [
-        "./src/lib/*"
-      ],
-      "@stuff/components/utils": [
-        "./src/components/utils.ts"
-      ],
-      "@stuff/client/interfaces": [
-        "./src/interfaces/index.ts"
-      ],
-      "@stuff/styling/*": [
-        "./styled-system/*"
-      ],
-      "@stuff/client/utils": [
-        "./src/utils/index.ts"
-      ],
-      "contentlayer/generated": [
-        "./.contentlayer/generated"
-      ],
-      "@style-system/css": [
-        "./packages/ui/css/index.css.ts"
-      ],
-      "@style-system/utils": [
-        "./packages/ui/utils/index.ts"
-      ]
-    }
-  },
-  "include": [
-    ".eslintrc.cjs",
-    "next-env.d.ts",
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "./packages/**/*.ts",
-    "./packages/**/*.tsx",
-    ".next/types/**/*.ts",
-    ".contentlayer/generated",
-    "./unimport.d.ts"
-  ],
-  "exclude": [
-    "**/dist",
-    ".next",
-    "cdk.out",
-    "node_modules"
-  ]
+	"compilerOptions": {
+		/* Base Options: */
+		"esModuleInterop": true,
+		"skipLibCheck": true,
+		"target": "es2022",
+		"allowJs": true,
+		"strictFunctionTypes": true,
+		"resolveJsonModule": true,
+		"moduleDetection": "force",
+		"isolatedModules": true,
+		/* Strictness */
+		"strict": true,
+		"noUncheckedIndexedAccess": true,
+		"checkJs": true,
+		/* Bundled projects */
+		"lib": ["dom", "dom.iterable", "ES2022", "webworker"],
+		"noEmit": true,
+		"module": "ESNext",
+		"moduleResolution": "Bundler",
+		"jsx": "preserve",
+		"plugins": [
+			{
+				"name": "next"
+			}
+		],
+		"incremental": true,
+		/* Path Aliases */
+		"baseUrl": ".",
+		"paths": {
+			"@/env": ["./src/env.js"],
+			"@stuff/api-client/react": ["./backend/client/react.tsx"],
+			"@stuff/api-client/server": ["./backend/client/server.ts"],
+			"@stuff/infra-constants": ["./packages/infra-constants/index.ts"],
+			"@stuff/data-access/*": ["./src/data-access/*"],
+			"@stuff/structure": ["./src/components/structure/index.ts"],
+			"@stuff/typography": ["./src/components/typography/index.ts"],
+			"@stuff/ui/*": ["./src/components/ui/*"],
+			"@stuff/icons/*": ["./src/components/icons/*"],
+			"@stuff/lib/*": ["./src/lib/*"],
+			"@stuff/components/utils": ["./src/components/utils.ts"],
+			"@stuff/client/interfaces": ["./src/interfaces/index.ts"],
+			"@stuff/styling/*": ["./styled-system/*"],
+			"@stuff/client/utils": ["./src/utils/index.ts"],
+			"contentlayer/generated": ["./.contentlayer/generated"],
+			"@style-system/css": ["./packages/ui/css/index.css.ts"],
+			"@style-system/utils": ["./packages/ui/utils/index.ts"]
+		}
+	},
+	"include": [
+		".eslintrc.cjs",
+		"next-env.d.ts",
+		"src/**/*.ts",
+		"src/**/*.tsx",
+		"./packages/**/*.ts",
+		"./packages/**/*.tsx",
+		".next/types/**/*.ts",
+		".contentlayer/generated",
+		"./unimport.d.ts"
+	],
+	"exclude": ["**/dist", ".next", "cdk.out", "node_modules"]
 }

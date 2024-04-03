@@ -19,192 +19,188 @@ import { useAtom } from "jotai";
 import { theme } from "src/styles/themes.css";
 
 const paramsInterface = z.object({
-  threadId: z.string(),
-  folderId: z.string()
+	threadId: z.string(),
+	folderId: z.string(),
 });
 
 export interface ProcessMessageInterface {
-  messageId: string;
-  subject: string;
-  content: {
-    text: string;
-    html: string;
-  };
-  to: {
-    address: string;
-    name: string;
-  }[];
-  from: {
-    address: string;
-    name: string;
-  };
+	messageId: string;
+	subject: string;
+	content: {
+		text: string;
+		html: string;
+	};
+	to: {
+		address: string;
+		name: string;
+	}[];
+	from: {
+		address: string;
+		name: string;
+	};
 }
 
 const processMessage = async (
-  message: ProcessMessageInterface,
-  userKey: Buffer
+	message: ProcessMessageInterface,
+	userKey: Buffer,
 ) => {
-  const htmlContent = decryptSymmetric(message.content.html, userKey);
-  const textContent = decryptSymmetric(message.content.text, userKey);
+	const htmlContent = decryptSymmetric(message.content.html, userKey);
+	const textContent = decryptSymmetric(message.content.text, userKey);
 
-  return {
-    messageId: message.messageId,
-    content: {
-      text: textContent,
-      html: htmlContent
-    },
-    subject: message.subject,
-    from: message.from,
-    to: message.to
-  };
+	return {
+		messageId: message.messageId,
+		content: {
+			text: textContent,
+			html: htmlContent,
+		},
+		subject: message.subject,
+		from: message.from,
+		to: message.to,
+	};
 };
 
 const MainPage = ({ threadId, folderId }: z.infer<typeof paramsInterface>) => {
-  const threadQuery = useThreadQuery({
-    folderId,
-    threadId
-  });
-  const threadReadMutation = useThreadsReadMutation();
-  const masterKey = useDataKey();
+	const threadQuery = useThreadQuery({
+		folderId,
+		threadId,
+	});
+	const threadReadMutation = useThreadsReadMutation();
+	const masterKey = useDataKey();
 
-  const messages = useQueries({
-    queries: (threadQuery.data?.messages ?? []).map(message => ({
-      queryKey: ["message", { messageId: message.messageId }],
-      queryFn: async () => {
-        const threadEncryptionKey = z
-          .string()
-          .parse(message.messageEncryptionKey);
-        const content = await fetch(message.contentUrl, {
-          cache: "force-cache"
-        }).then(async v =>
-          z.object({ html: z.string(), text: z.string() }).parse(await v.json())
-        );
-        const userKey = decryptAsymmetric(
-          threadEncryptionKey,
-          z.string().parse(masterKey)
-        );
+	const messages = useQueries({
+		queries: (threadQuery.data?.messages ?? []).map((message) => ({
+			queryKey: ["message", { messageId: message.messageId }],
+			queryFn: async () => {
+				const threadEncryptionKey = z
+					.string()
+					.parse(message.messageEncryptionKey);
+				const content = await fetch(message.contentUrl, {
+					cache: "force-cache",
+				}).then(async (v) =>
+					z
+						.object({ html: z.string(), text: z.string() })
+						.parse(await v.json()),
+				);
+				const userKey = decryptAsymmetric(
+					threadEncryptionKey,
+					z.string().parse(masterKey),
+				);
 
-        return processMessage(
-          {
-            content,
-            messageId: message.messageId,
-            subject: message.subject,
-            to: message.to,
-            from: message.from
-          },
-          userKey
-        );
-      }
-    }))
-  });
+				return processMessage(
+					{
+						content,
+						messageId: message.messageId,
+						subject: message.subject,
+						to: message.to,
+						from: message.from,
+					},
+					userKey,
+				);
+			},
+		})),
+	});
 
-  useEffect(() => {
-    if (threadQuery.data?.thread.read === false) {
-      threadReadMutation.mutate({
-        value: true,
-        folderId,
-        threadIds: [threadId]
-      });
-    }
-  }, [folderId, threadId, threadQuery.data?.thread.read]);
+	useEffect(() => {
+		if (threadQuery.data?.thread.read === false) {
+			threadReadMutation.mutate({
+				value: true,
+				folderId,
+				threadIds: [threadId],
+			});
+		}
+	}, [folderId, threadId, threadQuery.data?.thread.read]);
 
-  return (
-    <>
-      <Flex gap="0.75rem" className="p-4" align="center" justify="between">
-        <h1 className="text-3xl text-text">
-          {threadQuery.data?.thread.title}
-        </h1>
-        <div>
-          <Tooltip>
-            <TooltipTrigger className="rounded-full hover:bg-hover">
-                <ShieldCheckIcon
-                  size={18}
-                  color={theme.text2}
-                />
-            </TooltipTrigger>
-            <TooltipContent className="bg-background2 shadow-lg">
-              <p className="text-sm text-text2">
-                This thread is encrypted by Stuff, only you can read this
-              </p>
-            </TooltipContent>
-          </Tooltip>
-        </div>
-      </Flex>
-      <Flex col gap="1rem" className="px-4 pb-4">
-        {messages.map(({ data: mail }, index) => {
-          if (mail === undefined) {
-            return <Loading size={24} color="text-primary" key={index} />;
-          }
-          return (
-            <Flex
-              col
-              className="rounded-md border border-border"
-              key={mail.messageId}
-            >
-              <Flex col gap="1px" className="bg-background2 p-4">
-                <h2 className="text-xl">{mail.from.name}</h2>
-                <p className="text-md text-muted-foreground">
-                  {mail.from.address}
-                </p>
-              </Flex>
-              <div
-                className="min-h-[170px] p-4"
-                dangerouslySetInnerHTML={{
-                  __html: purify().sanitize(mail.content.html)
-                }}
-              />
-              <Flex className="border-t border-border p-4">
-                <Button className="font-semibold">Svara</Button>
-              </Flex>
-            </Flex>
-          );
-        })}
-      </Flex>
-    </>
-  );
+	return (
+		<>
+			<Flex gap="0.75rem" className="p-4" align="center" justify="between">
+				<h1 className="text-3xl text-text">{threadQuery.data?.thread.title}</h1>
+				<div>
+					<Tooltip>
+						<TooltipTrigger className="rounded-full hover:bg-hover">
+							<ShieldCheckIcon size={18} color={theme.text2} />
+						</TooltipTrigger>
+						<TooltipContent className="bg-background2 shadow-lg">
+							<p className="text-sm text-text2">
+								This thread is encrypted by Stuff, only you can read this
+							</p>
+						</TooltipContent>
+					</Tooltip>
+				</div>
+			</Flex>
+			<Flex col gap="1rem" className="px-4 pb-4">
+				{messages.map(({ data: mail }, index) => {
+					if (mail === undefined) {
+						return <Loading size={24} color="text-primary" key={index} />;
+					}
+					return (
+						<Flex
+							col
+							className="rounded-md border border-border"
+							key={mail.messageId}
+						>
+							<Flex col gap="1px" className="bg-background2 p-4">
+								<h2 className="text-xl">{mail.from.name}</h2>
+								<p className="text-md text-muted-foreground">
+									{mail.from.address}
+								</p>
+							</Flex>
+							<div
+								className="min-h-[170px] p-4"
+								dangerouslySetInnerHTML={{
+									__html: purify().sanitize(mail.content.html),
+								}}
+							/>
+							<Flex className="border-t border-border p-4">
+								<Button className="font-semibold">Svara</Button>
+							</Flex>
+						</Flex>
+					);
+				})}
+			</Flex>
+		</>
+	);
 };
 
 export function ThreadView({
-  folderId,
-  threadId,
-  determineWidth
+	folderId,
+	threadId,
+	determineWidth,
 }: {
-  folderId: string;
-  threadId: string;
-  determineWidth?: (width: number) => void;
+	folderId: string;
+	threadId: string;
+	determineWidth?: (width: number) => void;
 }) {
-  const [_, setThreadOpen] = useAtom(threadOpen);
-  const ref = useRef<HTMLDivElement>(null);
+	const [_, setThreadOpen] = useAtom(threadOpen);
+	const ref = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (ref.current?.clientWidth) {
-      determineWidth?.(ref.current?.clientWidth)
-    }
-  }, [ref.current?.clientWidth])
+	useEffect(() => {
+		if (ref.current?.clientWidth) {
+			determineWidth?.(ref.current?.clientWidth);
+		}
+	}, [ref.current?.clientWidth]);
 
+	return (
+		<div className="flex flex-col max-h-full" ref={ref}>
+			<Flex className="p-1" align="center" gap="0.5rem">
+				<button
+					className="rounded-full p-[calc(0.5rem+2px)] hover:bg-muted"
+					onClick={() => {
+						setThreadOpen(null);
+						window.history.replaceState(null, "", `/mail/${folderId}`);
+					}}
+				>
+					<ArrowLeftCircleIcon size={22} />
+				</button>
 
-  return (
-      <div className="flex flex-col max-h-full" ref={ref}>
-        <Flex className="p-1" align="center" gap="0.5rem">
-          <button
-            className="rounded-full p-[calc(0.5rem+2px)] hover:bg-muted"
-            onClick={() =>{
-              setThreadOpen(null);
-              window.history.replaceState(null, '', `/mail/${folderId}`)
-            }}
-          >
-            <ArrowLeftCircleIcon size={22} />
-          </button>
+				<div className="block h-[calc(50px/1.6)] border-r border-border"></div>
 
-          <div className="block h-[calc(50px/1.6)] border-r border-border"></div>
-
-          <SelectedBar threadIds={[threadId]} folderId={folderId} />
-          <div className="block h-[calc(50px/1.6)] border-r border-border"></div>
-        </Flex>
-        <div className="mx-auto block h-[1px] w-full border-t border-border"></div>
-        <div className="overflow-y-auto w-full h-full">
-          <MainPage folderId={folderId} threadId={threadId} />
-        </div>
-      </div>
-  );
+				<SelectedBar threadIds={[threadId]} folderId={folderId} />
+				<div className="block h-[calc(50px/1.6)] border-r border-border"></div>
+			</Flex>
+			<div className="mx-auto block h-[1px] w-full border-t border-border"></div>
+			<div className="overflow-y-auto w-full h-full">
+				<MainPage folderId={folderId} threadId={threadId} />
+			</div>
+		</div>
+	);
 }

@@ -12,56 +12,56 @@ import History from "@tiptap/extension-history";
 import "./style.css";
 
 const Tiptap = ({
-  onUpdate,
-  initialContent,
-  placeholder,
-  className
+	onUpdate,
+	initialContent,
+	placeholder,
+	className,
 }: {
-  initialContent: string;
-  placeholder: string;
-  className?: string;
-  onUpdate?: ({
-    html,
-    text,
-    json
-  }: {
-    html: string;
-    text: string;
-    json: JSONContent;
-  }) => void;
+	initialContent: string;
+	placeholder: string;
+	className?: string;
+	onUpdate?: ({
+		html,
+		text,
+		json,
+	}: {
+		html: string;
+		text: string;
+		json: JSONContent;
+	}) => void;
 }) => {
-  const editor = useEditor({
-    content: initialContent,
-    extensions: [
-      Document,
-      Text,
-      Bold,
-      HardBreak,
-      Placeholders.configure({
-        placeholder
-      }),
-      Heading.configure({
-        HTMLAttributes: {
-          class: "tiptap-title"
-        }
-      }),
-      History,
-      P
-    ],
-    editorProps: {
-      attributes: {
-        class: "outline-none tiptap-root w-full h-full pb-32"
-      }
-    },
-    onUpdate: ({ editor }) => {
-      const text = editor.getText();
-      const json = editor.getJSON();
-      const html = editor.getHTML();
-      onUpdate?.({ text, json, html });
-    }
-  });
+	const editor = useEditor({
+		content: initialContent,
+		extensions: [
+			Document,
+			Text,
+			Bold,
+			HardBreak,
+			Placeholders.configure({
+				placeholder,
+			}),
+			Heading.configure({
+				HTMLAttributes: {
+					class: "tiptap-title",
+				},
+			}),
+			History,
+			P,
+		],
+		editorProps: {
+			attributes: {
+				class: "outline-none tiptap-root w-full h-full pb-32",
+			},
+		},
+		onUpdate: ({ editor }) => {
+			const text = editor.getText();
+			const json = editor.getJSON();
+			const html = editor.getHTML();
+			onUpdate?.({ text, json, html });
+		},
+	});
 
-  return <EditorContent editor={editor} className={className} />;
+	return <EditorContent editor={editor} className={className} />;
 };
 
 export default Tiptap;
