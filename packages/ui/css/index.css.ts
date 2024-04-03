@@ -68,12 +68,15 @@ const margin = defineProperties({
 export const anotherColors = {
 	text1: themeMode.text1,
 	text2: themeMode.text2,
-	bg: themeMode.backgroundApp,
-	bg2: themeMode.backgroundSubtle,
-	hover: themeMode.backgroundHover,
-	accent: colors.accent1,
+	bgApp: themeMode.backgroundApp,
+	bgSubtle: colors.bgSubtle,
+	bgHover: themeMode.backgroundHover,
+	bgSelected: themeMode.backgroundSelected,
+	bgComponent: colors.bgComponent,
+	borderFocus: themeMode.borderFocus,
+	accent1: colors.accent1,
 	accent2: colors.accent2,
-	highlight: theme.highlight,
+	highlight: themeMode.backgroundSelected,
 	transparent: "transparent",
 };
 

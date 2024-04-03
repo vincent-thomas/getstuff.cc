@@ -14,108 +14,114 @@ import type { envInterface } from "packages/mail-reciever/src/env";
 import type { z } from "zod";
 
 interface MailApiStackProps extends StackProps {
-  emailDomain: string;
-  env: {
-    account: string;
-    region: string;
-  };
-  formattedEmailBucket: Bucket;
-  stage: string;
+	emailDomain: string;
+	env: {
+		account: string;
+		region: string;
+	};
+	formattedEmailBucket: Bucket;
+	stage: string;
 }
 
 interface LambdaOptions {
-  NODE_OPTIONS?: string;
-  AWS_REGION: string;
+	NODE_OPTIONS?: string;
+	AWS_REGION: string;
 }
 
 export class EmailReciever extends Stack {
-  constructor(
-    scope: App,
-    id: string,
-    { stage, emailDomain, formattedEmailBucket, ...props }: MailApiStackProps
-  ) {
-    super(scope, id, props);
+	constructor(
+		scope: App,
+		id: string,
+		{ stage, emailDomain, formattedEmailBucket, ...props }: MailApiStackProps,
+	) {
+		super(scope, id, props);
 
-    const topic = new Topic(this, "MailApiTopic", {});
-    const sqs = new Queue(this, "MailApiQueue", {});
-    const RAW_emailsBucket = new Bucket(this, "raw-emails-bucket", {});
+		const topic = new Topic(this, "MailApiTopic", {});
+		const sqs = new Queue(this, "MailApiQueue", {});
+		const RAW_emailsBucket = new Bucket(this, "raw-emails-bucket", {});
 
-    new ReceiptRuleSet(this, "ReceiptRuleSet", {
-      dropSpam: true,
-      rules: [
-        {
-          enabled: true,
-          recipients: [emailDomain],
-          tlsPolicy: TlsPolicy.REQUIRE,
-          actions: [
-            new S3Action({
-              bucket: RAW_emailsBucket,
-              topic
-            })
-          ],
-          scanEnabled: true
-        }
-      ]
-    })
+		new ReceiptRuleSet(this, "ReceiptRuleSet", {
+			dropSpam: true,
+			rules: [
+				{
+					enabled: true,
+					recipients: [emailDomain],
+					tlsPolicy: TlsPolicy.REQUIRE,
+					actions: [
+						new S3Action({
+							bucket: RAW_emailsBucket,
+							topic,
+						}),
+					],
+					scanEnabled: true,
+				},
+			],
+		});
 
-    topic.addSubscription(new SqsSubscription(sqs));
+		topic.addSubscription(new SqsSubscription(sqs));
 
-    const table = Table.fromTableArn(
-      this,
-      "EntitiesTable",
-      `arn:aws:dynamodb:${props.env.region}:${props.env.account}:table/${getDataTable(stage)}`
-    );
-    const tableGSI1 = Table.fromTableArn(
-      this,
-      "EntitiesTableGSI1",
-      `arn:aws:dynamodb:${props.env.region}:${props.env.account}:table/${getDataTable(stage)}/index/gsi1`
-    );
+		const table = Table.fromTableArn(
+			this,
+			"EntitiesTable",
+			`arn:aws:dynamodb:${props.env.region}:${
+				props.env.account
+			}:table/${getDataTable(stage)}`,
+		);
+		const tableGSI1 = Table.fromTableArn(
+			this,
+			"EntitiesTableGSI1",
+			`arn:aws:dynamodb:${props.env.region}:${
+				props.env.account
+			}:table/${getDataTable(stage)}/index/gsi1`,
+		);
 
-    const usersTable = Table.fromTableArn(
-      this,
-      "usersTable",
-      `arn:aws:dynamodb:${props.env.region}:${props.env.account}:table/${getUserTable(stage)}`
-    );
+		const usersTable = Table.fromTableArn(
+			this,
+			"usersTable",
+			`arn:aws:dynamodb:${props.env.region}:${
+				props.env.account
+			}:table/${getUserTable(stage)}`,
+		);
 
-    // AWS_REGION: Builtin in the runtime
-    const lambdaEnv = {
-      STAGE: stage,
-      EMAIL_DOMAIN: emailDomain,
-    } satisfies Omit<z.infer<typeof envInterface>, "AWS_REGION">;
+		// AWS_REGION: Builtin in the runtime
+		const lambdaEnv = {
+			STAGE: stage,
+			EMAIL_DOMAIN: emailDomain,
+		} satisfies Omit<z.infer<typeof envInterface>, "AWS_REGION">;
 
-    const lambda = new Function(this, "MailApiFunction", {
-      code: Code.fromAsset("packages/mail-reciever/dist"),
-      handler: "main.handler",
-      functionName: `${stage}-stuff-mail-reciever-function`,
-      runtime: Runtime.NODEJS_20_X,
-      timeout: Duration.seconds(20),
-      environment: {
-        ...lambdaEnv, 
-        NODE_OPTIONS: "--enable-source-maps",
-      }
-    });
+		const lambda = new Function(this, "MailApiFunction", {
+			code: Code.fromAsset("packages/mail-reciever/dist"),
+			handler: "main.handler",
+			functionName: `${stage}-stuff-mail-reciever-function`,
+			runtime: Runtime.NODEJS_20_X,
+			timeout: Duration.seconds(20),
+			environment: {
+				...lambdaEnv,
+				NODE_OPTIONS: "--enable-source-maps",
+			},
+		});
 
-    formattedEmailBucket.grantPut(lambda);
-    usersTable.grant(lambda, "dynamodb:GetItem");
+		formattedEmailBucket.grantPut(lambda);
+		usersTable.grant(lambda, "dynamodb:GetItem");
 
-    table.grant(lambda, "dynamodb:PutItem");
-    table.grant(lambda, "dynamodb:Query");
-    table.grant(lambda, "dynamodb:GetItem");
-    table.grant(lambda, "dynamodb:DeleteItem");
-    tableGSI1.grant(lambda, "dynamodb:Query");
+		table.grant(lambda, "dynamodb:PutItem");
+		table.grant(lambda, "dynamodb:Query");
+		table.grant(lambda, "dynamodb:GetItem");
+		table.grant(lambda, "dynamodb:DeleteItem");
+		tableGSI1.grant(lambda, "dynamodb:Query");
 
-    lambda.addToRolePolicy(
-      new PolicyStatement({
-        actions: ["ses:SendEmail"],
-        resources: ["*"]
-      })
-    );
+		lambda.addToRolePolicy(
+			new PolicyStatement({
+				actions: ["ses:SendEmail"],
+				resources: ["*"],
+			}),
+		);
 
-    lambda.addEventSource(
-      new SqsEventSource(sqs, {
-        batchSize: 10
-      })
-    );
-    RAW_emailsBucket.grantRead(lambda);
-  }
+		lambda.addEventSource(
+			new SqsEventSource(sqs, {
+				batchSize: 10,
+			}),
+		);
+		RAW_emailsBucket.grantRead(lambda);
+	}
 }

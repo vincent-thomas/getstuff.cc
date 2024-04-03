@@ -4,7 +4,7 @@ import { sendMailRouter } from "./send-mail";
 import { router } from "backend/trpc";
 
 export const mailRouter = router({
-  threads: threadsRouter,
-  folders: foldersRouter,
-  sendMail: sendMailRouter
+	threads: threadsRouter,
+	folders: foldersRouter,
+	sendMail: sendMailRouter,
 });

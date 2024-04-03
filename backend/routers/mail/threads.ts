@@ -1,7 +1,4 @@
-import {
-  QueryCommand,
-  UpdateCommand
-} from "@aws-sdk/lib-dynamodb";
+import { QueryCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
 import { getDataTable, getEmailContentBucket } from "@stuff/infra-constants";
 import { z } from "zod";
 import { messageInterface } from "../../interfaces/message";
@@ -14,198 +11,205 @@ import { messageViewInterface } from "backend/interfaces/messageView";
 import { moveThread } from "backend/utils/moveThread";
 
 export const threadsRouter = router({
-  getThreads: protectedProc
-    .input(z.object({ folderId: z.string() }))
-    .query(async ({ ctx, input: { folderId } }) => {
-      const threadViewsCommand = new QueryCommand({
-        TableName: getDataTable(env.STAGE),
-        KeyConditionExpression: "sk = :sk and begins_with(pk, :pk)",
-        ExpressionAttributeValues: {
-          ":sk": `thread-view|${ctx.session.username}|${folderId}`,
-          ":pk": "mail|"
-        },
-        IndexName: "gsi1"
-      });
+	getThreads: protectedProc
+		.input(z.object({ folderId: z.string() }))
+		.query(async ({ ctx, input: { folderId } }) => {
+			const threadViewsCommand = new QueryCommand({
+				TableName: getDataTable(env.STAGE),
+				KeyConditionExpression: "sk = :sk and begins_with(pk, :pk)",
+				ExpressionAttributeValues: {
+					":sk": `thread-view|${ctx.session.username}|${folderId}`,
+					":pk": "mail|",
+				},
+				IndexName: "gsi1",
+			});
 
-      const { Items } = await ctx.dyn.send(threadViewsCommand);
+			const { Items } = await ctx.dyn.send(threadViewsCommand);
 
-      const threadViews = z.array(threadViewInterface).parse(Items);
-      const threads = [];
-      for (const threadView of threadViews) {
-        const threadCommand = new QueryCommand({
-          TableName: getDataTable(env.STAGE),
-          KeyConditionExpression: "begins_with(sk,:sk) and pk = :pk",
-          ExpressionAttributeValues: {
-            ":sk": `thread|`,
-            ":pk": "mail|" + threadView.pk.split("|")[1]
-          }
-        });
+			const threadViews = z.array(threadViewInterface).parse(Items);
+			const threads = [];
+			for (const threadView of threadViews) {
+				const threadCommand = new QueryCommand({
+					TableName: getDataTable(env.STAGE),
+					KeyConditionExpression: "begins_with(sk,:sk) and pk = :pk",
+					ExpressionAttributeValues: {
+						":sk": `thread|`,
+						":pk": "mail|" + threadView.pk.split("|")[1],
+					},
+				});
 
-        const { Items } = await ctx.dyn.send(threadCommand);
+				const { Items } = await ctx.dyn.send(threadCommand);
 
-        if (Items?.length !== 1) {
-          continue;
-        }
+				if (Items?.length !== 1) {
+					continue;
+				}
 
-        const thread = threadInterface.parse(Items?.[0]);
+				const thread = threadInterface.parse(Items?.[0]);
 
-        threads.push({
-          threadId: z.string().parse(thread.pk.split("|")[1]),
-          title: thread.title,
-          lastActive: threadView.last_active,
-          read: threadView.read
-        });
-      }
+				threads.push({
+					threadId: z.string().parse(thread.pk.split("|")[1]),
+					title: thread.title,
+					lastActive: threadView.last_active,
+					read: threadView.read,
+				});
+			}
 
-      threads.sort((a, b) => b.lastActive - a.lastActive);
+			threads.sort((a, b) => b.lastActive - a.lastActive);
 
-      return threads;
-    }),
-  getThread: protectedProc
-    .input(z.object({ folderId: z.string(), threadId: z.string() }))
-    .query(async ({ ctx, input: { folderId, threadId } }) => {
-      const threadViewsCommand = new QueryCommand({
-        TableName: getDataTable(env.STAGE),
-        KeyConditionExpression: "sk = :sk and begins_with(pk, :pk)",
-        ExpressionAttributeValues: {
-          ":sk": `thread-view|${ctx.session.username}|${folderId}`,
-          ":pk": `mail|${threadId}`
-        },
-        IndexName: "gsi1"
-      });
+			return threads;
+		}),
+	getThread: protectedProc
+		.input(z.object({ folderId: z.string(), threadId: z.string() }))
+		.query(async ({ ctx, input: { folderId, threadId } }) => {
+			const threadViewsCommand = new QueryCommand({
+				TableName: getDataTable(env.STAGE),
+				KeyConditionExpression: "sk = :sk and begins_with(pk, :pk)",
+				ExpressionAttributeValues: {
+					":sk": `thread-view|${ctx.session.username}|${folderId}`,
+					":pk": `mail|${threadId}`,
+				},
+				IndexName: "gsi1",
+			});
 
-      const { Items } = await ctx.dyn.send(threadViewsCommand);
+			const { Items } = await ctx.dyn.send(threadViewsCommand);
 
-      console.log({Items})
+			console.log({ Items });
 
-      const threadView = z.array(threadViewInterface).parse(Items)?.[0];
+			const threadView = z.array(threadViewInterface).parse(Items)?.[0];
 
-      if (threadView === undefined) {
-        return null;
-      }
+			if (threadView === undefined) {
+				return null;
+			}
 
-      const messageCommand = new QueryCommand({
-        TableName: getDataTable(env.STAGE),
-        KeyConditionExpression: "begins_with(sk,:sk) and pk = :pk",
-        ExpressionAttributeValues: {
-          ":sk": `message|`,
-          ":pk": `mail|${threadId}`
-        }
-      });
+			const messageCommand = new QueryCommand({
+				TableName: getDataTable(env.STAGE),
+				KeyConditionExpression: "begins_with(sk,:sk) and pk = :pk",
+				ExpressionAttributeValues: {
+					":sk": `message|`,
+					":pk": `mail|${threadId}`,
+				},
+			});
 
-      const { Items: messages } = await ctx.dyn.send(messageCommand);
-      console.log({messages})
+			const { Items: messages } = await ctx.dyn.send(messageCommand);
+			console.log({ messages });
 
-      const threadCommand = new QueryCommand({
-        TableName: getDataTable(env.STAGE),
-        KeyConditionExpression: "begins_with(sk,:sk) and pk = :pk",
-        ExpressionAttributeValues: {
-          ":sk": `thread|`,
-          ":pk": "mail|" + threadView.pk.split("|")[1]
-        }
-      });
+			const threadCommand = new QueryCommand({
+				TableName: getDataTable(env.STAGE),
+				KeyConditionExpression: "begins_with(sk,:sk) and pk = :pk",
+				ExpressionAttributeValues: {
+					":sk": `thread|`,
+					":pk": "mail|" + threadView.pk.split("|")[1],
+				},
+			});
 
-      const { Items: threadItems } = await ctx.dyn.send(threadCommand);
-      console.log({threadItems})
+			const { Items: threadItems } = await ctx.dyn.send(threadCommand);
+			console.log({ threadItems });
 
-      const thread = threadInterface.parse(threadItems?.[0]);
+			const thread = threadInterface.parse(threadItems?.[0]);
 
-      const niceMessages = [];
+			const niceMessages = [];
 
-      const formattedMessages = z.array(messageInterface).parse(messages);
+			const formattedMessages = z.array(messageInterface).parse(messages);
 
-      for (const message of formattedMessages) {
-        const messageId = message.sk.split("|")[1];
-        const command = new GetObjectCommand({
-          Bucket: getEmailContentBucket(ctx.env.STAGE),
-          Key: messageId
-        });
+			for (const message of formattedMessages) {
+				const messageId = message.sk.split("|")[1];
+				const command = new GetObjectCommand({
+					Bucket: getEmailContentBucket(ctx.env.STAGE),
+					Key: messageId,
+				});
 
-        const contentUrl = await getSignedUrl(ctx.s3, command);
+				const contentUrl = await getSignedUrl(ctx.s3, command);
 
-        const getMessageViewCommand = new QueryCommand({
-          TableName: getDataTable(env.STAGE),
-          KeyConditionExpression: "pk = :pk and begins_with(sk, :sk)",
-          ExpressionAttributeValues: {
-            ":sk": `message-view|`,
-            ":pk": `mail|${messageId}`
-          },
-        })
+				const getMessageViewCommand = new QueryCommand({
+					TableName: getDataTable(env.STAGE),
+					KeyConditionExpression: "pk = :pk and begins_with(sk, :sk)",
+					ExpressionAttributeValues: {
+						":sk": `message-view|`,
+						":pk": `mail|${messageId}`,
+					},
+				});
 
-        const messageViewsRAW = await ctx.dyn.send(getMessageViewCommand).then(v => v.Items);
-        console.log({messageViewsRAW})
-        
-        const messageView = messageViewInterface.parse(messageViewsRAW?.[0]);
+				const messageViewsRAW = await ctx.dyn
+					.send(getMessageViewCommand)
+					.then((v) => v.Items);
+				console.log({ messageViewsRAW });
 
-        niceMessages.push({
-          messageId: z.string().parse(messageId),
-          to: message.to,
-          from: message.from,
-          subject: message.subject,
-          contentUrl,
-          messageEncryptionKey: messageView.encryptedMessageEncryptionKey
-        });
+				const messageView = messageViewInterface.parse(messageViewsRAW?.[0]);
 
-        await ctx.redis.set("content-url:" + messageId, contentUrl, {
-          ex: 900
-        });
-      }
-      return {
-        messages: niceMessages,
-        thread: {
-          lastActive: threadView.last_active,
-          read: threadView.read,
-          title: thread.title
-        }
-      };
-    }),
-  moveThreads: protectedProc
-    .input(
-      z.object({
-        folderId: z.string(),
-        threadIds: z.array(z.string()),
-        newFolderId: z.string()
-      })
-    )
-    .mutation(async ({ ctx, input: { folderId, threadIds, newFolderId } }) => {
-      const results = [];
-      for (const threadId of threadIds) {
-        const result = await moveThread(ctx.dyn, env.STAGE, ctx.session.username, threadId, {
-          folderId, newFolderId
-        })
-        results.push(result.success);
-      }
-      return results;
-    }),
+				niceMessages.push({
+					messageId: z.string().parse(messageId),
+					to: message.to,
+					from: message.from,
+					subject: message.subject,
+					contentUrl,
+					messageEncryptionKey: messageView.encryptedMessageEncryptionKey,
+				});
 
-  setRead: protectedProc
-    .input(
-      z.object({
-        folderId: z.string(),
-        threadIds: z.array(z.string()),
-        value: z.boolean()
-      })
-    )
-    .mutation(async ({ ctx, input }) => {
-      for (const threadId of input.threadIds) {
-        const command = new UpdateCommand({
-          TableName: getDataTable(ctx.env.STAGE),
-          Key: {
-            pk: `mail|${threadId}`,
-            sk: `thread-view|${ctx.session.username}|${input.folderId}`
-          },
-          ExpressionAttributeNames: {
-            "#read": "read"
-          },
-          ExpressionAttributeValues: {
-            ":value": input.value
-          },
-          UpdateExpression: "set #read = :value"
-        });
+				await ctx.redis.set("content-url:" + messageId, contentUrl, {
+					ex: 900,
+				});
+			}
+			return {
+				messages: niceMessages,
+				thread: {
+					lastActive: threadView.last_active,
+					read: threadView.read,
+					title: thread.title,
+				},
+			};
+		}),
+	moveThreads: protectedProc
+		.input(
+			z.object({
+				folderId: z.string(),
+				threadIds: z.array(z.string()),
+				newFolderId: z.string(),
+			}),
+		)
+		.mutation(async ({ ctx, input: { folderId, threadIds, newFolderId } }) => {
+			const results = [];
+			for (const threadId of threadIds) {
+				const result = await moveThread(
+					ctx.dyn,
+					env.STAGE,
+					ctx.session.username,
+					threadId,
+					{
+						folderId,
+						newFolderId,
+					},
+				);
+				results.push(result.success);
+			}
+			return results;
+		}),
 
-        await ctx.dyn.send(command);
-      }
-    })
+	setRead: protectedProc
+		.input(
+			z.object({
+				folderId: z.string(),
+				threadIds: z.array(z.string()),
+				value: z.boolean(),
+			}),
+		)
+		.mutation(async ({ ctx, input }) => {
+			for (const threadId of input.threadIds) {
+				const command = new UpdateCommand({
+					TableName: getDataTable(ctx.env.STAGE),
+					Key: {
+						pk: `mail|${threadId}`,
+						sk: `thread-view|${ctx.session.username}|${input.folderId}`,
+					},
+					ExpressionAttributeNames: {
+						"#read": "read",
+					},
+					ExpressionAttributeValues: {
+						":value": input.value,
+					},
+					UpdateExpression: "set #read = :value",
+				});
+
+				await ctx.dyn.send(command);
+			}
+		}),
 });
-
-

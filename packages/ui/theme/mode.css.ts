@@ -5,10 +5,7 @@ export const themeMode = createThemeContract({
 	 * Main app background
 	 */
 	backgroundApp: null,
-	/**
-	 * Subtle background
-	 */
-	backgroundSubtle: null,
+	// backgroundSubtle: null,
 	/**
 	 * Background for interactive components
 	 */
@@ -40,7 +37,7 @@ export const themeMode = createThemeContract({
 
 createGlobalTheme(".dark", themeMode, {
 	backgroundApp: "#111111",
-	backgroundSubtle: "#191919",
+	// backgroundSubtle: "#004DF211",
 
 	backgroundComponent: "#222222",
 	backgroundHover: "#2A2A2A",
@@ -55,7 +52,7 @@ createGlobalTheme(".dark", themeMode, {
 
 createGlobalTheme(".light", themeMode, {
 	backgroundApp: "#FCFCFC",
-	backgroundSubtle: "#F9F9F9",
+	// backgroundSubtle: "#F4FAFF",
 	backgroundComponent: "#F0F0F0",
 	borderSubtle: "#D9D9D9",
 	borderInteractive: "#CECECE",

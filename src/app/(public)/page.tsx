@@ -17,7 +17,7 @@ import {
 	AccordionItem,
 	AccordionTrigger,
 } from "@stuff/ui/accortion";
-import { border, stack } from "src/components/recipies";
+import { stack } from "src/components/recipies";
 import { shadow } from "src/components/recipies/shadow.css";
 
 import { NiceCard } from "./_components/nicecard";
@@ -25,9 +25,9 @@ import { HeaderIcon } from "./page.icon";
 import { Text2 } from "packages/ui/atoms";
 
 export default setupPage({
-	async Component() {
+	Component() {
 		return (
-			<div className={stack({ gap: "xl", direction: "col" })}>
+			<div className={cn(stack({ gap: "xl", direction: "col" }))}>
 				<Section
 					maxWidth="md"
 					className={css({ p: "medium", paddingBottom: "none" })}
@@ -105,10 +105,8 @@ export default setupPage({
 				</Section>
 				<Section
 					maxWidth="lg"
-					className={cn(
-						css({ bg: "bg2", mX: "auto", width: "full" }),
-						border({ rounded: "xl" }),
-					)}
+					style={{ borderRadius: 24 }}
+					className={cn(css({ bg: "bgSubtle", mX: "auto", width: "full" }))}
 				>
 					<Section
 						maxWidth="md"
@@ -128,7 +126,7 @@ export default setupPage({
 								className={cn(
 									conversations,
 									shadow({ size: "large" }),
-									css({ p: "xlarge", bg: "bg" }),
+									css({ p: "xlarge", bg: "bgApp" }),
 								)}
 							>
 								<H2 className={css({ fontSize: "large" })}>Conversations</H2>
@@ -146,7 +144,7 @@ export default setupPage({
 								className={cn(
 									folders,
 									shadow({ size: "large" }),
-									css({ p: "xlarge", bg: "bg" }),
+									css({ p: "xlarge", bg: "bgApp" }),
 								)}
 							>
 								<P>Extension:</P>
@@ -164,13 +162,13 @@ export default setupPage({
 								className={cn(
 									extensions,
 									shadow({ size: "large" }),
-									css({ bg: "bg" }),
+									css({ bg: "bgApp" }),
 								)}
 							>
 								<Link
 									href="/extensions"
 									className={cn(
-										css({ bg: { hover: "hover" } }),
+										css({ bg: { hover: "bgHover" } }),
 										stack({ direction: "col" }),
 									)}
 								>
@@ -197,17 +195,40 @@ export default setupPage({
 								</Link>
 							</Card>
 						</div>
-						<div className="py-16"></div>
-						<h2 className="text-4xl font-bold pb-10">
-							Guarranties by <StuffBranding />:
-						</h2>
-						<div className="grid grid-cols-2 gap-6">
-							<Card p="medium">
-								<h1 className="text-3xl font-semibold">Most Secure Mail</h1>
-								<p className="max-w-[50ch]">
+					</Section>
+					<Section
+						maxWidth="md"
+						className={cn(
+							stack({ direction: "col", align: "start" }),
+							css({ overflow: "hidden", pY: "2xlarge" }),
+						)}
+					>
+						<H1 id="features" className={css({ fontSize: "xlarge" })}>
+							Guarantees by <StuffBranding />
+						</H1>
+						<div
+							className={cn(
+								stack({
+									direction: { mobile: "col", desktop: "row" },
+									gap: "md",
+								}),
+								css({
+									paddingTop: "xlarge",
+								}),
+							)}
+						>
+							<Card
+								p="medium"
+								className={css({
+									bg: { default: "bgComponent", hover: "bgHover" },
+									p: "xlarge",
+								})}
+							>
+								<H2 className={css({ fontSize: "large" })}>Most Secure Mail</H2>
+								<Text2 className="max-w-[50ch]">
 									We keep your account safe to the extreme with protocols such
 									as SRP (secure remote password)
-								</p>
+								</Text2>
 								<Link
 									href="#"
 									className={cn(
@@ -218,28 +239,40 @@ export default setupPage({
 									Learn more
 								</Link>
 							</Card>
-							<Card p="medium">
-								<h1 className="text-3xl font-semibold">Private</h1>
-								<p className="max-w-[50ch]">
+							<Card
+								p="medium"
+								className={css({
+									bg: { default: "bgComponent", hover: "bgHover" },
+									p: "xlarge",
+								})}
+							>
+								<H2 className={css({ fontSize: "large" })}>Private</H2>
+								<Text2 className="max-w-[50ch]">
 									All your user information and emails are end-to-end encrypted
 									and is only viewable by you, we can&apos;t even see it.
-								</p>
+								</Text2>
 								<Link
 									href="#"
 									className={cn(
-										"ml-auto block font-semibold",
+										css({ fontWeight: "semibold" }),
 										button({ variant: "link" }),
 									)}
 								>
 									Learn more
 								</Link>
 							</Card>
-							<Card p="medium">
-								<h1 className="text-3xl font-semibold">Polished</h1>
-								<p className="max-w-[50ch]">
+							<Card
+								p="medium"
+								className={css({
+									bg: { default: "bgComponent", hover: "bgHover" },
+									p: "xlarge",
+								})}
+							>
+								<H2 className={css({ fontSize: "large" })}>Polished</H2>
+								<Text2 className="max-w-[50ch]">
 									With its polished user experience, you can be sure to get the
 									most out of a mail service
-								</p>
+								</Text2>
 							</Card>
 						</div>
 					</Section>

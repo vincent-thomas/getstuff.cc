@@ -1,1 +1,1 @@
-export * from "./spin.css"
+export * from "./spin.css";

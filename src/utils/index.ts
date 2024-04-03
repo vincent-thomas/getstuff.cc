@@ -1,2 +1,1 @@
-
-export * from "./setupPage"
+export * from "./setupPage";

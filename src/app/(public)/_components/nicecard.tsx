@@ -25,7 +25,7 @@ export const NiceCard = ({
 					stack({ direction: "col", gap: "md", align: "start" }),
 					css({
 						cursor: "pointer",
-						background: { hover: "hover" },
+						background: { hover: "bgHover", default: "bgComponent" },
 					}),
 				)}
 			>

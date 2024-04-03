@@ -42,7 +42,10 @@ const Tier: FC<TierProps> = ({ title, desc, price, features }) => {
 				</div>
 				<Text2 className="text-lg">{desc}</Text2>
 			</div>
-			<div className={css({ bg: "bg2", p: "large" })} style={{ flexGrow: 1 }}>
+			<div
+				className={css({ bg: "bgSubtle", p: "large" })}
+				style={{ flexGrow: 1 }}
+			>
 				<Text2
 					className={cn(css({ fontWeight: "semibold", fontSize: "medium" }))}
 				>
