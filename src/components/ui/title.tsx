@@ -1,5 +1,6 @@
 import type { FC, HTMLAttributes } from "react";
 import { cn } from "../utils";
+import { H1 } from "../typography/headers";
 
 interface HeadingProps extends HTMLAttributes<HTMLHeadingElement> {
 	weight: "bold" | "normal" | "semibold";
@@ -11,9 +12,9 @@ export const Heading: FC<HeadingProps> = ({
 	style,
 	...props
 }) => (
-	<h1
+	<H1
 		{...props}
 		style={{ ...style, fontWeight: weight }}
-		className={cn(`tracking-tight`, css({ color: "text1" }), className)}
+		className={cn(className)}
 	/>
 );

@@ -3,5 +3,5 @@ import { palette } from "packages/ui/theme/palettes.css";
 
 globalStyle("*", {
 	scrollbarWidth: "thin",
-	scrollbarColor: palette.solid1,
+	scrollbarColor: palette.solid2,
 });

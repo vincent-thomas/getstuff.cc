@@ -23,6 +23,8 @@ import { toast } from "sonner";
 import { Card } from "src/app/(public)/_components/card";
 import { ScrollArea } from "packages/components/lib/scroll-area";
 import { stack } from "src/components/recipies";
+import { hoverUnderline } from "./account-viewer.css";
+import { Text2 } from "packages/ui/atoms";
 
 const classNames =
 	"border border-border px-4 py-3 rounded-md flex flex-col hover:bg-hover w-full";
@@ -36,18 +38,19 @@ export const Extensions = () => {
 			<DialogTrigger asChild>
 				<button
 					className={cn(
-						"p-3 flex items-center gap-2 rounded-lg shadow-sm hover:bg-hover hover:outline outline-1 outline-border",
+						stack({ align: "center", gap: "md" }),
+						css({ color: "text2", p: "medium" }),
+						hoverUnderline,
 					)}
 				>
-					<PuzzleIcon color="var(--text2)" size={24} />
-					<span
+					<PuzzleIcon size={24} />
+					<Text2
 						className={css({
 							fontWeight: "semibold",
-							fontSize: "large",
 						})}
 					>
 						Extensions
-					</span>
+					</Text2>
 				</button>
 			</DialogTrigger>
 			<DialogContent className="flex flex-col">
@@ -136,7 +139,6 @@ export const EnabledMailRelayButton = () => {
 						placeholder="Search..."
 						className={css({
 							p: "medium",
-							borderColor: "border",
 							bg: "bgSubtle",
 						})}
 					/>

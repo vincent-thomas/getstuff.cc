@@ -63,18 +63,9 @@ const borderStyles = better
 export const border = recipe({
 	variants: {
 		color: {
-			subtle: {
-				// ...base,
-				// borderColor: themeMode.borderSubtle,
-			},
-			interactive: {
-				// ...base,,
-				// borderColor: themeMode.borderInteractive,
-			},
-			focus: {
-				// ...base,
-				// borderColor: themeMode.borderFocus,
-			},
+			subtle: {},
+			interactive: {},
+			focus: {},
 		},
 		rounded: {
 			radius: rounding.md,
@@ -85,26 +76,11 @@ export const border = recipe({
 			},
 		},
 		side: {
-			t: {
-				// borderStyle: "solid",
-				// borderTopWidth: "1px",
-			},
-			r: {
-				// borderStyle: "solid",
-				// borderRightWidth: "1px",
-			},
-			b: {
-				// borderStyle: "solid",
-				// borderBottomWidth: "1px",
-			},
-			l: {
-				// borderStyle: "solid",
-				// borderLeftWidth: "1px",
-			},
-			all: {
-				// borderStyle: "solid",
-				// borderWidth: "1px",
-			},
+			t: {},
+			r: {},
+			b: {},
+			l: {},
+			all: {},
 			none: {},
 		},
 	},

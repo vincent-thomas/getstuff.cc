@@ -1,4 +1,4 @@
-import { createThemeContract } from "@vanilla-extract/css";
+// import { createThemeContract } from "@vanilla-extract/css";
 
 // export const theme = createGlobalThemeContract({
 //   background: "background",
@@ -15,20 +15,20 @@ import { createThemeContract } from "@vanilla-extract/css";
 //   highlight: "highlight"
 // })
 
-export const theme = createThemeContract({
-	background: null,
-	background2: null,
-	// muted: "muted",
-	// mutedForeground: "muted-foreground",
-	border: null,
-	accent: null,
-	accent2: null,
-	text: null,
-	text2: null,
-	card: null,
-	hover: null,
-	highlight: null,
-});
+// export const theme = createThemeContract({
+// 	background: null,
+// 	background2: null,
+// 	// muted: "muted",
+// 	// mutedForeground: "muted-foreground",
+// 	border: null,
+// 	accent: null,
+// 	accent2: null,
+// 	text: null,
+// 	text2: null,
+// 	card: null,
+// 	hover: null,
+// 	highlight: null,
+// });
 
 // createGlobalTheme(".light", theme, {
 //   background: "#FCFCFC",
