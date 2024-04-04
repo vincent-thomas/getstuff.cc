@@ -1,4 +1,4 @@
-import { colors } from "packages/ui/theme";
+import { palette } from "packages/ui/theme/palettes.css";
 
 export const Logo = ({ size }: { size: number; color?: true }) => {
 	return (
@@ -9,10 +9,10 @@ export const Logo = ({ size }: { size: number; color?: true }) => {
 			fill="none"
 			xmlns="http://www.w3.org/2000/svg"
 		>
-			<path d="M0 1L33 33.1649V97H0V1Z" fill={colors.accent1} />
-			<path d="M37 36L53 50.7417V97H37V36Z" fill={colors.accent1} />
-			<path d="M73 36L57 50.7417V97H73V36Z" fill={colors.accent1} />
-			<path d="M110 0L77 32.5V97H110V0Z" fill={colors.accent1} />
+			<path d="M0 1L33 33.1649V97H0V1Z" fill={palette.solid1} />
+			<path d="M37 36L53 50.7417V97H37V36Z" fill={palette.solid1} />
+			<path d="M73 36L57 50.7417V97H73V36Z" fill={palette.solid1} />
+			<path d="M110 0L77 32.5V97H110V0Z" fill={palette.solid1} />
 		</svg>
 	);
 };

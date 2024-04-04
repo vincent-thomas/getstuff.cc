@@ -3,7 +3,7 @@ import { Card } from "../_components/card";
 import { PageHeador } from "../_components/header";
 import { setupPage } from "@stuff/client/utils";
 import { StuffBranding } from "../_components/stuff";
-import { Text1, Text2 } from "packages/ui/atoms";
+import { Text2, Text1 } from "packages/ui/atoms";
 import { stack } from "packages/ui/patterns/stack";
 import { themeMode } from "packages/ui/theme";
 import { marker } from "./page.css";
@@ -36,21 +36,21 @@ const Tier: FC<TierProps> = ({ title, desc, price, features }) => {
 					>
 						{title}
 					</h2>
-					<Text2 className="text-lg font-semibold">
+					<Text1 className="text-lg font-semibold">
 						{price === 0 ? "free" : `$${price}/month`}
-					</Text2>
+					</Text1>
 				</div>
-				<Text2 className="text-lg">{desc}</Text2>
+				<Text1 className="text-lg">{desc}</Text1>
 			</div>
 			<div
 				className={css({ bg: "bgSubtle", p: "large" })}
 				style={{ flexGrow: 1 }}
 			>
-				<Text2
+				<Text1
 					className={cn(css({ fontWeight: "semibold", fontSize: "medium" }))}
 				>
 					<em>Features included:</em>
-				</Text2>
+				</Text1>
 				<ul
 					style={{
 						listStyleType: "disc",
@@ -62,7 +62,7 @@ const Tier: FC<TierProps> = ({ title, desc, price, features }) => {
 				>
 					{features.map((feature, i) => (
 						<li className={marker} key={i}>
-							<Text1>{feature}</Text1>
+							<Text2>{feature}</Text2>
 						</li>
 					))}
 				</ul>

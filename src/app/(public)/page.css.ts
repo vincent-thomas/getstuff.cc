@@ -35,3 +35,13 @@ export const extensions = style({
 	gridArea: "extensions",
 	border: "1px solid hsl(var(--border))",
 });
+
+export const imageRotate = style({
+	width: "100%",
+	"@media": {
+		"(min-width: 768px)": {
+			width: "80%",
+			transform: "rotate(8deg) skewY(-12deg)",
+		},
+	},
+});

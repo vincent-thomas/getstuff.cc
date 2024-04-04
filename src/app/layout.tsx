@@ -10,10 +10,10 @@ import { TRPCReactProvider } from "@stuff/api-client/react";
 import type { Metadata, Viewport } from "next";
 import { ThemeProvider } from "src/providers/theme";
 import { TooltipProvider } from "@stuff/ui/tooltip";
-import "packages/ui/theme/mode.css";
-import "packages/ui/theme/color.css";
+// import "packages/ui/theme/mode.css";
+// import "packages/ui/theme/color.css";
 import { spacingDefiningClass } from "packages/ui/variables";
-import { THEME } from "packages/ui/theme/color.css";
+import { themeClass } from "packages/ui/theme/palettes.css";
 const inter = Inter({
 	axes: ["slnt"],
 	subsets: ["latin"],
@@ -65,7 +65,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 					inter.className,
 					css({ bg: "bgApp", minHeight: "screen" }),
 					spacingDefiningClass,
-					THEME.BLUE,
+					themeClass,
 				)}
 			>
 				<TooltipProvider>
@@ -75,6 +75,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 							disableTransitionOnChange
 							enableColorScheme={false}
 							enableSystem
+							defaultTheme="light"
 						>
 							{children}
 						</ThemeProvider>

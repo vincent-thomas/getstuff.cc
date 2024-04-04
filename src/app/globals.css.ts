@@ -1,7 +1,7 @@
 import { globalStyle } from "@vanilla-extract/css";
-import { colors } from "packages/ui/theme";
+import { palette } from "packages/ui/theme/palettes.css";
 
 globalStyle("*", {
 	scrollbarWidth: "thin",
-	scrollbarColor: colors.accent1,
+	scrollbarColor: palette.solid1,
 });

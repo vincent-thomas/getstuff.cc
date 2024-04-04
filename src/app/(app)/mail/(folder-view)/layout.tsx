@@ -25,7 +25,7 @@ const Layout = async (props: LayoutProps) => {
 				<Sidebar />
 			</div>
 			<div
-				className={css({ p: "large" })}
+				className={cn(css({ p: "large" }))}
 				style={{ flexGrow: "1", overflowBlock: "hidden" }}
 			>
 				{props.children}
