@@ -23,9 +23,10 @@ import { api } from "@stuff/api-client/react";
 import { ScrollArea } from "packages/components/lib/scroll-area";
 import { Flex } from "@stuff/structure";
 import { button } from "@stuff/ui/button/button.css";
-import { theme } from "src/styles/themes.css";
 import { Button } from "@stuff/ui/button";
-import { stack } from "src/components/recipies";
+import { border, stack } from "src/components/recipies";
+import { palette } from "packages/ui/theme";
+import { Text2 } from "packages/ui/atoms";
 
 const mailSendInterface = z.object({
 	to: z.string().email(),
@@ -85,15 +86,21 @@ export const ComposeButton = () => {
 			open={open}
 		>
 			<DrawerTrigger
-				className="flex items-center gap-2 rounded-lg px-3 py-3 outline-border outline outline-[2px] outline-offset-[-2px] shadow-sm bg-hover"
+				className={cn(
+					stack({ align: "center", gap: "md" }),
+					border({ rounded: "radius", color: "interactive", side: "all" }),
+					css({
+						p: "medium",
+						bg: { default: "bgComponent", hover: "bgHover" },
+					}),
+					// "outline-border outline outline-[2px] outline-offset-[-2px]",
+				)}
 				onClick={() => setOpen(true)}
 			>
-				<PlusIcon color={theme.text} size={24} />
-				<span
-					className={cn(css({ fontWeight: "semibold", fontSize: "large" }))}
-				>
+				<PlusIcon color={palette.text2} size={24} />
+				<Text2 className={cn(css({ fontWeight: "semibold", color: "text2" }))}>
 					Compose
-				</span>
+				</Text2>
 			</DrawerTrigger>
 
 			<DrawerContent
@@ -125,7 +132,7 @@ export const ComposeButton = () => {
 									className={cn(css({ bg: "text1", padding: "small" }))}
 									type="submit"
 								>
-									<ArrowUpIcon color={theme.background} size={26} />
+									<ArrowUpIcon color={palette.background1} size={26} />
 								</Button>
 							</div>
 						</DrawerHeader>

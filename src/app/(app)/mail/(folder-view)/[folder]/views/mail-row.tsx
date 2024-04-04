@@ -10,8 +10,9 @@ import { prefetchThreadQuery } from "@stuff/data-access/prefetch-thread-query";
 import { useDataKey } from "@stuff/lib/useUserPrivateKey";
 import { useQueryClient } from "@tanstack/react-query";
 import { threadOpen } from "../store/thread-open";
-import { stack } from "src/components/recipies";
+import { border, stack } from "src/components/recipies";
 import { Button } from "@stuff/ui/button";
+import { Text1, Text2 } from "packages/ui/atoms";
 
 export const MailRow = ({
 	thread,
@@ -37,12 +38,16 @@ export const MailRow = ({
 			className={cn(
 				stack({}),
 				css({
-					bg: selected.includes(thread.threadId)
-						? "highlight"
-						: thread.read
-							? "bgComponent"
-							: "bgApp",
+					bg: {
+						default: selected.includes(thread.threadId)
+							? "highlight"
+							: thread.read
+								? "bgComponent"
+								: "bgApp",
+						hover: "bgHover",
+					},
 				}),
+				border({ side: "b", color: "interactive" }),
 				"border-b border-border hover:bg-hover",
 			)}
 		>
@@ -117,14 +122,14 @@ export const MailRow = ({
 				>
 					{thread.title}
 				</p>
-				<div className={cn("text-foreground")}>
+				<Text2>
 					{formatDistanceToNow(new Date(thread.lastActive), {
 						addSuffix: true,
 					})}
-				</div>
-				<div className="w-16 text-right text-text2">
+				</Text2>
+				<Text1 style={{ width: "4rem", textAlign: "end" }}>
 					<i>{thread.read ? "read" : "not read"}</i>
-				</div>
+				</Text1>
 			</button>
 		</div>
 	);

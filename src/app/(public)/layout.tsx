@@ -5,7 +5,9 @@ import { stack } from "src/components/recipies";
 import { Footer } from "./_components/footer";
 
 const Layout = (props: LayoutProps) => (
-	<div className={stack({ direction: "col" })}>
+	<div
+		className={cn(css({ overflowX: "hidden" }), stack({ direction: "col" }))}
+	>
 		<CookieTeller />
 		<Navbar />
 		{props.children}

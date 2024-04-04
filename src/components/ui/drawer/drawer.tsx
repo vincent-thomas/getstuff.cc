@@ -5,7 +5,7 @@ import { Drawer as DrawerPrimitive } from "vaul";
 import { cn } from "../../../../packages/components/utils";
 import "./drawer.css";
 import { contentWrapper, drawerOverlay } from "./drawer.css";
-import { stack } from "src/components/recipies";
+import { border, stack } from "src/components/recipies";
 const Drawer = ({
 	shouldScaleBackground = true,
 	...props
@@ -60,7 +60,11 @@ const DrawerContent = React.forwardRef<
 					borderTopRightRadius: "10px",
 					borderWidth: "1px",
 				}}
-				className={cn(css({ bg: "bgApp", borderColor: "border" }), className)}
+				className={cn(
+					css({ bg: "bgApp" }),
+					border({ color: "interactive", rounded: "radius", side: "all" }),
+					className,
+				)}
 				{...props}
 			>
 				{children}

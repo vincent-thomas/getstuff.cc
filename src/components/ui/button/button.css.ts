@@ -46,7 +46,7 @@ export const button = recipe({
 				border({ color: "interactive" }),
 				{
 					background: palette.solid1,
-					color: "white",
+					color: palette.background1,
 					":hover": {
 						background: palette.solid2,
 					},

@@ -16,6 +16,8 @@ import { H3 } from "@stuff/typography";
 import { Logo } from "src/components/logo";
 import { cn } from "@stuff/components/utils";
 import { stack } from "src/components/recipies";
+import { Text1, Text2 } from "packages/ui/atoms";
+import { hoverUnderline } from "./account-viewer.css";
 
 export const AccountViewer = async () => {
 	const session = await api.user.session.query();
@@ -27,15 +29,29 @@ export const AccountViewer = async () => {
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger>
-				<div className="hover:bg-hover p-3 rounded-md hover:outline outline-2 outline-border">
+				<div
+					className={cn(
+						css({
+							p: "medium",
+							bg: { default: "transparent", hover: "bgHover" },
+						}),
+						"hover:outline outline-2 outline-border",
+						hoverUnderline,
+					)}
+				>
 					<div className={cn(stack({ gap: "md", align: "center" }))}>
 						<UserAvatar />
-						<div className={cn(stack({ direction: "col" }), "text-left")}>
-							<h1 className="font-semibold flex gap-1 items-center">
+						<div className={cn(stack({ direction: "col", align: "start" }))}>
+							<h1
+								className={cn(
+									css({ fontWeight: "semibold" }),
+									stack({ gap: "xs", align: "center" }),
+								)}
+							>
 								<Logo size={24} />
-								<p className="text-text text-3xl">Mail</p>
+								<Text1 className={cn(css({ fontSize: "large" }))}>Mail</Text1>
 							</h1>
-							<p className="text-muted-foreground">{session.username}</p>
+							<Text2>{session.username}</Text2>
 						</div>
 					</div>
 				</div>

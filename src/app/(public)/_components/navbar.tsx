@@ -3,7 +3,6 @@ import Link from "next/link";
 import { cn } from "packages/components/utils";
 import { Logo } from "src/components/logo";
 import { StuffBranding } from "./stuff";
-import { ThemeBtn } from "./theme-icon";
 import { stack } from "src/components/recipies";
 
 export const Navbar = () => (
@@ -54,7 +53,6 @@ export const Navbar = () => (
 				</Link>
 			</div>
 			<nav className={stack({ direction: "row", gap: "xl", align: "center" })}>
-				<ThemeBtn />
 				<Link
 					href="/auth/identify"
 					className={cn(

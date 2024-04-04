@@ -1,5 +1,4 @@
 import { createSprinkles, defineProperties } from "@vanilla-extract/sprinkles";
-import { theme } from "src/styles/themes.css";
 import { screenConditions } from "packages/ui/conditions";
 import { spacing } from "packages/ui/variables";
 import { palette } from "../theme/palettes.css";
@@ -89,9 +88,6 @@ export const color = defineProperties({
 	properties: {
 		color: anotherColors,
 		background: anotherColors,
-		borderColor: {
-			border: theme.border,
-		},
 		fill: anotherColors,
 		stroke: anotherColors,
 	},
