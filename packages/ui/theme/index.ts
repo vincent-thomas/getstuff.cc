@@ -1,2 +1,1 @@
-export * from "./color.css";
-export * from "./mode.css";
+export * from "./palettes.css";

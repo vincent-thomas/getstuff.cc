@@ -7,7 +7,7 @@ export const P = ({
 	style,
 }: { children?: ReactNode; className?: string; style?: CSSProperties }) => {
 	return (
-		<p style={style} className={cn(css({ color: "text2" }), className)}>
+		<p style={style} className={cn(css({ color: "text1" }), className)}>
 			{children}
 		</p>
 	);

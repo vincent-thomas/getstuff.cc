@@ -2,7 +2,7 @@ import { cn } from "@stuff/components/utils";
 import { Button, button } from "@stuff/ui/button";
 import { cookies } from "next/headers";
 import Link from "next/link";
-import { themeMode } from "packages/ui/theme";
+import { palette } from "packages/ui/theme";
 import { stack } from "src/components/recipies";
 
 export const CookieTeller = () => {
@@ -26,7 +26,7 @@ export const CookieTeller = () => {
 				css({ position: "sticky", bg: "bgSubtle", p: "medium" }),
 				stack({ gap: "md", align: "center" }),
 			)}
-			style={{ top: 0, borderBottom: "1px solid " + themeMode.borderSubtle }}
+			style={{ top: 0, borderBottom: "1px solid " + palette.borderSubtle }}
 		>
 			<div>
 				Stuff Mail use cookies only to make sure you are you. Please click here

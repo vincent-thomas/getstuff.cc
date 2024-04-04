@@ -3,7 +3,7 @@ import { Section } from "./section";
 import { H1, P } from "@stuff/typography";
 import { Heading } from "@stuff/ui/title";
 import { stack } from "src/components/recipies";
-import { Text2 } from "packages/ui/atoms";
+import { Text1 } from "packages/ui/atoms";
 
 export const HeroTitle = ({
 	className,
@@ -32,9 +32,9 @@ export const HeroTitle = ({
 		>
 			{title}
 		</Heading>
-		<Text2 className={css({ fontSize: "medium", fontWeight: "semibold" })}>
+		<Text1 className={css({ fontSize: "medium", fontWeight: "semibold" })}>
 			{comment}
-		</Text2>
+		</Text1>
 		{!!under && <div className={css({ paddingTop: "small" })}>{under}</div>}
 	</div>
 );

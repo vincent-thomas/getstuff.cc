@@ -8,26 +8,50 @@ import { button } from "@stuff/ui/button/button.css";
 import { StuffBranding } from "./_components/stuff";
 import { H1, H2, P } from "@stuff/typography";
 import "./style.css";
-import { boxGrid, conversations, extensions, folders } from "./page.css";
-import { Logo } from "src/components/logo";
-import { Footer } from "./_components/footer";
 import {
-	Accordion,
-	AccordionContent,
-	AccordionItem,
-	AccordionTrigger,
-} from "@stuff/ui/accortion";
-import { stack } from "src/components/recipies";
+	boxGrid,
+	conversations,
+	extensions,
+	folders,
+	imageRotate,
+} from "./page.css";
+import { Logo } from "src/components/logo";
+import { border, stack } from "src/components/recipies";
 import { shadow } from "src/components/recipies/shadow.css";
 
 import { NiceCard } from "./_components/nicecard";
 import { HeaderIcon } from "./page.icon";
-import { Text2 } from "packages/ui/atoms";
+import { Text1 } from "packages/ui/atoms";
+import { palette } from "packages/ui/theme/palettes.css";
 
 export default setupPage({
 	Component() {
 		return (
 			<div className={cn(stack({ gap: "xl", direction: "col" }))}>
+				<div
+					className={css({ position: "absolute" })}
+					style={{
+						top: 0,
+						left: 0,
+						right: 0,
+						height: "300px",
+						opacity: 0.2,
+						background: `linear-gradient(to bottom, ${palette.solid1}, transparent)`,
+						zIndex: -1,
+					}}
+				/>
+				<div
+					className={css({ position: "fixed" })}
+					style={{
+						left: 0,
+						bottom: 0,
+						right: 0,
+						height: "60px",
+						opacity: 0.1,
+						background: `linear-gradient(to top, ${palette.solid1}, transparent)`,
+						zIndex: -1,
+					}}
+				/>
 				<Section
 					maxWidth="md"
 					className={css({ p: "medium", paddingBottom: "none" })}
@@ -105,19 +129,21 @@ export default setupPage({
 				</Section>
 				<Section
 					maxWidth="lg"
-					style={{ borderRadius: 24 }}
-					className={cn(css({ bg: "bgSubtle", mX: "auto", width: "full" }))}
+					className={cn(
+						css({ bg: "bgSubtle", mX: "auto", width: "full" }),
+						border({ color: "subtle", rounded: "xl", side: "all" }),
+					)}
 				>
 					<Section
 						maxWidth="md"
 						className={cn(
 							stack({ direction: "col", align: "start" }),
-							css({ overflow: "hidden", pY: "2xlarge" }),
+							css({ pY: "2xlarge" }),
 						)}
 					>
-						<Text2 className={css({ fontSize: "medium" })}>
+						<Text1 className={css({ fontSize: "medium" })}>
 							Stuff is a mail service
-						</Text2>
+						</Text1>
 						<H1 id="features" className={css({ fontSize: "xlarge" })}>
 							Stuff Features
 						</H1>
@@ -125,8 +151,8 @@ export default setupPage({
 							<Card
 								className={cn(
 									conversations,
-									shadow({ size: "large" }),
-									css({ p: "xlarge", bg: "bgApp" }),
+									stack({ direction: "col" }),
+									css({ p: "xlarge", bg: "bgApp", overflow: "visible" }),
 								)}
 							>
 								<H2 className={css({ fontSize: "large" })}>Conversations</H2>
@@ -137,7 +163,13 @@ export default setupPage({
 								<img
 									src="/conversationv2.webp"
 									alt="Conversations example from Stuff mail"
-									className="rounded-xl shadow-xl mt-4 md:skew-y-[-12deg] md:rotate-[8deg] md:w-[80%] w-full ml-auto mr-2 aspect-square border-border border"
+									className={cn(
+										shadow({ size: "large" }),
+										border({ rounded: "xl", color: "focus", side: "all" }),
+										css({ marginLeft: "auto", marginTop: "medium" }),
+										imageRotate,
+										"mt-4 md:w-[80%] w-full ml-auto mr-2 border-border border",
+									)}
 								/>
 							</Card>
 							<Card
@@ -179,10 +211,10 @@ export default setupPage({
 										)}
 									>
 										<H2 className={css({ fontSize: "large" })}>Extensions</H2>
-										<Text2>
+										<Text1>
 											With Stuff Extensions, behavior and features can be added
 											and highly customised to Stuff.
-										</Text2>
+										</Text1>
 									</div>
 									<div className={stack({ justify: "end" })}>
 										<img
@@ -196,11 +228,11 @@ export default setupPage({
 							</Card>
 						</div>
 					</Section>
-					<Section
+					{/* <Section
 						maxWidth="md"
 						className={cn(
 							stack({ direction: "col", align: "start" }),
-							css({ overflow: "hidden", pY: "2xlarge" }),
+							css({ pY: "2xlarge" }),
 						)}
 					>
 						<H1 id="features" className={css({ fontSize: "xlarge" })}>
@@ -275,9 +307,9 @@ export default setupPage({
 								</Text2>
 							</Card>
 						</div>
-					</Section>
+					</Section> */}
 				</Section>
-				<Section maxWidth="xs">
+				{/* <Section maxWidth="xs">
 					<H2>FAQ</H2>
 					<Accordion type="multiple">
 						<AccordionItem value="item-1">
@@ -295,10 +327,7 @@ export default setupPage({
 							</AccordionContent>
 						</AccordionItem>
 					</Accordion>
-				</Section>
-				<div className="mb-24">
-					<Footer />
-				</div>
+				</Section> */}
 			</div>
 		);
 	},

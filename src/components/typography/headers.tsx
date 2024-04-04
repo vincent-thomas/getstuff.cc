@@ -18,7 +18,7 @@ export const H1 = ({
 			style={style}
 			id={id}
 			className={cn(
-				css({ fontWeight: "bold", color: "text1" }),
+				css({ fontWeight: "bold", color: "text2" }),
 				shared,
 				"text-4xl",
 				className,
@@ -38,7 +38,7 @@ export const H2 = ({
 		<h2
 			{...props}
 			className={cn(
-				css({ fontWeight: "bold", color: "text1" }),
+				css({ fontWeight: "bold", color: "text2" }),
 				shared,
 				"text-3xl",
 				className,

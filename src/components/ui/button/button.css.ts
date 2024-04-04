@@ -1,6 +1,6 @@
 import { style } from "@vanilla-extract/css";
 import { recipe, type RecipeVariants } from "@vanilla-extract/recipes";
-import { colors, themeMode } from "packages/ui/theme";
+import { palette } from "packages/ui/theme/palettes.css";
 import { rounding, spacing } from "packages/ui/variables";
 import { border, stack } from "src/components/recipies";
 
@@ -29,38 +29,38 @@ export const button = recipe({
 	variants: {
 		variant: {
 			primary: {
-				background: themeMode.text1,
-				color: themeMode.backgroundApp,
+				background: palette.text2,
+				color: palette.background1,
 			},
 			outline: [
 				border({ color: "interactive" }),
 				style({
 					":hover": {
-						background: themeMode.backgroundHover,
-						color: themeMode.text2,
+						background: palette.bgHover,
+						color: palette.text2,
 					},
-					color: themeMode.text1,
+					color: palette.text2,
 				}),
 			],
 			accent: [
 				border({ color: "interactive" }),
 				{
-					background: colors.accent1,
-					color: colors.accentForeground,
+					background: palette.solid1,
+					color: "white",
 					":hover": {
-						background: colors.accent2,
+						background: palette.solid2,
 					},
 				},
 			],
 			ghost: {
 				":hover": {
-					background: themeMode.backgroundHover,
-					color: themeMode.text2,
+					background: palette.bgHover,
+					color: palette.text2,
 				},
-				color: themeMode.text1,
+				color: palette.text2,
 			},
 			link: {
-				color: themeMode.text1,
+				color: palette.text2,
 				textUnderlineOffset: "4px",
 				":hover": {
 					textDecoration: "underline",

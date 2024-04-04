@@ -2,6 +2,7 @@ import { Section } from "./section";
 import Link from "next/link";
 import { button } from "@stuff/ui/button/button.css";
 import { stack } from "packages/ui/patterns/stack";
+import { Text1 } from "packages/ui/atoms";
 
 export const Footer = () => {
 	return (
@@ -11,8 +12,8 @@ export const Footer = () => {
 			<Section maxWidth="lg">
 				<div className={stack({ justify: "between" })}>
 					<div className={stack({ align: "center", gap: "sm" })}>
-						<p>Stuff © {new Date().getFullYear()}</p>
-						<span>•</span>
+						<Text1>Stuff © {new Date().getFullYear()}</Text1>
+						<Text1>•</Text1>
 						<a
 							href="https://github.com/vincent-thomas"
 							target="_blank"
@@ -22,7 +23,7 @@ export const Footer = () => {
 							Vincent Thomas
 						</a>
 					</div>
-					<div className={stack({ gap: "lg" })}>
+					<div className={stack({ gap: "xl" })}>
 						<Link href="/cookies" className={button({ variant: "link" })}>
 							Cookies
 						</Link>

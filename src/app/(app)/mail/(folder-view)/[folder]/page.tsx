@@ -40,7 +40,7 @@ export default setupPage({
 						bg: "bgApp",
 						overflowY: "hidden",
 					}),
-					border({ rounded: "lg" }),
+					border({ rounded: "lg", side: "all", color: "subtle" }),
 				)}
 			>
 				<MainMailView folder={folder} threadId={query.threadId} />

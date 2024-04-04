@@ -1,4 +1,4 @@
-import { createThemeContract, styleVariants } from "@vanilla-extract/css";
+import { styleVariants } from "@vanilla-extract/css";
 
 export const rounding = styleVariants({
 	icon: { borderRadius: "50%" },
