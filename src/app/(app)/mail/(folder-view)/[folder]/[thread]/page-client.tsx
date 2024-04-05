@@ -16,7 +16,8 @@ import { Loading } from "@stuff/icons/loading";
 import purify from "dompurify";
 import { threadOpen } from "../store/thread-open";
 import { useAtom } from "jotai";
-import { theme } from "src/styles/themes.css";
+import { palette } from "packages/ui/theme";
+import { border } from "src/components/recipies";
 
 const paramsInterface = z.object({
 	threadId: z.string(),
@@ -117,7 +118,7 @@ const MainPage = ({ threadId, folderId }: z.infer<typeof paramsInterface>) => {
 				<div>
 					<Tooltip>
 						<TooltipTrigger className="rounded-full hover:bg-hover">
-							<ShieldCheckIcon size={18} color={theme.text2} />
+							<ShieldCheckIcon size={18} color={palette.text2} />
 						</TooltipTrigger>
 						<TooltipContent className="bg-background2 shadow-lg">
 							<p className="text-sm text-text2">
@@ -133,9 +134,17 @@ const MainPage = ({ threadId, folderId }: z.infer<typeof paramsInterface>) => {
 						return <Loading size={24} color="text-primary" key={index} />;
 					}
 					return (
-						<Flex
-							col
-							className="rounded-md border border-border"
+						<div
+							className={cn(
+								stack({ direction: "col" }),
+								border({
+									rounded: "radius",
+									color: "interactive",
+									side: "all",
+								}),
+							)}
+							// col
+							// className="rounded-md border border-border"
 							key={mail.messageId}
 						>
 							<Flex col gap="1px" className="bg-background2 p-4">
@@ -150,10 +159,16 @@ const MainPage = ({ threadId, folderId }: z.infer<typeof paramsInterface>) => {
 									__html: purify().sanitize(mail.content.html),
 								}}
 							/>
-							<Flex className="border-t border-border p-4">
+							<div
+								className={cn(
+									stack({}),
+									border({ side: "t", color: "subtle" }),
+									css({ p: "medium" }),
+								)}
+							>
 								<Button className="font-semibold">Svara</Button>
-							</Flex>
-						</Flex>
+							</div>
+						</div>
 					);
 				})}
 			</Flex>

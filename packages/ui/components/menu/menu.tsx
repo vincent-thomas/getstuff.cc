@@ -13,9 +13,8 @@ import { P } from "@stuff/typography";
 import { spacing } from "packages/ui/variables";
 import type { FC, ReactNode } from "react";
 import { border } from "src/components/recipies";
-import { menuItem } from "./menu.css";
+import { menuItem, menuItemStyle } from "./menu.css";
 import { stack } from "packages/ui/patterns/stack";
-import { palette } from "packages/ui/theme";
 
 export const Menu = ({ children }: { children: ReactNode }) => {
 	return <AriaMenuProvider>{children}</AriaMenuProvider>;
@@ -49,18 +48,14 @@ export const MenuItem: FC<MenuItemProps> = ({
 			}}
 			className={cn(
 				menuItem,
+				menuItemStyle,
 				css({
-					bg: { hover: variant === "danger" ? undefined : "accent1" },
-					p: "medium",
-					color: {
-						hover: variant === "danger" ? undefined : "bgApp",
-						default: "text2",
-					},
+					bg: { hover: variant === "danger" ? undefined : "bgHover" },
+					pY: "large",
+					pX: "medium",
 					fontWeight: "semibold",
-					cursor: "pointer",
 				}),
-				stack({ align: "center", gap: "sm" }),
-				border({ rounded: "radius" }),
+				stack({ align: "center", gap: "md" }),
 				className,
 			)}
 			{...props}
@@ -75,6 +70,7 @@ export const MenuDescription: FC<{ children: ReactNode }> = ({ children }) => {
 				css({
 					fontSize: "small",
 					paddingLeft: "small",
+					paddingTop: "xsmall",
 				}),
 			)}
 		>
@@ -85,9 +81,14 @@ export const MenuDescription: FC<{ children: ReactNode }> = ({ children }) => {
 
 export interface MenuContentProps extends AriaMenuContentProps {}
 
-export const MenuContent: FC<MenuContentProps> = ({ className, ...props }) => {
+export const MenuContent: FC<MenuContentProps> = ({
+	className,
+	style,
+	...props
+}) => {
 	return (
 		<AriaMenuContent
+			style={{ ...style, marginTop: spacing.small }}
 			className={cn(
 				css({
 					bg: "bgComponent",

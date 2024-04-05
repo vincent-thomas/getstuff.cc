@@ -17,6 +17,9 @@ import { useThreadsMoveMutation } from "@stuff/data-access/move-threads-mutation
 import { useThreadsReadMutation } from "@stuff/data-access/read-threads-mutation";
 import { Button } from "@stuff/ui/button";
 import { threadOpen } from "../store/thread-open";
+import { stack } from "packages/ui/patterns/stack";
+import { palette } from "packages/ui/theme";
+import { border } from "src/components/recipies";
 
 export const SelectedBar = ({
 	folderId,
@@ -47,7 +50,7 @@ export const SelectedBar = ({
 
 	const [_, setThreadId] = useAtom(threadOpen);
 	return (
-		<div className="flex items-center gap-1">
+		<div className={cn(css({}), stack({ align: "center", gap: "sm" }))}>
 			<Popover
 				onOpenChange={(test) => {
 					if (test === true) return;
@@ -56,7 +59,7 @@ export const SelectedBar = ({
 			>
 				<PopoverTrigger asChild>
 					<Button variant="ghost" size="md">
-						<FolderInput size={18} color="var(--text)" />
+						<FolderInput size={18} color={palette.text2} />
 					</Button>
 				</PopoverTrigger>
 				<PopoverContent className="p-2">
@@ -79,12 +82,20 @@ export const SelectedBar = ({
 							</button>
 						))}
 						{otherFolders.length > 0 && (
-							<div className="w-full px-4 h-[1px] bg-muted"></div>
+							<div
+								style={{ height: "1px" }}
+								className={cn(
+									css({ bg: "bgComponent", width: "full", pX: "medium" }),
+								)}
+							></div>
 						)}
 						{otherFolders.map((folder) => (
 							<button
 								key={folder.id}
-								className="hover:bg-muted p-2 rounded-md"
+								className={cn(
+									css({ bg: { hover: "bgHover" }, p: "small" }),
+									border({ rounded: "radius" }),
+								)}
 								onClick={async () => {
 									await moveThreads.mutateAsync({
 										folderId: folderId,
@@ -114,7 +125,7 @@ export const SelectedBar = ({
 					});
 				}}
 			>
-				<MailOpen size={18} color="var(--text)" />
+				<MailOpen size={18} color={palette.text2} />
 			</Button>
 
 			{folderId !== "archive" && (
@@ -134,7 +145,7 @@ export const SelectedBar = ({
 						await utils.mail.threads.getThreads.invalidate({ folderId });
 					}}
 				>
-					<ArchiveIcon size={18} color="var(--text)" />
+					<ArchiveIcon size={18} color={palette.text2} />
 				</Button>
 			)}
 		</div>
