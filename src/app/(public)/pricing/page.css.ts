@@ -1,8 +1,8 @@
 import { style } from "@vanilla-extract/css";
-import { colors } from "packages/ui/theme";
+import { palette } from "packages/ui/theme";
 
 export const marker = style({
 	"::marker": {
-		color: colors.accent1,
+		color: palette.solid1,
 	},
 });

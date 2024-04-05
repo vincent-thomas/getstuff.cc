@@ -57,6 +57,8 @@ export const Form = () => {
 		return (
 			<form
 				onSubmit={handleSubmit(async ({ username, password }) => {
+					console.log("testing");
+
 					setLoading(true);
 					const { salt, serverEphemeralPublic } =
 						await initAccountSessionMutation.mutateAsync({ username });
@@ -101,7 +103,7 @@ export const Form = () => {
 			>
 				<MailInput {...register("username")} />
 				<PasswordInput {...register("password")} />
-				<Button size="lg" variant="primary">
+				<Button size="lg" variant="primary" type="submit">
 					Submit
 					{loading && <Loading size={16} color={palette.text2} />}
 				</Button>

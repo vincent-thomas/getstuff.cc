@@ -46,16 +46,14 @@ export const MailRow = ({
 								: "bgApp",
 						hover: "bgHover",
 					},
+					pY: "small",
 				}),
 				border({ side: "b", color: "interactive" }),
-				"border-b border-border hover:bg-hover",
 			)}
 		>
-			<div className={css({ p: "small" })}>
+			<div className={css({ p: "medium" })}>
 				<Button
-					variant="ghost"
-					size="icon"
-					rounded="icon"
+					variant="icon"
 					onClick={() => {
 						if (selected.includes(thread.threadId)) {
 							setSelected(selected.filter((id) => id !== thread.threadId));

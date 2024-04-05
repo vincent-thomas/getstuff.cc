@@ -13,16 +13,25 @@ export const button = recipe({
 			gap: "sm",
 			inline: 1,
 		}),
+		css({
+			fontWeight: "semibold",
+			cursor: "pointer",
+		}),
 		style({
 			whiteSpace: "nowrap",
-			fontWeight: 600,
 			transition: "colors",
-			cursor: "pointer",
 			outline: "none",
+			borderRadius: "8px",
 			":disabled": {
 				pointerEvents: "none",
 				opacity: 0.5,
 				cursor: "not-allowed",
+			},
+			selectors: {
+				"&[data-focus-visible]": {
+					outline: "2px solid currentColor",
+					outlineOffset: "4px",
+				},
 			},
 		}),
 	],
@@ -50,6 +59,11 @@ export const button = recipe({
 					":hover": {
 						background: palette.solid2,
 					},
+					selectors: {
+						"&[data-focus-visible]": {
+							outlineColor: palette.solid1,
+						},
+					},
 				},
 			],
 			ghost: {
@@ -66,18 +80,24 @@ export const button = recipe({
 					textDecoration: "underline",
 				},
 			},
+			icon: [
+				border({ rounded: "circle" }),
+				{
+					":hover": {
+						background: palette.bgHover,
+						color: palette.text2,
+					},
+					color: palette.text2,
+				},
+			],
 		},
 		size: {
 			sm: { padding: spacing.small },
 			md: { padding: spacing.medium },
 			lg: { padding: spacing.large },
-			icon: css({ p: "medium" }),
 		},
 		rounded: {
 			medium: rounding.md,
-			icon: {
-				borderRadius: "50%",
-			},
 		},
 	},
 });

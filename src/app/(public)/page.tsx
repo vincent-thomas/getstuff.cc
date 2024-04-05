@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { Section } from "./_components/section";
 import { Card } from "./_components/card";
 import { HeroTitle } from "./_components/header";
@@ -23,6 +22,7 @@ import { NiceCard } from "./_components/nicecard";
 import { HeaderIcon } from "./page.icon";
 import { Text1 } from "packages/ui/atoms";
 import { palette } from "packages/ui/theme/palettes.css";
+import { Link } from "src/components/structure/link";
 
 export default setupPage({
 	Component() {
@@ -190,20 +190,19 @@ export default setupPage({
 									Learn more
 								</Link>
 							</Card>
-							<Card
+							<Link
+								href="/extensions"
+								style={{ outlineColor: palette.borderFocus }}
 								className={cn(
 									extensions,
 									shadow({ size: "large" }),
 									css({ bg: "bgApp" }),
+
+									css({ bg: { hover: "bgHover" } }),
+									stack({ direction: "col" }),
 								)}
 							>
-								<Link
-									href="/extensions"
-									className={cn(
-										css({ bg: { hover: "bgHover" } }),
-										stack({ direction: "col" }),
-									)}
-								>
+								<Card className={cn()}>
 									<div
 										className={cn(
 											stack({ direction: "col" }),
@@ -224,110 +223,11 @@ export default setupPage({
 											style={{ width: "70%" }}
 										/>
 									</div>
-								</Link>
-							</Card>
+								</Card>
+							</Link>
 						</div>
 					</Section>
-					{/* <Section
-						maxWidth="md"
-						className={cn(
-							stack({ direction: "col", align: "start" }),
-							css({ pY: "2xlarge" }),
-						)}
-					>
-						<H1 id="features" className={css({ fontSize: "xlarge" })}>
-							Guarantees by <StuffBranding />
-						</H1>
-						<div
-							className={cn(
-								stack({
-									direction: { mobile: "col", desktop: "row" },
-									gap: "md",
-								}),
-								css({
-									paddingTop: "xlarge",
-								}),
-							)}
-						>
-							<Card
-								p="medium"
-								className={css({
-									bg: { default: "bgComponent", hover: "bgHover" },
-									p: "xlarge",
-								})}
-							>
-								<H2 className={css({ fontSize: "large" })}>Most Secure Mail</H2>
-								<Text2 className="max-w-[50ch]">
-									We keep your account safe to the extreme with protocols such
-									as SRP (secure remote password)
-								</Text2>
-								<Link
-									href="#"
-									className={cn(
-										"ml-auto block font-semibold",
-										button({ variant: "link" }),
-									)}
-								>
-									Learn more
-								</Link>
-							</Card>
-							<Card
-								p="medium"
-								className={css({
-									bg: { default: "bgComponent", hover: "bgHover" },
-									p: "xlarge",
-								})}
-							>
-								<H2 className={css({ fontSize: "large" })}>Private</H2>
-								<Text2 className="max-w-[50ch]">
-									All your user information and emails are end-to-end encrypted
-									and is only viewable by you, we can&apos;t even see it.
-								</Text2>
-								<Link
-									href="#"
-									className={cn(
-										css({ fontWeight: "semibold" }),
-										button({ variant: "link" }),
-									)}
-								>
-									Learn more
-								</Link>
-							</Card>
-							<Card
-								p="medium"
-								className={css({
-									bg: { default: "bgComponent", hover: "bgHover" },
-									p: "xlarge",
-								})}
-							>
-								<H2 className={css({ fontSize: "large" })}>Polished</H2>
-								<Text2 className="max-w-[50ch]">
-									With its polished user experience, you can be sure to get the
-									most out of a mail service
-								</Text2>
-							</Card>
-						</div>
-					</Section> */}
 				</Section>
-				{/* <Section maxWidth="xs">
-					<H2>FAQ</H2>
-					<Accordion type="multiple">
-						<AccordionItem value="item-1">
-							<AccordionTrigger>Is Stuff mail free?</AccordionTrigger>
-							<AccordionContent>
-								Yes Stuff mail has a free tier that gets you going
-							</AccordionContent>
-						</AccordionItem>
-						<AccordionItem value="item-2">
-							<AccordionTrigger>How secure is stuff mail?</AccordionTrigger>
-							<AccordionContent>
-								Stuff mails design is to be secure and private. We use
-								end-to-end encryption to keep your emails safe. This means that
-								its impossible for us as service owners to read your messages.
-							</AccordionContent>
-						</AccordionItem>
-					</Accordion>
-				</Section> */}
 			</div>
 		);
 	},

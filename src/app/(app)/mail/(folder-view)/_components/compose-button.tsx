@@ -93,7 +93,6 @@ export const ComposeButton = () => {
 						p: "medium",
 						bg: { default: "bgComponent", hover: "bgHover" },
 					}),
-					// "outline-border outline outline-[2px] outline-offset-[-2px]",
 				)}
 				onClick={() => setOpen(true)}
 			>
@@ -104,7 +103,7 @@ export const ComposeButton = () => {
 			</DrawerTrigger>
 
 			<DrawerContent
-				asChild
+				// asChild
 				style={{
 					display: "grid",
 					gridTemplateRows: "auto 1fr auto",
