@@ -9,12 +9,12 @@ export const drawerOverlay = style({
 	inset: 0,
 	zIndex: 50,
 	background: "black",
-	opacity: "0.80",
+	opacity: "0.75",
 });
 
 export const contentWrapper = style({
-	top: 0,
-	bottom: 0,
-	insetInline: 0,
-	zIndex: 50,
+	// top: 0,
+	// bottom: 0,
+	// insetInline: 0,
+	// zIndex: 50,
 });

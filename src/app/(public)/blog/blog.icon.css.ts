@@ -1,5 +1,5 @@
 import { globalStyle } from "@vanilla-extract/css";
-import { colors } from "packages/ui/theme";
+import { palette } from "packages/ui/theme";
 
 globalStyle(".cls-1_notification-4", {
 	fill: "none",
@@ -13,23 +13,23 @@ globalStyle(
 );
 
 globalStyle(".cls-2_notification-4", {
-	fill: colors.accent1,
+	fill: palette.solid1,
 });
 
 globalStyle(".cls-3_notification-4", {
-	fill: colors.accent2,
+	fill: palette.solid2,
 });
 
 globalStyle(".cls-4_notification-4", {
-	fill: colors.accent1,
+	fill: palette.solid1,
 });
 
 globalStyle(".cls-5_notification-4", {
-	fill: colors.accent1,
+	fill: palette.solid1,
 });
 
 globalStyle(".cls-6_notification-4", {
-	fill: colors.accent1,
+	fill: palette.solid1,
 });
 
 // globalStyle(".cls-7_notification-4,.cls-8_notification-4", {
@@ -49,7 +49,7 @@ globalStyle(".cls-6_notification-4", {
 // })
 
 // globalStyle(".cls-12_notification-4", {
-//   fill: colors.accent1
+//   fill: palette.solid1
 // })
 
 // globalStyle(".cls-13_notification-4", {
@@ -61,5 +61,5 @@ globalStyle(".cls-14_notification-4", {
 });
 
 // globalStyle(".cls-3_notification-4,.cls-19_notification-4", {
-//   fill: colors.accent1
+//   fill: palette.solid1
 // })

@@ -4,6 +4,12 @@ import * as React from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { PlusIcon } from "lucide-react";
 import { cn } from "../utils";
+import { border, shadow } from "src/components/recipies";
+import { dialogContentStyles } from "./dialog.css";
+import { stack } from "packages/ui/patterns/stack";
+import { Button } from "@stuff/ui/button";
+import { H1 } from "@stuff/typography";
+import { spacing } from "packages/ui/variables";
 
 const Dialog = DialogPrimitive.Root;
 
@@ -19,8 +25,10 @@ const DialogOverlay = React.forwardRef<
 >(({ className, ...props }, ref) => (
 	<DialogPrimitive.Overlay
 		ref={ref}
+		style={{ inset: 0, zIndex: 50, backgroundColor: "rgba(0, 0, 0, 0.8)" }}
 		className={cn(
-			"fixed inset-0 z-50 bg-black/80  data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+			css({ position: "fixed" }),
+			// "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
 			className,
 		)}
 		{...props}
@@ -31,33 +39,79 @@ DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
 interface DialogContentProps
 	extends React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> {
 	onClosePress?: () => void;
+	size: "sm" | "md" | "lg";
+	mainTitle?: JSX.Element | string;
 }
 
 const DialogContent = React.forwardRef<
 	React.ElementRef<typeof DialogPrimitive.Content>,
 	DialogContentProps
->(({ className, children, onClosePress, ...props }, ref) => (
-	<DialogPortal>
-		<DialogOverlay onClick={onClosePress} />
-		<DialogPrimitive.Content
-			ref={ref}
-			className={cn(
-				"fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border border-border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg",
-				className,
-			)}
-			{...props}
-		>
-			{children}
-			<DialogPrimitive.Close
-				onClick={onClosePress}
-				className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground"
+>(
+	(
+		{ className, children, onClosePress, size = "sm", mainTitle, ...props },
+		ref,
+	) => (
+		<DialogPortal>
+			<DialogOverlay onClick={onClosePress} />
+			<DialogPrimitive.Content
+				ref={ref}
+				style={{
+					zIndex: 50,
+					transform: "translate(-50%, -50%)",
+					left: "50%",
+					top: "50%",
+					maxWidth: size === "sm" ? "26rem" : size === "md" ? "34rem" : "50rem",
+					width: "100%",
+				}}
+				className={cn(
+					css({
+						position: "fixed",
+						width: "full",
+						bg: "bgApp",
+						p: "large",
+					}),
+					dialogContentStyles,
+					shadow({ size: "large" }),
+					stack({ direction: "col" }),
+					border({ color: "subtle", rounded: "radius", side: "all" }),
+				)}
+				{...props}
 			>
-				<PlusIcon className="h-4 w-4 rotate-45" />
-				<span className="sr-only">Close</span>
-			</DialogPrimitive.Close>
-		</DialogPrimitive.Content>
-	</DialogPortal>
-));
+				<DialogPrimitive.Close
+					onClick={onClosePress}
+					style={{
+						top: spacing.large,
+						right: spacing.large,
+					}}
+					className={cn(
+						css({
+							marginLeft: "auto",
+							position: "absolute",
+						}),
+
+						"absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground",
+					)}
+					asChild
+				>
+					<Button variant="icon" size="sm">
+						<PlusIcon
+							className={css({ color: "text1" })}
+							size={24}
+							style={{ rotate: "45deg" }}
+						/>
+					</Button>
+				</DialogPrimitive.Close>
+				{mainTitle && (
+					<H1 className={css({ fontSize: "xlarge", pY: "small" })}>
+						{mainTitle}
+					</H1>
+				)}
+
+				<div className={className}>{children}</div>
+			</DialogPrimitive.Content>
+		</DialogPortal>
+	),
+);
 DialogContent.displayName = DialogPrimitive.Content.displayName;
 
 const DialogHeader = ({

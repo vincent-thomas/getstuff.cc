@@ -1,9 +1,9 @@
 import { button } from "@stuff/ui/button/button.css";
-import Link from "next/link";
 import { cn } from "packages/components/utils";
 import { Logo } from "src/components/logo";
 import { StuffBranding } from "./stuff";
 import { stack } from "src/components/recipies";
+import { Link } from "src/components/structure/link";
 
 export const Navbar = () => (
 	<header className="animate-in slide-in-from-top-2 duration-700 fade-in">
@@ -14,23 +14,21 @@ export const Navbar = () => (
 			)}
 		>
 			<div className={stack({ direction: "row", gap: "md", align: "center" })}>
-				<Link
-					href="/"
-					className={button({
-						variant: "ghost",
-						size: "md",
-						rounded: "medium",
-					})}
-				>
+				<div className={stack({ gap: "sm", align: "center" })}>
 					<Logo size={24} color />
 					<h1
 						className={cn(
-							css({ color: "text1", fontWeight: "bold", fontSize: "large" }),
+							css({
+								color: "text1",
+								fontWeight: "bold",
+								fontSize: "large",
+							}),
 						)}
 					>
 						<StuffBranding />
 					</h1>
-				</Link>
+				</div>
+
 				<Link
 					href="/pricing"
 					className={button({
@@ -41,6 +39,7 @@ export const Navbar = () => (
 				>
 					Pricing
 				</Link>
+
 				<Link
 					href="/blog"
 					className={button({
@@ -62,6 +61,7 @@ export const Navbar = () => (
 				>
 					Login
 				</Link>
+
 				<Link
 					href="/auth/init"
 					className={cn(

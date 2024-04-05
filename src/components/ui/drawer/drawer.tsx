@@ -6,6 +6,7 @@ import { cn } from "../../../../packages/components/utils";
 import "./drawer.css";
 import { contentWrapper, drawerOverlay } from "./drawer.css";
 import { border, stack } from "src/components/recipies";
+import { palette } from "packages/ui/theme";
 const Drawer = ({
 	shouldScaleBackground = true,
 	...props
@@ -40,36 +41,69 @@ const DrawerContent = React.forwardRef<
 	React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Content>
 >(({ className, children, ...props }, ref) => (
 	<DrawerPortal>
+		{/* <div
+			className={css({ position: "fixed", color: "accent1" })}
+			style={{ zIndex: 0 }}
+		> */}
 		<DrawerOverlay />
-		<div
-			className={cn(
-				contentWrapper,
-				stack({ align: "end", justify: "center" }),
-				css({
-					paddingTop: "medium",
-					pX: "medium",
-				}),
-			)}
-		>
-			<DrawerPrimitive.Content
-				ref={ref}
-				style={{
-					height: "100%",
-					width: "100%",
-					borderTopLeftRadius: "10px",
-					borderTopRightRadius: "10px",
-					borderWidth: "1px",
-				}}
-				className={cn(
-					css({ bg: "bgApp" }),
-					border({ color: "interactive", rounded: "radius", side: "all" }),
-					className,
-				)}
-				{...props}
+
+		<DrawerPrimitive.Content>
+			<div
+				style={{ inset: 0, backgroundColor: "white", position: "fixed" }}
+				className={css({ padding: "2xlarge" })}
 			>
 				{children}
-			</DrawerPrimitive.Content>
-		</div>
+			</div>
+		</DrawerPrimitive.Content>
+		{/* </div> */}
+		{/* <DrawerPrimitive.Content
+			style={{
+				inset: 0,
+				backgroundColor: "white !important",
+			}}
+			className={css({ position: "fixed", paddingTop: "2xlarge" })}
+		>
+			<div style={{ backgroundColor: "white", zIndex: 50 }}>test</div>
+		</DrawerPrimitive.Content> */}
+
+		{/* // 	<div
+	// 		className={cn(
+	// 			// contentWrapper,
+	// 			stack({ align: "end", justify: "center" }),
+	// 			css({
+	// 				paddingTop: "medium",
+	// 				pX: "medium",
+	// 			}),
+	// 		)}
+	// 	> */}
+		{/* div */}
+		{/* <DrawerPrimitive.Content
+			ref={ref}
+			style={{
+				insetInline: "0",
+				bottom: "0",
+				top: "0",
+				backgroundColor: palette.background2,
+				zIndex: 50,
+			}}
+			className={css({ position: "fixed" })} */}
+		{/* // style={{
+			// 	height: "100%",
+			// 	width: "100%",
+			// 	borderTopLeftRadius: "10px",
+			// 	borderTopRightRadius: "10px",
+			// 	borderWidth: "1px",
+			// }}
+			// className={cn(
+			// 	css({ bg: "bgApp" }),
+			// 	border({ color: "interactive", rounded: "radius", side: "all" }),
+			// 	className,
+			// )}
+		// 	{...props}
+		// >
+		// 	{children}
+		// </DrawerPrimitive.Content> */}
+		{/* // 	</div> */}
 	</DrawerPortal>
 ));
 DrawerContent.displayName = "DrawerContent";

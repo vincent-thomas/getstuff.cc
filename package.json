@@ -17,6 +17,7 @@
 		"cdk:deploy": "dotenv -- cdk deploy --all"
 	},
 	"dependencies": {
+		"@ariakit/react": "^0.4.5",
 		"@aws-sdk/client-dynamodb": "^3.529.1",
 		"@aws-sdk/client-s3": "^3.529.1",
 		"@aws-sdk/client-ses": "^3.529.1",

@@ -7,7 +7,7 @@ import { Loading } from "@stuff/icons/loading";
 import { cn } from "@stuff/components/utils";
 import { stack } from "src/components/recipies";
 import { Button } from "@stuff/ui/button";
-import { theme } from "src/styles/themes.css";
+import { palette } from "packages/ui/theme";
 
 export const RefreshButton = () => {
 	const [isFetching, setFetching] = useState(false);
@@ -28,7 +28,7 @@ export const RefreshButton = () => {
 					}, 2300);
 				}}
 			>
-				{isFetching ? <Loading size={24} color={theme.text2} /> : <Refresh />}
+				{isFetching ? <Loading size={24} color={palette.text1} /> : <Refresh />}
 			</Button>
 		</div>
 	);

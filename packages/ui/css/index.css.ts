@@ -2,6 +2,7 @@ import { createSprinkles, defineProperties } from "@vanilla-extract/sprinkles";
 import { screenConditions } from "packages/ui/conditions";
 import { spacing } from "packages/ui/variables";
 import { palette } from "../theme/palettes.css";
+import { fadeEnter } from "../keyframes/enter.css";
 
 const size = defineProperties({
 	properties: {
@@ -26,11 +27,12 @@ const size = defineProperties({
 
 const space = {
 	none: 0,
-	small: spacing.small,
-	medium: spacing.medium,
-	large: spacing.large,
-	xlarge: spacing.xlarge,
-	"2xlarge": spacing["2xlarge"],
+	...spacing,
+	// small: spacing.small,
+	// medium: spacing.medium,
+	// large: spacing.large,
+	// xlarge: spacing.xlarge,
+	// "2xlarge": spacing["2xlarge"],
 	auto: "auto",
 };
 
@@ -144,6 +146,24 @@ export const overflow = defineProperties({
 	},
 });
 
+export const animations = defineProperties({
+	properties: {
+		animation: {
+			fadeEnter: {
+				animationName: fadeEnter,
+				animationDuration: "0.2s",
+				animationTimingFunction: "ease",
+			},
+			fadeOut: {
+				animationName: fadeEnter,
+				animationDuration: "0.2s",
+				animationTimingFunction: "ease",
+			},
+		},
+		overflowY: ["hidden", "scroll", "auto", "visible"],
+	},
+});
+
 export const css = createSprinkles(
 	padding,
 	margin,
@@ -153,4 +173,5 @@ export const css = createSprinkles(
 	position,
 	cursor,
 	overflow,
+	animations,
 );

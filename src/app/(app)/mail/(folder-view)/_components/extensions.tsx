@@ -22,12 +22,16 @@ import {
 import { toast } from "sonner";
 import { Card } from "src/app/(public)/_components/card";
 import { ScrollArea } from "packages/components/lib/scroll-area";
-import { stack } from "src/components/recipies";
 import { hoverUnderline } from "./account-viewer.css";
 import { Text2 } from "packages/ui/atoms";
+import { stack } from "packages/ui/patterns/stack";
+import { border } from "src/components/recipies";
 
-const classNames =
-	"border border-border px-4 py-3 rounded-md flex flex-col hover:bg-hover w-full";
+const classNames = cn(
+	css({ p: "medium", bg: { hover: "bgHover" }, width: "full" }),
+	stack({ gap: "sm", direction: "col" }),
+	border({ color: "interactive", side: "all", rounded: "radius" }),
+);
 
 export const Extensions = () => {
 	const enabled = api.extensions.mailRelay.enabled.useQuery();
@@ -53,11 +57,16 @@ export const Extensions = () => {
 					</Text2>
 				</button>
 			</DialogTrigger>
-			<DialogContent className="flex flex-col">
-				<Flex justify="start" align="center" gap="1rem">
-					<PuzzleIcon size={30} />
-					<H1>Extensions</H1>
-				</Flex>
+			<DialogContent
+				className={stack({ direction: "col" })}
+				size="lg"
+				mainTitle={
+					<span className={stack({ gap: "md", align: "center" })}>
+						<PuzzleIcon size={24} />
+						Extensions
+					</span>
+				}
+			>
 				{enabled.data === false ? (
 					<div className={cn(classNames)}>
 						<H2>Mail relay</H2>
@@ -97,19 +106,24 @@ export const EnabledMailRelayButton = () => {
 	return (
 		<Drawer>
 			<DrawerTrigger className={classNames}>
-				<Flex col className="text-left w-full">
+				<div
+					style={{ width: "100%" }}
+					className={cn(
+						stack({ direction: "col" }),
+						css({ textAlign: "left" }),
+					)}
+				>
 					<H2>Mail relay</H2>
 					<P>Mail relay is a nice feature</P>
-					<Flex
-						className="text-text2"
-						align="center"
-						justify="end"
-						gap="0.3rem"
+					<P
+						className={cn(
+							stack({ align: "center", justify: "end", gap: "md" }),
+						)}
 					>
 						<i>enabled</i>
 						<CheckIcon size={16} />
-					</Flex>
-				</Flex>
+					</P>
+				</div>
 			</DrawerTrigger>
 			<DrawerContent asChild>
 				<div
@@ -163,7 +177,7 @@ export const EnabledMailRelayButton = () => {
 												</Card>
 											</Button>
 										</DialogTrigger>
-										<DialogContent>
+										<DialogContent size="lg">
 											<div
 												className={stack({
 													align: "center",

@@ -5,7 +5,7 @@ import { setupPage } from "@stuff/client/utils";
 import { StuffBranding } from "../_components/stuff";
 import { Text2, Text1 } from "packages/ui/atoms";
 import { stack } from "packages/ui/patterns/stack";
-import { themeMode } from "packages/ui/theme";
+import { palette } from "packages/ui/theme";
 import { marker } from "./page.css";
 import { FC } from "react";
 
@@ -22,7 +22,7 @@ const Tier: FC<TierProps> = ({ title, desc, price, features }) => {
 			<div
 				className={css({ p: "large" })}
 				style={{
-					borderBottom: `1px solid ${themeMode.borderSubtle}`,
+					borderBottom: `1px solid ${palette.borderSubtle}`,
 					width: "100%",
 				}}
 			>
