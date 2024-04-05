@@ -71,10 +71,7 @@ export const AccountViewer = async () => {
 					</div>
 				</div>
 			</MenuButton>
-			<MenuContent
-				style={{ width: 240 }}
-				className={cn(css({ marginTop: "small" }))}
-			>
+			<MenuContent style={{ width: 240 }}>
 				<MenuItem>
 					<CreditCardIcon /> Billing
 				</MenuItem>

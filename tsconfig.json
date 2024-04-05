@@ -14,7 +14,12 @@
 		"noUncheckedIndexedAccess": true,
 		"checkJs": true,
 		/* Bundled projects */
-		"lib": ["dom", "dom.iterable", "ES2022", "webworker"],
+		"lib": [
+			"dom",
+			"dom.iterable",
+			"ES2022",
+			"webworker"
+		],
 		"noEmit": true,
 		"module": "ESNext",
 		"moduleResolution": "Bundler",
@@ -28,23 +33,63 @@
 		/* Path Aliases */
 		"baseUrl": ".",
 		"paths": {
-			"@/env": ["./src/env.js"],
-			"@stuff/api-client/react": ["./backend/client/react.tsx"],
-			"@stuff/api-client/server": ["./backend/client/server.ts"],
-			"@stuff/infra-constants": ["./packages/infra-constants/index.ts"],
-			"@stuff/data-access/*": ["./src/data-access/*"],
-			"@stuff/structure": ["./src/components/structure/index.ts"],
-			"@stuff/typography": ["./src/components/typography/index.ts"],
-			"@stuff/ui/*": ["./src/components/ui/*"],
-			"@stuff/icons/*": ["./src/components/icons/*"],
-			"@stuff/lib/*": ["./src/lib/*"],
-			"@stuff/components/utils": ["./src/components/utils.ts"],
-			"@stuff/client/interfaces": ["./src/interfaces/index.ts"],
-			"@stuff/styling/*": ["./styled-system/*"],
-			"@stuff/client/utils": ["./src/utils/index.ts"],
-			"contentlayer/generated": ["./.contentlayer/generated"],
-			"@style-system/css": ["./packages/ui/css/index.css.ts"],
-			"@style-system/utils": ["./packages/ui/utils/index.ts"]
+			"@/env": [
+				"./src/env.js"
+			],
+			"@stuff/api-client/react": [
+				"./backend/client/react.tsx"
+			],
+			"@stuff/api-client/server": [
+				"./backend/client/server.ts"
+			],
+			"@stuff/infra-constants": [
+				"./packages/infra-constants/index.ts"
+			],
+			"@stuff/data-access/*": [
+				"./src/data-access/*"
+			],
+			"@stuff/structure": [
+				"./src/components/structure/index.ts"
+			],
+			"@stuff/typography": [
+				"./src/components/typography/index.ts"
+			],
+			"@stuff/ui/*": [
+				"./src/components/ui/*"
+			],
+			"@stuff/icons/*": [
+				"./src/components/icons/*"
+			],
+			"@stuff/lib/*": [
+				"./src/lib/*"
+			],
+			"@stuff/components/utils": [
+				"./src/components/utils.ts"
+			],
+			"@stuff/client/interfaces": [
+				"./src/interfaces/index.ts"
+			],
+			"@stuff/styling/*": [
+				"./styled-system/*"
+			],
+			"@stuff/client/utils": [
+				"./src/utils/index.ts"
+			],
+			"contentlayer/generated": [
+				"./.contentlayer/generated"
+			],
+			"@style-system/css": [
+				"./packages/ui/css/index.css.ts"
+			],
+			"@style-system/utils": [
+				"./packages/ui/utils/index.ts"
+			],
+			"@style-system/patterns": [
+				"./packages/ui/patterns/index.ts"
+			],
+			"@style-system/palette": [
+				"./packages/ui/theme/palettes.css.ts"
+			]
 		}
 	},
 	"include": [
@@ -58,5 +103,10 @@
 		".contentlayer/generated",
 		"./unimport.d.ts"
 	],
-	"exclude": ["**/dist", ".next", "cdk.out", "node_modules"]
+	"exclude": [
+		"**/dist",
+		".next",
+		"cdk.out",
+		"node_modules"
+	]
 }

@@ -22,6 +22,14 @@ const size = defineProperties({
 			screen: "100vh",
 			full: "100%",
 		},
+		maxWidth: {
+			screen: "100vh",
+			full: "100%",
+		},
+		maxHeight: {
+			screen: "100vh",
+			full: "100%",
+		},
 	},
 });
 

@@ -21,13 +21,7 @@ const config = {
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
 		config?.module?.rules?.push({
 			test: /\.wasm$/,
-			// Tells WebPack that this module should be included as
-			// raw-encoded binary file and not as code
 			loader: "base64-loader",
-			// Disables WebPack's opinion where WebAssembly should be,
-			// makes it think that it's not WebAssembly
-			//
-			// Error: WebAssembly module is included in initial chunk.
 			type: "javascript/auto",
 		});
 
@@ -47,6 +41,14 @@ const config = {
 						from: "@style-system/utils",
 						name: "cn",
 					},
+					{
+						from: "@style-system/patterns",
+						name: "stack",
+					},
+					{
+						from: "@style-system/palette",
+						name: "palette"
+					}
 				],
 			}),
 		);

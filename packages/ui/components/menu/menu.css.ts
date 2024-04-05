@@ -1,5 +1,5 @@
 import { style } from "@vanilla-extract/css";
-import { palette } from "packages/ui/theme";
+import { spacing } from "packages/ui/variables";
 
 export const menuItem = style({
 	selectors: {
@@ -7,4 +7,15 @@ export const menuItem = style({
 			outline: "2px solid " + palette.borderFocus,
 		},
 	},
+});
+
+export const menuItemStyle = style({
+	":hover": {
+		backgroundColor: palette.bgHover,
+		outline: `1px solid ${palette.borderComponent}`,
+	},
+	borderRadius: "8px",
+	cursor: "pointer",
+	padding: spacing.small,
+	color: palette.text2,
 });

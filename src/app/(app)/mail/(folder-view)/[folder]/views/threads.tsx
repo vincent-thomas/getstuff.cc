@@ -19,6 +19,7 @@ import { useAtom } from "jotai";
 import { useSearchParams } from "next/navigation";
 import { cn } from "@stuff/components/utils";
 import { border } from "src/components/recipies";
+import { stack } from "packages/ui/patterns/stack";
 
 const paramsInterface = z.object({
 	threadId: z.string(),
@@ -191,23 +192,34 @@ export function ThreadView({
 			style={{ width: "100%" }}
 			className={cn(
 				border({ color: "subtle", side: "l" }),
-				"border-l border-border md:min-w-[500px] flex flex-col max-h-full",
+				stack({ direction: "col" }),
+				css({ maxHeight: "full" }),
 			)}
 		>
-			<Flex className="py-1" align="center">
-				<button
-					className="rounded-full p-3 m-1 hover:bg-hover"
+			<div
+				className={cn(
+					stack({ align: "center", gap: "sm" }),
+					css({ p: "small" }),
+				)}
+			>
+				<Button
+					variant="icon"
+					size="sm"
 					onClick={() => {
 						setThreadOpen(null);
 						window.history.replaceState({}, "", `/mail/${folderId}`);
 					}}
 				>
-					<PlusIcon size={18} className="rotate-45" color="var(--text2)" />
-				</button>
+					<PlusIcon
+						size={18}
+						style={{ rotate: "45deg" }}
+						color={palette.text1}
+					/>
+				</Button>
 				<div className="block h-[calc(50px/1.6)] border-r border-border mr-[0.25rem]"></div>
 				<SelectedBar threadIds={[threadId]} folderId={folderId} />
 				<div className="block h-[calc(50px/1.6)] border-r border-border ml-[0.25rem]"></div>
-			</Flex>
+			</div>
 			<div className="mx-auto block h-[1px] w-full border-t border-border"></div>
 			<div className="overflow-y-auto w-full">
 				<MainPage folderId={folderId} threadId={threadId} />
