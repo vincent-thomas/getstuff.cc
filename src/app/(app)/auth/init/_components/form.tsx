@@ -29,27 +29,6 @@ import { Button } from "@stuff/ui/button";
 import { setPasswordDerivedSecret } from "@stuff/lib/useUserPrivateKey";
 import { useRouter } from "next/navigation";
 import { Loading } from "@stuff/icons/loading";
-import { colors } from "packages/ui/theme";
-
-// const QRCODE_SIZE = "100%"
-// const QRCODE_LEVEL = 'Q'
-// const QRCODE_BORDER = 1
-
-// const QRCodeComponent = ({ value }: {value: string }) => {
-//   const { path, viewBox } = useQRCodeGenerator(value, QRCODE_LEVEL, QRCODE_BORDER)
-
-//   return (
-//     <svg
-//       width={QRCODE_SIZE}
-//       height={QRCODE_SIZE}
-//       viewBox={viewBox}
-//       stroke='none'
-//     >
-//       <rect width='100%' height='100%' fill='#ffffff' />
-//       <path d={path} fill='#000000' />
-//     </svg>
-//   )
-// }
 
 const validator = z.object({
 	username: z.string(),
@@ -68,21 +47,6 @@ export const Form = () => {
 	} = useForm<z.infer<typeof validator>>({
 		resolver: zodResolver(validator),
 	});
-	// const [userToSignUp, setUserToSignUp] = useState<{
-	//   user: {
-	//     username: string,
-	//     name: string,
-	//     verifier: string,
-	//     salt: string,
-	//     encryptedDataKey: string,
-	//     encryptedUserData: string,
-	//     publicKey: string
-	//   },
-	//   totp: {
-	//     secret: string,
-	//     uri: string
-	//   }
-	//   }>();
 
 	const _createAccountMutation = api.accounts.createAccount.useMutation();
 	const requestSessionMutation = api.accounts.requestSession.useMutation();
@@ -209,7 +173,6 @@ export const Form = () => {
 	//               secret: userToSignUp.totp.secret,
 	//               encoding: "base32"
 	//             });
-	//             console.log(result)
 	//       })}>
 	//         <Flex col gap="0.5rem" align="start">
 	//           <label htmlFor="test">Validate</label>
@@ -251,8 +214,7 @@ export const Form = () => {
 				)}
 			</div>
 			<Button variant="primary" disabled={!!errors.root}>
-				Submit{" "}
-				{loading && <Loading size={18} color={colors.accentForeground} />}
+				Submit {loading && <Loading size={18} color={palette.background1} />}
 			</Button>
 		</form>
 	);

@@ -13,8 +13,17 @@ const Page = () => {
 			)}
 		>
 			<div className={stack({ direction: "col", gap: "md", align: "start" })}>
+				<h2
+					className={css({
+						color: "text1",
+						fontSize: "4xlarge",
+						fontWeight: "bolder",
+					})}
+				>
+					404
+				</h2>
 				<H1 className={css({ color: "text2", fontSize: "xlarge" })}>
-					Stuff Mail 404
+					Stuff Mail
 				</H1>
 				<H2 className={css({ color: "text1", fontSize: "large" })}>
 					Page or resouce not found

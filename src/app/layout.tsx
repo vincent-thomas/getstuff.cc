@@ -11,7 +11,7 @@ import type { Metadata, Viewport } from "next";
 import { TooltipProvider } from "@stuff/ui/tooltip";
 import { spacingDefiningClass } from "packages/ui/variables";
 import { themeClass } from "packages/ui/theme/palettes.css";
-const inter = Inter({
+const font = Inter({
 	axes: ["slnt"],
 	subsets: ["latin"],
 });
@@ -59,7 +59,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 			<head />
 			<body
 				className={cn(
-					inter.className,
+					font.className,
 					css({ bg: "bgApp", minHeight: "screen" }),
 					spacingDefiningClass,
 					themeClass,

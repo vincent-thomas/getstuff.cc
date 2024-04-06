@@ -161,7 +161,7 @@ export default async function PostPage({ params }: PostPageProps) {
 							color: "bgApp",
 
 							fontSize: "2xlarge",
-							fontWeight: "verybold",
+							fontWeight: "bolder",
 						}),
 					)}
 				>

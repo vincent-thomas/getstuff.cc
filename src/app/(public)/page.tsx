@@ -23,6 +23,7 @@ import { HeaderIcon } from "./page.icon";
 import { Text1 } from "packages/ui/atoms";
 import { palette } from "packages/ui/theme/palettes.css";
 import { Link } from "src/components/structure/link";
+import Image from "next/image";
 
 export default setupPage({
 	Component() {
@@ -162,15 +163,19 @@ export default setupPage({
 									In Stuff mail you can have conversations with other email
 									users.
 								</P>
-								<img
+								<Image
+									width={704}
+									height={553}
 									src="/conversationv2.webp"
+									loading="lazy"
 									alt="Conversations example from Stuff mail"
+									style={{ aspectRatio: 1 }}
 									className={cn(
 										shadow({ size: "large" }),
 										border({ rounded: "xl", color: "focus", side: "all" }),
 										css({ marginLeft: "auto", marginTop: "medium" }),
 										imageRotate,
-										"mt-4 md:w-[80%] w-full ml-auto mr-2 border-border border",
+										// "mt-4 md:w-[80%] w-full ml-auto mr-2 border-border border",
 									)}
 								/>
 							</Card>
@@ -218,9 +223,12 @@ export default setupPage({
 										</Text1>
 									</div>
 									<div className={stack({ justify: "end" })}>
-										<img
+										<Image
 											src="/extensions.webp"
 											alt="Available extensions"
+											loading="lazy"
+											width="456"
+											height="420"
 											className={cn(css({ marginLeft: "auto" }))}
 											style={{ width: "70%" }}
 										/>

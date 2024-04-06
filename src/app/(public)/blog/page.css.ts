@@ -3,7 +3,7 @@ import { spacing } from "packages/ui/variables";
 
 export const blogContainer = style({
 	display: "grid",
-	gridTemplateColumns: "repeat(auto-fill, minmax(380px, 1fr))",
+	gridTemplateColumns: "1fr 1fr",
 	gap: spacing.medium,
 	justifyContent: "center",
 	"@media": {

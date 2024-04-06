@@ -60,15 +60,15 @@ export const Sidebar = async ({ className }: { className?: string }) => {
 							</h1>
 						</div>
 						<SidebarLink href="/mail/inbox">
-							<Inbox size={24} color="var(--text2)" />
+							<Inbox size={24} />
 							<span>Inbox</span>
 						</SidebarLink>
 						<SidebarLink href="/mail/archive">
-							<ArchiveIcon size={24} color="var(--text2)" />
+							<ArchiveIcon size={24} />
 							<span>Archive</span>
 						</SidebarLink>
 						<SidebarLink href="/mail/sent">
-							<SendIcon size={24} color="var(--text2)" />
+							<SendIcon size={24} />
 							<span>Sent</span>
 						</SidebarLink>
 					</div>

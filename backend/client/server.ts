@@ -1,10 +1,6 @@
 import "server-only";
 
-import {
-	createTRPCProxyClient,
-	loggerLink,
-	TRPCClientError,
-} from "@trpc/client";
+import { createTRPCProxyClient, TRPCClientError } from "@trpc/client";
 import { callProcedure } from "@trpc/server";
 import { observable } from "@trpc/server/observable";
 import type { TRPCErrorResponse } from "@trpc/server/rpc";
@@ -14,7 +10,6 @@ import { cache } from "react";
 import { appRouter, type AppRouter } from "..";
 import { createContextInner } from "../trpc";
 import { transformer } from "./shared";
-import { getRedis } from "../sdks/redis";
 import { getUserFromHeader } from "backend/utils/getUserFromHeaders";
 
 /**
@@ -27,16 +22,11 @@ const createContext = cache(async () => {
 
 	const username = cookies().get("stuff-active")?.value ?? "";
 
-	const redis = await getRedis();
-
-	const session = await getUserFromHeader(
-		{
-			"stuff-active": username ?? "",
-			[`stuff-token-${username}`]:
-				cookies().get(`stuff-token-${username}`)?.value ?? "",
-		},
-		redis,
-	);
+	const session = await getUserFromHeader({
+		"stuff-active": username ?? "",
+		[`stuff-token-${username}`]:
+			cookies().get(`stuff-token-${username}`)?.value ?? "",
+	});
 
 	const contextInner = await createContextInner({
 		session,
@@ -50,11 +40,6 @@ const createContext = cache(async () => {
 export const api = createTRPCProxyClient<AppRouter>({
 	transformer,
 	links: [
-		loggerLink({
-			enabled: (op) =>
-				process.env.NODE_ENV === "development" ||
-				(op.direction === "down" && op.result instanceof Error),
-		}),
 		/**
 		 * Custom RSC link that lets us invoke procedures without using http requests. Since Server
 		 * Components always run on the server, we can just call the procedure as a function.

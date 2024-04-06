@@ -1,5 +1,5 @@
 import { button } from "@stuff/ui/button/button.css";
-import { Form } from "./_components/form";
+import { FormInput } from "./_components/form";
 import Link from "next/link";
 import { cn } from "@stuff/components/utils";
 import { stack } from "src/components/recipies";
@@ -16,7 +16,7 @@ const Page = () => {
 			>
 				<h1
 					className={cn(
-						css({ fontWeight: "semibold", fontSize: "medium", color: "text1" }),
+						css({ fontWeight: "semibold", fontSize: "large", color: "text2" }),
 					)}
 				>
 					Login to Stuff!
@@ -25,7 +25,7 @@ const Page = () => {
 					Sign up
 				</Link>
 			</div>
-			<Form />
+			<FormInput />
 		</>
 	);
 };

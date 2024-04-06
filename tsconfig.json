@@ -96,9 +96,11 @@
 		".eslintrc.cjs",
 		"next-env.d.ts",
 		"src/**/*.ts",
+		"./.storybook/preview.tsx",
 		"src/**/*.tsx",
 		"./packages/**/*.ts",
 		"./packages/**/*.tsx",
+		"next.config.js",
 		".next/types/**/*.ts",
 		".contentlayer/generated",
 		"./unimport.d.ts"

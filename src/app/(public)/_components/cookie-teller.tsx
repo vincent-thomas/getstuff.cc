@@ -37,7 +37,7 @@ export const CookieTeller = () => {
 				.
 			</div>
 			<form action={test}>
-				<Button variant="ghost" size="sm" rounded="medium">
+				<Button variant="ghost" size="sm" rounded="medium" type="submit">
 					Accept
 				</Button>
 			</form>

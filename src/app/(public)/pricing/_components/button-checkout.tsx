@@ -3,7 +3,6 @@
 import { api } from "@stuff/api-client/react";
 import { Loading } from "@stuff/icons/loading";
 import { Button } from "@stuff/ui/button";
-import { colors } from "packages/ui/theme";
 
 export const CheckoutButton = () => {
 	const checkoutMutation = api.customer.checkout.useMutation();
@@ -17,7 +16,7 @@ export const CheckoutButton = () => {
 		>
 			Get Stuff+{" "}
 			{checkoutMutation.isLoading && (
-				<Loading size={18} color={colors.accentForeground} />
+				<Loading size={18} color={palette.background1} />
 			)}
 		</Button>
 	);

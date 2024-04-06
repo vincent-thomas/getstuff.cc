@@ -37,7 +37,7 @@ export const userRouter = router({
 				has_plus: customer?.status === "active",
 			};
 		} catch (e) {
-			console.log(e);
+			logger.error("Unknown error, rpc.encryptedData");
 
 			return null;
 		}
