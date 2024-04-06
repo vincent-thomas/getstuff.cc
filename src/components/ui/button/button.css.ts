@@ -81,12 +81,12 @@ export const button = recipe({
 				},
 			},
 			icon: [
-				border({ rounded: "circle" }),
 				{
 					":hover": {
 						background: palette.bgHover,
 						color: palette.text2,
 					},
+					borderRadius: "50%",
 					color: palette.text2,
 				},
 			],

@@ -51,8 +51,8 @@ export const MenuItem: FC<MenuItemProps> = ({
 				menuItemStyle,
 				css({
 					bg: { hover: variant === "danger" ? undefined : "bgHover" },
-					pY: "large",
-					pX: "medium",
+					p: "large",
+					fontSize: "medium",
 					fontWeight: "semibold",
 				}),
 				stack({ align: "center", gap: "md" }),
@@ -63,21 +63,22 @@ export const MenuItem: FC<MenuItemProps> = ({
 	);
 };
 
-export const MenuDescription: FC<{ children: ReactNode }> = ({ children }) => {
-	return (
-		<P
-			className={cn(
-				css({
-					fontSize: "small",
-					paddingLeft: "small",
-					paddingTop: "xsmall",
-				}),
-			)}
-		>
-			{children}
-		</P>
-	);
-};
+export const MenuDescription: FC<{ children: ReactNode; className?: string }> =
+	({ children, className }) => {
+		return (
+			<P
+				className={cn(
+					css({
+						fontSize: "small",
+						paddingTop: "xsmall",
+					}),
+					className,
+				)}
+			>
+				{children}
+			</P>
+		);
+	};
 
 export interface MenuContentProps extends AriaMenuContentProps {}
 
@@ -94,7 +95,7 @@ export const MenuContent: FC<MenuContentProps> = ({
 					bg: "bgComponent",
 					p: "small",
 				}),
-				stack({ direction: "col", gap: "sm" }),
+				stack({ direction: "col", gap: "xs" }),
 				border({ color: "interactive", rounded: "radius", side: "all" }),
 				className,
 			)}
@@ -105,14 +106,15 @@ export const MenuContent: FC<MenuContentProps> = ({
 
 export interface MenuSeperatorProps extends AriaMenuSeperatorOptions {}
 
-export const MenuSeperator: FC<MenuSeperatorProps> = () => {
+export const MenuSeparator: FC<MenuSeperatorProps> = () => {
 	return (
 		<AriaMenuSeparator
 			style={{
+				borderBottom: "none",
+				borderTop: `1px solid ${palette.borderComponent}`,
+				borderLeft: `1px solid ${palette.borderComponent}`,
+				borderRight: `1px solid ${palette.borderComponent}`,
 				marginInline: `calc(${spacing.small}*-1)`,
-				height: "1px !important",
-				backgroundColor: palette.borderSubtle,
-				border: "none",
 			}}
 		/>
 	);

@@ -1,38 +1,27 @@
-// import {
-// 	DropdownMenu,
-// 	DropdownMenuContent,
-// 	DropdownMenuGroup,
-// 	DropdownMenuItem,
-// 	DropdownMenuLabel,
-// 	DropdownMenuSeparator,
-// 	DropdownMenuShortcut,
-// 	DropdownMenuTrigger,
-// } from "packages/components/lib/dropdown";
 import { UserAvatar } from "./user-avatar";
 import { api } from "@stuff/api-client/server";
 import { redirect } from "next/navigation";
-// import { Outlogger } from "./outlogger";
-// import { H3 } from "@stuff/typography";
-import { Logo } from "src/components/logo";
 import { cn } from "@stuff/components/utils";
-import { stack } from "src/components/recipies";
-import { Text1, Text2 } from "packages/ui/atoms";
-import { hoverUnderline } from "./account-viewer.css";
 import {
 	Menu,
 	MenuButton,
 	MenuContent,
 	MenuDescription,
 	MenuItem,
-	MenuSeperator,
+	MenuSeparator,
 } from "packages/ui/components/menu";
 import {
+	CircleUserIcon,
 	CogIcon,
 	CreditCardIcon,
 	LogOutIcon,
 	PackageOpenIcon,
 } from "lucide-react";
-import { Button } from "@stuff/ui/button";
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipTrigger,
+} from "packages/ui/components/tooltip/tooltip";
 
 export const AccountViewer = async () => {
 	const session = await api.user.session.query();
@@ -43,35 +32,37 @@ export const AccountViewer = async () => {
 
 	return (
 		<Menu>
-			<MenuButton>
-				<div
-					className={cn(
-						css({
-							p: "medium",
-							bg: { default: "transparent", hover: "bgHover" },
-						}),
-						"hover:outline outline-2 outline-border",
-						hoverUnderline,
-					)}
-				>
-					<div className={cn(stack({ gap: "md", align: "center" }))}>
+			<MenuButton
+				render={
+					<button
+						style={{
+							borderRadius: "50%",
+							aspectRatio: 1,
+							height: "52px",
+						}}
+						className={cn(
+							css({
+								p: "xsmall",
+								bg: { default: "transparent", hover: "bgHover" },
+							}),
+						)}
+					/>
+				}
+			>
+				<Tooltip>
+					<TooltipTrigger>
 						<UserAvatar />
-						<div className={cn(stack({ direction: "col", align: "start" }))}>
-							<h1
-								className={cn(
-									css({ fontWeight: "semibold" }),
-									stack({ gap: "xs", align: "center" }),
-								)}
-							>
-								<Logo size={24} />
-								<Text1 className={cn(css({ fontSize: "large" }))}>Mail</Text1>
-							</h1>
-							<Text2>{session.username}</Text2>
-						</div>
-					</div>
-				</div>
+					</TooltipTrigger>
+					<TooltipContent className={css({ color: "text2" })}>
+						User profile settings
+					</TooltipContent>
+				</Tooltip>
 			</MenuButton>
-			<MenuContent style={{ width: 240 }}>
+			<MenuContent>
+				<MenuDescription className={css({ paddingBottom: "small" })}>
+					Account: {session.username}@getstuff.cc
+				</MenuDescription>
+				<MenuSeparator />
 				<MenuItem>
 					<CreditCardIcon /> Billing
 				</MenuItem>
@@ -79,11 +70,11 @@ export const AccountViewer = async () => {
 					<CogIcon /> Settings
 				</MenuItem>
 				<MenuItem>
-					<PackageOpenIcon /> Manage Storage
+					<CircleUserIcon />
+					Manage account
 				</MenuItem>
-				<MenuSeperator />
-				<MenuDescription>Account</MenuDescription>
-				<MenuItem>Manage account</MenuItem>
+				<MenuSeparator />
+
 				<MenuItem variant="danger">
 					<LogOutIcon /> Log out
 				</MenuItem>

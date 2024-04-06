@@ -27,13 +27,22 @@ export const NiceCard = ({
 					stack({ direction: "col", gap: "md", align: "start" }),
 					css({
 						cursor: "pointer",
+						height: "full",
+						width: "full",
 						background: { hover: "bgHover", default: "bgSubtle" },
 					}),
 				)}
 			>
 				<H2 className={css({ fontSize: "large" })}>{title}</H2>
 				<Text1 className="max-w-[45ch]">{desc}</Text1>
-				<div className={button({ variant: "link", size: "sm" })}>Read more</div>
+				<div
+					className={cn(
+						css({ marginTop: "auto" }),
+						button({ variant: "link", size: "sm" }),
+					)}
+				>
+					Read more
+				</div>
 			</Card>
 		</Link>
 	);

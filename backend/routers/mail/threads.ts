@@ -9,11 +9,14 @@ import { threadViewInterface } from "backend/interfaces/threadView";
 import { threadInterface } from "backend/interfaces/thread";
 import { messageViewInterface } from "backend/interfaces/messageView";
 import { moveThread } from "backend/utils/moveThread";
+import Fuse from "fuse.js";
 
 export const threadsRouter = router({
 	getThreads: protectedProc
-		.input(z.object({ folderId: z.string() }))
-		.query(async ({ ctx, input: { folderId } }) => {
+		.input(
+			z.object({ folderId: z.string(), searchQuery: z.string().optional() }),
+		)
+		.query(async ({ ctx, input: { folderId, searchQuery } }) => {
 			const threadViewsCommand = new QueryCommand({
 				TableName: getDataTable(env.STAGE),
 				KeyConditionExpression: "sk = :sk and begins_with(pk, :pk)",
@@ -27,7 +30,7 @@ export const threadsRouter = router({
 			const { Items } = await ctx.dyn.send(threadViewsCommand);
 
 			const threadViews = z.array(threadViewInterface).parse(Items);
-			const threads = [];
+			let threads = [];
 			for (const threadView of threadViews) {
 				const threadCommand = new QueryCommand({
 					TableName: getDataTable(env.STAGE),
@@ -55,6 +58,14 @@ export const threadsRouter = router({
 			}
 
 			threads.sort((a, b) => b.lastActive - a.lastActive);
+
+			if (searchQuery) {
+				const fuse = new Fuse(threads, {
+					keys: ["title"],
+				});
+
+				threads = fuse.search(searchQuery).map((v) => v.item);
+			}
 
 			return threads;
 		}),

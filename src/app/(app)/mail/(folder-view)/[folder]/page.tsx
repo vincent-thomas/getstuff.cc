@@ -8,7 +8,10 @@ import { cn } from "@stuff/components/utils";
 import { border, stack } from "src/components/recipies";
 
 export default setupPage({
-	query: z.object({ threadId: z.string().optional() }),
+	query: z.object({
+		threadId: z.string().optional(),
+		q: z.string().optional(),
+	}),
 	params: z.object({ folder: z.string() }),
 	async Component({ params, query }) {
 		const folderResult = await api.mail.folders.getFolder.query({
@@ -43,7 +46,11 @@ export default setupPage({
 					border({ rounded: "lg" }),
 				)}
 			>
-				<MainMailView folder={folder} threadId={query.threadId} />
+				<MainMailView
+					folder={folder}
+					threadId={query.threadId}
+					searchQuery={query.q}
+				/>
 				<ThreadView folderId={folder.folderId} />
 			</main>
 		);
