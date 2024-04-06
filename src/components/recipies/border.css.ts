@@ -20,7 +20,7 @@ const colorsKeys = {
 	focus: "borderFocus",
 };
 
-const colors = Object.keys(colorsKeys) as string[];
+const colors = Object.keys(colorsKeys);
 const sides = ["t", "r", "b", "l", "all", "none"];
 const allShit = doBorder(colors, sides);
 

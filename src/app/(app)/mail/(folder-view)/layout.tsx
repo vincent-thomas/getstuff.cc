@@ -56,6 +56,7 @@ const Layout = async (props: LayoutProps) => {
 						paddingTop: "none",
 
 						height: "full",
+						overflow: "hidden",
 					}),
 					stack({
 						direction: { mobile: "reverse-col", tablet: "row" },

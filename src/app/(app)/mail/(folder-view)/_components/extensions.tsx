@@ -26,6 +26,7 @@ import { hoverUnderline } from "./account-viewer.css";
 import { Text2 } from "packages/ui/atoms";
 import { stack } from "packages/ui/patterns/stack";
 import { border } from "src/components/recipies";
+import Image from "next/image";
 
 const classNames = cn(
 	css({ p: "medium", bg: { hover: "bgHover" }, width: "full" }),
@@ -185,9 +186,10 @@ export const EnabledMailRelayButton = () => {
 													direction: "col",
 												})}
 											>
-												<img
+												<Image
 													width={50}
 													height={50}
+													alt="Website favicon"
 													src={`https://www.gentlentapis.com/tools/v1/getFavicon?url=https://${alias.label}&format=image`}
 												/>
 												<Heading weight="bold" className="text-2xl">
