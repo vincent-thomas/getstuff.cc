@@ -1,8 +1,16 @@
+import { spinKeyFrame } from "packages/ui/keyframes";
+
 export const Spinner = ({ size }: { size: number }) => {
 	return (
 		<svg
 			width={size}
 			height={size}
+			style={{
+				animationName: spinKeyFrame,
+				animationDuration: "700ms",
+				animationIterationCount: "infinite",
+				animationTimingFunction: "ease",
+			}}
 			viewBox="0 0 24 24"
 			fill="none"
 			className="animate-spin"

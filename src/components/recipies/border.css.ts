@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { recipe } from "@vanilla-extract/recipes";
 import { palette } from "packages/ui/theme/palettes.css";
 import { rounding } from "packages/ui/variables";
@@ -33,7 +34,9 @@ const type = {
 };
 
 const better = allShit.map(([colorBetter, side]) => {
-	const color = palette[colorsKeys[colorBetter as string]];
+	// @ts-expect-error because
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+	const color = palette[colorsKeys[colorBetter!]];
 	if (side === "none") {
 		return {
 			border: "none",
@@ -43,20 +46,27 @@ const better = allShit.map(([colorBetter, side]) => {
 		colorBetter,
 		side,
 		{
-			[`border${type[side as string]}Color`]: color,
-			[`border${type[side as string]}Style`]: "solid",
-			[`border${type[side as string]}Width`]: "1px",
+			// @ts-expect-error because
+			[`border${type[side!]}Color`]: color,
+			// @ts-expect-error because
+			[`border${type[side!]}Style`]: "solid",
+			// @ts-expect-error because
+			[`border${type[side!]}Width`]: "1px",
 		},
 	];
 });
 
 const borderStyles = better
+	// @ts-expect-error because
 	.filter((v) => v?.border !== "none")
 	.map((v) => ({
 		variants: {
+			// @ts-expect-error because
 			side: v[1],
+			// @ts-expect-error because
 			color: v[0],
 		},
+		// @ts-expect-error because
 		style: v[2],
 	}));
 

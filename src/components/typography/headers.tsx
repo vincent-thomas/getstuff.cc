@@ -54,7 +54,13 @@ export const H3 = ({
 	className,
 }: { children?: ReactNode; className?: string }) => {
 	return (
-		<h2 className={cn(css({ fontWeight: "bold" }), "text-xl", className)}>
+		<h2
+			className={cn(
+				css({ fontWeight: "bold", color: "text2" }),
+				"text-xl",
+				className,
+			)}
+		>
 			{children}
 		</h2>
 	);

@@ -49,16 +49,13 @@ export const createContextInner = async (opts: CreateInnerContextOptions) => {
  * @link https://trpc.io/docs/v11/context#inner-and-outer-context
  */
 export async function createContext(opts: { req: NextRequest }) {
-	const redis = await getRedis();
 	const active = opts.req.cookies.get("stuff-active")?.value ?? "";
 	const token = opts.req.cookies.get(`stuff-token-${active}`)?.value ?? "";
-	const session = await getUserFromHeader(
-		{
-			"stuff-active": active,
-			[`stuff-token-${active}`]: token,
-		},
-		redis,
-	);
+
+	const session = await getUserFromHeader({
+		"stuff-active": active,
+		[`stuff-token-${active}`]: token,
+	});
 	const contextInner = await createContextInner({ session });
 	return {
 		...contextInner,

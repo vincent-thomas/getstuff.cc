@@ -42,6 +42,7 @@ export const CreateFolderButton = () => {
 				</button>
 			</DialogTrigger>
 			<DialogContent
+				size="md"
 				onClosePress={() => {
 					setOpen(false);
 				}}

@@ -1,11 +1,6 @@
-import { z } from "zod";
-import { getJwtId, verifyJwt } from "./jwt";
-import type { Redis } from "@upstash/redis";
+import { verifyJwt } from "./jwt";
 
-export async function getUserFromHeader(
-	cookies: Record<string, string>,
-	redis: Redis,
-) {
+export async function getUserFromHeader(cookies: Record<string, string>) {
 	if (cookies["stuff-active"]) {
 		try {
 			const active = cookies["stuff-active"];
@@ -17,10 +12,8 @@ export async function getUserFromHeader(
 			if (jwt === undefined) {
 				return null;
 			}
-			const jwtId = getJwtId(jwt);
-			const jwtToken = z.string().parse(await redis.get(`session:${jwtId}`));
 
-			const user = verifyJwt(jwt, jwtToken);
+			const user = await verifyJwt(jwt);
 
 			return user;
 		} catch (e) {

@@ -6,10 +6,10 @@ const config = {
 	},
 	plugins: ["@typescript-eslint"],
 	extends: [
-		"next/core-web-vitals",
-		"plugin:@typescript-eslint/recommended-type-checked",
-		"plugin:@typescript-eslint/stylistic-type-checked",
-	],
+        "next/core-web-vitals",
+        "plugin:@typescript-eslint/recommended-type-checked",
+        "plugin:@typescript-eslint/stylistic-type-checked"
+    ],
 	rules: {
 		"no-unused-vars": ["off"],
 		// These opinionated rules are enabled in stylistic-type-checked above.

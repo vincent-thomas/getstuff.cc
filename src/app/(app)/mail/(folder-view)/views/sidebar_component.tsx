@@ -3,6 +3,8 @@
 import { cn } from "@stuff/components/utils";
 import type { ReactNode } from "react";
 import { Link } from "src/components/structure/link";
+import { sidebarLinkActive } from "./sidebar_component.css";
+import { border } from "src/components/recipies";
 
 export const SidebarLink = ({
 	children,
@@ -11,9 +13,12 @@ export const SidebarLink = ({
 }: { children: ReactNode; href: string; className?: string }) => {
 	return (
 		<Link
-			activeClass="outline outline-border outline-1 bg-hover"
+			activeClass={sidebarLinkActive}
 			className={cn(
-				"text-text flex items-center md:gap-2 rounded-md px-3 py-2 hover:bg-hover md:text-lg font-semibold flex-col md:flex-row",
+				stack({ align: "center", gap: "sm", justify: "start" }),
+				border({ rounded: "radius" }),
+				css({ bg: { hover: "bgHover" }, p: "medium", color: "text2" }),
+				// "hover:bg-hover md:text-lg font-semibold flex-col md:flex-row",
 				className,
 			)}
 			href={href}

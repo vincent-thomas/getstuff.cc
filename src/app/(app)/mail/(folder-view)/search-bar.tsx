@@ -25,7 +25,9 @@ export const Searchbar = () => {
 			>
 				<div className={css({ p: "xsmall" })}>
 					<Tooltip placement="bottom-start">
-						<TooltipTrigger render={<Button variant="icon" size="sm" />}>
+						<TooltipTrigger
+							render={<Button variant="icon" size="sm" type="submit" />}
+						>
 							<SearchIcon color={palette.text1} size={24} />
 						</TooltipTrigger>
 						<TooltipContent className={css({ color: "text2" })}>
@@ -39,7 +41,6 @@ export const Searchbar = () => {
 					name="q"
 					className={css({
 						color: "text2",
-
 						width: "full",
 						fontSize: "medium",
 						pY: "large",

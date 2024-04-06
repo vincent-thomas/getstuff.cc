@@ -41,7 +41,13 @@ const components = {
 		/>
 	),
 	p: ({ ...props }) => (
-		<P className="leading-7 [&:not(:first-child)]:mt-4" {...props} />
+		<P
+			className={cn(
+				css({ color: "text2" }),
+				"leading-7 [&:not(:first-child)]:mt-4",
+			)}
+			{...props}
+		/>
 	),
 };
 

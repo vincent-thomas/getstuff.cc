@@ -1,183 +1,183 @@
 "use client";
 
+import { cn } from "@stuff/components/utils";
 import { Button } from "@stuff/ui/button";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { Form, type FormInputProps } from "packages/ui/components";
+import { useState } from "react";
+import { border, stack } from "src/components/recipies";
 import { z } from "zod";
-import { useEffect, useReducer, useState } from "react";
+import { Spinner } from "../../icons/spinner";
 import { api } from "@stuff/api-client/react";
-import {
-	generateEphemeral,
-	deriveSession,
-} from "secure-remote-password/client";
 import {
 	createPasswordDerivedSecret,
 	createSRPPrivateKey,
 	generateMasterSecret,
 } from "../../_utils";
-import { MailInput, PasswordInput } from "../../_components/inputs";
-import { useRouter } from "next/navigation";
+import {
+	deriveSession,
+	generateEphemeral,
+} from "secure-remote-password/client";
 import { setPasswordDerivedSecret } from "@stuff/lib/useUserPrivateKey";
-import { cn } from "@stuff/components/utils";
-import { stack } from "src/components/recipies";
-import { Loading } from "@stuff/icons/loading";
-import { palette } from "packages/ui/theme";
+import { useRouter } from "next/navigation";
 
-const validator = z.object({
-	username: z.string(),
-	password: z.string().min(8),
-});
+function capitalizeFirstLetter(string: string) {
+	return string.charAt(0).toUpperCase() + string.slice(1);
+}
 
-type State = "INPUT_CREDENTIALS" | "INPUT_OTP";
-
-const reducer = (previousState: State): State => {
-	if (previousState === "INPUT_CREDENTIALS") {
-		return "INPUT_OTP";
-	}
-	return "INPUT_CREDENTIALS";
+const FormField = ({
+	name,
+	...props
+}: { name: string; type: FormInputProps["type"] }) => {
+	return (
+		<div
+			style={{ textAlign: "start" }}
+			className={cn(
+				stack({ direction: "col", gap: "sm" }),
+				css({ color: "text2" }),
+			)}
+			{...props}
+		>
+			<Form.Label name={name}>{capitalizeFirstLetter(name)}</Form.Label>
+			<Form.Input
+				name={name}
+				className={cn(
+					css({
+						bg: "bgComponent",
+						p: "medium",
+						color: "text2",
+						fontSize: "medium",
+					}),
+					border({ rounded: "radius", color: "interactive", side: "all" }),
+				)}
+				{...props}
+			/>
+			<Form.Error name={name} />
+		</div>
+	);
 };
 
-export const Form = () => {
-	const [state] = useReducer(reducer, "INPUT_CREDENTIALS");
+const createSession = async ({
+	salt,
+	password,
+	username,
+	serverEphemeralPublic,
+}: {
+	password: string;
+	salt: string;
+	serverEphemeralPublic: string;
+	username: string;
+}) => {
+	const verifierPrivateKey = await createSRPPrivateKey(password, salt);
+	const clientEpheremal = generateEphemeral();
+
+	return {
+		clientSession: deriveSession(
+			clientEpheremal.secret,
+			serverEphemeralPublic,
+			salt,
+			username,
+			verifierPrivateKey,
+		),
+		clientEpheremal,
+	};
+};
+
+export const FormInput = () => {
+	const form = Form.useStore({
+		defaultValues: {
+			username: "",
+			password: "",
+		},
+	});
 	const initAccountSessionMutation =
 		api.accounts.initAccountSession.useMutation();
 	const requestSessionMutation = api.accounts.requestSession.useMutation();
+
 	const router = useRouter();
-	const [loading, setLoading] = useState(false);
 
-	useEffect(() => {
-		console.log("STATE", state);
-	}, [state]);
+	const [isLoading, setIsLoading] = useState(false);
 
-	const { register, handleSubmit, setError } = useForm<
-		z.infer<typeof validator>
-	>({ resolver: zodResolver(validator) });
+	form.useValidate(({ values, touched }) => {
+		if (touched.username) {
+			if (!z.string().email().safeParse(values.username).success) {
+				form.setError(form.names.username, `Field is not a valid email`);
+				return;
+			}
+			if (!values.username.endsWith("@getstuff.cc")) {
+				form.setError(form.names.username, `Required to end with @getstuff.cc`);
+				return;
+			}
+			if (!z.string().min(15).safeParse(values.username).success) {
+				form.setError(
+					form.names.username,
+					`Username should be atleast 3 characters`,
+				);
+				return;
+			}
+		}
+		if (touched.password) {
+			if (!z.string().min(8).safeParse(values.password).success) {
+				form.setError(
+					form.names.password,
+					`Password should be atleast 8 characters`,
+				);
+				return;
+			}
+		}
+	});
 
-	if (state === "INPUT_CREDENTIALS") {
-		return (
-			<form
-				onSubmit={handleSubmit(async ({ username, password }) => {
-					console.log("testing");
+	form.useSubmit(async ({ values: { password, username: username_EMAIL } }) => {
+		setIsLoading(true);
+		const username = username_EMAIL.replace("@getstuff.cc", "");
 
-					setLoading(true);
-					const { salt, serverEphemeralPublic } =
-						await initAccountSessionMutation.mutateAsync({ username });
+		const { salt, serverEphemeralPublic } =
+			await initAccountSessionMutation.mutateAsync({ username });
 
-					const hashedPassword = await generateMasterSecret(password, salt);
+		const hashedPassword = await generateMasterSecret(password, salt);
 
-					const verifierPrivateKey = await createSRPPrivateKey(
-						hashedPassword,
-						salt,
-					);
-					const clientEpheremal = generateEphemeral();
-					const clientSession = deriveSession(
-						clientEpheremal.secret,
-						serverEphemeralPublic,
-						salt,
-						username,
-						verifierPrivateKey,
-					);
+		const { clientEpheremal, clientSession } = await createSession({
+			salt,
+			username,
+			password: hashedPassword,
+			serverEphemeralPublic,
+		});
 
-					try {
-						await requestSessionMutation.mutateAsync({
-							username,
-							clientEpheremalPublic: clientEpheremal.public,
-							clientSessionProof: clientSession.proof,
-						});
+		try {
+			await requestSessionMutation.mutateAsync({
+				username,
+				clientEpheremalPublic: clientEpheremal.public,
+				clientSessionProof: clientSession.proof,
+			});
 
-						const passwordDerivedSecret = await createPasswordDerivedSecret(
-							hashedPassword,
-							salt,
-						);
-						setPasswordDerivedSecret(passwordDerivedSecret.toString("hex"));
+			const passwordDerivedSecret = await createPasswordDerivedSecret(
+				hashedPassword,
+				salt,
+			);
+			setPasswordDerivedSecret(passwordDerivedSecret.toString("hex"));
 
-						router.push("/mail/inbox");
-					} catch (error) {
-						console.log(error);
-						setError("username", { message: "Invalid credentials" });
-						setLoading(false);
-					}
-					setLoading(false);
-				})}
-				className={cn(stack({ direction: "col", gap: "md" }))}
-			>
-				<MailInput {...register("username")} />
-				<PasswordInput {...register("password")} />
-				<Button size="lg" variant="primary" type="submit">
-					Submit
-					{loading && <Loading size={16} color={palette.text2} />}
-				</Button>
-			</form>
-		);
-	}
+			router.push("/mail/inbox");
+		} catch (error) {
+			form.setError(form.names.username, "Invalid credentials");
+			setIsLoading(false);
+		}
+		setIsLoading(false);
+	});
 
-	return <></>;
-
-	// const { register, handleSubmit } = useForm<z.infer<typeof validator>>({
-	//   resolver: zodResolver(validator)
-	// });
-	// const [invalidCredentials, setInvalidCredentials] = useState(false);
-	// const [isLoading, setLoading] = useState(false);
-
-	// const initAccountSessionMutation =
-	//   api.accounts.initAccountSession.useMutation();
-	// const requestSessionMutation = api.accounts.requestSession.useMutation();
-
-	// const onSubmit = handleSubmit(async data => {
-	//   setLoading(true);
-	//   setInvalidCredentials(false);
-	//   const { salt, serverEphemeralPublic } =
-	//     await initAccountSessionMutation.mutateAsync({
-	//       username: data.username
-	//     });
-
-	//   const hashedPassword = await generateMasterSecret(data.password, salt);
-
-	//   const verifierPrivateKey = await createSRPPrivateKey(hashedPassword, salt);
-
-	//   const clientEpheremal = generateEphemeral();
-
-	//   const clientSession = deriveSession(
-	//     clientEpheremal.secret,
-	//     serverEphemeralPublic,
-	//     salt,
-	//     data.username,
-	//     verifierPrivateKey
-	//   );
-
-	//   try {
-	//     await requestSessionMutation.mutateAsync({
-	//       username: data.username,
-	//       clientEpheremalPublic: clientEpheremal.public,
-	//       clientSessionProof: clientSession.proof
-	//     });
-
-	//     const passwordDerivedSecret = await createPasswordDerivedSecret(
-	//       hashedPassword,
-	//       salt
-	//     );
-	//     setPasswordDerivedSecret(passwordDerivedSecret.toString("hex"));
-
-	//     router.push("/mail/inbox");
-	//   } catch (error) {
-	//     console.log(error);
-	//     setInvalidCredentials(true);
-	//     setLoading(false);
-	//   }
-	// });
-	// const router = useRouter();
-};
-
-export const EmailStage = ({
-	whenDone,
-}: { whenDone: false | ((email: string) => Promise<void>) }) => {
-	// const [state, reducer] = useReducer((prevState: string | false, incomingEmail: string) => {
-	//   if (!z.string().email().safeParse(prevState).success) {
-	//     return false
-	//   }
-
-	//   return incomingEmail
-	// }, "");
-
-	return <MailInput locked={whenDone === false} />;
+	return (
+		<Form.Root
+			store={form}
+			className={cn(
+				stack({ direction: "col", gap: "md" }),
+				css({ bg: "bgComponent", p: "large" }),
+				border({ rounded: "radius", color: "interactive", side: "all" }),
+			)}
+		>
+			<FormField name={form.names.username.toString()} type="text" />
+			<FormField name={form.names.password.toString()} type="password" />
+			<Button type="submit" variant="primary" size="md" disabled={isLoading}>
+				Submit
+				{isLoading && <Spinner size={20} />}
+			</Button>
+		</Form.Root>
+	);
 };

@@ -148,10 +148,12 @@ export const accountsRouter = router({
 
 				try {
 					if (user === undefined) {
+						logger.debug("USER DOESNT EXIST, user_id=" + username);
 						throw {};
 					}
 					const customer = await getCustomer(dyn, env.STAGE, user.customerId);
 					if (customer === undefined) {
+						logger.error("CUSTOMER DOESNT EXIST: " + username);
 						throw {};
 					}
 					const serverSecretEpheremal = z
@@ -167,13 +169,11 @@ export const accountsRouter = router({
 						clientSessionProof,
 					);
 
-					const { jwt, jti } = createJwt(
+					const jwt = await createJwt(
 						username,
 						user.customerId,
 						customer.status,
-						serverSession.key,
 					);
-					await redis.set(`session:${jti}`, serverSession.key);
 					cookies().set("stuff-token-" + username, jwt, {
 						sameSite: "strict",
 						secure: true,
@@ -189,7 +189,6 @@ export const accountsRouter = router({
 						serverProof: serverSession.proof,
 					};
 				} catch (e) {
-					console.error(e);
 					throw { code: "NOT_FOUND", message: "Invalid credentials" };
 				}
 			},

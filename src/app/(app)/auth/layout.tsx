@@ -7,6 +7,7 @@ import Link from "next/link";
 import { cn } from "@stuff/components/utils";
 import { border, stack } from "src/components/recipies";
 import { P } from "@stuff/typography";
+import { button } from "@stuff/ui/button";
 
 const Layout = ({ children }: { children: ReactNode }) => {
 	const [loading, setLoading] = useState(true);
@@ -38,7 +39,11 @@ const Layout = ({ children }: { children: ReactNode }) => {
 					<P>
 						By clicking submit you agree to the <br />
 						terms and conditions and our{" "}
-						<Link href="/privacy-policy" className="underline" target="_blank">
+						<Link
+							href="/privacy-policy"
+							className={button({ variant: "link" })}
+							target="_blank"
+						>
 							privacy policy
 						</Link>
 						.

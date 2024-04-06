@@ -242,11 +242,10 @@ export const mailHandler = async ({
 			console.debug("THREAD VIEW", threadView);
 
 			if (threadView?.sk.split("|")?.[2] === "sent") {
-				const response = await moveThread(dyn, env.STAGE, username, threadId, {
+				await moveThread(dyn, env.STAGE, username, threadId, {
 					folderId: "sent",
 					newFolderId: "inbox",
 				});
-				console.log(response);
 			}
 
 			await createMessageView(dyn, env.STAGE, {

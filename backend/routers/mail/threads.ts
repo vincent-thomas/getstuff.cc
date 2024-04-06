@@ -84,8 +84,6 @@ export const threadsRouter = router({
 
 			const { Items } = await ctx.dyn.send(threadViewsCommand);
 
-			console.log({ Items });
-
 			const threadView = z.array(threadViewInterface).parse(Items)?.[0];
 
 			if (threadView === undefined) {
@@ -102,7 +100,6 @@ export const threadsRouter = router({
 			});
 
 			const { Items: messages } = await ctx.dyn.send(messageCommand);
-			console.log({ messages });
 
 			const threadCommand = new QueryCommand({
 				TableName: getDataTable(env.STAGE),
@@ -114,7 +111,6 @@ export const threadsRouter = router({
 			});
 
 			const { Items: threadItems } = await ctx.dyn.send(threadCommand);
-			console.log({ threadItems });
 
 			const thread = threadInterface.parse(threadItems?.[0]);
 
@@ -143,7 +139,6 @@ export const threadsRouter = router({
 				const messageViewsRAW = await ctx.dyn
 					.send(getMessageViewCommand)
 					.then((v) => v.Items);
-				console.log({ messageViewsRAW });
 
 				const messageView = messageViewInterface.parse(messageViewsRAW?.[0]);
 

@@ -25,33 +25,36 @@ const config = {
 			type: "javascript/auto",
 		});
 
-		config.plugins.push(
-			unimport.webpack({
-				dts: true,
-				imports: [
-					{
-						from: "@/env",
-						name: "env",
-					},
-					{
-						from: "@style-system/css",
-						name: "css",
-					},
-					{
-						from: "@style-system/utils",
-						name: "cn",
-					},
-					{
-						from: "@style-system/patterns",
-						name: "stack",
-					},
-					{
-						from: "@style-system/palette",
-						name: "palette"
-					}
-				],
-			}),
-		);
+
+		config?.plugins?.push(unimport.webpack({
+			dts: true,
+			imports: [
+				{
+					from: "@/env",
+					name: "env",
+				},
+				{
+					from: "@style-system/css",
+					name: "css",
+				},
+				{
+					from: "@style-system/utils",
+					name: "cn",
+				},
+				{
+					from: "@style-system/patterns",
+					name: "stack",
+				},
+				{
+					from: "@style-system/palette",
+					name: "palette",
+				},
+				{
+					from: "packages/logger",
+					name: "logger",
+				},
+			],
+		}));
 
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
 		config.resolve.fallback = {
@@ -62,8 +65,11 @@ const config = {
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 		return config;
 	},
+	swcMinify: true,
 	images: {
-		domains: ["api.dicebear.com"],
+		remotePatterns: [{
+			hostname: "api.dicebear.com"
+		}],
 	},
 };
 
