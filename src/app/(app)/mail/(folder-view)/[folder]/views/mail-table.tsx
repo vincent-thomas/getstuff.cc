@@ -7,11 +7,16 @@ import { api } from "@stuff/api-client/server";
 
 export interface FolderHeader {
 	folderId: string;
+	searchQuery?: string;
 }
 
-export const MailTable: FC<FolderHeader> = async ({ folderId }) => {
+export const MailTable: FC<FolderHeader> = async ({
+	folderId,
+	searchQuery,
+}) => {
 	const threads = await api.mail.threads.getThreads.query({
 		folderId: folderId,
+		searchQuery,
 	});
 
 	// await new Promise(res => {setTimeout(() => res("test"), 2000)})

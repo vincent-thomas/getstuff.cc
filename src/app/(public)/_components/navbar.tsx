@@ -14,7 +14,13 @@ export const Navbar = () => (
 			)}
 		>
 			<div className={stack({ direction: "row", gap: "md", align: "center" })}>
-				<div className={stack({ gap: "sm", align: "center" })}>
+				<Link
+					className={cn(
+						button({ variant: "link", size: "sm" }),
+						stack({ gap: "sm", align: "center" }),
+					)}
+					href="/"
+				>
 					<Logo size={24} color />
 					<h1
 						className={cn(
@@ -27,12 +33,12 @@ export const Navbar = () => (
 					>
 						<StuffBranding />
 					</h1>
-				</div>
+				</Link>
 
 				<Link
 					href="/pricing"
 					className={button({
-						variant: "ghost",
+						variant: "link",
 						size: "md",
 						rounded: "medium",
 					})}
@@ -43,7 +49,7 @@ export const Navbar = () => (
 				<Link
 					href="/blog"
 					className={button({
-						variant: "ghost",
+						variant: "link",
 						size: "md",
 						rounded: "medium",
 					})}
@@ -56,7 +62,7 @@ export const Navbar = () => (
 					href="/auth/identify"
 					className={cn(
 						css({ fontWeight: "semibold" }),
-						button({ variant: "outline", size: "md", rounded: "medium" }),
+						button({ variant: "link", size: "md", rounded: "medium" }),
 					)}
 				>
 					Login

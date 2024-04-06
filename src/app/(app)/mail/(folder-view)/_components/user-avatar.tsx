@@ -13,8 +13,8 @@ export const UserAvatar = () => {
 	return (
 		<img
 			src={user?.avatar_url}
-			height={38}
-			width={38}
+			height={40}
+			width={40}
 			className={border({ rounded: "circle" })}
 			alt="User selected avatar"
 		/>

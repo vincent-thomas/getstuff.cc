@@ -36,11 +36,6 @@ const size = defineProperties({
 const space = {
 	none: 0,
 	...spacing,
-	// small: spacing.small,
-	// medium: spacing.medium,
-	// large: spacing.large,
-	// xlarge: spacing.xlarge,
-	// "2xlarge": spacing["2xlarge"],
 	auto: "auto",
 };
 
@@ -117,6 +112,7 @@ export const fonts = defineProperties({
 			normal: "normal",
 			semibold: "600",
 			bold: "700",
+			bolder: "800",
 		},
 		fontSize: {
 			small: `${base / multi}px`,

@@ -8,7 +8,12 @@ import { stack } from "src/components/recipies";
 export const MainMailView = ({
 	folder,
 	threadId,
-}: { folder: { folderId: string; name: string }; threadId?: string }) => {
+	searchQuery,
+}: {
+	folder: { folderId: string; name: string };
+	threadId?: string;
+	searchQuery?: string;
+}) => {
 	return (
 		<div
 			className={cn(
@@ -19,7 +24,7 @@ export const MainMailView = ({
 		>
 			<FolderHeader folder={folder} />
 			<Suspense>
-				<MailTable folderId={folder.folderId} />
+				<MailTable folderId={folder.folderId} searchQuery={searchQuery} />
 			</Suspense>
 		</div>
 	);

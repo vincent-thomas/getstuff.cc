@@ -113,7 +113,12 @@ const MainPage = ({ threadId, folderId }: z.infer<typeof paramsInterface>) => {
 
 	return (
 		<>
-			<Flex gap="0.75rem" className="p-4" align="center" justify="between">
+			<div
+				className={cn(
+					stack({ align: "center", justify: "between", gap: "md" }),
+					css({ p: "medium" }),
+				)}
+			>
 				<h1 className="text-3xl text-text">{threadQuery.data?.thread.title}</h1>
 				<div>
 					<Tooltip>
@@ -127,8 +132,13 @@ const MainPage = ({ threadId, folderId }: z.infer<typeof paramsInterface>) => {
 						</TooltipContent>
 					</Tooltip>
 				</div>
-			</Flex>
-			<Flex col gap="1rem" className="px-4 pb-4">
+			</div>
+			<div
+				className={cn(
+					stack({ direction: "col", gap: "md" }),
+					css({ paddingBottom: "medium", pX: "medium" }),
+				)}
+			>
 				{messages.map(({ data: mail }, index) => {
 					if (mail === undefined) {
 						return <Loading size={24} color="text-primary" key={index} />;
@@ -143,16 +153,20 @@ const MainPage = ({ threadId, folderId }: z.infer<typeof paramsInterface>) => {
 									side: "all",
 								}),
 							)}
-							// col
-							// className="rounded-md border border-border"
 							key={mail.messageId}
 						>
-							<Flex col gap="1px" className="bg-background2 p-4">
-								<h2 className="text-xl">{mail.from.name}</h2>
+							<div
+								style={{ gap: "1px" }}
+								className={cn(
+									stack({ direction: "col" }),
+									css({ background: "bgSubtle", padding: "medium" }),
+								)}
+							>
+								<h2 className={css({ fontSize: "large" })}>{mail.from.name}</h2>
 								<p className="text-md text-muted-foreground">
 									{mail.from.address}
 								</p>
-							</Flex>
+							</div>
 							<div
 								className="min-h-[170px] p-4"
 								dangerouslySetInnerHTML={{
@@ -171,7 +185,7 @@ const MainPage = ({ threadId, folderId }: z.infer<typeof paramsInterface>) => {
 						</div>
 					);
 				})}
-			</Flex>
+			</div>
 		</>
 	);
 };

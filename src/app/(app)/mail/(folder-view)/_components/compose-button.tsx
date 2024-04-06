@@ -5,7 +5,6 @@ import {
 	Menu,
 	MenuButton,
 	MenuContent,
-	MenuDescription,
 	MenuItem,
 } from "packages/ui/components/menu";
 import { stack } from "packages/ui/patterns/stack";
@@ -105,7 +104,6 @@ export const ComposeButton = () => {
 				New
 			</MenuButton>
 			<MenuContent style={{ width: "240px" }}>
-				{/* <MenuDescription>Create</MenuDescription> */}
 				<MenuItem>
 					<MailIcon />
 					E-Mail

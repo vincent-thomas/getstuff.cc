@@ -5,6 +5,7 @@ export const menuItem = style({
 	selectors: {
 		"&[data-focus-visible='true']": {
 			outline: "2px solid " + palette.borderFocus,
+			outlineOffset: "2px",
 		},
 	},
 });

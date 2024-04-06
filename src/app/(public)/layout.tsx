@@ -6,13 +6,18 @@ import { Footer } from "./_components/footer";
 
 const Layout = (props: LayoutProps) => (
 	<div
-		className={cn(css({ overflowX: "hidden" }), stack({ direction: "col" }))}
+		className={cn(
+			css({ overflowX: "hidden", minHeight: "screen" }),
+			stack({ direction: "col" }),
+		)}
 	>
 		<CookieTeller />
 		<Navbar />
 		{props.children}
-		<div className={css({ marginBottom: "2xlarge", marginTop: "xlarge" })}>
-			<Footer />
+		<div className={css({ marginBottom: "2xlarge", marginTop: "auto" })}>
+			<div className={css({ marginTop: "2xlarge" })}>
+				<Footer />
+			</div>
 		</div>
 	</div>
 );

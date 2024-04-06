@@ -1,5 +1,4 @@
 import { ArchiveIcon, Inbox, SendIcon } from "lucide-react";
-import { AccountViewer } from "../_components/account-viewer";
 import { ComposeButton } from "../_components/compose-button";
 import { CreateFolderButton } from "../_components/create-folder-button";
 import { api } from "@stuff/api-client/server";
@@ -36,7 +35,6 @@ export const Sidebar = async ({ className }: { className?: string }) => {
 			</div>
 			<aside
 				data-desktop
-				style={{ width: "240px" }}
 				className={cn(
 					stack({ direction: "col" }),
 					css({ height: "full" }),
@@ -45,14 +43,6 @@ export const Sidebar = async ({ className }: { className?: string }) => {
 			>
 				<div className={stack({ direction: "col", gap: "lg" })}>
 					<div className={stack({ gap: "sm", direction: "col" })}>
-						<div
-							className={cn(
-								stack({ direction: "col" }),
-								css({ paddingBottom: "medium" }),
-							)}
-						>
-							<AccountViewer />
-						</div>
 						<ComposeButton />
 						<Extensions />
 					</div>

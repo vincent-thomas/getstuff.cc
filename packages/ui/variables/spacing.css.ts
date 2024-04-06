@@ -11,7 +11,7 @@ export const spacing = createThemeContract({
 
 export const spacingDefiningClass = style({
 	vars: assignVars(spacing, {
-		xsmall: "3px",
+		xsmall: "4px",
 		small: "6px",
 		medium: "10px",
 		large: "12px",
@@ -21,7 +21,7 @@ export const spacingDefiningClass = style({
 	"@media": {
 		"screen and (min-width: 768px)": {
 			vars: assignVars(spacing, {
-				xsmall: "4px",
+				xsmall: "6px",
 				small: "8px",
 				medium: "12px",
 				large: "14px",

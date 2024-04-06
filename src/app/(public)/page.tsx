@@ -34,8 +34,8 @@ export default setupPage({
 						top: 0,
 						left: 0,
 						right: 0,
-						height: "300px",
-						opacity: 0.2,
+						height: "420px",
+						opacity: 0.15,
 						background: `linear-gradient(to bottom, ${palette.solid1}, transparent)`,
 						zIndex: -1,
 					}}
@@ -46,7 +46,7 @@ export default setupPage({
 						left: 0,
 						bottom: 0,
 						right: 0,
-						height: "60px",
+						height: "80px",
 						opacity: 0.1,
 						background: `linear-gradient(to top, ${palette.solid1}, transparent)`,
 						zIndex: -1,
@@ -155,7 +155,9 @@ export default setupPage({
 									css({ p: "xlarge", bg: "bgApp", overflow: "visible" }),
 								)}
 							>
-								<H2 className={css({ fontSize: "large" })}>Conversations</H2>
+								<H2 className={css({ fontSize: "large" })}>
+									Seamless Conversations
+								</H2>
 								<P style={{ maxWidth: "35ch", textWrap: "wrap" }}>
 									In Stuff mail you can have conversations with other email
 									users.

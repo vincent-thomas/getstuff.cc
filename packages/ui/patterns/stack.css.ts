@@ -35,7 +35,7 @@ const structureRecipe = defineProperties({
 		},
 		gap: {
 			xs: {
-				gap: "4px",
+				gap: spacing.xsmall,
 			},
 			sm: {
 				gap: spacing.small,
