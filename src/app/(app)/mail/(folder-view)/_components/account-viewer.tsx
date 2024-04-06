@@ -15,7 +15,6 @@ import {
 	CogIcon,
 	CreditCardIcon,
 	LogOutIcon,
-	PackageOpenIcon,
 } from "lucide-react";
 import {
 	Tooltip,
