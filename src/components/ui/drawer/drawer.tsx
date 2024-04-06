@@ -4,9 +4,7 @@ import * as React from "react";
 import { Drawer as DrawerPrimitive } from "vaul";
 import { cn } from "../../../../packages/components/utils";
 import "./drawer.css";
-import { contentWrapper, drawerOverlay } from "./drawer.css";
-import { border, stack } from "src/components/recipies";
-import { palette } from "packages/ui/theme";
+import { drawerOverlay } from "./drawer.css";
 const Drawer = ({
 	shouldScaleBackground = true,
 	...props
@@ -49,8 +47,10 @@ const DrawerContent = React.forwardRef<
 
 		<DrawerPrimitive.Content>
 			<div
+				ref={ref}
 				style={{ inset: 0, backgroundColor: "white", position: "fixed" }}
-				className={css({ padding: "2xlarge" })}
+				className={cn(css({ padding: "2xlarge" }), className)}
+				{...props}
 			>
 				{children}
 			</div>
