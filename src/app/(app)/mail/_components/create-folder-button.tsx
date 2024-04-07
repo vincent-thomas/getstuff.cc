@@ -13,7 +13,7 @@ import {
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
-} from "packages/components/lib/dialog";
+} from "packages/ui/components/dialog/dialog";
 import { Button } from "@stuff/ui/button";
 import { Loading } from "@stuff/icons/loading";
 import { palette } from "packages/ui/theme";
