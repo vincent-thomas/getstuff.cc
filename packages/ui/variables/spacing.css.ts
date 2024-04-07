@@ -1,8 +1,4 @@
-import {
-	assignVars,
-	createThemeContract,
-	style,
-} from "@vanilla-extract/css";
+import { assignVars, createThemeContract, style } from "@vanilla-extract/css";
 
 export const spacing = createThemeContract({
 	xsmall: null,

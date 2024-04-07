@@ -41,7 +41,7 @@ export const button = recipe({
 				color: palette.background1,
 			},
 			outline: [
-				border({ color: "interactive", side: 'all' }),
+				border({ color: "interactive", side: "all" }),
 				style({
 					":hover": {
 						background: palette.bgHover,
@@ -96,11 +96,11 @@ export const button = recipe({
 		},
 		rounded: {
 			medium: {
-				borderRadius: rounding.medium
+				borderRadius: rounding.medium,
 			},
 			small: {
-				borderRadius: rounding.small
-			}
+				borderRadius: rounding.small,
+			},
 		},
 	},
 });

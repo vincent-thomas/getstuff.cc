@@ -51,68 +51,70 @@ const DialogContent = React.forwardRef<
 		{ className, children, onClosePress, size = "sm", mainTitle, ...props },
 		ref,
 	) => {
-	return (
-		<DialogPortal>
-			<DialogOverlay onClick={onClosePress} />
-			<DialogPrimitive.Content
-				ref={ref}
-				style={{
-					zIndex: 50,
-					transform: "translate(-50%, -50%)",
-					left: "50%",
-					top: "50%",
-					maxWidth: size === "sm" ? "26rem" : size === "md" ? "34rem" : "50rem",
-					width: "100%",
-				}}
-				className={cn(
-					css({
-						position: "fixed",
-						width: "full",
-						bg: "bgComponent",
-						p: "large",
-					}),
-					dialogContentStyles,
-					shadow({ size: "large" }),
-					stack({ direction: "col", gap:"sm" }),
-					border({ color: "interactive", rounded: "radius", side: "all" }),
-				)}
-				{...props}
-			>
-				<DialogPrimitive.Close
-					onClick={onClosePress}
+		return (
+			<DialogPortal>
+				<DialogOverlay onClick={onClosePress} />
+				<DialogPrimitive.Content
+					ref={ref}
 					style={{
-						top: 0,
-						right: 0,
-						marginTop: spacing.large,
-						marginRight: spacing.large,
+						zIndex: 50,
+						transform: "translate(-50%, -50%)",
+						left: "50%",
+						top: "50%",
+						maxWidth:
+							size === "sm" ? "26rem" : size === "md" ? "34rem" : "50rem",
+						width: "100%",
 					}}
 					className={cn(
 						css({
-							marginLeft: "auto",
-							position: "absolute",
+							position: "fixed",
+							width: "full",
+							bg: "bgComponent",
+							// p: "large",
 						}),
+						dialogContentStyles,
+						shadow({ size: "large" }),
+						stack({ direction: "col" }),
+						border({ color: "interactive", rounded: "radius", side: "all" }),
+						className,
 					)}
-					asChild
+					{...props}
 				>
-					<Button variant="icon" size="sm">
-						<PlusIcon
-							className={css({ color: "text1" })}
-							size={24}
-							style={{ rotate: "45deg" }}
-						/>
-					</Button>
-				</DialogPrimitive.Close>
-				{mainTitle && (
-					<H1 className={css({ fontSize: "xlarge" })}>
-						{mainTitle}
-					</H1>
-				)}
+					<DialogPrimitive.Close
+						onClick={onClosePress}
+						style={{
+							top: 0,
+							right: 0,
+							marginTop: spacing.large,
+							marginRight: spacing.large,
+						}}
+						className={cn(
+							css({
+								marginLeft: "auto",
+								position: "absolute",
+							}),
+						)}
+						asChild
+					>
+						<Button variant="icon" size="sm">
+							<PlusIcon
+								className={css({ color: "text1" })}
+								size={24}
+								style={{ rotate: "45deg" }}
+							/>
+						</Button>
+					</DialogPrimitive.Close>
+					{mainTitle && (
+						<H1 className={css({ fontSize: "xlarge" })}>{mainTitle}</H1>
+					)}
 
-				<div className={className}>{children}</div>
-			</DialogPrimitive.Content>
-		</DialogPortal>
-	)
-});
+					{children}
+				</DialogPrimitive.Content>
+			</DialogPortal>
+		);
+	},
+);
+
 DialogContent.displayName = DialogPrimitive.Content.displayName;
 
 const DialogHeader = ({
@@ -164,7 +166,11 @@ const DialogDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
 	<DialogPrimitive.Description
 		ref={ref}
-		className={cn("text-sm text-muted-foreground", className)}
+		className={cn(
+			"text-sm text-muted-foreground",
+			css({ color: "text1" }),
+			className,
+		)}
 		{...props}
 	/>
 ));

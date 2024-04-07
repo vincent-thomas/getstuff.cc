@@ -17,19 +17,30 @@ export const ManageAccount = () => {
 };
 
 export const Logout = () => {
-	const logoutMutation = api.accounts.logout.useMutation();
-	const router = useRouter();
+
+	const logoutAction = useLogoutAction();
+
 	return (
 		<MenuItem
 			variant="danger"
 			onClick={async () => {
-				await logoutMutation.mutateAsync();
-				clearDerivedSecretStore();
-				router.push("/auth/identify");
-				toast.info("Logged out successfully");
+				await logoutAction()
 			}}
 		>
 			<LogOutIcon /> Log out
 		</MenuItem>
 	);
 };
+
+
+export const useLogoutAction = () => {
+	const logoutMutation = api.accounts.logout.useMutation();
+	const router = useRouter();
+
+	return async () => {
+		await logoutMutation.mutateAsync();
+		clearDerivedSecretStore();
+		router.push("/auth/identify");
+		toast.info("Logged out successfully");
+	}
+}

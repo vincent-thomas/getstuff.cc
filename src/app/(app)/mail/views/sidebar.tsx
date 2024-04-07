@@ -74,7 +74,7 @@ export const Sidebar = ({ className }: { className?: string }) => {
 				</div>
 				<div className={stack({ gap: "sm", direction: "col" })}>
 					{/* <Suspense fallback={<ListFoldersSkeleton />}> */}
-						<ListFolders />
+					<ListFolders />
 					{/* </Suspense> */}
 				</div>
 			</aside>

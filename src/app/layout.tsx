@@ -63,7 +63,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 					css({ bg: "bgApp", minHeight: "screen" }),
 					spacingDefiningClass,
 					themeClass,
-					roundingClass
+					roundingClass,
 				)}
 			>
 				<ToastProvider>
