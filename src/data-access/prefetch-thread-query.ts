@@ -1,5 +1,5 @@
 import type { QueryClient } from "@tanstack/react-query";
-import type { MailMessage } from "src/app/(app)/mail/(folder-view)/[folder]/[thread]/message";
+import type { MailMessage } from "src/app/(app)/mail/[folder]/[thread]/message";
 import { z } from "zod";
 
 export const prefetchThreadQuery = async ({

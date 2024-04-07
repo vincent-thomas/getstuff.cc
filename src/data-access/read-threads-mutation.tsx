@@ -1,6 +1,6 @@
 import { api } from "@stuff/api-client/react";
 import { useAtom } from "jotai";
-import { messagesIdSelected } from "../app/(app)/mail/(folder-view)/[folder]/store/messages-id-selected";
+import { messagesIdSelected } from "../app/(app)/mail/[folder]/store/messages-id-selected";
 
 export const useThreadsReadMutation = () => {
 	const utils = api.useUtils();

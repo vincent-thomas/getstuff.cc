@@ -9,6 +9,7 @@ import {
 } from "packages/ui/components/menu";
 import { stack } from "packages/ui/patterns/stack";
 import { menuButton } from "./compose-button.css";
+import { ComposeAction } from "../ui-actions/compose";
 
 // import {
 // 	Drawer,
@@ -103,10 +104,11 @@ export const ComposeButton = () => {
 				New
 			</MenuButton>
 			<MenuContent style={{ width: "240px" }}>
-				<MenuItem>
+				<ComposeAction trigger={<MenuItem>
 					<MailIcon />
 					E-Mail
-				</MenuItem>
+				</MenuItem>}/>
+				
 				<MenuItem>
 					<FileIcon /> Upload file
 				</MenuItem>

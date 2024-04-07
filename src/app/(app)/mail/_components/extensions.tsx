@@ -10,7 +10,7 @@ import {
 	Dialog,
 	DialogContent,
 	DialogTrigger,
-} from "packages/components/lib/dialog";
+} from "packages/ui/components/dialog/dialog";
 
 import { hoverUnderline } from "./account-viewer.css";
 import { Text2 } from "packages/ui/atoms";
