@@ -78,10 +78,10 @@ export const border = recipe({
 			focus: {},
 		},
 		rounded: {
-			radius: rounding.md,
-			lg: rounding.lg,
-			xl: rounding.xl,
-			xxl: rounding.xxl,
+			radius: {borderRadius:rounding.medium},
+			lg: {borderRadius:rounding.large},
+			xl: {borderRadius: rounding.xlarge},
+			xxl: {borderRadius:rounding["2xlarge"]},
 			circle: {
 				borderRadius: "50%",
 			},

@@ -21,7 +21,6 @@ export const button = recipe({
 			whiteSpace: "nowrap",
 			transition: "colors",
 			outline: "none",
-			borderRadius: "8px",
 			":disabled": {
 				pointerEvents: "none",
 				opacity: 0.5,
@@ -42,7 +41,7 @@ export const button = recipe({
 				color: palette.background1,
 			},
 			outline: [
-				border({ color: "interactive" }),
+				border({ color: "interactive", side: 'all' }),
 				style({
 					":hover": {
 						background: palette.bgHover,
@@ -52,7 +51,6 @@ export const button = recipe({
 				}),
 			],
 			accent: [
-				border({ color: "interactive" }),
 				{
 					background: palette.solid1,
 					color: palette.background1,
@@ -97,7 +95,12 @@ export const button = recipe({
 			lg: { padding: spacing.large },
 		},
 		rounded: {
-			medium: rounding.md,
+			medium: {
+				borderRadius: rounding.medium
+			},
+			small: {
+				borderRadius: rounding.small
+			}
 		},
 	},
 });

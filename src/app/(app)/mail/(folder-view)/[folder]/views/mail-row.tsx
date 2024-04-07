@@ -1,13 +1,10 @@
 "use client";
 
-import { api } from "@stuff/api-client/react";
 import { cn } from "packages/components/utils";
 import { messagesIdSelected } from "../store/messages-id-selected";
 import { useAtom } from "jotai";
 import { Checked, UnChecked } from "packages/icons/lib/unchecked";
 import { formatDistanceToNow } from "date-fns";
-import { prefetchThreadQuery } from "@stuff/data-access/prefetch-thread-query";
-import { useQueryClient } from "@tanstack/react-query";
 import { border, stack } from "src/components/recipies";
 import { Button } from "@stuff/ui/button";
 import { Text1, Text2 } from "packages/ui/atoms";
@@ -26,9 +23,6 @@ export const MailRow = ({
 	};
 }) => {
 	const [selected, setSelected] = useAtom(messagesIdSelected);
-	const utils = api.useUtils();
-
-	const qC = useQueryClient();
 
 	return (
 		<div
@@ -75,29 +69,6 @@ export const MailRow = ({
 					stack({ grow: 1, align: "center", gap: "lg" }),
 					css({ pY: "small", paddingRight: "large", textAlign: "left" }),
 				)}
-				onMouseOver={async () => {
-					await utils.mail.threads.getThread.prefetch(
-						{
-							folderId,
-							threadId: thread.threadId,
-						},
-						{
-							staleTime: 10_000,
-						},
-					);
-					const cachedThread = await utils.mail.threads.getThread.ensureData({
-						folderId,
-						threadId: thread.threadId,
-					});
-
-					if (cachedThread === null) {
-						return;
-					}
-					await prefetchThreadQuery({
-						messages: cachedThread.messages,
-						queryClient: qC,
-					});
-				}}
 			>
 				<p
 					className={cn(

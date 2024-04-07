@@ -1,11 +1,12 @@
-import { styleVariants } from "@vanilla-extract/css";
+import { createTheme } from "@vanilla-extract/css";
 
-export const rounding = styleVariants({
-	icon: { borderRadius: "50%" },
-	md: { borderRadius: "8px" },
-	lg: { borderRadius: "12px" },
-	xl: { borderRadius: "24px" },
-	xxl: { borderRadius: "32px" },
-	sm: { borderRadius: "4px" },
-	none: { borderRadius: "0px" },
-});
+
+export const [roundingClass, rounding] = createTheme({
+	none: "0px",
+	small: "4px",
+	medium: "8px",
+	large: "12px" ,
+	xlarge: "24px",
+	"2xlarge": "32px",
+	icon: "50%",
+})

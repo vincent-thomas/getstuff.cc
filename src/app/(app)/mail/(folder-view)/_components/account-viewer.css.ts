@@ -3,8 +3,8 @@ import { palette } from "packages/ui/theme";
 import { rounding } from "packages/ui/variables";
 
 export const hoverUnderline = style([
-	rounding.md,
 	{
+		borderRadius: rounding.medium,
 		backgroundColor: "transparent",
 		color: palette.text1,
 		outlineOffset: "-1px",
