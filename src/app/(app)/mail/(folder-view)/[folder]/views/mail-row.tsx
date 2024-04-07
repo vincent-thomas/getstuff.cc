@@ -7,12 +7,11 @@ import { useAtom } from "jotai";
 import { Checked, UnChecked } from "packages/icons/lib/unchecked";
 import { formatDistanceToNow } from "date-fns";
 import { prefetchThreadQuery } from "@stuff/data-access/prefetch-thread-query";
-import { useDataKey } from "@stuff/lib/useUserPrivateKey";
 import { useQueryClient } from "@tanstack/react-query";
-import { threadOpen } from "../store/thread-open";
 import { border, stack } from "src/components/recipies";
 import { Button } from "@stuff/ui/button";
 import { Text1, Text2 } from "packages/ui/atoms";
+import { Link } from "src/components/structure/link";
 
 export const MailRow = ({
 	thread,
@@ -28,8 +27,7 @@ export const MailRow = ({
 }) => {
 	const [selected, setSelected] = useAtom(messagesIdSelected);
 	const utils = api.useUtils();
-	const [_, setThreadId] = useAtom(threadOpen);
-	const dataKey = useDataKey();
+
 	const qC = useQueryClient();
 
 	return (
@@ -46,14 +44,15 @@ export const MailRow = ({
 								: "bgApp",
 						hover: "bgHover",
 					},
-					pY: "small",
 				}),
 				border({ side: "b", color: "interactive" }),
 			)}
 		>
-			<div className={css({ p: "medium" })}>
+			<div className={css({ p: "small" })}>
 				<Button
 					variant="icon"
+					size="md"
+					className={cn(css({ bg: { hover: "bgHover" } }))}
 					onClick={() => {
 						if (selected.includes(thread.threadId)) {
 							setSelected(selected.filter((id) => id !== thread.threadId));
@@ -69,20 +68,13 @@ export const MailRow = ({
 					)}
 				</Button>
 			</div>
-			<button
+			<Link
+				href={`/mail/${folderId}/${thread.threadId}`}
 				key={thread.threadId}
 				className={cn(
 					stack({ grow: 1, align: "center", gap: "lg" }),
 					css({ pY: "small", paddingRight: "large", textAlign: "left" }),
 				)}
-				onClick={() => {
-					setThreadId(thread.threadId);
-					window.history.replaceState(
-						{},
-						"",
-						`/mail/${folderId}?threadId=${thread.threadId}`,
-					);
-				}}
 				onMouseOver={async () => {
 					await utils.mail.threads.getThread.prefetch(
 						{
@@ -98,12 +90,11 @@ export const MailRow = ({
 						threadId: thread.threadId,
 					});
 
-					if (cachedThread === null || dataKey === undefined) {
+					if (cachedThread === null) {
 						return;
 					}
 					await prefetchThreadQuery({
 						messages: cachedThread.messages,
-						dataKey,
 						queryClient: qC,
 					});
 				}}
@@ -128,7 +119,7 @@ export const MailRow = ({
 				<Text1 style={{ width: "4rem", textAlign: "end" }}>
 					<i>{thread.read ? "read" : "not read"}</i>
 				</Text1>
-			</button>
+			</Link>
 		</div>
 	);
 };

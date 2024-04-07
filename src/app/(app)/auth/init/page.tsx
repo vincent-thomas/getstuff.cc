@@ -1,13 +1,25 @@
 import { button } from "@stuff/ui/button/button.css";
-import { Form } from "./_components/form";
-import Link from "next/link";
+import { FormInput } from "./_components/form";
 import { cn } from "packages/components/utils";
+import { Link } from "src/components/structure/link";
 
 const Page = () => {
 	return (
 		<>
-			<div className="flex w-full justify-between">
-				<h1 className="text-2xl font-semibold">Welcome to Stuff!</h1>
+			<div
+				className={cn(
+					stack({
+						justify: "between",
+					}),
+				)}
+			>
+				<h1
+					className={cn(
+						css({ fontWeight: "semibold", fontSize: "large", color: "text2" }),
+					)}
+				>
+					Welcome to Stuff!
+				</h1>
 				<Link
 					href="/auth/identify"
 					className={cn(
@@ -18,7 +30,7 @@ const Page = () => {
 					Login
 				</Link>
 			</div>
-			<Form />
+			<FormInput />
 		</>
 	);
 };

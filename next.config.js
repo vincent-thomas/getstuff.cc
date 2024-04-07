@@ -16,6 +16,7 @@ const config = {
 	poweredByHeader: false,
 	experimental: {
 		useLightningcss: true,
+		ppr: true
 	},
 	webpack: (config) => {
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access

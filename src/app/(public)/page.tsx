@@ -24,6 +24,7 @@ import { Text1 } from "packages/ui/atoms";
 import { palette } from "packages/ui/theme/palettes.css";
 import { Link } from "src/components/structure/link";
 import Image from "next/image";
+import { Disclosure } from "packages/ui/components/disclosure";
 
 export default setupPage({
 	Component() {
@@ -237,6 +238,10 @@ export default setupPage({
 							</Link>
 						</div>
 					</Section>
+					<Disclosure.Root>
+						<Disclosure.Trigger>testing</Disclosure.Trigger>
+						<Disclosure.Content>testing</Disclosure.Content>
+					</Disclosure.Root>
 				</Section>
 			</div>
 		);

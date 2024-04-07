@@ -102,6 +102,7 @@
 		"./packages/**/*.tsx",
 		"next.config.js",
 		".next/types/**/*.ts",
+		"./src/types/reset.d.ts",
 		".contentlayer/generated",
 		"./unimport.d.ts"
 	],

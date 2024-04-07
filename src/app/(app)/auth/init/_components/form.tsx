@@ -1,10 +1,7 @@
 "use client";
 
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import type { z } from "zod";
 import { useState } from "react";
-import { Checkbox } from "packages/components/lib/checkbox";
 import { api } from "@stuff/api-client/react";
 import {
 	generateSalt,
@@ -17,7 +14,6 @@ import {
 	createSRPPrivateKey,
 	generateMasterSecret,
 } from "../../_utils";
-import { MailInput, NameInput, PasswordInput } from "../../_components/inputs";
 import { randomBytes } from "crypto";
 import { userDataInterface } from "@stuff/client/interfaces";
 import {
@@ -28,83 +24,64 @@ import {
 import { Button } from "@stuff/ui/button";
 import { setPasswordDerivedSecret } from "@stuff/lib/useUserPrivateKey";
 import { useRouter } from "next/navigation";
-import { Loading } from "@stuff/icons/loading";
+import { Form } from "packages/ui/components";
+import { border } from "src/components/recipies";
+import { Spinner } from "../../icons/spinner";
 
-const validator = z.object({
-	username: z.string(),
-	name: z.string(),
-	password: z.string().min(8),
-	samePassword: z.string().min(8),
-	checkbox: z.any(),
-});
-
-export const Form = () => {
-	const {
-		register,
-		handleSubmit,
-		setError,
-		formState: { errors },
-	} = useForm<z.infer<typeof validator>>({
-		resolver: zodResolver(validator),
-	});
+export const FormInput = () => {
+	const [loading, setLoading] = useState(false);
 
 	const _createAccountMutation = api.accounts.createAccount.useMutation();
 	const requestSessionMutation = api.accounts.requestSession.useMutation();
 	const initAccountSessionMutation =
 		api.accounts.initAccountSession.useMutation();
 
-	const [isClicked, setClicked] = useState(false);
 	const router = useRouter();
-	const [loading, setLoading] = useState(false);
 
-	const onSubmit = handleSubmit(async (data) => {
-		if (!isClicked) {
-			setError("checkbox", {
-				message: "You must accept the terms and conditions",
-			});
+	const form = Form.useStore({
+		defaultValues: {
+			username: "",
+			name: "",
+			password: "",
+			password2: "",
+		},
+	});
+
+	form.useValidate((state) => {
+		const values = state.values;
+
+		if (values.password !== values.password2) {
+			form.setError(form.names.password2, "Password is not the same");
 			return;
 		}
+	});
 
-		if (data.password !== data.samePassword) {
-			setError("samePassword", {
-				message: "Passwords do not match",
-			});
-			return;
-		}
+	form.useSubmit(async ({ values: data }) => {
 		setLoading(true);
-
 		const salt = generateSalt();
-
 		const masterSecret = await generateMasterSecret(data.password, salt);
-
 		// 1/2 Keys generated from masterSecret
 		const verifierPrivateKey = await createSRPPrivateKey(masterSecret, salt);
 		const verifier = deriveVerifier(verifierPrivateKey);
-
 		const passwordDerivedSecret = await createPasswordDerivedSecret(
 			masterSecret,
 			salt,
 		);
-
 		const defaultUserData = userDataInterface.parse({
 			theme: "dark",
 			avatar_url: `https://api.dicebear.com/7.x/fun-emoji/svg?seed=${Buffer.from(
 				randomBytes(4),
 			).toString("hex")}`,
 		} satisfies z.infer<typeof userDataInterface>);
-
 		const { publicKey, privateKey } = genKeyPair();
-
 		const encryptedData = encryptSymmetric(
 			deserializeData(Buffer.from(JSON.stringify(defaultUserData))),
 			passwordDerivedSecret,
 		);
-
 		const encryptedPrivateKey = encryptSymmetric(
 			deserializeData(Buffer.from(privateKey)),
 			passwordDerivedSecret,
 		);
-
 		await _createAccountMutation.mutateAsync({
 			username: data.username,
 			name: data.name,
@@ -114,12 +91,9 @@ export const Form = () => {
 			encryptedUserData: encryptedData,
 			publicKey,
 		});
-
 		const { serverEphemeralPublic } =
 			await initAccountSessionMutation.mutateAsync({ username: data.username });
-
 		const clientEpheremal = generateEphemeral();
-
 		const clientSession = deriveSession(
 			clientEpheremal.secret,
 			serverEphemeralPublic,
@@ -127,95 +101,40 @@ export const Form = () => {
 			data.username,
 			verifierPrivateKey,
 		);
-
 		await requestSessionMutation.mutateAsync({
 			username: data.username,
 			clientEpheremalPublic: clientEpheremal.public,
 			clientSessionProof: clientSession.proof,
 		});
-
 		setPasswordDerivedSecret(passwordDerivedSecret.toString("hex"));
-
 		router.push("/mail/inbox");
-
-		// const secret = generateSecret({
-		//   length: 20,
-		//   issuer: "Stuff",
-		//   name: data.username
-		// })
-
-		// setUserToSignUp({
-		//   user: {
-		//     username: data.username,
-		//     name: data.name,
-		//     verifier,
-		//     salt,
-		//     encryptedDataKey: encryptedPrivateKey,
-		//     encryptedUserData: encryptedData,
-		//     publicKey
-		//   },
-		//   totp: {
-		//     secret: secret.base32,
-		//     uri: secret.otpauth_url
-		//   }
-		// })
 	});
 
-	// const {register: register2, handleSubmit: handleSubmit2} = useForm<{qr: string}>()
-
-	// if (userToSignUp !== undefined) {
-	//   return (
-	//     <>
-	//       <QRCodeComponent value={userToSignUp.totp.uri} />
-	//       <form onSubmit={handleSubmit2(async ({qr}) => {
-	//             const result = totp.verify({
-	//               token: qr,
-	//               secret: userToSignUp.totp.secret,
-	//               encoding: "base32"
-	//             });
-	//       })}>
-	//         <Flex col gap="0.5rem" align="start">
-	//           <label htmlFor="test">Validate</label>
-	//           <input {...register2("qr")} className="p-2 bg-background2 rounded-md border-border border w-full outline-1 outline-offset-2 focus:outline outline-border" placeholder="2FA code" name="test" />
-	//         </Flex>
-	//         <Button variant="primary">Create user</Button>
-	//       </form>
-	//     </>
-	//   )
-	// }
-
 	return (
-		<form className="flex flex-col gap-4" onSubmit={onSubmit}>
-			{errors.username?.message && (
-				<div className="rounded-md bg-red-500 p-4">
-					{errors.username.message}
-				</div>
+		<Form.Root
+			store={form}
+			className={cn(
+				stack({ direction: "col", gap: "md" }),
+				css({ p: "medium", bg: "bgComponent" }),
+				border({ rounded: "radius", color: "interactive", side: "all" }),
 			)}
-			<MailInput {...register("username")} autoComplete="username" />
-			<NameInput {...register("name")} autoComplete="given-name" />
-			<PasswordInput {...register("password")} autoComplete="new-password" />
-			<PasswordInput
-				repeat
-				{...register("samePassword")}
-				autoComplete="new-password"
+		>
+			<Form.Field
+				name={form.names.username}
+				type="text"
+				required
+				minLength={3}
 			/>
-			<div className="flex items-center gap-2">
-				<Checkbox onClick={() => setClicked(!isClicked)} />
-				<label
-					htmlFor="terms"
-					className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-				>
-					Accept terms and conditions
-				</label>
-			</div>
-			<div className="self-start">
-				{typeof errors.checkbox?.message === "string" && (
-					<span className="text-red-400">{errors.checkbox.message}</span>
-				)}
-			</div>
-			<Button variant="primary" disabled={!!errors.root}>
-				Submit {loading && <Loading size={18} color={palette.background1} />}
-			</Button>
-		</form>
+			<Form.Field name={form.names.name} type="text" required minLength={2} />
+			<Form.Field
+				name={form.names.password}
+				type="password"
+				required
+				minLength={8}
+			/>
+			<Form.Field name={form.names.password2} type="password" required />
+
+			<Button type="submit">Submit {loading && <Spinner size={20} />}</Button>
+		</Form.Root>
 	);
 };

@@ -7,10 +7,12 @@ import { Flex } from "@stuff/structure";
 import { cn } from "@stuff/components/utils";
 import { Extensions } from "../_components/extensions";
 import { SidebarLink } from "./sidebar_component";
-import { stack } from "src/components/recipies";
+import { border, stack } from "src/components/recipies";
+import { Suspense } from "react";
+import { unstable_noStore } from "next/cache";
+import { pulse } from "packages/ui/keyframes";
 
-export const Sidebar = async ({ className }: { className?: string }) => {
-	const folders = await api.mail.folders.listFolders.query();
+export const Sidebar = ({ className }: { className?: string }) => {
 	return (
 		<>
 			<div className="grid grid-cols-3" data-mobile>
@@ -35,69 +37,124 @@ export const Sidebar = async ({ className }: { className?: string }) => {
 			</div>
 			<aside
 				data-desktop
+				style={{
+					minWidth: "240px",
+				}}
 				className={cn(
-					stack({ direction: "col" }),
+					stack({ direction: "col", gap: "lg" }),
 					css({ height: "full" }),
 					className,
 				)}
 			>
-				<div className={stack({ direction: "col", gap: "lg" })}>
-					<div className={stack({ gap: "sm", direction: "col" })}>
-						<ComposeButton />
-						<Extensions />
+				<div className={stack({ gap: "sm", direction: "col" })}>
+					<ComposeButton />
+					<Extensions />
+				</div>
+				<div className={stack({ gap: "sm", direction: "col" })}>
+					<div
+						className={cn(
+							stack({ align: "center", justify: "start" }),
+							css({ p: "medium" }),
+						)}
+					>
+						<h1 className={cn(css({ color: "text2", fontWeight: "semibold" }))}>
+							INBOXES
+						</h1>
 					</div>
-					<div className={stack({ gap: "sm", direction: "col" })}>
-						<div
-							className={cn(
-								stack({ align: "center", justify: "start" }),
-								css({ p: "medium" }),
-							)}
-						>
-							<h1
-								className={cn(css({ color: "text2", fontWeight: "semibold" }))}
-							>
-								INBOXES
-							</h1>
-						</div>
-						<SidebarLink href="/mail/inbox">
-							<Inbox size={24} />
-							<span>Inbox</span>
-						</SidebarLink>
-						<SidebarLink href="/mail/archive">
-							<ArchiveIcon size={24} />
-							<span>Archive</span>
-						</SidebarLink>
-						<SidebarLink href="/mail/sent">
-							<SendIcon size={24} />
-							<span>Sent</span>
-						</SidebarLink>
-					</div>
-					<div className={stack({ gap: "sm", direction: "col" })}>
-						<div
-							className={cn(
-								stack({ align: "center", justify: "between" }),
-								css({ width: "full", pX: "small" }),
-							)}
-						>
-							<h1 className={css({ color: "text2", fontWeight: "semibold" })}>
-								FOLDERS
-							</h1>
-							<CreateFolderButton />
-						</div>
-						<div className="flex flex-col gap-2 overflow-y-auto">
-							{folders.length === 0 ? (
-								<Flex justify="start" className="pl-6 pt-1">
-									No Folders!
-								</Flex>
-							) : (
-								folders.map((folder) => (
-									<Folder folder={folder} key={folder.sk} />
-								))
-							)}
-						</div>
-					</div>
+					<SidebarLink href="/mail/inbox">
+						<Inbox size={24} />
+						<span>Inbox</span>
+					</SidebarLink>
+					<SidebarLink href="/mail/archive">
+						<ArchiveIcon size={24} />
+						<span>Archive</span>
+					</SidebarLink>
+					<SidebarLink href="/mail/sent">
+						<SendIcon size={24} />
+						<span>Sent</span>
+					</SidebarLink>
+				</div>
+				<div className={stack({ gap: "sm", direction: "col" })}>
+					<Suspense fallback={<ListFoldersSkeleton />}>
+						<ListFolders />
+					</Suspense>
 				</div>
 			</aside>
 		</>
+	);
+};
+
+const ListFoldersSkeleton = async () => {
+	return (
+		<div
+			className={cn(
+				stack({ direction: "col", gap: "sm" }),
+				css({ overflowY: "auto" }),
+			)}
+		>
+			<div
+				className={cn(
+					stack({ align: "center", justify: "between" }),
+					css({ width: "full", pX: "small" }),
+				)}
+			>
+				<div
+					style={{
+						height: "28px",
+						width: "82px",
+						animation: `${pulse} 2s cubic-bezier(0.4, 0, 0.6, 1) infinite`,
+					}}
+					className={cn(
+						css({ bg: "bgComponent" }),
+						border({ rounded: "radius" }),
+					)}
+				></div>
+				<CreateFolderButton />
+			</div>
+			{[0, 1, 2].map((data) => (
+				<div
+					key={data}
+					className={cn(
+						css({ width: "full", bg: "bgComponent" }),
+						border({ rounded: "radius" }),
+					)}
+					style={{
+						height: "44px",
+						animation: `${pulse} 2s cubic-bezier(0.4, 0, 0.6, 1) infinite`,
+					}}
+				/>
+			))}
+		</div>
+	);
+};
+
+const ListFolders = async () => {
+	unstable_noStore();
+	const folders = await api.mail.folders.listFolders.query();
+
+	return (
+		<div
+			className={cn(
+				stack({ direction: "col", gap: "sm" }),
+				css({ overflowY: "auto" }),
+			)}
+		>
+			<div
+				className={cn(
+					stack({ align: "center", justify: "between" }),
+					css({ width: "full", pX: "small" }),
+				)}
+			>
+				<h2 className={css({ color: "text2", fontWeight: "semibold" })}>
+					FOLDERS
+				</h2>
+				<CreateFolderButton />
+			</div>
+			{folders.length === 0 ? (
+				<>No Folders!</>
+			) : (
+				folders.map((folder) => <Folder folder={folder} key={folder.sk} />)
+			)}
+		</div>
 	);
 };

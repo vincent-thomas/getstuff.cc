@@ -4,6 +4,7 @@ import { MailRow } from "./mail-row";
 import { Flex } from "@stuff/structure";
 import { H2, P } from "@stuff/typography";
 import { api } from "@stuff/api-client/server";
+import { unstable_noStore } from "next/cache";
 
 export interface FolderHeader {
 	folderId: string;
@@ -14,12 +15,11 @@ export const MailTable: FC<FolderHeader> = async ({
 	folderId,
 	searchQuery,
 }) => {
+	unstable_noStore();
 	const threads = await api.mail.threads.getThreads.query({
 		folderId: folderId,
 		searchQuery,
 	});
-
-	// await new Promise(res => {setTimeout(() => res("test"), 2000)})
 
 	if (threads.length === 0) {
 		return (
@@ -37,10 +37,7 @@ export const MailTable: FC<FolderHeader> = async ({
 	}
 
 	return (
-		<div
-			style={{ flexGrow: "grow" }}
-			className={cn(css({ height: "full", overflowY: "auto" }))}
-		>
+		<div className={cn(css({ overflowY: "auto" }))}>
 			{threads.map((thread) => (
 				<MailRow key={thread.threadId} thread={thread} folderId={folderId} />
 			))}

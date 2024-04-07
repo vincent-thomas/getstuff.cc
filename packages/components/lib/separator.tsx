@@ -2,18 +2,12 @@
 
 import * as SeparatorPrimitive from "@radix-ui/react-separator";
 import { cn } from "../utils";
-import {
-	type ComponentPropsWithoutRef,
-	type ElementRef,
-	forwardRef,
-} from "react";
+import type { FC, HTMLAttributes } from "react";
 
-const Separator = forwardRef<
-	ElementRef<typeof SeparatorPrimitive.Root>,
-	ComponentPropsWithoutRef<typeof SeparatorPrimitive.Root>
->(({ className, orientation = "horizontal", ...props }, ref) => (
+const Separator: FC<
+	HTMLAttributes<HTMLDivElement> & { orientation: "horizontal" | "vertical" }
+> = ({ className, orientation = "horizontal", ...props }) => (
 	<div
-		ref={ref}
 		className={cn(
 			orientation === "horizontal"
 				? "w-full border-t border-border"
@@ -22,7 +16,7 @@ const Separator = forwardRef<
 		)}
 		{...props}
 	/>
-));
+);
 Separator.displayName = SeparatorPrimitive.Root.displayName;
 
 export { Separator };
