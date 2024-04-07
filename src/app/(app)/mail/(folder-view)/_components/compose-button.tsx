@@ -28,7 +28,6 @@ import { menuButton } from "./compose-button.css";
 // import { useForm } from "react-hook-form";
 // import { zodResolver } from "@hookform/resolvers/zod";
 // import { api } from "@stuff/api-client/react";
-// import { ScrollArea } from "packages/components/lib/scroll-area";
 // import { Flex } from "@stuff/structure";
 // import { button } from "@stuff/ui/button/button.css";
 // import { Button } from "@stuff/ui/button";
@@ -196,16 +195,11 @@ export const ComposeButton = () => {
 		// 					/>
 		// 				</div>
 		// 			</div>
-		// 			<ScrollArea
-		// 				style={{ height: "100%" }}
-		// 				className={css({ pX: "large" })}
-		// 			>
 		// 				<Tiptap
 		// 					placeholder="Compose your email..."
 		// 					initialContent="<p></p>"
 		// 					onUpdate={({ text, html }) => setDefaultContent({ text, html })}
 		// 				/>
-		// 			</ScrollArea>
 		// 			<DrawerFooter>
 		// 				<DrawerClose
 		// 					className={cn(button({ variant: "outline", size: "lg" }))}

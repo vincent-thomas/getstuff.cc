@@ -1,72 +1,25 @@
-"use client";
-
-import { useAtom } from "jotai";
-import { cn } from "packages/components/utils";
-import { messagesIdSelected } from "../store/messages-id-selected";
-import { api } from "@stuff/api-client/react";
+import { api as apiServer } from "@stuff/api-client/server";
 import type { FC } from "react";
-import { Checked, UnChecked } from "packages/icons/lib/unchecked";
-import { RefreshButton } from "../_components/refresh-button";
-import { SelectedBar } from "../_components/selected-bar";
-import { stack } from "src/components/recipies";
-import { palette } from "packages/ui/theme";
+import { redirect } from "next/navigation";
+import { FolderHeaderInternal } from "./header-client";
+import { unstable_noStore } from "next/cache";
 
 interface FolderHeader {
 	folder: { name: string; folderId: string };
 }
 
-export const FolderHeader: FC<FolderHeader> = ({ folder }) => {
-	const threadsQuery = api.mail.threads.getThreads.useQuery({
-		folderId: folder.folderId,
+export const FolderHeader: FC<{ folderId: string }> = async ({ folderId }) => {
+	unstable_noStore();
+	const folderResult = await apiServer.mail.folders.getFolder.query({
+		folderId,
 	});
-	const [selected, setSelected] = useAtom(messagesIdSelected);
 
-	return (
-		<div
-			style={{
-				borderBottom: "1px solid " + palette.borderSubtle,
-			}}
-			className={cn(
-				stack({ direction: "row", align: "center" }),
-				css({ width: "full" }),
-			)}
-		>
-			<div className={css({ p: "small" })}>
-				<button
-					className={cn(css({ color: "text1", p: "medium" }))}
-					onClick={() => {
-						setSelected([]);
-						if (selected.length !== threadsQuery.data?.length) {
-							for (const thread of threadsQuery.data ?? []) {
-								setSelected((value) => [...value, thread.threadId]);
-							}
-						}
-					}}
-				>
-					{selected.length === threadsQuery.data?.length &&
-					threadsQuery.data.length !== 0 ? (
-						<Checked size={18} />
-					) : (
-						<UnChecked size={18} />
-					)}
-				</button>
-			</div>
+	if (folderResult === undefined) {
+		redirect("/mail/inbox");
+	}
+	const name =
+		// eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+		folderResult === null ? folderId : folderResult?.gsi2.split("|")?.[2]!;
 
-			<h1 className={cn(css({ fontSize: "medium", color: "text1" }))}>
-				{folder.name}
-			</h1>
-			<div
-				className={cn(
-					stack({ justify: "end" }),
-					css({ width: "full", height: "full", pX: "small" }),
-				)}
-			>
-				{selected.length === 0 ? (
-					<RefreshButton />
-				) : (
-					<SelectedBar threadIds={selected} folderId={folder.folderId} />
-				)}
-			</div>
-		</div>
-	);
+	return <FolderHeaderInternal folderId={folderId} name={name} />;
 };

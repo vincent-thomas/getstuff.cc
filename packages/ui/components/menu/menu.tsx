@@ -20,9 +20,10 @@ export const Menu = ({ children }: { children: ReactNode }) => {
 	return <AriaMenuProvider>{children}</AriaMenuProvider>;
 };
 
-export interface MenuButtonProps extends AriaMenuButtonProps {}
-
-export const MenuButton: FC<MenuButtonProps> = ({ className, ...props }) => {
+export const MenuButton: FC<AriaMenuButtonProps> = ({
+	className,
+	...props
+}) => {
 	return (
 		<AriaMenuButton
 			style={{ outlineOffset: "-2px" }}
@@ -51,7 +52,7 @@ export const MenuItem: FC<MenuItemProps> = ({
 				menuItemStyle,
 				css({
 					bg: { hover: variant === "danger" ? undefined : "bgHover" },
-					p: "large",
+					p: "medium",
 					fontSize: "medium",
 					fontWeight: "semibold",
 				}),
@@ -80,9 +81,7 @@ export const MenuDescription: FC<{ children: ReactNode; className?: string }> =
 		);
 	};
 
-export interface MenuContentProps extends AriaMenuContentProps {}
-
-export const MenuContent: FC<MenuContentProps> = ({
+export const MenuContent: FC<AriaMenuContentProps> = ({
 	className,
 	style,
 	...props
@@ -104,9 +103,7 @@ export const MenuContent: FC<MenuContentProps> = ({
 	);
 };
 
-export interface MenuSeperatorProps extends AriaMenuSeperatorOptions {}
-
-export const MenuSeparator: FC<MenuSeperatorProps> = () => {
+export const MenuSeparator: FC<AriaMenuSeperatorOptions> = () => {
 	return (
 		<AriaMenuSeparator
 			style={{

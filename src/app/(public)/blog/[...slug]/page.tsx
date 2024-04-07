@@ -11,11 +11,15 @@ import { formatDate } from "date-fns";
 import { Mdx } from "src/components/mdx-components";
 import { ShareTwitter } from "../../_components/share-twitter";
 import { Flex } from "@stuff/structure";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@stuff/ui/tooltip";
 import { ShareFacebook } from "../../_components/share-facebook";
 import { H1, H2, P } from "@stuff/typography";
 
 import { border, stack } from "src/components/recipies";
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipTrigger,
+} from "packages/ui/components/tooltip/tooltip";
 
 interface PostPageProps {
 	params: {
@@ -244,24 +248,30 @@ export default async function PostPage({ params }: PostPageProps) {
 							<div className="mt-12 border-t border-border w-full">
 								<P className={css({ color: "text2" })}>Share post:</P>
 								<Flex className="pt-6">
-									<Flex className="p-1 bg-background2 border-border border rounded-md">
+									<div
+										className={cn(
+											stack({}),
+											css({ bg: "bgSubtle", p: "xsmall" }),
+											border({
+												rounded: "radius",
+												color: "subtle",
+												side: "all",
+											}),
+										)}
+									>
 										<Tooltip>
 											<TooltipTrigger>
 												<ShareTwitter blogId={post.id} />
 											</TooltipTrigger>
-											<TooltipContent className="bg-background2 shadow-lg">
-												Share on X/Twitter
-											</TooltipContent>
+											<TooltipContent>Share on X/Twitter</TooltipContent>
 										</Tooltip>
 										<Tooltip>
 											<TooltipTrigger>
 												<ShareFacebook blogId={post.id} />
 											</TooltipTrigger>
-											<TooltipContent className="bg-background2 shadow-lg">
-												Share on Facebook
-											</TooltipContent>
+											<TooltipContent>Share on Facebook</TooltipContent>
 										</Tooltip>
-									</Flex>
+									</div>
 								</Flex>
 							</div>
 							<div

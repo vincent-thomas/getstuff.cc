@@ -2,7 +2,7 @@
 
 import { cn } from "@stuff/components/utils";
 import { Button } from "@stuff/ui/button";
-import { Form, type FormInputProps } from "packages/ui/components";
+import { Form } from "packages/ui/components";
 import { useState } from "react";
 import { border, stack } from "src/components/recipies";
 import { z } from "zod";
@@ -19,42 +19,6 @@ import {
 } from "secure-remote-password/client";
 import { setPasswordDerivedSecret } from "@stuff/lib/useUserPrivateKey";
 import { useRouter } from "next/navigation";
-
-function capitalizeFirstLetter(string: string) {
-	return string.charAt(0).toUpperCase() + string.slice(1);
-}
-
-const FormField = ({
-	name,
-	...props
-}: { name: string; type: FormInputProps["type"] }) => {
-	return (
-		<div
-			style={{ textAlign: "start" }}
-			className={cn(
-				stack({ direction: "col", gap: "sm" }),
-				css({ color: "text2" }),
-			)}
-			{...props}
-		>
-			<Form.Label name={name}>{capitalizeFirstLetter(name)}</Form.Label>
-			<Form.Input
-				name={name}
-				className={cn(
-					css({
-						bg: "bgComponent",
-						p: "medium",
-						color: "text2",
-						fontSize: "medium",
-					}),
-					border({ rounded: "radius", color: "interactive", side: "all" }),
-				)}
-				{...props}
-			/>
-			<Form.Error name={name} />
-		</div>
-	);
-};
 
 const createSession = async ({
 	salt,
@@ -172,8 +136,8 @@ export const FormInput = () => {
 				border({ rounded: "radius", color: "interactive", side: "all" }),
 			)}
 		>
-			<FormField name={form.names.username.toString()} type="text" />
-			<FormField name={form.names.password.toString()} type="password" />
+			<Form.Field name={form.names.username.toString()} type="text" />
+			<Form.Field name={form.names.password.toString()} type="password" />
 			<Button type="submit" variant="primary" size="md" disabled={isLoading}>
 				Submit
 				{isLoading && <Spinner size={20} />}

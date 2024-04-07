@@ -10,19 +10,17 @@ import {
 	MenuItem,
 	MenuSeparator,
 } from "packages/ui/components/menu";
-import {
-	CircleUserIcon,
-	CogIcon,
-	CreditCardIcon,
-	LogOutIcon,
-} from "lucide-react";
+import { CogIcon, CreditCardIcon } from "lucide-react";
 import {
 	Tooltip,
 	TooltipContent,
 	TooltipTrigger,
 } from "packages/ui/components/tooltip/tooltip";
+import { unstable_noStore } from "next/cache";
+import { Logout, ManageAccount } from "./account-viewer.actions";
 
 export const AccountViewer = async () => {
+	unstable_noStore();
 	const session = await api.user.session.query();
 
 	if (session === null) {
@@ -68,15 +66,10 @@ export const AccountViewer = async () => {
 				<MenuItem>
 					<CogIcon /> Settings
 				</MenuItem>
-				<MenuItem>
-					<CircleUserIcon />
-					Manage account
-				</MenuItem>
+				<ManageAccount />
 				<MenuSeparator />
 
-				<MenuItem variant="danger">
-					<LogOutIcon /> Log out
-				</MenuItem>
+				<Logout />
 			</MenuContent>
 		</Menu>
 	);

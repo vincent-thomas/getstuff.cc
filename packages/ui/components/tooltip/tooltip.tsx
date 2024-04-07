@@ -28,6 +28,7 @@ export const TooltipContent: FC<TooltipContentProps> = ({
 				css({
 					bg: "bgComponent",
 					p: "small",
+					color: "text2",
 				}),
 				border({ color: "interactive", rounded: "radius", side: "all" }),
 				className,
