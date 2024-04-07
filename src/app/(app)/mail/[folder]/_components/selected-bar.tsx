@@ -56,7 +56,9 @@ export const SelectedBar = ({
 	return (
 		<div className={cn(stack({ align: "center", gap: "sm" }))}>
 			<Menu>
-				<MenuButton render={<Button variant="ghost" size="md" rounded="medium" />}>
+				<MenuButton
+					render={<Button variant="ghost" size="md" rounded="medium" />}
+				>
 					<FolderInput size={18} color={palette.text2} />
 				</MenuButton>
 				<MenuContent>
@@ -101,7 +103,8 @@ export const SelectedBar = ({
 			</Menu>
 			<Button
 				variant="ghost"
-				size="md"rounded="medium"
+				size="md"
+				rounded="medium"
 				onClick={async () => {
 					await setReadMutation.mutateAsync({
 						folderId,
@@ -116,7 +119,8 @@ export const SelectedBar = ({
 			{folderId !== "archive" && (
 				<Button
 					size="md"
-					variant="ghost"rounded="medium"
+					variant="ghost"
+					rounded="medium"
 					onClick={async () => {
 						const successed = await moveThreads.mutateAsync({
 							folderId,

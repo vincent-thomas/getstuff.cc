@@ -104,11 +104,15 @@ export const ComposeButton = () => {
 				New
 			</MenuButton>
 			<MenuContent style={{ width: "240px" }}>
-				<ComposeAction trigger={<MenuItem>
-					<MailIcon />
-					E-Mail
-				</MenuItem>}/>
-				
+				<ComposeAction
+					trigger={
+						<MenuItem>
+							<MailIcon />
+							E-Mail
+						</MenuItem>
+					}
+				/>
+
 				<MenuItem>
 					<FileIcon /> Upload file
 				</MenuItem>

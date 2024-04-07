@@ -75,7 +75,7 @@ export const MailMessage = ({ thread }: { thread: MailMessage }) => {
 	}, [mailMessage.data]);
 
 	const isLoading = mailMessage.data === undefined || safeHtmlContent === null;
-	const [isMinimized, setIsMinimized]= useState(false);
+	const [isMinimized, setIsMinimized] = useState(false);
 
 	return (
 		<div
@@ -87,52 +87,65 @@ export const MailMessage = ({ thread }: { thread: MailMessage }) => {
 		>
 			<div
 				role="button"
-				onClick={() => setIsMinimized(is => !is)}
+				onClick={() => setIsMinimized((is) => !is)}
 				className={cn(
 					stack({ justify: "between", align: "center" }),
-					css({ bg: "bgComponent", p: "large",  textAlign:"left", cursor: "pointer" }),
-					!isMinimized && border({side: "b", color: "interactive"})
+					css({
+						bg: "bgComponent",
+						p: "large",
+						textAlign: "left",
+						cursor: "pointer",
+					}),
+					!isMinimized && border({ side: "b", color: "interactive" }),
 				)}
 			>
 				<div>
-					<h2 className={cn(css({color: "text2"}))}>{thread.from.name}</h2>
+					<h2 className={cn(css({ color: "text2" }))}>{thread.from.name}</h2>
 					<h3 className={cn(css({ color: "text1" }))}>{thread.from.address}</h3>
 				</div>
-				{isLoading ? <Spinner size={24} /> : (<Minimize2Icon size={18} style={{rotate: "-45deg"}} className={(cn(button({variant:"icon", size:"sm"})), css({color: "text1"}))} />)}
+				{isLoading ? (
+					<span className={css({ color: "text1" })}>
+						<Spinner size={24} />
+					</span>
+				) : (
+					<span className={button({ variant: "icon", size: "sm" })}>
+						<Minimize2Icon size={18} style={{ rotate: "-45deg" }} />
+					</span>
+				)}
 			</div>
 			{!isMinimized && (
 				<>
 					<div className={cn(css({ p: "large" }))}>
-					{isLoading ? (
-						<div
-							style={{
-								animation: `${pulse} 2s cubic-bezier(0.4, 0, 0.6, 1) infinite`,
-								height: "100px",
-							}}
-							className={cn(
-								border({ rounded: "radius" }),
-								css({ width: "full", bg: "bgHover" }),
-							)}
-						/>
-					) : (
-						<div
-							className={cn(css({ color: "text2" }))}
-							dangerouslySetInnerHTML={{
-								__html: safeHtmlContent,
-							}}
-						/>
-					)}
-				</div>
-				<div
-					className={cn(
-						css({ p: "medium" }),
-						border({ side: "t", color: "interactive" }),
-					)}
-				>
-					<Button variant="primary" size="md" rounded="medium">
-						Svara
-					</Button>
-				</div>
+						{isLoading ? (
+							<div
+								style={{
+									animation: `${pulse} 2s cubic-bezier(0.4, 0, 0.6, 1) infinite`,
+									height: "100px",
+								}}
+								className={cn(
+									border({ rounded: "radius" }),
+									css({ width: "full", bg: "bgHover" }),
+								)}
+							/>
+						) : (
+							<div
+								className={cn(css({ color: "text2" }))}
+								dangerouslySetInnerHTML={{
+									__html: safeHtmlContent,
+								}}
+							/>
+						)}
+					</div>
+					<div
+						className={cn(
+							css({ p: "medium" }),
+							border({ side: "t", color: "interactive" }),
+						)}
+					>
+						<Button variant="primary" size="md" rounded="medium">
+							Svara
+						</Button>
+					</div>
 				</>
 			)}
 		</div>
