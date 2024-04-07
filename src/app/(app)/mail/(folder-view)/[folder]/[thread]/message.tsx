@@ -2,13 +2,15 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { z } from "zod";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { decryptAsymmetric, decryptSymmetric } from "@stuff/lib/crypto";
 import { useDataKey } from "@stuff/lib/useUserPrivateKey";
 import { border } from "src/components/recipies";
 import purify from "dompurify";
 import { pulse } from "packages/ui/keyframes";
-import { Button } from "@stuff/ui/button";
+import { Button, button } from "@stuff/ui/button";
+import { Spinner } from "src/app/(app)/auth/icons/spinner";
+import { Minimize2Icon } from "lucide-react";
 
 export interface MailMessage {
 	messageId: string;
@@ -72,6 +74,9 @@ export const MailMessage = ({ thread }: { thread: MailMessage }) => {
 		);
 	}, [mailMessage.data]);
 
+	const isLoading = mailMessage.data === undefined || safeHtmlContent === null;
+	const [isMinimized, setIsMinimized]= useState(false);
+
 	return (
 		<div
 			className={cn(
@@ -80,41 +85,56 @@ export const MailMessage = ({ thread }: { thread: MailMessage }) => {
 				css({ overflow: "hidden" }),
 			)}
 		>
-			<div className={cn(css({ bg: "bgComponent", p: "large" }))}>
-				<h2 className={cn(css({ color: "text2" }))}>{thread.from.name}</h2>
-				<h3 className={cn(css({ color: "text1" }))}>{thread.from.address}</h3>
-			</div>
-			<div className={cn(css({ p: "large" }))}>
-				{mailMessage.data === undefined || safeHtmlContent === null ? (
-					<div
-						style={{
-							animation: `${pulse} 2s cubic-bezier(0.4, 0, 0.6, 1) infinite`,
-							height: "100px",
-						}}
-						className={cn(
-							border({ rounded: "radius" }),
-							css({ width: "full", bg: "bgHover" }),
-						)}
-					/>
-				) : (
-					<div
-						className={cn(css({ color: "text2" }))}
-						dangerouslySetInnerHTML={{
-							__html: safeHtmlContent,
-						}}
-					/>
-				)}
-			</div>
 			<div
+				role="button"
+				onClick={() => setIsMinimized(is => !is)}
 				className={cn(
-					css({ p: "medium" }),
-					border({ side: "t", color: "interactive" }),
+					stack({ justify: "between", align: "center" }),
+					css({ bg: "bgComponent", p: "large",  textAlign:"left", cursor: "pointer" }),
+					!isMinimized && border({side: "b", color: "interactive"})
 				)}
 			>
-				<Button variant="primary" size="md">
-					Svara
-				</Button>
+				<div>
+					<h2 className={cn(css({color: "text2"}))}>{thread.from.name}</h2>
+					<h3 className={cn(css({ color: "text1" }))}>{thread.from.address}</h3>
+				</div>
+				{isLoading ? <Spinner size={24} /> : (<Minimize2Icon size={18} style={{rotate: "-45deg"}} className={(cn(button({variant:"icon", size:"sm"})), css({color: "text1"}))} />)}
 			</div>
+			{!isMinimized && (
+				<>
+					<div className={cn(css({ p: "large" }))}>
+					{isLoading ? (
+						<div
+							style={{
+								animation: `${pulse} 2s cubic-bezier(0.4, 0, 0.6, 1) infinite`,
+								height: "100px",
+							}}
+							className={cn(
+								border({ rounded: "radius" }),
+								css({ width: "full", bg: "bgHover" }),
+							)}
+						/>
+					) : (
+						<div
+							className={cn(css({ color: "text2" }))}
+							dangerouslySetInnerHTML={{
+								__html: safeHtmlContent,
+							}}
+						/>
+					)}
+				</div>
+				<div
+					className={cn(
+						css({ p: "medium" }),
+						border({ side: "t", color: "interactive" }),
+					)}
+				>
+					<Button variant="primary" size="md" rounded="medium">
+						Svara
+					</Button>
+				</div>
+				</>
+			)}
 		</div>
 	);
 };

@@ -8,7 +8,7 @@ import type { ReactNode } from "react";
 import { cn } from "packages/components/utils";
 import { TRPCReactProvider } from "@stuff/api-client/react";
 import type { Metadata, Viewport } from "next";
-import { spacingDefiningClass } from "packages/ui/variables";
+import { roundingClass, spacingDefiningClass } from "packages/ui/variables";
 import { themeClass } from "packages/ui/theme/palettes.css";
 import { ToastProvider } from "src/providers/sonner";
 const font = Inter({
@@ -63,6 +63,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 					css({ bg: "bgApp", minHeight: "screen" }),
 					spacingDefiningClass,
 					themeClass,
+					roundingClass
 				)}
 			>
 				<ToastProvider>

@@ -12,10 +12,11 @@ export type ButtonProps = ButtonOptions &
 export const Button: FC<ButtonProps> = ({
 	className,
 	variant,
+	rounded,
 	size,
 	...props
 }) => (
-	<AriaButton className={cn(button({ variant, size }), className)} {...props} />
+	<AriaButton className={cn(button({ variant, size,rounded }), className)} {...props} />
 );
 
 Button.displayName = "Button";

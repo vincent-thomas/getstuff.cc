@@ -22,7 +22,7 @@ const Layout = setupLayout({
 			<div
 				className={cn(
 					stack({ direction: "col" }),
-					css({ height: "full", bg: "bgSubtle" }),
+					css({ height: "screen", bg: "bgSubtle" }),
 				)}
 			>
 				<div
@@ -90,13 +90,7 @@ const Layout = setupLayout({
 								css({ height: "full", width: "full" }),
 							)}
 						>
-							<Suspense
-								fallback={
-									<div style={{ minHeight: "62px", width: "100%" }}></div>
-								}
-							>
-								<FolderHeader folderId={params.folder} />
-							</Suspense>
+							<FolderHeader folderId={params.folder} />
 							<Suspense>
 								<MailTable folderId={params.folder} searchQuery={query?.q} />
 							</Suspense>

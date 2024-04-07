@@ -1,7 +1,6 @@
 import {
 	assignVars,
 	createThemeContract,
-	globalStyle,
 	style,
 } from "@vanilla-extract/css";
 

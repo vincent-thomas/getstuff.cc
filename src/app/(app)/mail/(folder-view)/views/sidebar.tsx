@@ -7,10 +7,8 @@ import { Flex } from "@stuff/structure";
 import { cn } from "@stuff/components/utils";
 import { Extensions } from "../_components/extensions";
 import { SidebarLink } from "./sidebar_component";
-import { border, stack } from "src/components/recipies";
-import { Suspense } from "react";
+import { stack } from "src/components/recipies";
 import { unstable_noStore } from "next/cache";
-import { pulse } from "packages/ui/keyframes";
 
 export const Sidebar = ({ className }: { className?: string }) => {
 	return (
@@ -50,11 +48,11 @@ export const Sidebar = ({ className }: { className?: string }) => {
 					<ComposeButton />
 					<Extensions />
 				</div>
-				<div className={stack({ gap: "sm", direction: "col" })}>
+				<div className={stack({ direction: "col" })}>
 					<div
 						className={cn(
 							stack({ align: "center", justify: "start" }),
-							css({ p: "medium" }),
+							css({ p: "small" }),
 						)}
 					>
 						<h1 className={cn(css({ color: "text2", fontWeight: "semibold" }))}>
@@ -75,58 +73,45 @@ export const Sidebar = ({ className }: { className?: string }) => {
 					</SidebarLink>
 				</div>
 				<div className={stack({ gap: "sm", direction: "col" })}>
-					<Suspense fallback={<ListFoldersSkeleton />}>
+					{/* <Suspense fallback={<ListFoldersSkeleton />}> */}
 						<ListFolders />
-					</Suspense>
+					{/* </Suspense> */}
 				</div>
 			</aside>
 		</>
 	);
 };
 
-const ListFoldersSkeleton = async () => {
-	return (
-		<div
-			className={cn(
-				stack({ direction: "col", gap: "sm" }),
-				css({ overflowY: "auto" }),
-			)}
-		>
-			<div
-				className={cn(
-					stack({ align: "center", justify: "between" }),
-					css({ width: "full", pX: "small" }),
-				)}
-			>
-				<div
-					style={{
-						height: "28px",
-						width: "82px",
-						animation: `${pulse} 2s cubic-bezier(0.4, 0, 0.6, 1) infinite`,
-					}}
-					className={cn(
-						css({ bg: "bgComponent" }),
-						border({ rounded: "radius" }),
-					)}
-				></div>
-				<CreateFolderButton />
-			</div>
-			{[0, 1, 2].map((data) => (
-				<div
-					key={data}
-					className={cn(
-						css({ width: "full", bg: "bgComponent" }),
-						border({ rounded: "radius" }),
-					)}
-					style={{
-						height: "44px",
-						animation: `${pulse} 2s cubic-bezier(0.4, 0, 0.6, 1) infinite`,
-					}}
-				/>
-			))}
-		</div>
-	);
-};
+// const ListFoldersSkeleton = async () => {
+// 	return (
+// 		<div
+// 			className={cn(
+// 				stack({ direction: "col", gap: "sm" }),
+// 				css({ overflowY: "auto" }),
+// 			)}
+// 		>
+// 			<div
+// 				className={cn(
+// 					stack({ align: "center", justify: "between" }),
+// 					css({ width: "full", pX: "small" }),
+// 				)}
+// 			>
+// 				<div
+// 					style={{
+// 						height: "28px",
+// 						width: "82px",
+// 						animation: `${pulse} 2s cubic-bezier(0.4, 0, 0.6, 1) infinite`,
+// 					}}
+// 					className={cn(
+// 						css({ bg: "bgComponent" }),
+// 						border({ rounded: "radius" }),
+// 					)}
+// 				></div>
+// 				<CreateFolderButton />
+// 			</div>
+// 		</div>
+// 	);
+// };
 
 const ListFolders = async () => {
 	unstable_noStore();
