@@ -5,12 +5,14 @@ import "./globals.css";
 import { Inter } from "next/font/google";
 
 import type { ReactNode } from "react";
-import { cn } from "packages/components/utils";
 import { TRPCReactProvider } from "@stuff/api-client/react";
 import type { Metadata, Viewport } from "next";
 import { roundingClass, spacingDefiningClass } from "packages/ui/variables";
 import { themeClass } from "packages/ui/theme/palettes.css";
 import { ToastProvider } from "src/providers/sonner";
+import { Provider } from "jotai";
+import { store } from "./global-store";
+
 const font = Inter({
 	axes: ["slnt"],
 	subsets: ["latin"],
@@ -67,7 +69,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 				)}
 			>
 				<ToastProvider>
-					<TRPCReactProvider>{children}</TRPCReactProvider>
+					<TRPCReactProvider>
+						<Provider store={store}>{children}</Provider>
+					</TRPCReactProvider>
 				</ToastProvider>
 			</body>
 		</html>

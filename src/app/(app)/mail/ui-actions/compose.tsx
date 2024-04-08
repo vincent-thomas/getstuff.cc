@@ -11,12 +11,12 @@ import {
 } from "packages/ui/components/dialog";
 import type { FC } from "react";
 import { border } from "src/components/recipies";
-import { IAction } from "./commandMenu";
+import type { IAction } from "./commandMenu";
 
-const isOpen = atom(false);
+export const isComposing = atom(false);
 
 export const ComposeAction: FC<IAction> = ({ trigger, className }) => {
-	const [open, setOpen] = useAtom(isOpen)
+	const [open, setOpen] = useAtom(isComposing);
 	const form = Form.useStore({
 		defaultValues: {
 			to: "",
@@ -25,7 +25,13 @@ export const ComposeAction: FC<IAction> = ({ trigger, className }) => {
 	});
 	return (
 		<Dialog onOpenChange={(state) => setOpen(state)} open={open}>
-			<DialogTrigger asChild className={className}>{trigger}</DialogTrigger>
+			<DialogTrigger
+				asChild
+				className={className}
+				onClick={() => setOpen(true)}
+			>
+				{trigger}
+			</DialogTrigger>
 			<DialogContent size="lg">
 				<div className={css({ p: "large" })}>
 					<H1 className={cn(css({ fontSize: "xlarge" }))}>Compose</H1>

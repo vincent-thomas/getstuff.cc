@@ -1,14 +1,11 @@
 import { cn } from "@stuff/components/utils";
-import { type InputHTMLAttributes, type Ref, forwardRef } from "react";
+import { type InputHTMLAttributes } from "react";
 import { border, stack } from "src/components/recipies";
 
-export const MailInput = forwardRef(function MailInput(
-	{
-		locked,
-		...props
-	}: InputHTMLAttributes<HTMLInputElement> & { locked?: boolean },
-	ref: Ref<HTMLInputElement>,
-) {
+export const MailInput = function MailInput({
+	locked,
+	...props
+}: InputHTMLAttributes<HTMLInputElement> & { locked?: boolean }) {
 	return (
 		<div
 			className={cn(
@@ -19,7 +16,6 @@ export const MailInput = forwardRef(function MailInput(
 		>
 			<input
 				disabled={locked}
-				ref={ref}
 				placeholder="Enter email..."
 				className={cn(
 					css({
@@ -41,18 +37,14 @@ export const MailInput = forwardRef(function MailInput(
 			</p>
 		</div>
 	);
-});
+};
 
-export const PasswordInput = forwardRef(function PasswordInput(
-	{
-		repeat,
-		...props
-	}: InputHTMLAttributes<HTMLInputElement> & { repeat?: true },
-	ref: Ref<HTMLInputElement>,
-) {
+export const PasswordInput = function PasswordInput({
+	repeat,
+	...props
+}: InputHTMLAttributes<HTMLInputElement> & { repeat?: true }) {
 	return (
 		<input
-			ref={ref}
 			placeholder={repeat ? "Repeat password..." : "Enter password..."}
 			className={cn(
 				border({ rounded: "radius" }),
@@ -63,18 +55,16 @@ export const PasswordInput = forwardRef(function PasswordInput(
 			{...props}
 		/>
 	);
-});
+};
 
-export const NameInput = forwardRef(function NameInput(
+export const NameInput = function NameInput(
 	props: InputHTMLAttributes<HTMLInputElement>,
-	ref: Ref<HTMLInputElement>,
 ) {
 	return (
 		<input
-			ref={ref}
 			placeholder="Enter name..."
 			className="rounded-md border border-border bg-transparent p-3 outline-none focus:bg-muted"
 			{...props}
 		/>
 	);
-});
+};

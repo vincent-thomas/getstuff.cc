@@ -1,5 +1,4 @@
-import { cn } from "packages/components/utils";
-import { spacing } from "packages/ui/variables";
+import type { spacing } from "packages/ui/variables";
 import type { HTMLAttributes, ReactNode } from "react";
 import { border } from "src/components/recipies";
 

@@ -1,4 +1,3 @@
-import { cn } from "packages/components/utils";
 import type { ReactNode } from "react";
 
 const width = {

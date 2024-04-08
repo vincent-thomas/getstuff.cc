@@ -1,6 +1,5 @@
 "use client";
 
-import { cn } from "packages/components/utils";
 import { messagesIdSelected } from "../store/messages-id-selected";
 import { useAtom } from "jotai";
 import { Checked, UnChecked } from "packages/icons/lib/unchecked";

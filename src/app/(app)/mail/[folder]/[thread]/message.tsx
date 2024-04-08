@@ -72,7 +72,7 @@ export const MailMessage = ({ thread }: { thread: MailMessage }) => {
 		return purify().sanitize(
 			decryptSymmetric(mailMessage.data.html, threadEncryptionKey),
 		);
-	}, [mailMessage.data]);
+	}, [mailMessage.data, threadEncryptionKey]);
 
 	const isLoading = mailMessage.data === undefined || safeHtmlContent === null;
 	const [isMinimized, setIsMinimized] = useState(false);

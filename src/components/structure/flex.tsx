@@ -1,5 +1,4 @@
 import type { FC, ReactNode } from "react";
-import { cn } from "../../../packages/components/utils";
 
 interface Props {
 	col?: true;
