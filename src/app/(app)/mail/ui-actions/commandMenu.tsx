@@ -1,152 +1,191 @@
 "use client";
 
 import { Dialog, DialogDismiss } from "@ariakit/react";
-import { cloneElement, useEffect, useMemo, useState, type FC, type ReactNode } from "react";
-import { DialogRoot, focusClass } from "./commandMenu.css";
-import { border } from "src/components/recipies";
-import { Button, button } from "@stuff/ui/button";
-import { InboxIcon, LogOutIcon, LucideIcon, PlusIcon, SearchIcon } from "lucide-react";
-import { ComposeAction, IComposeAction } from "./compose";
-import Fuse from "fuse.js";
-import { P } from "@stuff/typography";
-import { useLogoutAction } from "../_components/account-viewer.actions";
+import {
+	Fragment,
+	useDeferredValue,
+	useEffect,
+	useMemo,
+	useState,
+	type FC,
+	type ReactNode,
+} from "react";
+import { DialogRoot, cardStyle, comboboxItem } from "./commandMenu.css";
+import { button } from "@stuff/ui/button";
+import { PlusIcon } from "lucide-react";
+import { matchSorter } from "match-sorter";
+import groupBy from "lodash.groupby";
+import * as Ariakit from "@ariakit/react";
+import { spacing } from "packages/ui/variables";
+import { actions } from "./things";
 
 export interface IAction {
 	trigger: ReactNode;
-	className?:string;
+	className?: string;
 }
 
-type Thing = {
-	label:string;
-	Icon: LucideIcon;
-	Action: FC<IAction>
-
+export interface ComboboxProps extends Omit<Ariakit.ComboboxProps, "onChange"> {
+	value?: string;
+	onChange?: (value: string) => void;
 }
 
-const Things: Thing[] = [
-	{
-		label: "Compose email",
-		Icon: InboxIcon,
-		Action: ComposeAction
-	},
-	{
-		label: "Log out",
-		Icon: LogOutIcon,
-		Action: ({trigger: Trigger}) => {
-			const logoutAction = useLogoutAction();
-			// console.log(Trigger)
-			const El = cloneElement(Trigger, {
-				onClick: async () => {
-					await logoutAction()
-					Trigger.props.onClick();
-				}
-			})
-			return El
-	}
-	}
-]
-
-const containerClass = cn(
-	css({p: "medium", bg: "bgComponent"}),
-	border({ rounded: "radius", color: "focus", side: "all" }),
-)
-
-export const CommandMenu: FC<IComposeAction> = () => {
+export const CommandMenu: FC = () => {
 	const [open, setOpen] = useState(false);
 	const [value, setValue] = useState("");
+	const deferedValue = useDeferredValue(value);
 
 	useEffect(() => {
-    const ctrl1 = (e: KeyboardEvent) => e.ctrlKey && e.key === "p";
+		const ctrl1 = (e: KeyboardEvent) => e.ctrlKey && e.key === "p";
 
-    const handler = (e: KeyboardEvent) => {
-      if (ctrl1(e)) {
-        setOpen(is => !is)
-      }
-    };
+		const handler = (e: KeyboardEvent) => {
+			if (ctrl1(e)) {
+				setOpen((is) => !is);
+			}
+		};
 
-    const ignore = (e: KeyboardEvent) => {
-      if (ctrl1(e)) {
-        e.preventDefault();
-      }
-    };
+		const ignore = (e: KeyboardEvent) => {
+			if (ctrl1(e)) {
+				e.preventDefault();
+			}
+		};
 
-    window.addEventListener("keyup", handler);
-    window.addEventListener("keydown", ignore);
+		window.addEventListener("keyup", handler);
+		window.addEventListener("keydown", ignore);
 
-    return () => {
-      window.removeEventListener("keyup", handler);
-      window.removeEventListener("keydown", ignore);
-    };
-  }, []);
-
-	const [shouldFocus, setShouldFocus] = useState(false);
+		return () => {
+			window.removeEventListener("keyup", handler);
+			window.removeEventListener("keydown", ignore);
+		};
+	}, []);
 
 	const list = useMemo(() => {
-		if (value === "") {
-			return Things;
-		}
-
-		const fuse = new Fuse(Things, {
-			keys: ["label"]
+		const searched = matchSorter(actions, deferedValue, {
+			keys: ["label", "type"],
 		});
+		return Object.entries(groupBy(searched, "type"));
+	}, [deferedValue]);
 
-		const items = fuse.search(value).map(v=>v.item);
-		if (items.length < Things.length) {
-			setShouldFocus(true);
-		} else {
-			setShouldFocus(false)
-		}
-		return items;
-	}, [value]);
+	const store = Ariakit.useComboboxStore();
 
 	return (
 		<Dialog
-
 			open={open}
-			className={cn(DialogRoot)}
-
+			className={cn(DialogRoot, stack({ direction: "col", gap: "sm" }))}
 			onClose={() => {
-				setValue('');
-				setOpen(false)
+				setValue("");
+				setOpen(false);
 			}}
 		>
-			<div
-				className={cn(
-					css({ mX: "auto" }),
-					stack({ direction: "col", gap:"sm" }),
-				)}
-				style={{ opacity: 1 }}
-			>
-				<form className={cn(stack({gap: "md"}),containerClass)} onSubmit={(e) => {
-					e.preventDefault();
-					console.log("ATT Göra fixa så att man kör första")
-				}}>
-					<Button variant="icon" size="sm" tabIndex={-1}><SearchIcon /></Button>
-					<input
-						placeholder="What to do?"
-						className={cn(css({fontSize: "medium", color: "text2"}))}
-						style={{ flexGrow: 1 }}
+			<Ariakit.ComboboxProvider store={store}>
+				<div
+					className={cn(cardStyle, css({ pY: "large" }))}
+					style={{
+						display: "grid",
+						gap: spacing.medium,
+						gridTemplateColumns: "1fr auto auto",
+					}}
+				>
+					<Ariakit.Combobox
+						placeholder="Search for anything..."
+						className={cn(
+							css({ fontSize: "medium", color: "text2", p: "small" }),
+						)}
 						value={value}
+						autoSelect
 						onChange={(e) => setValue(e.currentTarget.value)}
 					/>
-					<DialogDismiss className={cn(
-						button({variant: "outline", size: 'sm', rounded: "medium"})
-						)}>Esc</DialogDismiss>
-				</form>
-				<div className={cn(containerClass, stack({direction: "col", gap: 'sm'}))}>
-					{list.length === 0 ? (<P>No actions...</P>) : list.map((thing, i) => {
-						const thisClass = i === 0 && shouldFocus ? focusClass : undefined;
-						return (
-						<thing.Action key={i} trigger={
-								<Button key={i} onClick={() => setOpen(false)} size="md" rounded="medium" variant="ghost" className={cn(css({width: 'full'}), stack({justify: "start"}),thisClass)}>
-									<thing.Icon size={24} />
-									{thing.label}
-								</Button>
-							}
-						/>
-					)})}
+					<div>
+						<Ariakit.ComboboxCancel
+							className={cn(
+								button({ variant: "ghost", size: "sm", rounded: "icon" }),
+							)}
+						>
+							<PlusIcon
+								size={24}
+								style={{ rotate: "45deg" }}
+								onClick={() => setValue("")}
+							/>
+						</Ariakit.ComboboxCancel>
+					</div>
+					<div>
+						<DialogDismiss
+							className={cn(
+								button({ variant: "outline", size: "sm", rounded: "medium" }),
+							)}
+						>
+							Esc
+						</DialogDismiss>
+					</div>
 				</div>
-			</div>
+				<Ariakit.ComboboxList alwaysVisible className={cardStyle}>
+					{list.length === 0 ? (
+						<div className={cn(css({ p: "small", color: "text1" }))}>
+							No actions available
+						</div>
+					) : (
+						list.map(([type, items], i) => (
+							<Fragment key={i}>
+								<Ariakit.ComboboxGroup
+									className={cn(
+										stack({ direction: "col" }),
+										css({ pY: "small" }),
+									)}
+								>
+									<h1
+										role="button"
+										onClick={() => {
+											setValue(type);
+										}}
+										className={cn(
+											css({
+												color: "text1",
+												fontSize: "small",
+												p: "xsmall",
+												cursor: "pointer",
+											}),
+										)}
+									>
+										{type}
+									</h1>
+									{items.map((item, i) => (
+										<Ariakit.ComboboxItem
+											data-should-active={
+												list.flat(2).length - list.length !== actions.length
+											}
+											focusOnHover
+											setValueOnClick={false}
+											key={i}
+											value={item.label}
+											onClick={async () => {
+												if (
+													list.flat(2).length - list.length !==
+													actions.length
+												) {
+													await item.action();
+													setValue("");
+													setOpen(false);
+												}
+											}}
+											className={cn(
+												button({
+													variant: "ghost",
+													size: "md",
+													rounded: "medium",
+												}),
+												stack({ justify: "start", gap: "md" }),
+												comboboxItem,
+											)}
+										>
+											<item.Icon size={24} />
+											{item.label}
+										</Ariakit.ComboboxItem>
+									))}
+								</Ariakit.ComboboxGroup>
+							</Fragment>
+						))
+					)}
+				</Ariakit.ComboboxList>
+			</Ariakit.ComboboxProvider>
 		</Dialog>
 	);
 };

@@ -22,6 +22,7 @@ export const Menu = ({ children }: { children: ReactNode }) => {
 
 export const MenuButton: FC<AriaMenuButtonProps> = ({
 	className,
+	ref,
 	...props
 }) => {
 	return (
@@ -40,6 +41,7 @@ export interface MenuItemProps extends AriaMenuItemProps {
 export const MenuItem: FC<MenuItemProps> = ({
 	className,
 	variant = "default",
+	ref,
 	...props
 }) => {
 	return (
@@ -84,6 +86,7 @@ export const MenuDescription: FC<{ children: ReactNode; className?: string }> =
 export const MenuContent: FC<AriaMenuContentProps> = ({
 	className,
 	style,
+	ref,
 	...props
 }) => {
 	return (

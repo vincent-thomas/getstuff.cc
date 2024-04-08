@@ -1,4 +1,5 @@
 import { globalStyle, style } from "@vanilla-extract/css";
+import { border } from "src/components/recipies";
 
 export const DialogRoot = style([
 	css({
@@ -16,10 +17,24 @@ export const DialogRoot = style([
 ]);
 
 globalStyle("[data-backdrop]", {
-  backgroundColor: "hsl(204 4% 0% / 0.1)",
-	backdropFilter: "blur(4px)"
-})
+	backgroundColor: "hsl(204 4% 0% / 0.1)",
+	backdropFilter: "blur(4px)",
+});
 
-export const focusClass = style({
+export const cardStyle = style([
+	css({ bg: "bgSubtle", pX: "large", pY: "small" }),
+	border({ rounded: "radius", side: "all", color: "interactive" }),
+	{
+		backdropFilter: "blur(100px)",
+	},
+]);
+
+export const comboboxItem = style({
+	outline: "none !important",
+});
+
+globalStyle(`${comboboxItem}[data-active-item][data-should-active='true']`, {
 	backgroundColor: `${palette.bgSelected} !important`,
-})
+	outlineOffset: "0",
+	outline: `1px solid ${palette.borderFocus} !important`,
+});

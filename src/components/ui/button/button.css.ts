@@ -101,6 +101,9 @@ export const button = recipe({
 			small: {
 				borderRadius: rounding.small,
 			},
+			icon: {
+				borderRadius: rounding.icon,
+			},
 		},
 	},
 });

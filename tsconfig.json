@@ -30,6 +30,7 @@
 		"paths": {
 			"@/env": ["./src/env.js"],
 			"@stuff/api-client/react": ["./backend/client/react.tsx"],
+			"@stuff/api-client/vanilla": ["./backend/client/vanilla.ts"],
 			"@stuff/api-client/server": ["./backend/client/server.ts"],
 			"@stuff/infra-constants": ["./packages/infra-constants/index.ts"],
 			"@stuff/data-access/*": ["./src/data-access/*"],

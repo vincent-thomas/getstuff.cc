@@ -3,13 +3,13 @@
 import * as React from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { PlusIcon } from "lucide-react";
-import { cn } from "../../../components/utils";
 import { border, shadow } from "src/components/recipies";
 import { dialogContentStyles } from "./dialog.css";
 import { stack } from "packages/ui/patterns/stack";
 import { Button } from "@stuff/ui/button";
 import { H1 } from "@stuff/typography";
 import { spacing } from "packages/ui/variables";
+import { DialogDescriptionProps } from "@ariakit/react";
 
 const Dialog = DialogPrimitive.Root;
 
@@ -19,12 +19,11 @@ const DialogPortal = DialogPrimitive.Portal;
 
 const DialogClose = DialogPrimitive.Close;
 
-const DialogOverlay = React.forwardRef<
-	React.ElementRef<typeof DialogPrimitive.Overlay>,
-	React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>
->(({ className, ...props }, ref) => (
+const DialogOverlay: React.FC<DialogPrimitive.DialogOverlayProps> = ({
+	className,
+	...props
+}) => (
 	<DialogPrimitive.Overlay
-		ref={ref}
 		style={{ inset: 0, zIndex: 50, backgroundColor: "rgba(0, 0, 0, 0.8)" }}
 		className={cn(
 			css({ position: "fixed" }),
@@ -33,7 +32,7 @@ const DialogOverlay = React.forwardRef<
 		)}
 		{...props}
 	/>
-));
+);
 DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
 
 interface DialogContentProps
@@ -43,77 +42,74 @@ interface DialogContentProps
 	mainTitle?: JSX.Element | string;
 }
 
-const DialogContent = React.forwardRef<
-	React.ElementRef<typeof DialogPrimitive.Content>,
-	DialogContentProps
->(
-	(
-		{ className, children, onClosePress, size = "sm", mainTitle, ...props },
-		ref,
-	) => {
-		return (
-			<DialogPortal>
-				<DialogOverlay onClick={onClosePress} />
-				<DialogPrimitive.Content
-					ref={ref}
+const DialogContent: React.FC<DialogContentProps> = ({
+	className,
+	children,
+	onClosePress,
+	size = "sm",
+	mainTitle,
+	...props
+}) => {
+	return (
+		<DialogPortal>
+			<DialogOverlay onClick={onClosePress} />
+			<DialogPrimitive.Content
+				style={{
+					zIndex: 50,
+					transform: "translate(-50%, -50%)",
+					left: "50%",
+					top: "50%",
+					maxWidth: size === "sm" ? "26rem" : size === "md" ? "34rem" : "50rem",
+					width: "100%",
+				}}
+				className={cn(
+					css({
+						position: "fixed",
+						width: "full",
+						bg: "bgComponent",
+						// p: "large",
+					}),
+					dialogContentStyles,
+					shadow({ size: "large" }),
+					stack({ direction: "col" }),
+					border({ color: "interactive", rounded: "radius", side: "all" }),
+					className,
+				)}
+				{...props}
+			>
+				<DialogPrimitive.Close
+					onClick={onClosePress}
 					style={{
-						zIndex: 50,
-						transform: "translate(-50%, -50%)",
-						left: "50%",
-						top: "50%",
-						maxWidth:
-							size === "sm" ? "26rem" : size === "md" ? "34rem" : "50rem",
-						width: "100%",
+						top: 0,
+						right: 0,
+						marginTop: spacing.large,
+						marginRight: spacing.large,
 					}}
 					className={cn(
 						css({
-							position: "fixed",
-							width: "full",
-							bg: "bgComponent",
-							// p: "large",
+							marginLeft: "auto",
+							position: "absolute",
 						}),
-						dialogContentStyles,
-						shadow({ size: "large" }),
-						stack({ direction: "col" }),
-						border({ color: "interactive", rounded: "radius", side: "all" }),
-						className,
 					)}
-					{...props}
+					asChild
 				>
-					<DialogPrimitive.Close
-						onClick={onClosePress}
-						style={{
-							top: 0,
-							right: 0,
-							marginTop: spacing.large,
-							marginRight: spacing.large,
-						}}
-						className={cn(
-							css({
-								marginLeft: "auto",
-								position: "absolute",
-							}),
-						)}
-						asChild
-					>
-						<Button variant="icon" size="sm">
-							<PlusIcon
-								className={css({ color: "text1" })}
-								size={24}
-								style={{ rotate: "45deg" }}
-							/>
-						</Button>
-					</DialogPrimitive.Close>
-					{mainTitle && (
-						<H1 className={css({ fontSize: "xlarge" })}>{mainTitle}</H1>
-					)}
+					<Button variant="icon" size="sm">
+						<PlusIcon
+							className={css({ color: "text1" })}
+							size={24}
+							style={{ rotate: "45deg" }}
+						/>
+					</Button>
+				</DialogPrimitive.Close>
+				{mainTitle && (
+					<H1 className={css({ fontSize: "xlarge" })}>{mainTitle}</H1>
+				)}
 
-					{children}
-				</DialogPrimitive.Content>
-			</DialogPortal>
-		);
-	},
-);
+				{children}
+			</DialogPrimitive.Content>
+		</DialogPortal>
+	);
+};
 
 DialogContent.displayName = DialogPrimitive.Content.displayName;
 
@@ -145,27 +141,25 @@ const DialogFooter = ({
 );
 DialogFooter.displayName = "DialogFooter";
 
-const DialogTitle = React.forwardRef<
-	React.ElementRef<typeof DialogPrimitive.Title>,
-	React.ComponentPropsWithoutRef<typeof DialogPrimitive.Title>
->(({ className, ...props }, ref) => (
+const DialogTitle: React.FC<DialogPrimitive.DialogTitleProps> = ({
+	className,
+	...props
+}) => (
 	<DialogPrimitive.Title
-		ref={ref}
 		className={cn(
 			"text-lg font-semibold leading-none tracking-tight",
 			className,
 		)}
 		{...props}
 	/>
-));
+);
 DialogTitle.displayName = DialogPrimitive.Title.displayName;
 
-const DialogDescription = React.forwardRef<
-	React.ElementRef<typeof DialogPrimitive.Description>,
-	React.ComponentPropsWithoutRef<typeof DialogPrimitive.Description>
->(({ className, ...props }, ref) => (
+const DialogDescription: React.FC<DialogDescriptionProps> = ({
+	className,
+	...props
+}) => (
 	<DialogPrimitive.Description
-		ref={ref}
 		className={cn(
 			"text-sm text-muted-foreground",
 			css({ color: "text1" }),
@@ -173,7 +167,7 @@ const DialogDescription = React.forwardRef<
 		)}
 		{...props}
 	/>
-));
+);
 DialogDescription.displayName = DialogPrimitive.Description.displayName;
 
 export {

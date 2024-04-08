@@ -1,6 +1,6 @@
 "use client";
 
-import { FC } from "react";
+import type { FC } from "react";
 import { api } from "@stuff/api-client/react";
 import { useAtom } from "jotai";
 import { messagesIdSelected } from "../store/messages-id-selected";

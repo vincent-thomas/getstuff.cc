@@ -1,6 +1,5 @@
 import { button } from "@stuff/ui/button/button.css";
 import { FormInput } from "./_components/form";
-import { cn } from "packages/components/utils";
 import { Link } from "src/components/structure/link";
 
 const Page = () => {
