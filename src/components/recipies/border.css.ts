@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { recipe } from "@vanilla-extract/recipes";
-import { palette } from "packages/ui/theme/palettes.css";
 import { rounding } from "packages/ui/variables";
 
 function doBorder(arr1: string[], arr2: string[]) {

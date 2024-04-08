@@ -1,6 +1,5 @@
 import { style } from "@vanilla-extract/css";
 import { recipe, type RecipeVariants } from "@vanilla-extract/recipes";
-import { palette } from "packages/ui/theme/palettes.css";
 import { rounding, spacing } from "packages/ui/variables";
 import { border, stack } from "src/components/recipies";
 

@@ -1,5 +1,3 @@
-import { palette } from "packages/ui/theme/palettes.css";
-
 export const Logo = ({ size }: { size: number; color?: true }) => {
 	return (
 		<svg

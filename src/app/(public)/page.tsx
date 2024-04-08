@@ -6,7 +6,6 @@ import { setupPage } from "@stuff/client/utils";
 import { button } from "@stuff/ui/button/button.css";
 import { StuffBranding } from "./_components/stuff";
 import { H1, H2, P } from "@stuff/typography";
-import "./style.css";
 import {
 	boxGrid,
 	conversations,
@@ -19,9 +18,7 @@ import { border, stack } from "src/components/recipies";
 import { shadow } from "src/components/recipies/shadow.css";
 
 import { NiceCard } from "./_components/nicecard";
-import { HeaderIcon } from "./page.icon";
 import { Text1 } from "packages/ui/atoms";
-import { palette } from "packages/ui/theme/palettes.css";
 import { Link } from "src/components/structure/link";
 import Image from "next/image";
 import { Disclosure } from "packages/ui/components/disclosure";
@@ -62,7 +59,7 @@ export default setupPage({
 						style={{ width: "100%" }}
 						className={cn(
 							stack({
-								justify: "between",
+								justify: "start",
 								align: "center",
 								direction: {
 									mobile: "col",
@@ -103,7 +100,6 @@ export default setupPage({
 								</Link>
 							}
 						/>
-						<HeaderIcon />
 					</div>
 				</Section>
 				<Section

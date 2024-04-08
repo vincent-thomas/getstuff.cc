@@ -73,45 +73,12 @@ export const Sidebar = ({ className }: { className?: string }) => {
 					</SidebarLink>
 				</div>
 				<div className={stack({ gap: "sm", direction: "col" })}>
-					{/* <Suspense fallback={<ListFoldersSkeleton />}> */}
 					<ListFolders />
-					{/* </Suspense> */}
 				</div>
 			</aside>
 		</>
 	);
 };
-
-// const ListFoldersSkeleton = async () => {
-// 	return (
-// 		<div
-// 			className={cn(
-// 				stack({ direction: "col", gap: "sm" }),
-// 				css({ overflowY: "auto" }),
-// 			)}
-// 		>
-// 			<div
-// 				className={cn(
-// 					stack({ align: "center", justify: "between" }),
-// 					css({ width: "full", pX: "small" }),
-// 				)}
-// 			>
-// 				<div
-// 					style={{
-// 						height: "28px",
-// 						width: "82px",
-// 						animation: `${pulse} 2s cubic-bezier(0.4, 0, 0.6, 1) infinite`,
-// 					}}
-// 					className={cn(
-// 						css({ bg: "bgComponent" }),
-// 						border({ rounded: "radius" }),
-// 					)}
-// 				></div>
-// 				<CreateFolderButton />
-// 			</div>
-// 		</div>
-// 	);
-// };
 
 const ListFolders = async () => {
 	unstable_noStore();
