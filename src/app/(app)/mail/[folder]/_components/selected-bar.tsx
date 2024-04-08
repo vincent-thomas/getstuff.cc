@@ -22,6 +22,8 @@ import {
 	MenuItem,
 	MenuSeparator,
 } from "packages/ui/components";
+import { TRPCError } from "@trpc/server";
+import { toast } from "sonner";
 
 export const SelectedBar = ({
 	folderId,
@@ -40,7 +42,7 @@ export const SelectedBar = ({
 			(folder) => folder.id !== folderId,
 		);
 	}, [folderId]);
-	console.log(folderId);
+
 	const otherFolders = useMemo(() => {
 		return (folders.data ?? [])
 			.map((folder) => ({
@@ -69,12 +71,17 @@ export const SelectedBar = ({
 						<MenuItem
 							key={folder.id}
 							onClick={async () => {
-								await moveThreads.mutateAsync({
-									folderId: folderId,
-									newFolderId: folder.id,
-									threadIds: selected,
-								});
-								router.push(`/mail/${folderId}`);
+								try {
+									await moveThreads.mutateAsync({
+										folderId: folderId,
+										newFolderId: folder.id,
+										threadIds: selected,
+									});
+									router.push(`/mail/${folderId}`);
+								} catch (error) {
+									const e = error as TRPCError;
+									toast.error(e.message)
+								}
 							}}
 						>
 							{folder.name}

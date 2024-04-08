@@ -5,7 +5,7 @@ import { stack } from "src/components/recipies";
 import { Link } from "src/components/structure/link";
 
 export const Navbar = () => (
-	<header className="animate-in slide-in-from-top-2 duration-700 fade-in">
+	<header>
 		<div
 			className={cn(
 				css({ padding: "medium" }),

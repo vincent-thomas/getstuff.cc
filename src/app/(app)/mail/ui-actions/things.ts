@@ -1,6 +1,6 @@
 import { InboxIcon, LogOutIcon, type LucideIcon } from "lucide-react";
 import { store } from "src/app/global-store";
-import { isComposing } from "./compose";
+import { composeActionOpen } from "./compose";
 import { logoutMutation } from "../_components/account-viewer.actions";
 
 type Thing = {
@@ -21,8 +21,7 @@ export const actions: Thing[] = [
 		type: GROUPS.FEATURES,
 		Icon: InboxIcon,
 		action: () => {
-			store.set(isComposing, true);
-			console.log("composing...");
+			store.set(composeActionOpen, true);
 		},
 	},
 	{

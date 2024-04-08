@@ -1,5 +1,5 @@
 import { cn } from "@stuff/components/utils";
-import { H1, H2, P } from "@stuff/typography";
+import { H1, P } from "@stuff/typography";
 import { button } from "@stuff/ui/button/button.css";
 import Link from "next/link";
 import { stack } from "packages/ui/patterns/stack";
@@ -23,11 +23,10 @@ const Page = () => {
 					404
 				</h2>
 				<H1 className={css({ color: "text2", fontSize: "xlarge" })}>
-					Stuff Mail
-				</H1>
-				<H2 className={css({ color: "text1", fontSize: "large" })}>
+					Stuff Mail,<br/>
 					Page or resouce not found
-				</H2>
+
+				</H1>
 				<P>
 					This page doesn&apos;t seem to exist, or maybe you don&apos;t have
 					access to it?

@@ -108,9 +108,8 @@ export const accountsRouter = router({
 			const dyn = getDyn();
 			const user = await getUser(dyn, env.STAGE, username);
 
-			console.debug("USER", user);
-
 			if (user === undefined) {
+				logger.debug("user doesnt exist, sending random response")
 				// Random response to prevent knowing that username doesn't exist
 				return {
 					salt: randomBytes(64).toString("hex"),
@@ -148,7 +147,7 @@ export const accountsRouter = router({
 
 				try {
 					if (user === undefined) {
-						logger.debug("USER DOESNT EXIST, user_id=" + username);
+						logger.debug("user doesnt exist, user_id=" + username);
 						throw {};
 					}
 					const customer = await getCustomer(dyn, env.STAGE, user.customerId);
@@ -201,7 +200,6 @@ export const accountsRouter = router({
 			const jti = cookies().get("stuff-token-" + username)?.value;
 			if (jti) {
 				cookies().delete("stuff-token-" + username);
-				await ctx.redis.del(`session:${jti}`);
 			}
 		}
 	}),

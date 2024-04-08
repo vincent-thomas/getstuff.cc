@@ -10,16 +10,20 @@ import HardBreak from "@tiptap/extension-hard-break";
 import Heading from "@tiptap/extension-heading";
 import History from "@tiptap/extension-history";
 import "./style.css";
+import "./tiptap.css"
+import { ReactNode } from "react";
 
 const Tiptap = ({
 	onUpdate,
 	initialContent,
 	placeholder,
 	className,
+	innerClassName = ""
 }: {
 	initialContent: string;
 	placeholder: string;
 	className?: string;
+	innerClassName?:string;
 	onUpdate?: ({
 		html,
 		text,
@@ -50,7 +54,7 @@ const Tiptap = ({
 		],
 		editorProps: {
 			attributes: {
-				class: "outline-none tiptap-root w-full h-full pb-32",
+				class: innerClassName,
 			},
 		},
 		onUpdate: ({ editor }) => {

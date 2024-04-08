@@ -7,6 +7,7 @@ export const spacing = createThemeContract({
 	large: null,
 	xlarge: null,
 	"2xlarge": null,
+	"3xlarge": null,
 });
 
 export const spacingDefiningClass = style({
@@ -17,6 +18,7 @@ export const spacingDefiningClass = style({
 		large: "16px",
 		xlarge: "24px",
 		"2xlarge": "48px",
+		"3xlarge": "62px",
 	}),
 	"@media": {
 		"screen and (min-width: 768px)": {
@@ -27,6 +29,7 @@ export const spacingDefiningClass = style({
 				large: "18px",
 				xlarge: "28px",
 				"2xlarge": "52px",
+				"3xlarge"	: "70px",
 			}),
 		},
 	},
