@@ -18,7 +18,6 @@ export const SidebarLink = ({
 				stack({ align: "center", gap: "sm", justify: "start" }),
 				border({ rounded: "radius" }),
 				css({ bg: { hover: "bgHover" }, p: "medium", color: "text2" }),
-				// "hover:bg-hover md:text-lg font-semibold flex-col md:flex-row",
 				className,
 			)}
 			href={href}
