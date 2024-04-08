@@ -33,7 +33,7 @@ export const comboboxItem = style({
 	outline: "none !important",
 });
 
-globalStyle(`${comboboxItem}[data-active-item][data-should-active='true']`, {
+globalStyle(`${comboboxItem}[data-active-item]`, {
 	backgroundColor: `${palette.bgSelected} !important`,
 	outlineOffset: "0",
 	outline: `1px solid ${palette.borderFocus} !important`,

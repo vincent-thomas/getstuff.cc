@@ -18,6 +18,7 @@ import groupBy from "lodash.groupby";
 import * as Ariakit from "@ariakit/react";
 import { spacing } from "packages/ui/variables";
 import { actions } from "./things";
+import { ComposeAction } from "./compose";
 
 export interface IAction {
 	trigger: ReactNode;
@@ -111,6 +112,7 @@ export const CommandMenu: FC = () => {
 						<DialogDismiss
 							className={cn(
 								button({ variant: "outline", size: "sm", rounded: "medium" }),
+								css({bg: "bgComponent"})
 							)}
 						>
 							Esc
@@ -149,22 +151,14 @@ export const CommandMenu: FC = () => {
 									</h1>
 									{items.map((item, i) => (
 										<Ariakit.ComboboxItem
-											data-should-active={
-												list.flat(2).length - list.length !== actions.length
-											}
 											focusOnHover
 											setValueOnClick={false}
 											key={i}
 											value={item.label}
 											onClick={async () => {
-												if (
-													list.flat(2).length - list.length !==
-													actions.length
-												) {
-													await item.action();
-													setValue("");
-													setOpen(false);
-												}
+												await item.action();
+												setValue("");
+												setOpen(false);
 											}}
 											className={cn(
 												button({

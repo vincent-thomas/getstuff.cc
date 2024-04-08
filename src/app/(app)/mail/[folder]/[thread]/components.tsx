@@ -1,15 +1,33 @@
-import { redirect } from "next/navigation";
-import { MailMessage } from "./message";
-import { api } from "@stuff/api-client/server";
 import { border } from "src/components/recipies";
 import {
 	Tooltip,
 	TooltipContent,
 	TooltipTrigger,
 } from "packages/ui/components/tooltip/tooltip";
-import { Button } from "@stuff/ui/button";
-import { ShieldCheckIcon } from "lucide-react";
+import { Button, button } from "@stuff/ui/button";
+import { PlusIcon, ShieldCheckIcon } from "lucide-react";
 import { pulse } from "packages/ui/keyframes";
+import { Link } from "src/components/structure/link";
+import { SelectedBar } from "../_components/selected-bar";
+
+export const ConversationButtonBar = ({
+	folderId,
+	threadId,
+}: { folderId: string; threadId: string }) => {
+	return (
+		<div
+			className={cn(stack({ align: "center", gap: "sm" }), css({ p: "small" }))}
+		>
+			<Link
+				className={cn(button({ variant: "icon", size: "sm" }))}
+				href={`/mail/${folderId}`}
+			>
+				<PlusIcon size={18} style={{ rotate: "45deg" }} color={palette.text1} />
+			</Link>
+			<SelectedBar threadIds={[threadId]} folderId={folderId} />
+		</div>
+	);
+};
 
 export const ThreadContentSkeleton = () => {
 	return (
@@ -26,31 +44,8 @@ export const ThreadContentSkeleton = () => {
 	);
 };
 
-export const ThreadContent = async (conversationProps: {
-	folderId: string;
-	threadId: string;
-}) => {
-	const conversation =
-		await api.mail.threads.getThread.query(conversationProps);
 
-	if (conversation === null) {
-		redirect(`/mail/${conversationProps.folderId}`);
-	}
-	return (
-		<>
-			<ThreadHeading title={conversation?.thread.title} />
-			<div className={cn(css({ overflowY: "auto", p: "medium" }))}>
-				<div className={stack({ direction: "col", gap: "md" })}>
-					{conversation.messages.map((thread) => (
-						<MailMessage key={thread.messageId} thread={thread} />
-					))}
-				</div>
-			</div>
-		</>
-	);
-};
-
-const ThreadHeading = ({ title }: { title: string }) => {
+export const ThreadHeading = ({ title }: { title: string }) => {
 	return (
 		<div
 			className={cn(

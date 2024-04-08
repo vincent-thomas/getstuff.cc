@@ -1,10 +1,5 @@
-import { Toaster } from "sonner";
-import type { ReactNode } from "react";
+import { Toaster as SonnerToaster } from "sonner";
 
-export const ToastProvider = ({ children }: { children: ReactNode }) => (
-	<>
-		<Toaster />
-
-		{children}
-	</>
+export const Toaster = () => (
+		<SonnerToaster position="top-center" theme="dark" richColors />
 );

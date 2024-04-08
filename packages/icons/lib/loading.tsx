@@ -1,4 +1,3 @@
-import { cn } from "packages/components/utils";
 import type { FC } from "react";
 
 interface Props {

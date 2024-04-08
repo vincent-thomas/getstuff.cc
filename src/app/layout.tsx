@@ -9,7 +9,7 @@ import { TRPCReactProvider } from "@stuff/api-client/react";
 import type { Metadata, Viewport } from "next";
 import { roundingClass, spacingDefiningClass } from "packages/ui/variables";
 import { themeClass } from "packages/ui/theme/palettes.css";
-import { ToastProvider } from "src/providers/sonner";
+import { Toaster } from "src/providers/sonner";
 import { Provider } from "jotai";
 import { store } from "./global-store";
 
@@ -68,11 +68,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 					roundingClass,
 				)}
 			>
-				<ToastProvider>
-					<TRPCReactProvider>
-						<Provider store={store}>{children}</Provider>
-					</TRPCReactProvider>
-				</ToastProvider>
+				<TRPCReactProvider>
+					<Provider store={store}>{children}</Provider>
+				</TRPCReactProvider>
+				<Toaster />
 			</body>
 		</html>
 	);

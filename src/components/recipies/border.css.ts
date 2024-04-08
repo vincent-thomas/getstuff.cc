@@ -19,6 +19,7 @@ const colorsKeys = {
 	subtle: "borderSubtle",
 	interactive: "borderComponent",
 	focus: "borderFocus",
+	transparent: "transparent",
 };
 
 const colors = Object.keys(colorsKeys);
@@ -76,6 +77,7 @@ export const border = recipe({
 			subtle: {},
 			interactive: {},
 			focus: {},
+			transparent: {},
 		},
 		rounded: {
 			radius: { borderRadius: rounding.medium },

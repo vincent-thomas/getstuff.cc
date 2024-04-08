@@ -31,11 +31,3 @@ h2.tiptap-title {
 h1.tiptap-title {
   font-size: calc(var(--size) * pow(var(--increment), 4));
 }
-
-.tiptap p.is-editor-empty:first-child::before {
-  color: var(--text2);
-  content: attr(data-placeholder);
-  float: left;
-  height: 0;
-  pointer-events: none;
-}

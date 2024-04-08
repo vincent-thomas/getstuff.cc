@@ -10,6 +10,7 @@ import { threadInterface } from "backend/interfaces/thread";
 import { messageViewInterface } from "backend/interfaces/messageView";
 import { moveThread } from "backend/utils/moveThread";
 import Fuse from "fuse.js";
+import { TRPCError } from "@trpc/server";
 
 export const threadsRouter = router({
 	getThreads: protectedProc
@@ -173,6 +174,12 @@ export const threadsRouter = router({
 			}),
 		)
 		.mutation(async ({ ctx, input: { folderId, threadIds, newFolderId } }) => {
+			if (folderId === "sent") {
+				throw new TRPCError({
+					code: "BAD_REQUEST",
+					cause: "Cannot move threads from sent folder",
+				});
+			}
 			const results = [];
 			for (const threadId of threadIds) {
 				const result = await moveThread(
