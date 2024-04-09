@@ -9,7 +9,7 @@ import { stack } from "packages/ui/patterns/stack";
 import { Button } from "@stuff/ui/button";
 import { H1 } from "@stuff/typography";
 import { spacing } from "packages/ui/variables";
-import { DialogDescriptionProps } from "@ariakit/react";
+import type { DialogDescriptionProps } from "@ariakit/react";
 
 const Dialog = DialogPrimitive.Root;
 
