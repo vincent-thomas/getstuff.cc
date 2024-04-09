@@ -11,6 +11,7 @@ import { FolderHeader } from "./views/header";
 import { MailTable } from "./views/mail-table";
 import { CommandMenu } from "../ui-actions/commandMenu";
 import { UIActions } from "../ui-actions";
+import { MailRelayModal } from "../ui-actions/mailRelay";
 
 const Layout = setupLayout({
 	query: z
@@ -25,6 +26,7 @@ const Layout = setupLayout({
 			<>
 				<UIActions />
 				<CommandMenu />
+				<MailRelayModal />
 				<div
 					className={cn(
 						stack({ direction: "col" }),

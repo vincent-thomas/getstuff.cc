@@ -93,7 +93,7 @@ export const ComposeAction: FC<UIAction> = ({ open, onChange }) => {
 		}} open={open}>
 			<DialogContent size="lg">
 				<div className={css({ p: "large" })}>
-					<H1 className={cn(css({ fontSize: "xlarge" }))}>{subject ?? "Compose"}</H1>
+					<H1 className={cn(css({ fontSize: "xlarge" }))}>{subject || "Compose"}</H1>
 					<DialogDescription>Send an email</DialogDescription>
 				</div>
 				<div className={cn(border({ side: "t", color: "interactive" }))} />
@@ -155,10 +155,10 @@ export const ComposeAction: FC<UIAction> = ({ open, onChange }) => {
 						<div className={cn(border({ side: "t", color: "interactive" }))} />
 					</div>
 
-					<div ref={ref} className={cn(css({width: "full",p: "large", color: "text2" }))} style={{minHeight: "300px", overflow: "auto", maxHeight: "650px"}}>
+					<div ref={ref} className={cn(css({width: "full",p: "large", color: "text2" }))} style={{minHeight: "300px", overflow: "auto", maxHeight: "50vh"}}>
 						<Tiptap
 							onUpdate={(editor) => {
-								setShouldShadow(ref.current?.clientHeight === 650);
+								setShouldShadow((ref.current?.clientHeight || 0) > window.innerHeight * 0.5);
 								setEmailBody({html: editor.html, text: editor.text})
 							}}
 							initialContent="<p></p>"

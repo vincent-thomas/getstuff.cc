@@ -17,17 +17,19 @@ export const DialogRoot = style([
 ]);
 
 globalStyle("[data-backdrop]", {
-	backgroundColor: "hsl(204 4% 0% / 0.1)",
-	backdropFilter: "blur(4px)",
+	// backgroundColor: "hsl(204 4% 0% / 0.1)",
+	// backdropFilter: "blur(0.5px)",
 });
 
 export const cardStyle = style([
 	css({ bg: "bgSubtle", pX: "large", pY: "small" }),
-	border({ rounded: "radius", side: "all", color: "interactive" }),
-	{
-		backdropFilter: "blur(100px)",
-	},
+	border({ rounded: "radius", side: "all", color: "interactive" })
 ]);
+
+export const cardRoot = style({
+	backgroundColor: "rgba(0,0,0,0.8)",
+	boxShadow: "0px 40px 24px 8px rgba(0,0,0,0.8)",
+})
 
 export const comboboxItem = style({
 	outline: "none !important",
