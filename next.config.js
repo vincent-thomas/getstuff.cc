@@ -7,6 +7,7 @@ await import("./src/env.js");
 import { createVanillaExtractPlugin } from "@vanilla-extract/next-plugin";
 import { withContentlayer } from "next-contentlayer";
 import unimport from "unimport/unplugin";
+import million from "million/compiler";
 
 const withVE = createVanillaExtractPlugin();
 
@@ -14,10 +15,10 @@ const withVE = createVanillaExtractPlugin();
 const config = {
 	reactStrictMode: true,
 	poweredByHeader: false,
-	experimental: {
-		useLightningcss: true,
-		ppr: true
-	},
+	// experimental: {
+	// 	useLightningcss: true,
+	// 	ppr: true
+	// },
 	webpack: (config) => {
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
 		config?.module?.rules?.push({
@@ -74,4 +75,4 @@ const config = {
 	},
 };
 
-export default withContentlayer(withVE(config));
+export default million.next(withContentlayer(withVE(config)));
