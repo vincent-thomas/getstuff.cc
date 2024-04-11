@@ -8,6 +8,12 @@ import { createVanillaExtractPlugin } from "@vanilla-extract/next-plugin";
 import { withContentlayer } from "next-contentlayer";
 import unimport from "unimport/unplugin";
 import million from "million/compiler";
+import bundleAnalyzer from "@next/bundle-analyzer";
+
+const withBundleAnalyzer = bundleAnalyzer({
+  enabled: process.env.ANALYZE === "true",
+  openAnalyzer: true,
+});
 
 const withVE = createVanillaExtractPlugin();
 
@@ -15,10 +21,10 @@ const withVE = createVanillaExtractPlugin();
 const config = {
   reactStrictMode: true,
   poweredByHeader: false,
-  // experimental: {
-  // 	useLightningcss: true,
-  // 	ppr: true
-  // },
+  experimental: {
+    useLightningcss: true,
+    ppr: true,
+  },
   webpack: (config) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
     config?.module?.rules?.push({
@@ -82,5 +88,7 @@ const config = {
   },
 };
 
-// @ts-expect-error jag vet
-export default million.next(withContentlayer(withVE(config)));
+export default million.next(
+  // @ts-expect-error jag vet
+  withBundleAnalyzer(withContentlayer(withVE(config)))
+);

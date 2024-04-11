@@ -1,25 +1,28 @@
+"use client";
 import type { FC } from "react";
 
 import { MailRow } from "./mail-row";
 import { Flex } from "@stuff/structure";
 import { H2, P } from "@stuff/typography";
-import { api } from "@stuff/api-client/server";
-import { unstable_noStore } from "next/cache";
-
+import { api } from "@stuff/api-client/react";
 export interface FolderHeader {
 	folderId: string;
 	searchQuery?: string;
 }
 
-export const MailTable: FC<FolderHeader> = async ({
+export const MailTable: FC<FolderHeader> = ({
 	folderId,
 	searchQuery,
 }) => {
-	unstable_noStore();
-	const threads = await api.mail.threads.getThreads.query({
+	const {data: threads} = api.mail.threads.getThreads.useQuery({
 		folderId: folderId,
 		searchQuery,
 	});
+
+
+	if (threads === undefined) {
+		return (<></>)
+	}
 
 	if (threads.length === 0) {
 		return (
@@ -35,12 +38,12 @@ export const MailTable: FC<FolderHeader> = async ({
 			</Flex>
 		);
 	}
-
+ 
 	return (
 		<div className={cn(css({ overflowY: "auto" }))}>
-			{threads.map((thread) => (
-				<MailRow key={thread.threadId} thread={thread} folderId={folderId} />
-			))}
+				{threads.map((thread) => (
+					<MailRow key={thread.threadId} thread={thread} folderId={folderId} />
+				))}
 		</div>
 	);
 };

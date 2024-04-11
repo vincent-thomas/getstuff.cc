@@ -13,3 +13,8 @@ export const formErrorStyle = style([
 		color: "hsl(357 100% 90%)",
 	},
 ]);
+
+
+export const formLabelStyle = style({
+	userSelect: "none"
+})

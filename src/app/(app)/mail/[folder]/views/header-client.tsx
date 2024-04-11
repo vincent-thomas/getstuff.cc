@@ -5,7 +5,6 @@ import { api } from "@stuff/api-client/react";
 import { useAtom } from "jotai";
 import { messagesIdSelected } from "../store/messages-id-selected";
 import { Checked, UnChecked } from "packages/icons/lib/unchecked";
-import { RefreshButton } from "../_components/refresh-button";
 import { SelectedBar } from "../_components/selected-bar";
 
 export const FolderHeaderInternal: FC<{ folderId: string; name: string }> = ({
@@ -57,9 +56,7 @@ export const FolderHeaderInternal: FC<{ folderId: string; name: string }> = ({
 					css({ width: "full", height: "full", pX: "small" }),
 				)}
 			>
-				{selected.length === 0 ? (
-					<RefreshButton />
-				) : (
+				{selected.length > 0 && (
 					<SelectedBar threadIds={selected} folderId={folderId} />
 				)}
 			</div>

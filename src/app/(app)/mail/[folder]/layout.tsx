@@ -9,11 +9,14 @@ import { Searchbar } from "./search-bar";
 import { Suspense } from "react";
 import { FolderHeader } from "./views/header";
 import { MailTable } from "./views/mail-table";
-import { CommandMenu } from "../ui-actions/commandMenu";
-import { UIActions } from "../ui-actions";
-import { MailRelayModal } from "../ui-actions/mailRelay";
+import { Provider } from "./views/context";
+import dynamic from "next/dynamic"
 
-const Layout = setupLayout({
+const CommandMenu = dynamic(() => import("../ui-actions/commandMenu").then(v => ({default: v.CommandMenu})), {ssr: false});
+const UIActions = dynamic(() => import("../ui-actions").then(v => ({default: v.UIActions})), {ssr: false});
+const MailRelayModal = dynamic(() => import("../ui-actions/mailRelay").then(v => ({default: v.MailRelayModal})), {ssr: false});
+
+export default setupLayout({
 	query: z
 		.object({
 			q: z.string().optional(),
@@ -23,7 +26,7 @@ const Layout = setupLayout({
 	Component({ params, query, children }) {
 
 		return (
-			<>
+			<Provider>
 				<UIActions />
 				<CommandMenu />
 				<MailRelayModal />
@@ -100,16 +103,14 @@ const Layout = setupLayout({
 							>
 								<Suspense>
 									<FolderHeader folderId={params.folder} />
-									<MailTable folderId={params.folder} searchQuery={query?.q} />
 								</Suspense>
+									<MailTable folderId={params.folder} searchQuery={query?.q} />
 							</div>
 							{children}
 						</main>
 					</div>
 				</div>
-			</>
+			</Provider>
 		);
 	},
 });
-
-export default Layout;

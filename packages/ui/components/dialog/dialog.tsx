@@ -48,6 +48,7 @@ const DialogContent: React.FC<DialogContentProps> = ({
 	onClosePress,
 	size = "sm",
 	mainTitle,
+	style,
 	...props
 }) => {
 	return (
@@ -55,6 +56,7 @@ const DialogContent: React.FC<DialogContentProps> = ({
 			<DialogOverlay onClick={onClosePress} />
 			<DialogPrimitive.Content
 				style={{
+					...style,
 					zIndex: 50,
 					transform: "translate(-50%, -50%)",
 					left: "50%",
