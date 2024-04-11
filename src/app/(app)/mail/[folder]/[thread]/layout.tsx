@@ -1,6 +1,6 @@
 import { setupLayout } from "src/utils/setupPage";
 import { z } from "zod";
-import { ConversationButtonBar } from "./components";
+import { ConversationButtonBar } from "./components/components";
 import { border } from "src/components/recipies";
 
 const Layout = setupLayout({

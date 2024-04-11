@@ -8,7 +8,7 @@ import { Button, button } from "@stuff/ui/button";
 import { PlusIcon, ShieldCheckIcon } from "lucide-react";
 import { pulse } from "packages/ui/keyframes";
 import { Link } from "src/components/structure/link";
-import { SelectedBar } from "../_components/selected-bar";
+import { SelectedBar } from "../../_components/selected-bar";
 
 export const ConversationButtonBar = ({
 	folderId,

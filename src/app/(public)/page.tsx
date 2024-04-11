@@ -1,3 +1,5 @@
+import "server-only"
+
 import { Section } from "./_components/section";
 import { Card } from "./_components/card";
 import { HeroTitle } from "./_components/header";

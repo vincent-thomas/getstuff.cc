@@ -16,16 +16,17 @@ export const MailRelayModal = () => {
 	const [open, setOpen] = useAtom(mailRelayOpen);
 
 	const { data: aliases } = api.extensions.mailRelay.listAliases.useQuery();
-	if (aliases === undefined) {
-		return null;
-	}
 
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
-			<DialogContent size="md" className={cn(css({p: "xlarge", fontWeight: "bold"}), stack({direction: "col", gap: "lg"}))}>
-				<DialogTitle className={cn(css({fontSize:"large", color: "text2"}))}>Mail Relay</DialogTitle>
-				<div style={{minWidth: "300px", maxWidth: "50ch", overflowY: "auto"}} className={cn(stack({direction:'col', gap:'sm'}))}>
-					{aliases.map((item, i) => (
+			<DialogContent size="md" style={{
+					maxHeight: "90vh"
+				}}
+				className={cn(css({p: "large", fontWeight: "bold"}), stack({direction: "col", gap: "lg"}))}
+			>
+				<DialogTitle className={cn(css({fontSize:"xlarge", color: "text2"}))}>Mail Relay</DialogTitle>
+				<div style={{minHeight: "300px", maxHeight: "600px", overflowY: "auto"}} className={cn(stack({direction:'col', gap:'sm'}))}>
+					{(aliases ?? []).map((item, i) => (
 						<MailRelay key={i} {...item} />
 					))}
 				</div>
@@ -36,9 +37,7 @@ export const MailRelayModal = () => {
 
 const MailRelay = (item: {label:string, description:string, created_at: number}) => {
 
-
 	const isWebsite = useMemo(() => /^[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9]\.[a-zA-Z]{2,}$/.test(item.label), [item.label])
-	console.log(isWebsite, item.label);
 
 	return (
 		<Dialog>

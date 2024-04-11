@@ -8,7 +8,6 @@ type Page<T, C> = ({
 }: {
 	params: T;
 	query: C;
-	env: typeof env;
 }) => Promise<JSX.Element> | JSX.Element;
 
 export const setupPage =
@@ -31,7 +30,7 @@ export const setupPage =
 			query !== undefined
 				? (query.parse(props.searchParams) as z.infer<Query>)
 				: ({} as unknown);
-		return Component({ params: validated, query: queryValidated, env });
+		return Component({ params: validated, query: queryValidated });
 	};
 
 type Layout<T, C> = ({
@@ -42,7 +41,6 @@ type Layout<T, C> = ({
 	params: T;
 	query: C;
 	children: ReactNode;
-	env: typeof env;
 }) => Promise<JSX.Element> | JSX.Element;
 
 export const setupLayout =
@@ -69,6 +67,18 @@ export const setupLayout =
 			params: validated,
 			children: props.children,
 			query: queryValidated,
-			env,
+		});
+	};
+
+type Loading = ({
+	children,
+}: {
+	children: ReactNode;
+}) => Promise<JSX.Element> | JSX.Element;
+	
+export const setupLoading = ({ Component }: { Component: Loading; }): FC<LayoutProps> =>
+	(props) => {
+		return Component({
+			children: props.children
 		});
 	};

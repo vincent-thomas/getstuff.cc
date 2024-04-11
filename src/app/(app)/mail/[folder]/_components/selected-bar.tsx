@@ -22,7 +22,7 @@ import {
 	MenuItem,
 	MenuSeparator,
 } from "packages/ui/components";
-import { TRPCError } from "@trpc/server";
+import type { TRPCError } from "@trpc/server";
 import { toast } from "sonner";
 
 export const SelectedBar = ({
@@ -118,6 +118,7 @@ export const SelectedBar = ({
 						value: false,
 						threadIds,
 					});
+
 					router.push(`/mail/${folderId}`);
 				}}
 			>

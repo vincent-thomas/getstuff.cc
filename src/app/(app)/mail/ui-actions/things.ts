@@ -29,6 +29,25 @@ export const actions: Thing[] = [
 		},
 	},
 	{
+		type: GROUPS.FEATURES,
+		label: "View all extensions",
+		Icon: PuzzleIcon,
+		action:  () => store.set(extensionsOpen, true)
+	},
+	{
+		type: GROUPS.FEATURES,
+		label: "Extension: Mail Relay",
+		Icon: NotebookIcon,
+		action: () => store.set(mailRelayOpen, true)
+	},
+	{
+		type: GROUPS.FEATURES,
+		label: "Extension: Folder rules",
+		Icon: NotebookIcon,
+		action: () => store.set(mailRelayOpen, true)
+	},
+
+	{
 		type: GROUPS.ACCOUNT,
 		label: "Log out",
 		Icon: LogOutIcon,
@@ -36,12 +55,7 @@ export const actions: Thing[] = [
 			await logoutMutation();
 		},
 	},
-	{
-		type: GROUPS.FEATURES,
-		label: "View all extensions",
-		Icon: PuzzleIcon,
-		action:  () => store.set(extensionsOpen, true)
-	},
+
 	{
 		type: GROUPS.NAVIGATION,
 		label: "Go to inbox",
@@ -53,11 +67,5 @@ export const actions: Thing[] = [
 		label: "Go to archive",
 		Icon: ArchiveIcon,
 		action: goToArchiveAction
-	},
-	{
-		type: GROUPS.FEATURES,
-		label: "Extension: Mail Relay",
-		Icon: NotebookIcon,
-		action: () => store.set(mailRelayOpen, true)
-	},
+	}
 ];

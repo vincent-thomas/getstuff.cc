@@ -1,13 +1,17 @@
 "use client";
 
 import * as AriaKit from "@ariakit/react";
-import { formErrorStyle } from "./form.css";
+import { formErrorStyle, formLabelStyle } from "./form.css";
 import { FC } from "react";
 import { border } from "src/components/recipies";
 
 const FormRoot = AriaKit.Form;
 
-const FormLabel = AriaKit.FormLabel;
+const FormLabel: FC<AriaKit.FormLabelProps> = ({ className, ...props }) => {
+	return (
+		<AriaKit.FormLabel className={cn(formLabelStyle, className)} {...props} />
+	);
+};
 
 export type FormInputProps = AriaKit.FormInputProps;
 

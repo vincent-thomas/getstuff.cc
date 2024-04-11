@@ -1,9 +1,9 @@
 import { z } from "zod";
 import { setupPage } from "@stuff/client/utils";
-import {  ThreadHeading } from "./components";
+import { ThreadHeading } from "./components/components";
 import { api } from "@stuff/api-client/server";
 import { redirect } from "next/navigation";
-import { MailMessage } from "./message";
+import { MailMessage } from "./components/message";
 import { unstable_noStore } from "next/cache";
 
 export default setupPage({
