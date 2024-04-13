@@ -12,10 +12,9 @@ export default setupPage({
 		thread: z.string(),
 	}),
 	async Component({ params: { folder: folderId, thread: threadId } }) {
-		unstable_noStore()
+		unstable_noStore();
 
-		const conversation =
-		await api.mail.threads.getThread.query({
+		const conversation = await api.mail.threads.getThread.query({
 			folderId,
 			threadId,
 		});
@@ -25,7 +24,11 @@ export default setupPage({
 		}
 
 		if (!conversation?.thread.read) {
-			await api.mail.threads.setRead.mutate({value: true, folderId, threadIds: [threadId]})
+			await api.mail.threads.setRead.mutate({
+				value: true,
+				folderId,
+				threadIds: [threadId],
+			});
 		}
 
 		return (

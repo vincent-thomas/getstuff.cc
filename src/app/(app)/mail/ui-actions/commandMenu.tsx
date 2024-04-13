@@ -10,7 +10,12 @@ import {
 	type FC,
 	type ReactNode,
 } from "react";
-import { DialogRoot, cardRoot, cardStyle, comboboxItem } from "./commandMenu.css";
+import {
+	DialogRoot,
+	cardRoot,
+	cardStyle,
+	comboboxItem,
+} from "./commandMenu.css";
 import { button } from "@stuff/ui/button";
 import { PlusIcon } from "lucide-react";
 import { matchSorter } from "match-sorter";
@@ -78,7 +83,13 @@ export const CommandMenu: FC = () => {
 			}}
 		>
 			<Ariakit.ComboboxProvider store={store}>
-				<div className={cn(cardRoot, border({ rounded: "radius" }),  stack({ direction: "col", gap: "sm" }))}>
+				<div
+					className={cn(
+						cardRoot,
+						border({ rounded: "radius" }),
+						stack({ direction: "col", gap: "sm" }),
+					)}
+				>
 					<div
 						className={cn(cardStyle, css({ pY: "large" }))}
 						style={{
@@ -115,14 +126,18 @@ export const CommandMenu: FC = () => {
 							<DialogDismiss
 								className={cn(
 									button({ variant: "outline", size: "sm", rounded: "medium" }),
-									css({bg: "bgComponent"})
+									css({ bg: "bgComponent" }),
 								)}
 							>
 								Esc
 							</DialogDismiss>
 						</div>
 					</div>
-					<Ariakit.ComboboxList alwaysVisible className={cn(cardStyle, css({overflowY: "auto"}))} style={{maxHeight: "370px"}}>
+					<Ariakit.ComboboxList
+						alwaysVisible
+						className={cn(cardStyle, css({ overflowY: "auto" }))}
+						style={{ maxHeight: "370px" }}
+					>
 						<div>
 							{list.length === 0 ? (
 								<div className={cn(css({ p: "small", color: "text1" }))}>

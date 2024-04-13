@@ -14,7 +14,6 @@ export const formErrorStyle = style([
 	},
 ]);
 
-
 export const formLabelStyle = style({
-	userSelect: "none"
-})
+	userSelect: "none",
+});

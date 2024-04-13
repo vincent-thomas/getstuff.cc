@@ -109,7 +109,7 @@ export const accountsRouter = router({
 			const user = await getUser(dyn, env.STAGE, username);
 
 			if (user === undefined) {
-				logger.debug("user doesnt exist, sending random response")
+				logger.debug("user doesnt exist, sending random response");
 				// Random response to prevent knowing that username doesn't exist
 				return {
 					salt: randomBytes(64).toString("hex"),

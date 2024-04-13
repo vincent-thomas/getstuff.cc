@@ -9,7 +9,7 @@ import { Button } from "@stuff/ui/button";
 import { Text1, Text2 } from "packages/ui/atoms";
 import { Link } from "src/components/structure/link";
 import { useDraggable } from "@dnd-kit/core";
-import {CSS} from '@dnd-kit/utilities';
+import { CSS } from "@dnd-kit/utilities";
 import { GripVerticalIcon } from "lucide-react";
 import { DraggableData, draggableDataInterface } from "./context";
 
@@ -26,13 +26,21 @@ export const MailRow = ({
 	};
 }) => {
 	const [selected, setSelected] = useAtom(messagesIdSelected);
-	const { setNodeRef, listeners, setActivatorNodeRef, transform, attributes, isDragging } = useDraggable({
+	const {
+		setNodeRef,
+		listeners,
+		setActivatorNodeRef,
+		transform,
+		attributes,
+		isDragging,
+	} = useDraggable({
 		id: `mail-row:${thread.threadId}`,
 		data: draggableDataInterface.parse({
 			type: "mail-row",
-			id: thread.threadId,
-		} as DraggableData)
-	})
+			threadId: thread.threadId,
+			folderId,
+		} as DraggableData),
+	});
 
 	return (
 		<div
@@ -45,24 +53,35 @@ export const MailRow = ({
 			}}
 			{...attributes}
 			className={cn(
-				stack({
-				}),
+				stack({}),
 				css({
 					bg: {
 						default: selected.includes(thread.threadId)
 							? "highlight"
 							: thread.read
 								? "bgComponent"
-								: "bgApp"
+								: "bgApp",
 					},
 				}),
-				isDragging && shadow({
-					size: "large"
+				isDragging &&
+					shadow({
+						size: "large",
+					}),
+				border({
+					side: "b",
+					color: isDragging ? "focus" : "interactive",
+					rounded: isDragging ? "lg" : undefined,
 				}),
-				border({ side: "b", color: isDragging ? "focus" : "interactive", rounded: isDragging ? "lg" : undefined }),
 			)}
 		>
-			<button ref={setActivatorNodeRef} className={cn(css({p: "medium", paddingRight: "none"}), stack({justify: "center", align: "center"}))} {...listeners}>
+			<button
+				ref={setActivatorNodeRef}
+				className={cn(
+					css({ p: "medium", paddingRight: "none" }),
+					stack({ justify: "center", align: "center" }),
+				)}
+				{...listeners}
+			>
 				<GripVerticalIcon size={18} color={palette.text1} />
 			</button>
 
@@ -95,7 +114,7 @@ export const MailRow = ({
 				)}
 			>
 				<p
-					style={{width: "300px"}}
+					style={{ width: "300px" }}
 					className={cn(
 						css({
 							fontWeight: !thread.read ? "semibold" : "normal",
@@ -106,7 +125,7 @@ export const MailRow = ({
 				>
 					{thread.title}
 				</p>
-				<Text2 className={cn(css({marginLeft: "auto"}))}>
+				<Text2 className={cn(css({ marginLeft: "auto" }))}>
 					{formatDistanceToNow(new Date(thread.lastActive), {
 						addSuffix: true,
 					})}

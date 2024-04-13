@@ -80,7 +80,7 @@ export const SelectedBar = ({
 									router.push(`/mail/${folderId}`);
 								} catch (error) {
 									const e = error as TRPCError;
-									toast.error(e.message)
+									toast.error(e.message);
 								}
 							}}
 						>

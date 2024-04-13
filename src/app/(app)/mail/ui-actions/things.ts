@@ -1,4 +1,11 @@
-import { ArchiveIcon, InboxIcon, LogOutIcon, NotebookIcon, PuzzleIcon, type LucideIcon } from "lucide-react";
+import {
+	ArchiveIcon,
+	InboxIcon,
+	LogOutIcon,
+	NotebookIcon,
+	PuzzleIcon,
+	type LucideIcon,
+} from "lucide-react";
 import { store } from "src/app/global-store";
 import { composeActionOpen } from "./compose";
 import { logoutMutation } from "../_components/account-viewer.actions";
@@ -32,19 +39,19 @@ export const actions: Thing[] = [
 		type: GROUPS.FEATURES,
 		label: "View all extensions",
 		Icon: PuzzleIcon,
-		action:  () => store.set(extensionsOpen, true)
+		action: () => store.set(extensionsOpen, true),
 	},
 	{
 		type: GROUPS.FEATURES,
 		label: "Extension: Mail Relay",
 		Icon: NotebookIcon,
-		action: () => store.set(mailRelayOpen, true)
+		action: () => store.set(mailRelayOpen, true),
 	},
 	{
 		type: GROUPS.FEATURES,
 		label: "Extension: Folder rules",
 		Icon: NotebookIcon,
-		action: () => store.set(mailRelayOpen, true)
+		action: () => store.set(mailRelayOpen, true),
 	},
 
 	{
@@ -60,12 +67,12 @@ export const actions: Thing[] = [
 		type: GROUPS.NAVIGATION,
 		label: "Go to inbox",
 		Icon: InboxIcon,
-		action: goToInboxAction
+		action: goToInboxAction,
 	},
 	{
 		type: GROUPS.NAVIGATION,
 		label: "Go to archive",
 		Icon: ArchiveIcon,
-		action: goToArchiveAction
-	}
+		action: goToArchiveAction,
+	},
 ];

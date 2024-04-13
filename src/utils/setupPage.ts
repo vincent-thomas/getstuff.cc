@@ -75,10 +75,11 @@ type Loading = ({
 }: {
 	children: ReactNode;
 }) => Promise<JSX.Element> | JSX.Element;
-	
-export const setupLoading = ({ Component }: { Component: Loading; }): FC<LayoutProps> =>
+
+export const setupLoading =
+	({ Component }: { Component: Loading }): FC<LayoutProps> =>
 	(props) => {
 		return Component({
-			children: props.children
+			children: props.children,
 		});
 	};

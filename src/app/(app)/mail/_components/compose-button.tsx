@@ -12,7 +12,6 @@ import { menuButton } from "./compose-button.css";
 import { composeActionOpen } from "../ui-actions/compose";
 import { store } from "src/app/global-store";
 
-
 export const ComposeButton = () => {
 	return (
 		<Menu>

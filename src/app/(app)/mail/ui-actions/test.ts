@@ -3,9 +3,9 @@
 import { redirect } from "next/navigation";
 
 export async function goToInboxAction() {
-  redirect("/mail/inbox")
+	redirect("/mail/inbox");
 }
 
 export async function goToArchiveAction() {
-  redirect("/mail/archive")
+	redirect("/mail/archive");
 }

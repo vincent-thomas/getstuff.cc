@@ -29,7 +29,7 @@ export const spacingDefiningClass = style({
 				large: "18px",
 				xlarge: "28px",
 				"2xlarge": "52px",
-				"3xlarge"	: "70px",
+				"3xlarge": "70px",
 			}),
 		},
 	},

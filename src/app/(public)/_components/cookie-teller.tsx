@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 import Link from "next/link";
 import { palette } from "packages/ui/theme";
 import { stack } from "src/components/recipies";
-import { P } from "@stuff/typography"
+import { P } from "@stuff/typography";
 export const CookieTeller = () => {
 	const hasDoneIt = cookies().get("agnolished-cookies")?.value ?? null;
 
@@ -29,17 +29,14 @@ export const CookieTeller = () => {
 			style={{ top: 0, borderBottom: "1px solid " + palette.borderSubtle }}
 		>
 			<div className={cn(stack({}))}>
-				<P className={cn(css({color: "text2", marginRight: "small"}))}>
-					Stuff Mail use cookies only to make sure you are you. Please click here
-					to accept our cookies policy,
+				<P className={cn(css({ color: "text2", marginRight: "small" }))}>
+					Stuff Mail use cookies only to make sure you are you. Please click
+					here to accept our cookies policy,
 				</P>
 				<Link href="/cookies" className={button({ variant: "link" })}>
 					Read more here
 				</Link>
-				<P className={cn(css({color: "text2"}))}>
-					.
-				</P>
-
+				<P className={cn(css({ color: "text2" }))}>.</P>
 			</div>
 			<form action={test}>
 				<Button variant="primary" size="sm" rounded="medium" type="submit">

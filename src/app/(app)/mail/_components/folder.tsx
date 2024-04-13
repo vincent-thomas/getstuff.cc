@@ -16,9 +16,13 @@ export const Folder = ({
 	>[number];
 }) => {
 	const utils = api.useUtils();
-	const {setNodeRef} = useDroppable({
-		id: folder.sk
-	})
+	const { setNodeRef } = useDroppable({
+		id: folder.sk,
+		data: {
+			type: "folder",
+			folderId: folder.sk.split("|")[1],
+		},
+	});
 
 	const mouseOver = async () => {
 		await utils.mail.threads.getThreads.prefetch(
