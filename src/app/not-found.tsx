@@ -23,9 +23,9 @@ const Page = () => {
 					404
 				</h2>
 				<H1 className={css({ color: "text2", fontSize: "xlarge" })}>
-					Stuff Mail,<br/>
+					Stuff Mail,
+					<br />
 					Page or resouce not found
-
 				</H1>
 				<P>
 					This page doesn&apos;t seem to exist, or maybe you don&apos;t have

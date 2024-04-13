@@ -44,7 +44,6 @@ export const ThreadContentSkeleton = () => {
 	);
 };
 
-
 export const ThreadHeading = ({ title }: { title: string }) => {
 	return (
 		<div

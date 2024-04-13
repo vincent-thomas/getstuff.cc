@@ -23,13 +23,13 @@ globalStyle("[data-backdrop]", {
 
 export const cardStyle = style([
 	css({ bg: "bgSubtle", pX: "large", pY: "small" }),
-	border({ rounded: "radius", side: "all", color: "interactive" })
+	border({ rounded: "radius", side: "all", color: "interactive" }),
 ]);
 
 export const cardRoot = style({
 	backgroundColor: "rgba(0,0,0,0.8)",
 	boxShadow: "0px 40px 24px 8px rgba(0,0,0,0.8)",
-})
+});
 
 export const comboboxItem = style({
 	outline: "none !important",

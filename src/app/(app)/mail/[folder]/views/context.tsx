@@ -1,38 +1,78 @@
-"use client"
+"use client";
 
 import { DndContext, type DragEndEvent } from "@dnd-kit/core";
 import type { ReactNode } from "react";
+import { api } from "@stuff/api-client/react";
+import { vanillaApi } from "@stuff/api-client/vanilla";
 import { z } from "zod";
+import { toast } from "sonner";
 
-export const Provider = ({children}: {children: ReactNode}) => {
-  return (
-    <DndContext onDragEnd={handleDragEnd}>
-      {children}
-    </DndContext>
-  )
-}
+export const Provider = ({ children }: { children: ReactNode }) => {
+	const utils = api.useUtils();
 
-export const draggableDataInterface = z.object({
-  type: z.enum(["mail-row"]),
-  id: z.string()
-})
+	return (
+		<DndContext onDragEnd={handleDragEnd.bind(this, utils)}>
+			{children}
+		</DndContext>
+	);
+};
+
+export const draggableDataInterface = z.union([
+	z.object({
+		type: z.enum(["mail-row"]),
+		threadId: z.string(),
+		folderId: z.string(),
+	}),
+	z.object({ type: z.enum(["something"]) }),
+]);
 
 export type DraggableData = z.infer<typeof draggableDataInterface>;
 
-export const droppableDataInterface = z.any().optional();
+export const droppableDataInterface = z.union([
+	z.object({ type: z.enum(["folder"]), folderId: z.string() }),
+	z.object({ type: z.enum(["something"]) }),
+]);
 
-async function handleDragEnd(event: DragEndEvent) {
-  const {over: droppableRAW, active: draggableRAW} = event;
+async function handleDragEnd(
+	utils: ReturnType<typeof api.useUtils>,
+	event: DragEndEvent,
+) {
+	const { over: droppableRAW, active: draggableRAW } = event;
 
-  if (droppableRAW === null) return;
+	if (droppableRAW === null) {
+		toast.error("Area is not droppable", {
+			duration: 2000
+		});
+		return
+	};
 
-  const draggable = draggableDataInterface.parse(draggableRAW?.data.current);
+	const droppable = droppableDataInterface.parse(droppableRAW.data.current);
 
-  switch (draggable.type) {
-    case "mail-row":
-      console.log('mail-row');
-      return;
-    default:
-      throw new Error(`Unhandled type: ${draggable?.type}`);
-  }
+	const draggable = draggableDataInterface.parse(draggableRAW?.data.current);
+
+	switch (draggable.type) {
+		case "mail-row":
+			console.log("mail-row", draggable, droppable);
+
+      if (droppable.type !== "folder") {
+        throw new Error("non supported droppable type")
+      }
+
+      utils.mail.threads.getThreads.setData({folderId: draggable.folderId}, (oldData) => {
+        return (oldData || []).filter(item => {
+          return item.threadId !== draggable.threadId
+        })
+      })
+
+      await vanillaApi.mail.threads.moveThreads.mutate({
+        folderId: draggable.folderId,
+        threadIds: [draggable.threadId],
+        newFolderId: droppable.folderId
+      });
+      await utils.mail.threads.getThreads.invalidate({folderId: draggable.folderId})
+      await utils.mail.threads.getThreads.invalidate({folderId: droppable.folderId})
+			return;
+		default:
+			throw new Error(`Unhandled type: ${draggable?.type}`);
+	}
 }

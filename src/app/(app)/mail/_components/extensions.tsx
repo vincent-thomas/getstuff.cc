@@ -52,7 +52,7 @@ export const Extensions = () => {
 				</button>
 			</DialogTrigger>
 			<DialogContent
-				className={cn(stack({ direction: "col" }), css({p: "large"}))}
+				className={cn(stack({ direction: "col" }), css({ p: "large" }))}
 				size="lg"
 				mainTitle={
 					<span className={stack({ gap: "md", align: "center" })}>
@@ -62,19 +62,31 @@ export const Extensions = () => {
 				}
 			>
 				{enabled.data === false ? (
-				<EnableMailRelay />
+					<EnableMailRelay />
 				) : (
 					<button onClick={() => store.set(mailRelayOpen, true)}>
-						<div className={cn(css({ p: "large", bg: {default: "bgComponent", hover: "bgHover"}}), border({color: "interactive", side: "all", rounded: "radius"}))}>
-							<H1 className={cn(css({fontSize: "large"}))}>Mail Relay</H1>
+						<div
+							className={cn(
+								css({
+									p: "large",
+									bg: { default: "bgComponent", hover: "bgHover" },
+								}),
+								border({
+									color: "interactive",
+									side: "all",
+									rounded: "radius",
+								}),
+							)}
+						>
+							<H1 className={cn(css({ fontSize: "large" }))}>Mail Relay</H1>
 							<P>Mail relay is a nice features</P>
 						</div>
 					</button>
-				 )}
+				)}
 				<div className={cn(classNames)}>
 					<H2>Folder rules</H2>
 					<P>Redirect email elsewhere than inbox based on rules.</P>
-					<div className={cn(stack({justify: "end"}))}>
+					<div className={cn(stack({ justify: "end" }))}>
 						<Button>Enable</Button>
 					</div>
 				</div>
@@ -89,18 +101,18 @@ const EnableMailRelay = () => {
 
 	return (
 		<div className={cn(classNames)}>
-		<H2>Mail relay</H2>
-		<P>Mail relay is a nice feature</P>
-		<div className={cn(stack({justify: "end"}))}>
-			<Button
-				onClick={async () => {
-					await enableMutation.mutateAsync();
-					await utils.extensions.mailRelay.enabled.invalidate();
-				}}
-			>
-				Enable
-			</Button>
+			<H2>Mail relay</H2>
+			<P>Mail relay is a nice feature</P>
+			<div className={cn(stack({ justify: "end" }))}>
+				<Button
+					onClick={async () => {
+						await enableMutation.mutateAsync();
+						await utils.extensions.mailRelay.enabled.invalidate();
+					}}
+				>
+					Enable
+				</Button>
+			</div>
 		</div>
-	</div>
-	)
-}
+	);
+};

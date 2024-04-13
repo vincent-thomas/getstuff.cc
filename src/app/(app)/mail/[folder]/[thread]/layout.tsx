@@ -17,9 +17,12 @@ const Layout = setupLayout({
 					stack({ direction: "col" }),
 				)}
 			>
-        <ConversationButtonBar folderId={params.folder} threadId={params.thread} />
-        {children}
-      </div>
+				<ConversationButtonBar
+					folderId={params.folder}
+					threadId={params.thread}
+				/>
+				{children}
+			</div>
 		);
 	},
 });

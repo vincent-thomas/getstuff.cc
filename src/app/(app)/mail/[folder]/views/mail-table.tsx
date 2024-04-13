@@ -10,18 +10,14 @@ export interface FolderHeader {
 	searchQuery?: string;
 }
 
-export const MailTable: FC<FolderHeader> = ({
-	folderId,
-	searchQuery,
-}) => {
-	const {data: threads} = api.mail.threads.getThreads.useQuery({
+export const MailTable: FC<FolderHeader> = ({ folderId, searchQuery }) => {
+	const { data: threads } = api.mail.threads.getThreads.useQuery({
 		folderId: folderId,
 		searchQuery,
 	});
 
-
 	if (threads === undefined) {
-		return (<></>)
+		return <></>;
 	}
 
 	if (threads.length === 0) {
@@ -38,12 +34,12 @@ export const MailTable: FC<FolderHeader> = ({
 			</Flex>
 		);
 	}
- 
+
 	return (
 		<div className={cn(css({ overflowY: "auto" }))}>
-				{threads.map((thread) => (
-					<MailRow key={thread.threadId} thread={thread} folderId={folderId} />
-				))}
+			{threads.map((thread) => (
+				<MailRow key={thread.threadId} thread={thread} folderId={folderId} />
+			))}
 		</div>
 	);
 };

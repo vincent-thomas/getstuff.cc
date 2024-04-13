@@ -10,7 +10,7 @@ import HardBreak from "@tiptap/extension-hard-break";
 import Heading from "@tiptap/extension-heading";
 import History from "@tiptap/extension-history";
 import "./style.css";
-import "./tiptap.css"
+import "./tiptap.css";
 import { ReactNode } from "react";
 
 const Tiptap = ({
@@ -18,12 +18,12 @@ const Tiptap = ({
 	initialContent,
 	placeholder,
 	className,
-	innerClassName = ""
+	innerClassName = "",
 }: {
 	initialContent: string;
 	placeholder: string;
 	className?: string;
-	innerClassName?:string;
+	innerClassName?: string;
 	onUpdate?: ({
 		html,
 		text,
