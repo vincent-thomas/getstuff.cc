@@ -1,19 +1,23 @@
 {
-	"$schema": "https://biomejs.dev/schemas/1.6.3/schema.json",
-	"formatter": {
-		"enabled": true,
-		"include": ["**/*.ts", "**/*.json", "**/*.tsx"],
-		"indentWidth": 2,
-		"ignore": [
-			"node_modules",
-			".next",
-			".pnpm-store",
-			"cdk.out",
-			"public",
-			".contentlayer"
-		]
-	},
-	"linter": {
-		"enabled": false
-	}
+  "$schema": "https://biomejs.dev/schemas/1.6.3/schema.json",
+  "organizeImports": {
+    "enabled": true
+  },
+  "formatter": {
+    "enabled": true,
+    "include": ["**/*.ts", "**/*.json", "**/*.tsx"],
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "ignore": [
+      "node_modules",
+      ".next",
+      ".pnpm-store",
+      "cdk.out",
+      "public",
+      ".contentlayer"
+    ]
+  },
+  "linter": {
+    "enabled": true
+  }
 }

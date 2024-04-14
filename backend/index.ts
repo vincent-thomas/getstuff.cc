@@ -11,11 +11,11 @@ import { extensionsRouter } from "./routers/extensions";
  * All routers added in /api/routers should be manually added here.
  */
 export const appRouter = router({
-	accounts: accountsRouter,
-	user: userRouter,
-	mail: mailRouter,
-	customer: customerRouter,
-	extensions: extensionsRouter,
+  accounts: accountsRouter,
+  user: userRouter,
+  mail: mailRouter,
+  customer: customerRouter,
+  extensions: extensionsRouter,
 });
 
 // export type definition of API

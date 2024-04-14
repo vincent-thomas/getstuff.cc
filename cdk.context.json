@@ -1,7 +1,7 @@
 {
-	"hosted-zone:account=649534857523:domainName=getstuff.cc:region=eu-central-1": {
-		"Id": "/hostedzone/Z06618873JDEH9LCVLUOZ",
-		"Name": "getstuff.cc."
-	},
-	"acknowledged-issue-numbers": [29483]
+  "hosted-zone:account=649534857523:domainName=getstuff.cc:region=eu-central-1": {
+    "Id": "/hostedzone/Z06618873JDEH9LCVLUOZ",
+    "Name": "getstuff.cc."
+  },
+  "acknowledged-issue-numbers": [29483]
 }

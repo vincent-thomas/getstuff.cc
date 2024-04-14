@@ -17,7 +17,7 @@ import { getUserFromHeader } from "./utils/getUserFromHeaders";
 const sessionType = jwtPayloadValidator.nullable();
 
 interface CreateInnerContextOptions {
-	session: z.infer<typeof sessionType>;
+  session: z.infer<typeof sessionType>;
 }
 
 /**
@@ -30,18 +30,18 @@ interface CreateInnerContextOptions {
  * @link https://trpc.io/docs/v11/context#inner-and-outer-context
  */
 export const createContextInner = async (opts: CreateInnerContextOptions) => {
-	const dyn = getDyn();
-	const redis = await getRedis();
-	const s3 = getS3();
-	const ses = getSes();
-	return {
-		session: opts.session,
-		dyn,
-		redis,
-		s3,
-		ses,
-		env,
-	};
+  const dyn = getDyn();
+  const redis = await getRedis();
+  const s3 = getS3();
+  const ses = getSes();
+  return {
+    session: opts.session,
+    dyn,
+    redis,
+    s3,
+    ses,
+    env,
+  };
 };
 /**
  * Outer context. Used in the routers and will e.g. bring `req` & `res` to the context as "not `undefined`".
@@ -49,17 +49,17 @@ export const createContextInner = async (opts: CreateInnerContextOptions) => {
  * @link https://trpc.io/docs/v11/context#inner-and-outer-context
  */
 export async function createContext(opts: { req: NextRequest }) {
-	const active = opts.req.cookies.get("stuff-active")?.value ?? "";
-	const token = opts.req.cookies.get(`stuff-token-${active}`)?.value ?? "";
+  const active = opts.req.cookies.get("stuff-active")?.value ?? "";
+  const token = opts.req.cookies.get(`stuff-token-${active}`)?.value ?? "";
 
-	const session = await getUserFromHeader({
-		"stuff-active": active,
-		[`stuff-token-${active}`]: token,
-	});
-	const contextInner = await createContextInner({ session });
-	return {
-		...contextInner,
-	};
+  const session = await getUserFromHeader({
+    "stuff-active": active,
+    [`stuff-token-${active}`]: token,
+  });
+  const contextInner = await createContextInner({ session });
+  return {
+    ...contextInner,
+  };
 }
 
 /**
@@ -70,17 +70,17 @@ export async function createContext(opts: { req: NextRequest }) {
  * errors on the backend.
  */
 const t = initTRPC.context<typeof createContext>().create({
-	transformer: superjson,
-	errorFormatter({ shape, error }) {
-		return {
-			...shape,
-			data: {
-				...shape.data,
-				zodError:
-					error.cause instanceof ZodError ? error.cause.flatten() : null,
-			},
-		};
-	},
+  transformer: superjson,
+  errorFormatter({ shape, error }) {
+    return {
+      ...shape,
+      data: {
+        ...shape.data,
+        zodError:
+          error.cause instanceof ZodError ? error.cause.flatten() : null,
+      },
+    };
+  },
 });
 
 /**
@@ -107,19 +107,19 @@ export const router = t.router;
 export const pubProc = t.procedure;
 
 export const protectedProc = t.procedure.use(async function isAuthed(opts) {
-	const { ctx } = opts;
+  const { ctx } = opts;
 
-	// `ctx.user` is nullable
-	if (!ctx.session) {
-		//     ^?
-		throw new TRPCError({ code: "UNAUTHORIZED" });
-	}
-	return opts.next({
-		ctx: {
-			// ✅ user value is known to be non-null now
-			...ctx,
-			session: ctx.session,
-			// ^?
-		},
-	});
+  // `ctx.user` is nullable
+  if (!ctx.session) {
+    //     ^?
+    throw new TRPCError({ code: "UNAUTHORIZED" });
+  }
+  return opts.next({
+    ctx: {
+      // ✅ user value is known to be non-null now
+      ...ctx,
+      session: ctx.session,
+      // ^?
+    },
+  });
 });
