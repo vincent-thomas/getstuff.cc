@@ -1,16 +1,16 @@
 {
-	"name": "Stuff",
-	"build": {
-		"dockerfile": "Dockerfile",
-		"context": ".."
-	},
-	"customizations": {
-		"vscode": {
-			"extensions": [
-				"ms-azuretools.vscode-docker",
-				"EthanSK.restore-terminals",
-				"esbenp.prettier-vscode"
-			]
-		}
-	}
+  "name": "Stuff",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": ".."
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-azuretools.vscode-docker",
+        "EthanSK.restore-terminals",
+        "esbenp.prettier-vscode"
+      ]
+    }
+  }
 }

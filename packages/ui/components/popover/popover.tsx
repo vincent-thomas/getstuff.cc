@@ -9,21 +9,21 @@ export const PopoverTrigger = Ariakit.PopoverDisclosure;
 export interface PopoverContentProps extends Ariakit.PopoverProps {}
 
 export const PopoverContent: FC<PopoverContentProps> = ({
-	className,
-	...props
+  className,
+  ...props
 }) => {
-	return (
-		<Ariakit.Popover
-			className={cn(
-				css({
-					bg: "bgComponent",
-					p: "small",
-				}),
-				stack({ direction: "col", gap: "xs" }),
-				border({ color: "interactive", rounded: "radius", side: "all" }),
-				className,
-			)}
-			{...props}
-		/>
-	);
+  return (
+    <Ariakit.Popover
+      className={cn(
+        css({
+          bg: "bgComponent",
+          p: "small",
+        }),
+        stack({ direction: "col", gap: "xs" }),
+        border({ color: "interactive", rounded: "radius", side: "all" }),
+        className,
+      )}
+      {...props}
+    />
+  );
 };
