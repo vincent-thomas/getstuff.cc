@@ -12,6 +12,7 @@ import { roundingClass, spacingDefiningClass } from "packages/ui/variables";
 import type { ReactNode } from "react";
 import { Toaster } from "src/providers/sonner";
 import { store } from "./global-store";
+import { env } from "@/env";
 
 const font = Inter({
   axes: ["slnt"],

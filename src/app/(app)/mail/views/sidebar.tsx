@@ -15,19 +15,19 @@ export const Sidebar = ({ className }: { className?: string }) => {
     <>
       <div className="grid grid-cols-3" data-mobile>
         <Flex justify="center">
-          <SidebarLink href="/mail/inbox">
+          <SidebarLink folderId="inbox">
             <Inbox size={24} color="var(--text2)" />
             <span>Inbox</span>
           </SidebarLink>
         </Flex>
         <Flex justify="center">
-          <SidebarLink href="/mail/archive">
+          <SidebarLink folderId="archive">
             <ArchiveIcon size={24} color="var(--muted-foreground)" />
             <span>Archive</span>
           </SidebarLink>
         </Flex>
         <Flex justify="center">
-          <SidebarLink href="/mail/sent">
+          <SidebarLink folderId="sent" disableDroppable>
             <SendIcon size={24} color="var(--text)" />
             <span>Sent</span>
           </SidebarLink>
@@ -59,15 +59,15 @@ export const Sidebar = ({ className }: { className?: string }) => {
               INBOXES
             </h1>
           </div>
-          <SidebarLink href="/mail/inbox">
+          <SidebarLink folderId="inbox">
             <Inbox size={24} />
             <span>Inbox</span>
           </SidebarLink>
-          <SidebarLink href="/mail/archive">
+          <SidebarLink folderId="archive">
             <ArchiveIcon size={24} />
             <span>Archive</span>
           </SidebarLink>
-          <SidebarLink href="/mail/sent">
+          <SidebarLink folderId="sent" disableDroppable>
             <SendIcon size={24} />
             <span>Sent</span>
           </SidebarLink>

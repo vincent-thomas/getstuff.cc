@@ -1,5 +1,4 @@
-import { pki } from "node-forge";
-
+import {pki} from "node-forge";
 const rsa = pki.rsa;
 
 export const genKeyPair = () => {

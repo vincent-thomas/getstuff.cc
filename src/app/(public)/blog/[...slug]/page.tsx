@@ -20,6 +20,7 @@ import {
   TooltipTrigger,
 } from "packages/ui/components/tooltip/tooltip";
 import { border, stack } from "src/components/recipies";
+import { env } from "@/env";
 
 interface PostPageProps {
   params: {

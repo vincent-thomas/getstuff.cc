@@ -52,10 +52,16 @@ async function handleDragEnd(
 
   switch (draggable.type) {
     case "mail-row":
-      console.log("mail-row", draggable, droppable);
 
       if (droppable.type !== "folder") {
         throw new Error("non supported droppable type");
+      }
+
+      if (droppable.folderId === draggable.folderId) {
+        toast.error("Can't drop into same folder", {
+          duration: 2000
+        })
+        return;
       }
 
       utils.mail.threads.getThreads.setData(
