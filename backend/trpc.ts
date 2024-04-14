@@ -11,8 +11,8 @@ import superjson from "superjson";
 import { ZodError, type z } from "zod";
 import { jwtPayloadValidator } from "./utils/jwt";
 import { getRedis, getDyn, getS3, getSes } from "./sdks";
-import type { NextRequest } from "next/server";
 import { getUserFromHeader } from "./utils/getUserFromHeaders";
+import { env } from "@/env";
 
 const sessionType = jwtPayloadValidator.nullable();
 
@@ -48,9 +48,9 @@ export const createContextInner = async (opts: CreateInnerContextOptions) => {
  *
  * @link https://trpc.io/docs/v11/context#inner-and-outer-context
  */
-export async function createContext(opts: { req: NextRequest }) {
-  const active = opts.req.cookies.get("stuff-active")?.value ?? "";
-  const token = opts.req.cookies.get(`stuff-token-${active}`)?.value ?? "";
+export async function createContext(opts: { cookies: Record<string,string> }) {
+  const active = opts.cookies["stuff-active"] ?? "";
+  const token = opts.cookies[`stuff-token-${active}`] ?? "";
 
   const session = await getUserFromHeader({
     "stuff-active": active,

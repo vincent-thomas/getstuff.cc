@@ -16,6 +16,7 @@ import { createJwt } from "../utils/jwt";
 import { cookies } from "next/headers";
 import { getCustomerTable, getUserTable } from "packages/infra-constants/table";
 import { protectedProc, pubProc, router } from "backend/trpc";
+import { env } from "@/env";
 
 export const accountsRouter = router({
   createAccount: pubProc

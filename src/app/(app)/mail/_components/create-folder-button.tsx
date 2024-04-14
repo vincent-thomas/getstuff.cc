@@ -1,10 +1,9 @@
 "use client";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { api } from "@stuff/api-client/react";
 import { Loading } from "@stuff/icons/loading";
-import { Flex } from "@stuff/structure";
 import { Button } from "@stuff/ui/button";
 import { Plus } from "lucide-react";
+import { Form } from "packages/ui/components";
 import {
   Dialog,
   DialogContent,
@@ -15,24 +14,29 @@ import {
 } from "packages/ui/components/dialog/dialog";
 import { palette } from "packages/ui/theme";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
 import { z } from "zod";
-
-const formInterface = z.object({
-  folderName: z.string().min(3),
-});
 
 export const CreateFolderButton = () => {
   const [open, setOpen] = useState(false);
   const createFolderMutation = api.mail.folders.createFolder.useMutation();
-  const { register, handleSubmit } = useForm<z.infer<typeof formInterface>>({
-    resolver: zodResolver(formInterface),
-  });
 
-  const onSubmit = handleSubmit(async ({ folderName }) => {
-    await createFolderMutation.mutateAsync({ name: folderName });
-    setOpen(false);
-  });
+  const form = Form.useStore({
+    defaultValues: {
+      folderName: ""
+    }
+  })
+
+  form.useValidate(({values}) => {
+    if (!z.string().min(3).safeParse(values.folderName).success) {
+      form.setError(form.names.folderName, "Folder name can't be shorter than 3 characters")
+      return;
+    }
+  })
+
+  form.useSubmit(async ({values}) => {
+    await createFolderMutation.mutateAsync({name: values.folderName});
+    setOpen(false)
+  })
 
   return (
     <Dialog open={open}>
@@ -54,14 +58,17 @@ export const CreateFolderButton = () => {
             your emails.
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={onSubmit}>
-          <Flex col gap="0.5rem" className="py-2">
-            <label htmlFor="folder-name">Folder Name</label>
-            <input
-              placeholder="..."
-              {...register("folderName")}
-              className="rounded-md px-4 py-3 outline-none"
-            />
+        <Form.Root>
+          <div className={cn(stack({direction: "col", gap: "md"}))}>
+            <Form.Label name={form.names.folderName}>
+              Folder Name
+              <Form.Input
+                placeholder="..."
+                name={form.names.folderName}
+                className="rounded-md px-4 py-3 outline-none"
+              />
+              <Form.Error name={form.names.folderName} />
+            </Form.Label>
             <div className="pt-2">
               <Button type="submit">
                 Create folder{" "}
@@ -70,8 +77,8 @@ export const CreateFolderButton = () => {
                 )}
               </Button>
             </div>
-          </Flex>
-        </form>
+          </div>
+        </Form.Root>
       </DialogContent>
     </Dialog>
   );

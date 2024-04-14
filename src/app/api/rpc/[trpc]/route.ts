@@ -1,6 +1,6 @@
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 import type { NextRequest } from "next/server";
-
+import {env} from "@/env";
 import { appRouter } from "backend";
 import { createContext } from "backend/trpc";
 
@@ -10,7 +10,16 @@ const handler = (req: NextRequest) =>
     req,
 
     router: appRouter,
-    createContext: () => createContext({ req }),
+    createContext: () => {
+      
+      const cookies = req.cookies.getAll()
+      const betterCookies = {};
+
+      for (const item of cookies) {
+        betterCookies[item.name] = item.value
+      }
+
+      return createContext({ cookies: betterCookies })},
     onError:
       env.NODE_ENV === "development"
         ? ({ path, error }) => {

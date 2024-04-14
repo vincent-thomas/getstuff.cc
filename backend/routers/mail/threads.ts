@@ -11,6 +11,7 @@ import { messageViewInterface } from "backend/interfaces/messageView";
 import { moveThread } from "backend/utils/moveThread";
 import Fuse from "fuse.js";
 import { TRPCError } from "@trpc/server";
+import { env } from "@/env";
 
 export const threadsRouter = router({
   getThreads: protectedProc
