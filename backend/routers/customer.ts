@@ -5,6 +5,7 @@ import { getStripe } from "../sdks/stripe";
 import { getStuffPlusPriceId } from "../utils/prices";
 import type Stripe from "stripe";
 import { z } from "zod";
+import { env } from "@/env";
 
 export const customerRouter = router({
   checkout: protectedProc
@@ -43,8 +44,9 @@ export const customerRouter = router({
       );
       await ctx.redis.set(
         `checkout-session-url:${ctx.session.customerId}`,
-        session.url,
-        { ex: now + expires_at },
+        z.string().parse(session.url),
+        "EX",
+        now + expires_at
       );
 
       return { sessionUrl: z.string().parse(session.url) };

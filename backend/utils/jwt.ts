@@ -1,7 +1,6 @@
 import { z } from "zod";
 import { customerInterface } from "../interfaces/customer";
 import { SignJWT, jwtVerify as joseVerifyJwt } from "jose";
-import {env} from "src/env.mjs"
 const getJwtKey = () => {
   return env.JWT_SECRET;
 };

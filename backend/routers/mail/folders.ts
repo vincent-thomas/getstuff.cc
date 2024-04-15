@@ -32,7 +32,7 @@ export const foldersRouter = router({
     .mutation(async ({ ctx, input }) => {
       const folderId = createId();
       const command = new PutCommand({
-        TableName: getDataTable(ctx.env.STAGE),
+        TableName: getDataTable(env.STAGE),
         Item: folderInterface.parse({
           gsi2: `folder|${ctx.session.username}|${input.name}`,
           pk: `mail|${ctx.session.username}`,
@@ -44,7 +44,7 @@ export const foldersRouter = router({
     }),
   listFolders: protectedProc.query(async ({ ctx }) => {
     const command = new QueryCommand({
-      TableName: getDataTable(ctx.env.STAGE),
+      TableName: getDataTable(env.STAGE),
       KeyConditionExpression: "pk = :pk and begins_with(sk, :sk)",
       ExpressionAttributeValues: {
         ":pk": `mail|${ctx.session.username}`,

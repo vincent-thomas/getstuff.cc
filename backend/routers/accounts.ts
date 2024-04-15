@@ -119,7 +119,7 @@ export const accountsRouter = router({
       }
 
       const serverEphemeral = generateEphemeral(user.verifier);
-      await redis.set(username, serverEphemeral.secret, { ex: 60 * 5 });
+      await redis.set(username, serverEphemeral.secret, "EX", 60 * 5);
 
       return {
         salt: user.salt,

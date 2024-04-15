@@ -22,21 +22,24 @@ export const CreateFolderButton = () => {
 
   const form = Form.useStore({
     defaultValues: {
-      folderName: ""
-    }
-  })
+      folderName: "",
+    },
+  });
 
-  form.useValidate(({values}) => {
+  form.useValidate(({ values }) => {
     if (!z.string().min(3).safeParse(values.folderName).success) {
-      form.setError(form.names.folderName, "Folder name can't be shorter than 3 characters")
+      form.setError(
+        form.names.folderName,
+        "Folder name can't be shorter than 3 characters",
+      );
       return;
     }
-  })
+  });
 
-  form.useSubmit(async ({values}) => {
-    await createFolderMutation.mutateAsync({name: values.folderName});
-    setOpen(false)
-  })
+  form.useSubmit(async ({ values }) => {
+    await createFolderMutation.mutateAsync({ name: values.folderName });
+    setOpen(false);
+  });
 
   return (
     <Dialog open={open}>
@@ -59,7 +62,7 @@ export const CreateFolderButton = () => {
           </DialogDescription>
         </DialogHeader>
         <Form.Root>
-          <div className={cn(stack({direction: "col", gap: "md"}))}>
+          <div className={cn(stack({ direction: "col", gap: "md" }))}>
             <Form.Label name={form.names.folderName}>
               Folder Name
               <Form.Input
