@@ -30,7 +30,7 @@
     "baseUrl": ".",
     "paths": {
       "@/env": [
-        "src/env.mjs"
+        "./src/env.js"
       ],
       "@stuff/api-client/react": [
         "./backend/client/react.tsx"
@@ -98,7 +98,7 @@
     "src/**/*.tsx",
     "./packages/**/*.ts",
     "./packages/**/*.tsx",
-    "next.config.mjs",
+    "next.config.js",
     ".next/types/**/*.ts",
     "./src/types/reset.d.ts",
     "./backend/**/*.ts",

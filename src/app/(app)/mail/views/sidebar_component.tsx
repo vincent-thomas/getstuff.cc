@@ -4,15 +4,20 @@ import { cn } from "@stuff/components/utils";
 import type { ReactNode } from "react";
 import { border } from "src/components/recipies";
 import { Link } from "src/components/structure/link";
-import { sidebarLinkActive,isHoveringState } from "./sidebar_component.css";
+import { sidebarLinkActive, isHoveringState } from "./sidebar_component.css";
 import { useDroppable } from "@dnd-kit/core";
 
 export const SidebarLink = ({
   children,
   folderId,
   className,
-  disableDroppable
-}: { children: ReactNode; folderId: string; className?: string; disableDroppable?: boolean }) => {
+  disableDroppable,
+}: {
+  children: ReactNode;
+  folderId: string;
+  className?: string;
+  disableDroppable?: boolean;
+}) => {
   const { setNodeRef, isOver } = useDroppable({
     id: folderId,
     data: {

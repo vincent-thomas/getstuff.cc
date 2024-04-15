@@ -153,9 +153,7 @@ export const threadsRouter = router({
           messageEncryptionKey: messageView.encryptedMessageEncryptionKey,
         });
 
-        await ctx.redis.set("content-url:" + messageId, contentUrl, {
-          ex: 900,
-        });
+        await ctx.redis.set("content-url:" + messageId, contentUrl, "EX", 900);
       }
       return {
         messages: niceMessages,

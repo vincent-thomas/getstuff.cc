@@ -1,18 +1,5 @@
-import { createTRPCProxyClient, httpBatchLink } from "@trpc/client";
+import { createTRPCProxyClient } from "@trpc/client";
 import { type AppRouter } from "..";
-import { getUrl, transformer } from "./shared";
+import { clientOptions } from "./client-options";
 
-export const vanillaApi = createTRPCProxyClient<AppRouter>({
-  transformer: transformer,
-  links: [
-    httpBatchLink({
-      url: getUrl(),
-      fetch(url, options) {
-        return fetch(url, {
-          ...options,
-          credentials: "include",
-        });
-      },
-    }),
-  ],
-});
+export const vanillaApi = createTRPCProxyClient<AppRouter>(clientOptions);

@@ -5,8 +5,7 @@ export const sidebarLinkActive = style({
   backgroundColor: palette.bgSelected,
 });
 
-
 export const isHoveringState = style({
   outline: `3px solid ${palette.solid1}  !important`,
-  outlineOffset: "3px"
-})
+  outlineOffset: "3px",
+});

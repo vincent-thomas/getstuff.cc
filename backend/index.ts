@@ -4,22 +4,8 @@ import { mailRouter } from "./routers/mail";
 import { customerRouter } from "./routers/customer";
 import { protectedProc, router } from "./trpc";
 import { extensionsRouter } from "./routers/extensions";
-import { observable } from "@trpc/server/observable";
-import EventEmitter from "events";
-
-/**
- * This is the primary router for your server.
- *
- * All routers added in /api/routers should be manually added here.
- */
-
-
-interface Post {
-  message: string;
-}
-
-const ee = new EventEmitter();
-
+import { z } from "zod";
+import type EventEmitter from "events";
 export const appRouter = router({
   accounts: accountsRouter,
   user: userRouter,
@@ -27,34 +13,15 @@ export const appRouter = router({
   customer: customerRouter,
   extensions: extensionsRouter,
 
-  testingSubscriptions: protectedProc.subscription(() => {
-    return observable<Post>((emit) => {
-             // logic that will execute on subscription start
-            const interval = setInterval(() => emit.next(new Date()), 1000);
-            // function to clean up and close interval after end of connection
-            return () => {
-                clearInterval(interval);
-            }
-      // const onAdd = (data: Post) => {
-      //   emit.next(data);
-      // }
-
-      // ee.on("add", onAdd);
-
-      // return () => {
-      //   ee.off("add", onAdd);
-      // }
-    })
-  }),
-  addItemInSub: protectedProc.mutation(() => {
-    const post = {
-      message: "testgin"
-    }
-    ee.emit("add", post)
-
-    return post;
+  addItemInSub: protectedProc.input(z.object({folderId: z.string(), thread: z.object({
+    threadId: z.string(),
+    read: z.boolean(),
+    title: z.string(),
+    lastActive: z.number()
+  })})).mutation(async ({ctx,input}) => {
+    (global.ee as EventEmitter).emit(`new-mail:${ctx.session.username}:${input.folderId}`, JSON.stringify(input.thread))
+    
   })
 });
 
-// export type definition of API
 export type AppRouter = typeof appRouter;

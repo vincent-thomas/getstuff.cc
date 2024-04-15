@@ -1,18 +1,15 @@
 "use client";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { createWSClient, httpBatchLink, loggerLink, splitLink, wsLink } from "@trpc/client";
+
 import { createTRPCReact } from "@trpc/react-query";
 import { useState } from "react";
 
 import type { AppRouter } from "..";
-import { getUrl, transformer } from "./shared";
+import { clientOptions } from "./client-options";
 
 const createQueryClient = () => new QueryClient();
 
-const wsClient = createWSClient({
-  url: "ws://localhost:3001",
-})
 
 let clientQueryClientSingleton: QueryClient | undefined = undefined;
 const getQueryClient = () => {
@@ -30,32 +27,7 @@ export function TRPCReactProvider(props: { children: React.ReactNode }) {
   const queryClient = getQueryClient();
 
   const [trpcClient] = useState(() =>
-    api.createClient({
-      transformer,
-
-      links: [
-        loggerLink({
-          enabled: (op) =>
-            process.env.NODE_ENV === "development" ||
-            (op.direction === "down" && op.result instanceof Error),
-        }),
-        splitLink({
-          condition: (op) => op.type === "subscription",
-          true: wsLink<AppRouter>({
-            client: wsClient
-          }),
-          false: httpBatchLink({
-            url: getUrl(),
-            fetch(url, options) {
-              return fetch(url, {
-                ...options,
-                credentials: "include",
-              });
-            },
-          }),
-        })
-      ],
-    }),
+    api.createClient(clientOptions),
   );
 
   return (

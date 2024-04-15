@@ -27,8 +27,8 @@ export const Folder = ({
   });
 
   const canDrop = useMemo(() => {
-    return over?.data.current?.folderId !== active?.data?.current?.folderId
-  }, [over, active])
+    return over?.data.current?.folderId !== active?.data?.current?.folderId;
+  }, [over, active]);
 
   const mouseOver = async () => {
     await utils.mail.threads.getThreads.prefetch(
@@ -42,7 +42,7 @@ export const Folder = ({
   };
 
   return (
-    <div ref={setNodeRef} className={cn((isOver && canDrop) && isHoveringState)}>
+    <div ref={setNodeRef} className={cn(isOver && canDrop && isHoveringState)}>
       <Link
         href={`./${folder.sk.split("|")[1]}`}
         key={folder.sk.split("|")[1]}

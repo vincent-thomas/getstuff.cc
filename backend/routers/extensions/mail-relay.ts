@@ -14,7 +14,7 @@ import { TRPCError } from "@trpc/server";
 export const mailRelayRouter = router({
   enabled: protectedProc.query(async ({ ctx }) => {
     const command = new GetCommand({
-      TableName: getDataTable(ctx.env.STAGE),
+      TableName: getDataTable(env.STAGE),
       Key: {
         pk: `extension|${ctx.session.username}`,
         sk: `mail-relay`,
@@ -27,7 +27,7 @@ export const mailRelayRouter = router({
   }),
   enable: protectedProc.mutation(async ({ ctx }) => {
     const command = new PutCommand({
-      TableName: getDataTable(ctx.env.STAGE),
+      TableName: getDataTable(env.STAGE),
       Item: {
         pk: `extension|${ctx.session.username}`,
         sk: `mail-relay`,
@@ -38,7 +38,7 @@ export const mailRelayRouter = router({
   }),
   listAliases: protectedProc.query(async ({ ctx }) => {
     const command = new QueryCommand({
-      TableName: getDataTable(ctx.env.STAGE),
+      TableName: getDataTable(env.STAGE),
       KeyConditionExpression: "pk = :pk and begins_with(sk, :sk)",
       ExpressionAttributeValues: {
         ":pk": `mail|${ctx.session.username}`,
@@ -62,7 +62,7 @@ export const mailRelayRouter = router({
     )
     .mutation(async ({ ctx, input }) => {
       const command = new DeleteCommand({
-        TableName: getDataTable(ctx.env.STAGE),
+        TableName: getDataTable(env.STAGE),
         Key: {
           pk: `mail|${ctx.session.username}`,
           sk: `address-alias|${input.enabled ? "enabled" : "disabled"}|${
@@ -89,7 +89,7 @@ export const mailRelayRouter = router({
       });
 
       const getCommand = new QueryCommand({
-        TableName: getDataTable(ctx.env.STAGE),
+        TableName: getDataTable(env.STAGE),
         KeyConditionExpression: "begins_with(pk, :pk) and sk = :sk",
         IndexName: "gsi1",
         ExpressionAttributeValues: {
@@ -111,7 +111,7 @@ export const mailRelayRouter = router({
       }
 
       const command = new PutCommand({
-        TableName: getDataTable(ctx.env.STAGE),
+        TableName: getDataTable(env.STAGE),
         Item: addressAliasInterface.parse({
           pk: `mail|${ctx.session.username}`,
           sk: `address-alias|${words}`,
@@ -123,16 +123,5 @@ export const mailRelayRouter = router({
       });
 
       await ctx.dyn.send(command);
-
-      // const command = new PutCommand({
-      //   TableName: getDataTable(ctx.env.STAGE),
-      //   Key: {
-      //     pk: `mail|${ctx.session.username}`,
-      //     sk: `address-alias|${input.enabled ? "enabled" : "disabled"}|${input.alias}`
-      //   }
-      // })
-
-      // const response = await ctx.dyn.send(command);
-      // return response;
     }),
 });

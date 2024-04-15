@@ -12,7 +12,6 @@ import { ZodError, type z } from "zod";
 import { jwtPayloadValidator } from "./utils/jwt";
 import { getRedis, getDyn, getS3, getSes } from "./sdks";
 import { getUserFromHeader } from "./utils/getUserFromHeaders";
-import { env } from "@/env";
 
 const sessionType = jwtPayloadValidator.nullable();
 
@@ -20,6 +19,7 @@ interface CreateInnerContextOptions {
   session: z.infer<typeof sessionType>;
 }
 
+const redis = await getRedis();
 /**
  * Inner context. Will always be available in your procedures, in contrast to the outer context.
  *
@@ -31,7 +31,6 @@ interface CreateInnerContextOptions {
  */
 export const createContextInner = async (opts: CreateInnerContextOptions) => {
   const dyn = getDyn();
-  const redis = await getRedis();
   const s3 = getS3();
   const ses = getSes();
   return {
@@ -39,8 +38,7 @@ export const createContextInner = async (opts: CreateInnerContextOptions) => {
     dyn,
     redis,
     s3,
-    ses,
-    env,
+    ses
   };
 };
 /**
@@ -48,7 +46,7 @@ export const createContextInner = async (opts: CreateInnerContextOptions) => {
  *
  * @link https://trpc.io/docs/v11/context#inner-and-outer-context
  */
-export async function createContext(opts: { cookies: Record<string,string> }) {
+export async function createContext(opts: { cookies: Record<string, string> }) {
   const active = opts.cookies["stuff-active"] ?? "";
   const token = opts.cookies[`stuff-token-${active}`] ?? "";
 
