@@ -32,7 +32,7 @@ export const sendMailRouter = router({
     .mutation(async ({ ctx, input }) => {
       const user = (await getUser(
         ctx.dyn,
-        ctx.env.STAGE,
+        env.STAGE,
         ctx.session.username,
       ))!;
       const command = new SendEmailCommand({
@@ -54,17 +54,17 @@ export const sendMailRouter = router({
             Data: input.subject,
           },
         },
-        Source: `${ctx.session.username}@${ctx.env.DOMAIN}`,
+        Source: `${ctx.session.username}@${env.DOMAIN}`,
       });
 
       try {
         const { MessageId: DO_NOT_USE_BEYOND_ONE_LINE_DOWN } =
           await ctx.ses.send(command);
-        const messageId = `<${DO_NOT_USE_BEYOND_ONE_LINE_DOWN}@${ctx.env.AWS_REGION}.amazonses.com>`;
+        const messageId = `<${DO_NOT_USE_BEYOND_ONE_LINE_DOWN}@${env.AWS_REGION}.amazonses.com>`;
 
         const threadId = await createThread(
           ctx.dyn,
-          getDataTable(ctx.env.STAGE),
+          getDataTable(env.STAGE),
           input.subject,
         );
 
@@ -83,7 +83,7 @@ export const sendMailRouter = router({
         await uploadMessage(
           ctx.s3,
           ctx.dyn,
-          ctx.env.STAGE,
+          env.STAGE,
           z.string().parse(messageId),
           threadId,
           {
@@ -96,7 +96,7 @@ export const sendMailRouter = router({
             },
             from: {
               name: user.name,
-              address: `${ctx.session.username}@${ctx.env.DOMAIN}`,
+              address: `${ctx.session.username}@${env.DOMAIN}`,
             },
           },
         );
@@ -106,14 +106,14 @@ export const sendMailRouter = router({
           user.publicKey,
         );
 
-        await createMessageView(ctx.dyn, ctx.env.STAGE, {
+        await createMessageView(ctx.dyn, env.STAGE, {
           messageId: z.string().parse(messageId),
           encryptedMessageEncryptionKey: encryptedUserKey,
         });
 
         await createThreadView(
           ctx.dyn,
-          ctx.env.STAGE,
+          env.STAGE,
           "sent",
           threadId,
           ctx.session.username,

@@ -10,7 +10,7 @@ import { TRPCError, initTRPC } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError, type z } from "zod";
 import { jwtPayloadValidator } from "./utils/jwt";
-import { getRedis, getDyn, getS3, getSes } from "./sdks";
+import { getRedis, getDyn, getS3, getSes, getKafka } from "./sdks";
 import { getUserFromHeader } from "./utils/getUserFromHeaders";
 
 const sessionType = jwtPayloadValidator.nullable();
@@ -19,7 +19,16 @@ interface CreateInnerContextOptions {
   session: z.infer<typeof sessionType>;
 }
 
-const redis = await getRedis();
+const redis = await getRedis();  
+const dyn = getDyn();
+const s3 = getS3();
+const ses = getSes();
+const kafka = getKafka().producer({
+  allowAutoTopicCreation: true
+});
+
+await kafka.connect()
+
 /**
  * Inner context. Will always be available in your procedures, in contrast to the outer context.
  *
@@ -30,15 +39,13 @@ const redis = await getRedis();
  * @link https://trpc.io/docs/v11/context#inner-and-outer-context
  */
 export const createContextInner = async (opts: CreateInnerContextOptions) => {
-  const dyn = getDyn();
-  const s3 = getS3();
-  const ses = getSes();
   return {
     session: opts.session,
     dyn,
     redis,
     s3,
-    ses
+    ses,
+    kafka
   };
 };
 /**

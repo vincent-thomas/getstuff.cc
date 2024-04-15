@@ -1,15 +1,21 @@
+import { ParameterMaxVersionLimitExceeded } from "@aws-sdk/client-ssm";
+import { getKafka } from "backend/sdks";
 import { getUserFromHeader } from "backend/utils/getUserFromHeaders";
-import {EventEmitter} from "events";
 import { type NextRequest, NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
 
-// @ts-expect-error testing
-global.ee = global.ee || new EventEmitter();
+const kafka = getKafka();
+
+
 
 export const GET = async (req: NextRequest, {params}: {params: {folder: string}}) => {
 
 // console.log(req.cookies.get(""));
+  const consumer = kafka.consumer({
+    groupId: "new-mail",
+    allowAutoTopicCreation: true
+  });
   const username = req.cookies.get("stuff-active")?.value ?? "";
 
   const userKey = `stuff-token-${username}`
@@ -30,17 +36,26 @@ export const GET = async (req: NextRequest, {params}: {params: {folder: string}}
   const writer = responseStream.writable.getWriter();
   const encoder = new TextEncoder();
 
+
+const CHANNEL_NAME = `new-mail-${user.username}`;
   writer.closed.catch(async () => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-    // @ts-expect-error testing
-    global.ee.removeAllListeners();
+    await consumer.disconnect();
   })
 
+
   writer.ready.then(async () => {
-    // @ts-expect-error testing
-    global.ee.on(`new-mail:${user.username}:${params.folder}`, async (data) => {
-      await writer.write(encoder.encode(`data: ${data}\n\n`))
-    })
+    consumer.connect()
+    consumer.subscribe({ topic: CHANNEL_NAME, fromBeginning: true })
+    consumer.run({ 
+      eachMessage: async ({message}) => {
+        console.log(message.value?.toString());
+        const json = JSON.parse(message.value?.toString());
+
+        if (json.folderId !== params.folder) return;
+
+        await writer.write(encoder.encode(`data: ${JSON.stringify(json.thread)}\n\n`))
+      }
+     })
   }).catch(e => {
     console.log('writer.ready error', e)
   })

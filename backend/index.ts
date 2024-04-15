@@ -5,7 +5,6 @@ import { customerRouter } from "./routers/customer";
 import { protectedProc, router } from "./trpc";
 import { extensionsRouter } from "./routers/extensions";
 import { z } from "zod";
-import type EventEmitter from "events";
 export const appRouter = router({
   accounts: accountsRouter,
   user: userRouter,
@@ -19,8 +18,16 @@ export const appRouter = router({
     title: z.string(),
     lastActive: z.number()
   })})).mutation(async ({ctx,input}) => {
-    (global.ee as EventEmitter).emit(`new-mail:${ctx.session.username}:${input.folderId}`, JSON.stringify(input.thread))
     
+    await ctx.kafka.send({
+      topic: `new-mail-${ctx.session.username}`,
+      messages: [{
+        value: JSON.stringify({
+          folderId: input.folderId,
+          thread: input.thread
+        })
+      }]
+    })
   })
 });
 
