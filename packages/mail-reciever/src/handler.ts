@@ -28,6 +28,7 @@ import {
   genSymmetricKey,
 } from "@stuff/lib/crypto";
 import { moveThread } from "backend/utils/moveThread";
+import { getKafka } from "backend/sdks";
 
 export const mailHandler = async ({
   mail: {
@@ -252,6 +253,31 @@ export const mailHandler = async ({
         messageId,
         encryptedMessageEncryptionKey: encryptedUserKey,
       });
+
+      const kafka = getKafka();
+
+      const producer = kafka.producer({
+        allowAutoTopicCreation: true,
+      })
+
+      await producer.connect()
+      await producer.send({
+        topic: `new-mail-${username}`,
+        messages: [
+          {
+            value: JSON.stringify({
+              folderId: "inbox",
+              thread: {
+                threadId,
+                read: threadView?.read ?? false,
+                lastActive: threadView?.last_active ?? new Date().getTime()
+              }
+            })
+          }
+        ]
+      })
+
+      await producer.disconnect();
     } catch (e) {
       console.error("UNKNOWN ERROR", e);
     }

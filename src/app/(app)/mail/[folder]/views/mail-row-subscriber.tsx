@@ -14,11 +14,13 @@ export const NewMailListener = ({folderId}: {folderId: string}) => {
     }
 
     sse.onmessage = (data) => {
-      setNewEmails(old => [...old, JSON.parse(data.data)])
+      const newData = JSON.parse(data.data)
+      console.log(newData);
+      setNewEmails(old => [...old, newData])
     }
 
     return () => sse.close()
-  }, [])
+  }, [folderId])
 
 
   return newEmails.map((v, i) => (

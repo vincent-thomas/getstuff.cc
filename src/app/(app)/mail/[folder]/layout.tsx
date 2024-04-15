@@ -115,9 +115,7 @@ export default setupLayout({
                   css({ height: "full", width: "full" }),
                 )}
               >
-                <Suspense>
-                  <FolderHeader folderId={params.folder} />
-                </Suspense>
+                <FolderHeader folderId={params.folder} />
                 <MailTable folderId={params.folder} searchQuery={query?.q} />
               </div>
               {children}
