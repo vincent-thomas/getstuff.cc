@@ -1,5 +1,5 @@
-import { createSprinkles, defineProperties } from "@vanilla-extract/sprinkles";
 import { style } from "@vanilla-extract/css";
+import { createSprinkles, defineProperties } from "@vanilla-extract/sprinkles";
 import { screenConditions } from "../conditions";
 import { spacing } from "../variables";
 

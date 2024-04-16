@@ -8,8 +8,8 @@ import {
 const { privateKey, publicKey } = genKeyPair();
 
 test("test", () => {
-  const data = "data";
-  const encrypted = encryptAsymmetric(Buffer.from(data), publicKey);
+  const data = Buffer.from("data");
+  const encrypted = encryptAsymmetric(data, publicKey);
   const decrypted = decryptAsymmetric(encrypted, privateKey);
-  expect(decrypted.toString("utf-8")).toEqual(data);
+  expect(decrypted).toEqual(data);
 });

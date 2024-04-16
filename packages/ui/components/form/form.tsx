@@ -1,9 +1,9 @@
 "use client";
 
 import * as AriaKit from "@ariakit/react";
-import { formErrorStyle, formLabelStyle } from "./form.css";
-import { FC } from "react";
+import type { FC } from "react";
 import { border } from "src/components/recipies";
+import { formErrorStyle, formLabelStyle } from "./form.css";
 
 const FormRoot = AriaKit.Form;
 

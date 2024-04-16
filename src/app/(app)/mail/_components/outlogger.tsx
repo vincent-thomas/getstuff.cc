@@ -8,6 +8,7 @@ export const Outlogger = ({ children }: { children: ReactNode }) => {
   const logoutMutation = api.accounts.logout.useMutation();
   return (
     <button
+      type="button"
       onClick={async () => {
         await logoutMutation.mutateAsync();
         clearDerivedSecretStore();

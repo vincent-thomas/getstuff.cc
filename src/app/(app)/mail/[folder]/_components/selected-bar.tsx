@@ -39,17 +39,17 @@ export const SelectedBar = ({
 
   const CONSTANT_folders = useMemo(() => {
     return [{ id: "inbox", name: "Inbox" }].filter(
-      (folder) => folder.id !== folderId,
+      folder => folder.id !== folderId,
     );
   }, [folderId]);
 
   const otherFolders = useMemo(() => {
     return (folders.data ?? [])
-      .map((folder) => ({
+      .map(folder => ({
         name: folder.gsi2.split("|")[2],
         id: z.string().parse(folder.sk.split("|")[1]),
       }))
-      .filter((folder) => folder.id !== folderId);
+      .filter(folder => folder.id !== folderId);
   }, [folders.data, folderId]);
 
   const [selected] = useAtom(messagesIdSelected);
@@ -67,7 +67,7 @@ export const SelectedBar = ({
           <MenuDescription>Move to</MenuDescription>
           <MenuSeparator />
 
-          {CONSTANT_folders.map((folder) => (
+          {CONSTANT_folders.map(folder => (
             <MenuItem
               key={folder.id}
               onClick={async () => {
@@ -91,7 +91,7 @@ export const SelectedBar = ({
           {otherFolders.length > 0 && CONSTANT_folders.length !== 0 && (
             <MenuDescription>Your folders</MenuDescription>
           )}
-          {otherFolders.map((folder) => (
+          {otherFolders.map(folder => (
             <MenuItem
               key={folder.id}
               onClick={async () => {

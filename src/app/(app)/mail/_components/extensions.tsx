@@ -35,6 +35,7 @@ export const Extensions = () => {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <button
+          type="button"
           className={cn(
             stack({ align: "center", gap: "md" }),
             css({ color: "text2", p: "medium" }),
@@ -64,7 +65,7 @@ export const Extensions = () => {
         {enabled.data === false ? (
           <EnableMailRelay />
         ) : (
-          <button onClick={() => store.set(mailRelayOpen, true)}>
+          <button type="button" onClick={() => store.set(mailRelayOpen, true)}>
             <div
               className={cn(
                 css({

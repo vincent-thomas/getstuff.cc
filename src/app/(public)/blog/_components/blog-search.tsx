@@ -27,8 +27,8 @@ export const BlogSearch = ({
       keys: ["title", "description", "tags"],
     });
 
-    setQuery(fuse.search(search.get("q") ?? "").map((v) => v.item));
-  }, [search.get("q")]);
+    setQuery(fuse.search(search.get("q") ?? "").map(v => v.item));
+  }, [search, blogs, setQuery]);
 
   return (
     <div className="w-full flex justify-center items-center">
@@ -36,7 +36,7 @@ export const BlogSearch = ({
         type="search"
         className="w-full max-w-[500px] p-4 rounded-lg border-2 border-border bg-background2"
         value={search.get("q") ?? ""}
-        onChange={(e) => set("q", e.target.value)}
+        onChange={e => set("q", e.target.value)}
         placeholder="Search for blog posts"
       />
     </div>

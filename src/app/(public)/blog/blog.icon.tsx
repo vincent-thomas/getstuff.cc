@@ -9,6 +9,7 @@ export const BlogIcon = () => {
       width={500}
       height={500}
     >
+      <title>i dont know</title>
       {/* <style>
         .cls-2_notification-4{fill:url(#linear-gradient);}
         .cls-3_notification-4{isolation:isolate;opacity:.18;}

@@ -1,16 +1,16 @@
 import {
-  type TooltipProviderProps,
-  TooltipProvider,
-  TooltipAnchor,
   Tooltip as AriaTooltip,
   type TooltipProps as AriaTooltipProps,
+  TooltipAnchor,
+  TooltipProvider,
+  type TooltipProviderProps,
 } from "@ariakit/react";
 import type { FC } from "react";
 import { border } from "src/components/recipies";
 
 interface TooltipProps extends TooltipProviderProps {}
 
-export const Tooltip: FC<TooltipProps> = (props) => (
+export const Tooltip: FC<TooltipProps> = props => (
   <TooltipProvider {...props} />
 );
 

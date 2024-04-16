@@ -1,8 +1,8 @@
 import {
-  PutCommand,
+  DeleteCommand,
   type DynamoDBDocumentClient,
   GetCommand,
-  DeleteCommand,
+  PutCommand,
 } from "@aws-sdk/lib-dynamodb";
 import { getDataTable } from "@stuff/infra-constants";
 import { threadViewInterface } from "backend/interfaces/threadView";

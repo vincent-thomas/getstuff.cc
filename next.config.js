@@ -26,7 +26,7 @@ const config = {
     useLightningcss: true,
     ppr: true,
   },
-  webpack: (config) => {
+  webpack: config => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
     config?.module?.rules?.push({
       test: /\.wasm$/,
@@ -64,7 +64,7 @@ const config = {
             name: "logger",
           },
         ],
-      })
+      }),
     );
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
@@ -92,5 +92,5 @@ const config = {
 
 export default million.next(
   // @ts-expect-error jag vet
-  withBundleAnalyzer(withContentlayer(withVE(config)))
+  withBundleAnalyzer(withContentlayer(withVE(config))),
 );

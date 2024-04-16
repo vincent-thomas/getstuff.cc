@@ -1,15 +1,15 @@
 "use client";
 
-import * as React from "react";
+import type { DialogDescriptionProps } from "@ariakit/react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
+import { H1 } from "@stuff/typography";
+import { Button } from "@stuff/ui/button";
 import { PlusIcon } from "lucide-react";
+import { stack } from "packages/ui/patterns/stack";
+import { spacing } from "packages/ui/variables";
+import type * as React from "react";
 import { border, shadow } from "src/components/recipies";
 import { dialogContentStyles } from "./dialog.css";
-import { stack } from "packages/ui/patterns/stack";
-import { Button } from "@stuff/ui/button";
-import { H1 } from "@stuff/typography";
-import { spacing } from "packages/ui/variables";
-import type { DialogDescriptionProps } from "@ariakit/react";
 
 const Dialog = DialogPrimitive.Root;
 

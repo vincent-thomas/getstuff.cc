@@ -11,8 +11,12 @@ export const config = {
 export type Location = "IN_AUTH" | "IN_APP" | "OTHER";
 
 const decideLocation = (pathname: string) => {
-  if (pathname.startsWith("/mail")) return "IN_APP" as const;
-  else if (pathname.startsWith("/auth")) return "IN_AUTH" as const;
+  if (pathname.startsWith("/mail")) {
+    return "IN_APP" as const;
+  }
+  if (pathname.startsWith("/auth")) {
+    return "IN_AUTH" as const;
+  }
 
   return "OTHER";
 };

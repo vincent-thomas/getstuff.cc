@@ -1,20 +1,15 @@
 import {
   type App,
+  CfnOutput,
+  RemovalPolicy,
   Stack,
   type StackProps,
-  RemovalPolicy,
-  CfnOutput,
 } from "aws-cdk-lib";
 import { CustomersTable, ThingsTable, UsersTable } from "./constructs/table";
 
-import { Bucket, HttpMethods } from "aws-cdk-lib/aws-s3";
 import { getEmailContentBucket } from "@stuff/infra-constants";
+import { Bucket, HttpMethods } from "aws-cdk-lib/aws-s3";
 
-import {
-  ARecord,
-  CnameRecord,
-  type IHostedZone,
-} from "aws-cdk-lib/aws-route53";
 import {
   CfnAccessKey,
   Effect,
@@ -23,6 +18,11 @@ import {
   PolicyStatement,
   User,
 } from "aws-cdk-lib/aws-iam";
+import {
+  ARecord,
+  CnameRecord,
+  type IHostedZone,
+} from "aws-cdk-lib/aws-route53";
 import type { EmailIdentity } from "aws-cdk-lib/aws-ses";
 
 interface AccountStackProps extends StackProps {
@@ -75,8 +75,8 @@ export class DataApiInfra extends Stack {
     if (stage === "prod") {
       new CnameRecord(this, "stuff-email-cname-record", {
         zone,
-        recordName: `wwww`,
-        domainName: `cname.vercel-dns.com`,
+        recordName: "wwww",
+        domainName: "cname.vercel-dns.com",
       });
 
       new ARecord(this, "stuff-email-a-record", {
@@ -107,7 +107,7 @@ export class DataApiInfra extends Stack {
     const storageStatement = new PolicyStatement({
       effect: Effect.ALLOW,
       actions: ["s3:PutObject", "s3:GetObject"],
-      resources: [this.formattedEmailBucket.bucketArn + "/*"],
+      resources: [`${this.formattedEmailBucket.bucketArn}/*`],
     });
 
     const inlinePolicy = new PolicyDocument({

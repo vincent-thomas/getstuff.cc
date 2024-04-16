@@ -11,7 +11,7 @@ import { logoutMutation } from "../_components/account-viewer.actions";
 import { extensionsOpen } from "../_components/extensions";
 import { composeActionOpen } from "./compose";
 import { mailRelayOpen } from "./mailRelay";
-import { goToArchiveAction, goToInboxAction } from "./test";
+import { goToArchiveAction, goToInboxAction } from "./more-things";
 
 type Thing = {
   label: string;

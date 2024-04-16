@@ -4,7 +4,7 @@ import { z } from "zod";
 export const parseEmail = async (mimeEmail: string) => {
   const parsedEmailContent = await simpleParser(mimeEmail);
 
-  const attachments = parsedEmailContent.attachments.map((v) => ({
+  const attachments = parsedEmailContent.attachments.map(v => ({
     filename: v.filename,
     contentId: v.cid,
     content: v.content,
@@ -16,7 +16,7 @@ export const parseEmail = async (mimeEmail: string) => {
 
   let toPersons_UNFORMATTED: AddressObject | undefined;
 
-  const fromPerson = parsedEmailContent.from?.value.map((person) => ({
+  const fromPerson = parsedEmailContent.from?.value.map(person => ({
     name: person.name,
     address: person.address,
   }))[0];
@@ -29,7 +29,7 @@ export const parseEmail = async (mimeEmail: string) => {
     return;
   }
 
-  const toPersons = toPersons_UNFORMATTED?.value.map((toValue) => ({
+  const toPersons = toPersons_UNFORMATTED?.value.map(toValue => ({
     address: z.string().parse(toValue.address),
     name: toValue.name,
   }));
@@ -38,12 +38,12 @@ export const parseEmail = async (mimeEmail: string) => {
 
   if (Array.isArray(parsedEmailContent?.cc)) {
     cc =
-      parsedEmailContent.cc[0]?.value.map((cc) => ({
+      parsedEmailContent.cc[0]?.value.map(cc => ({
         address: cc.address,
         name: cc.name,
       })) ?? [];
   } else if (parsedEmailContent?.cc) {
-    cc = parsedEmailContent.cc.value.map((cc) => ({
+    cc = parsedEmailContent.cc.value.map(cc => ({
       name: cc.name,
       address: cc.address,
     }));

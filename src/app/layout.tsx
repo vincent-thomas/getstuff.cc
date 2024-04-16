@@ -4,6 +4,7 @@ import "./globals.css";
 
 import { Inter } from "next/font/google";
 
+import { env } from "@/env";
 import { TRPCReactProvider } from "@stuff/api-client/react";
 import { Provider } from "jotai";
 import type { Metadata, Viewport } from "next";
@@ -12,7 +13,6 @@ import { roundingClass, spacingDefiningClass } from "packages/ui/variables";
 import type { ReactNode } from "react";
 import { Toaster } from "src/providers/sonner";
 import { store } from "./global-store";
-import { env } from "@/env";
 
 const font = Inter({
   axes: ["slnt"],

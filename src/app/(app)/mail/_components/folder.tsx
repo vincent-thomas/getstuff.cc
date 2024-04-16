@@ -6,9 +6,9 @@ import type { api as apiServer } from "@stuff/api-client/server";
 import { cn } from "@stuff/components/utils";
 import { button } from "@stuff/ui/button";
 import Link from "next/link";
+import { useMemo } from "react";
 import { z } from "zod";
 import { isHoveringState } from "../views/sidebar_component.css";
-import { useMemo } from "react";
 
 export const Folder = ({
   folder,

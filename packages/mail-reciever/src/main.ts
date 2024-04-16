@@ -1,7 +1,7 @@
 // @ts-ignore
 
-import { messageValidator } from "./validators";
 import { mailHandler } from "./handler";
+import { messageValidator } from "./validators";
 
 interface MailRecord {
   messageId: string;
@@ -21,6 +21,7 @@ interface MailRecord {
 export const handler = async (event: { Records: MailRecord[] }) => {
   for (const { body } of event.Records) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
+    // biome-ignore lint/suspicious/noExplicitAny: Det parsas ändå
     const mail = JSON.parse((JSON.parse(body) as any).Message) as any;
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access

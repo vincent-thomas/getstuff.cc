@@ -12,6 +12,7 @@ export const CookieTeller = () => {
     return null;
   }
 
+  // biome-ignore lint/suspicious/useAwait: <explanation>
   const test = async () => {
     "use server";
 
@@ -26,7 +27,7 @@ export const CookieTeller = () => {
         css({ position: "sticky", bg: "bgSubtle", p: "medium" }),
         stack({ gap: "md", align: "center" }),
       )}
-      style={{ top: 0, borderBottom: "1px solid " + palette.borderSubtle }}
+      style={{ top: 0, borderBottom: `1px solid ${palette.borderSubtle}` }}
     >
       <div className={cn(stack({}))}>
         <P className={cn(css({ color: "text2", marginRight: "small" }))}>

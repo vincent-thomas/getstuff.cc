@@ -1,18 +1,17 @@
+import { randomUUID } from "crypto";
 import { PutObjectCommand, type S3Client } from "@aws-sdk/client-s3";
 import {
   type DynamoDBDocumentClient,
   PutCommand,
   QueryCommand,
 } from "@aws-sdk/lib-dynamodb";
-import { getEmailContentBucket } from "@stuff/infra-constants";
-import { randomUUID } from "crypto";
-import { z } from "zod";
-import { getDataTable } from "@stuff/infra-constants";
+import { getDataTable, getEmailContentBucket } from "@stuff/infra-constants";
 import { addressAliasInterface } from "backend/interfaces/addressAlias";
-import { getUser } from "backend/utils/getUser";
-import { threadViewInterface } from "backend/interfaces/threadView";
-import type { messageViewInterface } from "backend/interfaces/messageView";
 import { messageInterface } from "backend/interfaces/message";
+import type { messageViewInterface } from "backend/interfaces/messageView";
+import { threadViewInterface } from "backend/interfaces/threadView";
+import { getUser } from "backend/utils/getUser";
+import { z } from "zod";
 
 export const uploadEmailContent = async (
   s3: S3Client,
@@ -92,21 +91,17 @@ export const getUserFromAlias = async (
     IndexName: "gsi1",
   });
 
-  const result = await dyn.send(command).then((v) => v.Items);
+  const result = await dyn.send(command).then(v => v.Items);
 
   if (result === undefined || result?.length !== 1) {
     return undefined;
   }
 
   const existingAlias = addressAliasInterface.optional().parse(result[0]);
-  if (existingAlias == undefined) {
+  if (existingAlias === undefined) {
     return undefined;
   }
-  return await getUser(
-    dyn,
-    stage,
-    z.string().parse(existingAlias.pk.split("|")[1]),
-  );
+  return await getUser(z.string().parse(existingAlias.pk.split("|")[1]));
 };
 
 export const contactInterface = z.object({

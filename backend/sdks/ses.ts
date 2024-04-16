@@ -1,4 +1,3 @@
-import { env } from "@/env";
 import { SESClient } from "@aws-sdk/client-ses";
 
-export const getSes = () => new SESClient({ region: env.AWS_REGION });
+export const getSes = (region: string) => new SESClient({ region });

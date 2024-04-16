@@ -1,16 +1,16 @@
-import { RemovalPolicy, type Stack } from "aws-cdk-lib";
-import { Construct } from "constructs";
-import {
-  Table,
-  AttributeType,
-  ProjectionType,
-  BillingMode,
-} from "aws-cdk-lib/aws-dynamodb";
 import {
   getCustomerTable,
   getDataTable,
   getUserTable,
 } from "@stuff/infra-constants";
+import { RemovalPolicy, type Stack } from "aws-cdk-lib";
+import {
+  AttributeType,
+  BillingMode,
+  ProjectionType,
+  Table,
+} from "aws-cdk-lib/aws-dynamodb";
+import { Construct } from "constructs";
 
 interface TableOptions {
   stage: string;
@@ -27,7 +27,7 @@ export class ThingsTable extends Construct {
     { stage }: TableOptions,
   ) {
     super(scope, id);
-    this.table = new Table(this, `STUFF-TABLE`, {
+    this.table = new Table(this, "STUFF-TABLE", {
       tableName: getDataTable(stage),
       partitionKey: {
         name: "pk",

@@ -1,21 +1,17 @@
+import { env } from "@/env";
 import { TRPCError } from "@trpc/server";
-import { protectedProc, router } from "../trpc";
-import { getCustomer } from "../utils/getUser";
-import { getStripe } from "../sdks/stripe";
-import { getStuffPlusPriceId } from "../utils/prices";
 import type Stripe from "stripe";
 import { z } from "zod";
-import { env } from "@/env";
+import { getStripe } from "../sdks/stripe";
+import { protectedProc, router } from "../trpc";
+import { getCustomer } from "../utils/getUser";
+import { getStuffPlusPriceId } from "../utils/prices";
 
 export const customerRouter = router({
   checkout: protectedProc
     .output(z.object({ sessionUrl: z.string() }))
     .mutation(async ({ ctx }) => {
-      const customer = await getCustomer(
-        ctx.dyn,
-        env.STAGE,
-        ctx.session.customerId,
-      );
+      const customer = await getCustomer(ctx.session.customerId);
       if (!customer) {
         throw new TRPCError({
           code: "FORBIDDEN",
@@ -39,14 +35,14 @@ export const customerRouter = router({
 
       const session = await createSession(
         stripe,
-        customer.customer_id,
+        customer.customerId,
         now + expires_at,
       );
       await ctx.redis.set(
         `checkout-session-url:${ctx.session.customerId}`,
         z.string().parse(session.url),
         "EX",
-        now + expires_at
+        now + expires_at,
       );
 
       return { sessionUrl: z.string().parse(session.url) };

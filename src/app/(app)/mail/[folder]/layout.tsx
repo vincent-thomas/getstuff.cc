@@ -1,5 +1,4 @@
 import dynamic from "next/dynamic";
-import { Suspense } from "react";
 import { StuffBranding } from "src/app/(public)/_components/stuff";
 import { Logo } from "src/components/logo";
 import { border } from "src/components/recipies";
@@ -14,18 +13,18 @@ import { MailTable } from "./views/mail-table";
 
 const CommandMenu = dynamic(
   () =>
-    import("../ui-actions/commandMenu").then((v) => ({
+    import("../ui-actions/commandMenu").then(v => ({
       default: v.CommandMenu,
     })),
   { ssr: false },
 );
 const UIActions = dynamic(
-  () => import("../ui-actions").then((v) => ({ default: v.UIActions })),
+  () => import("../ui-actions").then(v => ({ default: v.UIActions })),
   { ssr: false },
 );
 const MailRelayModal = dynamic(
   () =>
-    import("../ui-actions/mailRelay").then((v) => ({
+    import("../ui-actions/mailRelay").then(v => ({
       default: v.MailRelayModal,
     })),
   { ssr: false },

@@ -9,9 +9,10 @@
 import { TRPCError, initTRPC } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError, type z } from "zod";
-import { jwtPayloadValidator } from "./utils/jwt";
-import { getRedis, getDyn, getS3, getSes, getKafka } from "./sdks";
+import { db } from "./db";
+import { getDyn, getRedis, getS3, getSes } from "./sdks";
 import { getUserFromHeader } from "./utils/getUserFromHeaders";
+import { jwtPayloadValidator } from "./utils/jwt";
 
 const sessionType = jwtPayloadValidator.nullable();
 
@@ -19,15 +20,15 @@ interface CreateInnerContextOptions {
   session: z.infer<typeof sessionType>;
 }
 
-const redis = await getRedis();  
-const dyn = getDyn();
-const s3 = getS3();
-const ses = getSes();
-const kafka = getKafka().producer({
-  allowAutoTopicCreation: true
-});
+const redis = await getRedis(env.AWS_REGION, env.STAGE);
+const dyn = getDyn(env.AWS_REGION);
+const s3 = getS3(env.AWS_REGION);
+const ses = getSes(env.AWS_REGION);
+// const kafka = getKafka().producer({
+//   allowAutoTopicCreation: true
+// });
 
-await kafka.connect()
+// await kafka.connect()
 
 /**
  * Inner context. Will always be available in your procedures, in contrast to the outer context.
@@ -38,14 +39,15 @@ await kafka.connect()
  *
  * @link https://trpc.io/docs/v11/context#inner-and-outer-context
  */
-export const createContextInner = async (opts: CreateInnerContextOptions) => {
+export const createContextInner = (opts: CreateInnerContextOptions) => {
   return {
     session: opts.session,
     dyn,
     redis,
     s3,
     ses,
-    kafka
+    db,
+    // kafka
   };
 };
 /**
@@ -111,7 +113,7 @@ export const router = t.router;
  */
 export const pubProc = t.procedure;
 
-export const protectedProc = t.procedure.use(async function isAuthed(opts) {
+export const protectedProc = t.procedure.use(function isAuthed(opts) {
   const { ctx } = opts;
 
   // `ctx.user` is nullable

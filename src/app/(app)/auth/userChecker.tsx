@@ -2,10 +2,12 @@
 
 import { useUser } from "@stuff/lib/useUser";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 export const UserChecker = ({ whenDone }: { whenDone: () => void }) => {
   const user = useUser();
   const router = useRouter();
+
+  const call = useCallback(() => whenDone(), [whenDone]);
 
   useEffect(() => {
     if (user === undefined) {
@@ -15,7 +17,7 @@ export const UserChecker = ({ whenDone }: { whenDone: () => void }) => {
       router.replace("/mail/inbox");
       return;
     }
-    whenDone();
-  }, [user]);
+    call();
+  }, [call, router, user]);
   return null;
 };

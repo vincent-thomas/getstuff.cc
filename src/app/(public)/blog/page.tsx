@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 
 export default async function BlogPage() {
   const posts = allPosts
-    .filter((post) => post.published)
+    .filter(post => post.published)
     .sort((a, b) => {
       return compareDesc(new Date(a.date), new Date(b.date));
     });
@@ -45,12 +45,12 @@ export default async function BlogPage() {
       </div>
 
       <div className={blogContainer}>
-        {posts.map((post) => {
+        {posts.map(post => {
           const readTime = Math.ceil(post.body.raw.split(" ").length / 200);
 
           const title =
             post.title.length > 37
-              ? post.title.slice(0, 37) + "..."
+              ? `${post.title.slice(0, 37)}...`
               : post.title;
 
           return (
@@ -107,7 +107,7 @@ export default async function BlogPage() {
                       css({ color: "text2", marginTop: "medium" }),
                     )}
                   >
-                    {post.tags.map((v) => (
+                    {post.tags.map(v => (
                       <p key={v}>#{v}</p>
                     ))}
                   </div>

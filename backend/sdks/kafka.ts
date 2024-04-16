@@ -1,12 +1,13 @@
-import {Kafka, logLevel} from "kafkajs";
+import { Kafka, logLevel } from "kafkajs";
 
-export const getKafka = () => new Kafka({
-  brokers: [env.KAFKA_BROKER],
-  ssl: true,
-  sasl: {
-    mechanism: "scram-sha-256",
-    username: env.KAFKA_USERNAME,
-    password: env.KAFKA_PASSWORD
-  },
-  logLevel: logLevel.ERROR
-})
+export const getKafka = (broker: string, username: string, password: string) =>
+  new Kafka({
+    brokers: [broker],
+    ssl: true,
+    sasl: {
+      mechanism: "scram-sha-256",
+      username,
+      password,
+    },
+    logLevel: logLevel.ERROR,
+  });

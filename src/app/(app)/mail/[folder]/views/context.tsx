@@ -51,7 +51,7 @@ async function handleDragEnd(
   const draggable = draggableDataInterface.parse(draggableRAW?.data.current);
 
   switch (draggable.type) {
-    case "mail-row":
+    case "mail-row": {
       if (droppable.type !== "folder") {
         throw new Error("non supported droppable type");
       }
@@ -65,8 +65,8 @@ async function handleDragEnd(
 
       utils.mail.threads.getThreads.setData(
         { folderId: draggable.folderId },
-        (oldData) => {
-          return (oldData || []).filter((item) => {
+        oldData => {
+          return (oldData || []).filter(item => {
             return item.threadId !== draggable.threadId;
           });
         },
@@ -84,6 +84,7 @@ async function handleDragEnd(
         folderId: droppable.folderId,
       });
       return;
+    }
     default:
       throw new Error(`Unhandled type: ${draggable?.type}`);
   }

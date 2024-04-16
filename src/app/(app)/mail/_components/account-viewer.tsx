@@ -32,6 +32,7 @@ export const AccountViewer = async () => {
       <MenuButton
         render={
           <button
+            type="button"
             style={{
               borderRadius: "50%",
               aspectRatio: 1,

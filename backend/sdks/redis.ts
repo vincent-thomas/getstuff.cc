@@ -1,23 +1,22 @@
-import { env } from "@/env";
 import { GetParameterCommand, SSMClient } from "@aws-sdk/client-ssm";
 import { Redis } from "ioredis";
 import { z } from "zod";
 
-const getRedisUrl = async (ssm: SSMClient) =>
+const getRedisUrl = async (ssm: SSMClient, stage: string) =>
   z.string().parse(
     await ssm
       .send(
         new GetParameterCommand({
-          Name: `/stuff/api/${env.STAGE}/redis-url`,
+          Name: `/stuff/api/${stage}/redis-url`,
           WithDecryption: true,
         }),
       )
-      .then((v) => v.Parameter?.Value),
+      .then(v => v.Parameter?.Value),
   );
 
-export const getRedis = async () => {
-  const ssm = new SSMClient({ region: env.AWS_REGION });
+export const getRedis = async (region: string, stage: string) => {
+  const ssm = new SSMClient({ region });
 
-  const url = await getRedisUrl(ssm);
+  const url = await getRedisUrl(ssm, stage);
   return new Redis(url);
 };

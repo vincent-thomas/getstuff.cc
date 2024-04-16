@@ -92,7 +92,7 @@ export const MailRow = ({
           className={cn(css({ bg: { hover: "bgHover" } }))}
           onClick={() => {
             if (selected.includes(thread.threadId)) {
-              setSelected(selected.filter((id) => id !== thread.threadId));
+              setSelected(selected.filter(id => id !== thread.threadId));
             } else {
               setSelected([...selected, thread.threadId]);
             }
@@ -117,10 +117,10 @@ export const MailRow = ({
           style={{ width: "300px" }}
           className={cn(
             css({
-              fontWeight: !thread.read ? "semibold" : "normal",
+              fontWeight: thread.read ? "normal" : "semibold",
               color: thread.read ? "text2" : "text1",
             }),
-            !thread.read ? "font-semibold" : "text-text2",
+            thread.read ? "text-text2" : "font-semibold",
           )}
         >
           {thread.title}

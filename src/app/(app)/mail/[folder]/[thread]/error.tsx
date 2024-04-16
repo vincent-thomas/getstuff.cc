@@ -7,7 +7,6 @@ const Page = (props: {
   error: Error & { digest?: string };
   reset: () => void;
 }) => {
-  console.log(props);
   return (
     <div className={cn(css({ width: "full", height: "full", p: "medium" }))}>
       <div

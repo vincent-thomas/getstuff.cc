@@ -20,7 +20,7 @@ export const setupPage =
     query?: Query;
     Component: Page<z.infer<Params>, z.infer<Query>>;
   }): FC<PageProps> =>
-  (props) => {
+  props => {
     const validated =
       params !== undefined
         ? (params.parse(props.params) as z.infer<Params>)
@@ -53,7 +53,7 @@ export const setupLayout =
     query?: Query;
     Component: Layout<z.infer<Params>, z.infer<Query>>;
   }): FC<LayoutProps> =>
-  (props) => {
+  props => {
     const validated =
       params !== undefined
         ? (params.parse(props.params) as z.infer<Params>)
@@ -78,7 +78,7 @@ type Loading = ({
 
 export const setupLoading =
   ({ Component }: { Component: Loading }): FC<LayoutProps> =>
-  (props) => {
+  props => {
     return Component({
       children: props.children,
     });

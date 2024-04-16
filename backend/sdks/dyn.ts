@@ -1,6 +1,5 @@
-import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
-import { env } from "@/env";
+import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 
-export const getDyn = () =>
-  DynamoDBDocumentClient.from(new DynamoDBClient({ region: env.AWS_REGION }));
+export const getDyn = (region: string) =>
+  DynamoDBDocumentClient.from(new DynamoDBClient({ region }));

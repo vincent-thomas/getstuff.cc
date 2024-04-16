@@ -60,8 +60,8 @@ const Tier: FC<TierProps> = ({ title, desc, price, features }) => {
             stack({ gap: "sm", direction: "col" }),
           )}
         >
-          {features.map((feature, i) => (
-            <li className={marker} key={i}>
+          {features.map(feature => (
+            <li className={marker} key={feature}>
               <Text2>{feature}</Text2>
             </li>
           ))}

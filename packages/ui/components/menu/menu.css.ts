@@ -3,7 +3,7 @@ import { style } from "@vanilla-extract/css";
 export const menuItem = style({
   selectors: {
     "&[data-focus-visible='true']": {
-      outline: "2px solid " + palette.borderFocus,
+      outline: `2px solid ${palette.borderFocus}`,
       outlineOffset: "2px",
     },
   },

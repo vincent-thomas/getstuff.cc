@@ -45,7 +45,7 @@ export const Searchbar = () => {
           pY: "large",
         })}
         value={search}
-        onChange={(e) => setSearch(e.target.value)}
+        onChange={e => setSearch(e.target.value)}
       />
       {search !== "" && (
         <div className={css({ p: "xsmall" })}>

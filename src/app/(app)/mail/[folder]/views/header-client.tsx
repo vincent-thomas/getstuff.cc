@@ -19,7 +19,7 @@ export const FolderHeaderInternal: FC<{ folderId: string; name: string }> = ({
   return (
     <div
       style={{
-        borderBottom: "1px solid " + palette.borderSubtle,
+        borderBottom: `1px solid ${palette.borderSubtle}`,
       }}
       className={cn(
         stack({ direction: "row", align: "center" }),
@@ -28,12 +28,13 @@ export const FolderHeaderInternal: FC<{ folderId: string; name: string }> = ({
     >
       <div className={css({ p: "small" })}>
         <button
+          type="button"
           className={cn(css({ color: "text1", p: "medium" }))}
           onClick={() => {
             setSelected([]);
             if (selected.length !== threadsQuery.data?.length) {
               for (const thread of threadsQuery.data ?? []) {
-                setSelected((value) => [...value, thread.threadId]);
+                setSelected(value => [...value, thread.threadId]);
               }
             }
           }}

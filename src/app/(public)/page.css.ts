@@ -23,7 +23,7 @@ export const boxGrid = style({
 
 export const conversations = style({
   gridArea: "conversations",
-  border: "1px solid " + palette.borderComponent,
+  border: `1px solid ${palette.borderComponent}`,
 });
 
 export const folders = style({

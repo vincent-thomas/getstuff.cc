@@ -15,6 +15,7 @@ export const Info: FC<Props> = ({ size, color }) => {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
+      <title>more information</title>
       <path
         d="M7 14C8.10457 14 9 13.1046 9 12C9 10.8954 8.10457 10 7 10C5.89543 10 5 10.8954 5 12C5 13.1046 5.89543 14 7 14Z"
         fill={color}

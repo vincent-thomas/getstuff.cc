@@ -1,6 +1,6 @@
 import type { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
-import type { Verdict } from "./validators";
 import { QueryCommand } from "@aws-sdk/lib-dynamodb";
+import type { Verdict } from "./validators";
 
 export const mailHandlerGuard = async (
   dyn: DynamoDBDocumentClient,
@@ -11,11 +11,11 @@ export const mailHandlerGuard = async (
   dmarcVerdict: Verdict,
 ) => {
   if (dmarcVerdict !== "PASS") {
-    console.log("ACCEPTING ANYWAY ERROR: dmarcVerdict", { dmarcVerdict });
+    console.info("ACCEPTING ANYWAY ERROR: dmarcVerdict", { dmarcVerdict });
   }
 
   if (spfVerdict !== "PASS" || dkimVerdict !== "PASS") {
-    console.log("ERROR: security passes", {
+    console.info("ERROR: security passes", {
       spfVerdict,
       dkimVerdict,
       dmarcVerdict,
@@ -38,7 +38,7 @@ async function messageIdExists(
     KeyConditionExpression: "sk = :sk and begins_with(pk, :pk)",
     ExpressionAttributeValues: {
       ":sk": `message|${messageId}`,
-      ":pk": `mail|`,
+      ":pk": "mail|",
     },
     IndexName: "gsi1",
   });
