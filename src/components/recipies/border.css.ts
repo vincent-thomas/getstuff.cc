@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { recipe } from "@vanilla-extract/recipes";
 import { rounding } from "packages/ui/variables";
+import { z } from "zod";
 
 function doBorder(arr1: string[], arr2: string[]) {
   const total = [];
@@ -25,7 +26,7 @@ const colors = Object.keys(colorsKeys);
 const sides = ["t", "r", "b", "l", "all", "none"];
 const allShit = doBorder(colors, sides);
 
-const type = {
+const Type = {
   t: "Top",
   l: "Left",
   r: "Right",
@@ -36,7 +37,8 @@ const type = {
 const better = allShit.map(([colorBetter, side]) => {
   // @ts-expect-error because
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  const color = palette[colorsKeys[colorBetter!]];
+  const color = palette[colorsKeys[colorBetter]];
+  side = z.string().parse(side);
   if (side === "none") {
     return {
       border: "none",
@@ -46,20 +48,17 @@ const better = allShit.map(([colorBetter, side]) => {
     colorBetter,
     side,
     {
-      // @ts-expect-error because
-      [`border${type[side!]}Color`]: color,
-      // @ts-expect-error because
-      [`border${type[side!]}Style`]: "solid",
-      // @ts-expect-error because
-      [`border${type[side!]}Width`]: "1px",
+      [`border${Type[side]}Color`]: color,
+      [`border${Type[side]}Style`]: "solid",
+      [`border${Type[side]}Width`]: "1px",
     },
   ];
 });
 
 const borderStyles = better
   // @ts-expect-error because
-  .filter((v) => v?.border !== "none")
-  .map((v) => ({
+  .filter(v => v?.border !== "none")
+  .map(v => ({
     variants: {
       // @ts-expect-error because
       side: v[1],

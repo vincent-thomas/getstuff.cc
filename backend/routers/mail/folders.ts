@@ -10,7 +10,9 @@ export const foldersRouter = router({
   folderExists: protectedProc
     .input(z.object({ folderId: z.string() }))
     .query(async ({ input: { folderId }, ctx }) => {
-      if (builtInFolder(folderId)) return true;
+      if (builtInFolder(folderId)) {
+        return true;
+      }
 
       const userFolderExists = await getFolder(ctx.session.username, folderId);
 
@@ -20,7 +22,9 @@ export const foldersRouter = router({
   getFolder: protectedProc
     .input(z.object({ folderId: z.string() }))
     .query(async ({ input: { folderId }, ctx }) => {
-      if (builtInFolder(folderId)) return null;
+      if (builtInFolder(folderId)) {
+        return null;
+      }
 
       const userFolderExists = await getFolder(ctx.session.username, folderId);
 

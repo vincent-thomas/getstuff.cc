@@ -14,13 +14,13 @@ import { Mdx } from "src/components/mdx-components";
 import { ShareFacebook } from "../../_components/share-facebook";
 import { ShareTwitter } from "../../_components/share-twitter";
 
+import { env } from "@/env";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "packages/ui/components/tooltip/tooltip";
 import { border, stack } from "src/components/recipies";
-import { env } from "@/env";
 
 interface PostPageProps {
   params: {
@@ -29,7 +29,7 @@ interface PostPageProps {
 }
 
 async function getPostFromParams(slug: string) {
-  const post = allPosts.find((post) => post.id === slug);
+  const post = allPosts.find(post => post.id === slug);
 
   if (!post) {
     null;
@@ -98,7 +98,7 @@ const isHeader = (line: string) => {
 export async function generateStaticParams(): Promise<
   PostPageProps["params"][]
 > {
-  return allPosts.map((post) => ({
+  return allPosts.map(post => ({
     slug: post.id.split("/"),
   }));
 }
@@ -108,11 +108,10 @@ const tableOfContents = (content: string[]) => {
   for (const line of content) {
     if (line.startsWith("# ")) {
       _headers.push(line);
-      continue;
     }
   }
 
-  return _headers.map((v) => ({
+  return _headers.map(v => ({
     title: v.replace("# ", ""),
     slug: v.replace("# ", "").toLowerCase().replaceAll(" ", "-"),
   }));
@@ -127,7 +126,7 @@ export default async function PostPage({ params }: PostPageProps) {
 
   const readTime = Math.ceil(post.body.raw.split(" ").length / 200);
   const toc = tableOfContents(
-    post.body.raw.split("\n").filter((v) => isHeader(v)),
+    post.body.raw.split("\n").filter(v => isHeader(v)),
   );
 
   return (
@@ -204,7 +203,7 @@ export default async function PostPage({ params }: PostPageProps) {
             >
               <H2>Table of contents</H2>
               <Flex col gap="0.5rem">
-                {toc.map((v) => (
+                {toc.map(v => (
                   <Link
                     key={v.slug}
                     href={`#${v.slug}`}

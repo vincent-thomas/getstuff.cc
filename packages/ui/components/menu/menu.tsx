@@ -1,20 +1,20 @@
 import {
-  MenuProvider as AriaMenuProvider,
   MenuButton as AriaMenuButton,
   type MenuButtonProps as AriaMenuButtonProps,
-  MenuItem as AriaMenuItem,
-  type MenuItemProps as AriaMenuItemProps,
-  type MenuSeparatorOptions as AriaMenuSeperatorOptions,
-  MenuSeparator as AriaMenuSeparator,
   Menu as AriaMenuContent,
   type MenuProps as AriaMenuContentProps,
+  MenuItem as AriaMenuItem,
+  type MenuItemProps as AriaMenuItemProps,
+  MenuProvider as AriaMenuProvider,
+  MenuSeparator as AriaMenuSeparator,
+  type MenuSeparatorOptions as AriaMenuSeperatorOptions,
 } from "@ariakit/react";
 import { P } from "@stuff/typography";
+import { stack } from "packages/ui/patterns/stack";
 import { spacing } from "packages/ui/variables";
 import type { FC, ReactNode } from "react";
 import { border } from "src/components/recipies";
 import { menuItem, menuItemStyle } from "./menu.css";
-import { stack } from "packages/ui/patterns/stack";
 
 export const Menu = ({ children }: { children: ReactNode }) => {
   return <AriaMenuProvider>{children}</AriaMenuProvider>;

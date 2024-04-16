@@ -16,6 +16,7 @@ export const Spinner = ({ size }: { size: number }) => {
       className="animate-spin"
       xmlns="http://www.w3.org/2000/svg"
     >
+      <title>Loading spinner</title>
       <path
         opacity="0.2"
         fillRule="evenodd"

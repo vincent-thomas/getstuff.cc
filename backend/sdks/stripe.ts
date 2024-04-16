@@ -1,6 +1,6 @@
 import { GetParameterCommand, SSMClient } from "@aws-sdk/client-ssm";
-import { z } from "zod";
 import { Stripe } from "stripe";
+import { z } from "zod";
 
 const getStripeKey = (ssm: SSMClient) =>
   ssm
@@ -10,7 +10,7 @@ const getStripeKey = (ssm: SSMClient) =>
         WithDecryption: true,
       }),
     )
-    .then((v) => z.string().parse(v.Parameter?.Value));
+    .then(v => z.string().parse(v.Parameter?.Value));
 
 export const getStripe = async () => {
   const ssm = new SSMClient({ region: env.AWS_REGION });

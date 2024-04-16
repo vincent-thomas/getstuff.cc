@@ -36,7 +36,7 @@ export default setupPage({
         <ThreadHeading title={conversation?.thread.title} />
         <div className={cn(css({ overflowY: "auto", p: "medium" }))}>
           <div className={stack({ direction: "col", gap: "md" })}>
-            {conversation.messages.map((thread) => (
+            {conversation.messages.map(thread => (
               <MailMessage key={thread.messageId} thread={thread} />
             ))}
           </div>

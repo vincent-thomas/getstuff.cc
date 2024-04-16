@@ -1,6 +1,6 @@
+import { SignJWT, jwtVerify as joseVerifyJwt } from "jose";
 import { z } from "zod";
 import { customerInterface } from "../interfaces/customer";
-import { SignJWT, jwtVerify as joseVerifyJwt } from "jose";
 const getJwtKey = () => {
   return env.JWT_SECRET;
 };
@@ -31,6 +31,6 @@ export const createJwt = (
 export const verifyJwt = async (jwt: string) =>
   jwtPayloadValidator.parse(
     await joseVerifyJwt(jwt, new TextEncoder().encode(getJwtKey())).then(
-      (v) => v.payload,
+      v => v.payload,
     ),
   );

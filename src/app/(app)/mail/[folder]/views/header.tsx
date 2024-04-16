@@ -2,11 +2,8 @@ import { api as apiServer } from "@stuff/api-client/server";
 import { unstable_noStore } from "next/cache";
 import { redirect } from "next/navigation";
 import type { FC } from "react";
+import { z } from "zod";
 import { FolderHeaderInternal } from "./header-client";
-
-interface FolderHeader {
-  folder: { name: string; folderId: string };
-}
 
 export const FolderHeader: FC<{ folderId: string }> = async ({ folderId }) => {
   unstable_noStore();
@@ -18,8 +15,9 @@ export const FolderHeader: FC<{ folderId: string }> = async ({ folderId }) => {
     redirect("/mail/inbox");
   }
   const name =
-    // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
-    folderResult === null ? folderId : folderResult?.gsi2.split("|")?.[2]!;
+    folderResult === null
+      ? folderId
+      : z.string().parse(folderResult?.gsi2.split("|")?.[2]);
 
   return <FolderHeaderInternal folderId={folderId} name={name} />;
 };

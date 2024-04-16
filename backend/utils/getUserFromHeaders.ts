@@ -7,7 +7,7 @@ export async function getUserFromHeader(cookies: Record<string, string>) {
       if (active === undefined) {
         return null;
       }
-      const jwt = cookies["stuff-token-" + active];
+      const jwt = cookies[`stuff-token-${active}`];
 
       if (jwt === undefined) {
         return null;

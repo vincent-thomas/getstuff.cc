@@ -45,7 +45,7 @@ export const CommandMenu: FC = () => {
 
     const handler = (e: KeyboardEvent) => {
       if (ctrl1(e)) {
-        setOpen((is) => !is);
+        setOpen(is => !is);
       }
     };
 
@@ -105,7 +105,7 @@ export const CommandMenu: FC = () => {
               )}
               value={value}
               autoSelect
-              onChange={(e) => setValue(e.currentTarget.value)}
+              onChange={e => setValue(e.currentTarget.value)}
             />
             <div>
               {value !== "" && (
@@ -144,17 +144,20 @@ export const CommandMenu: FC = () => {
                   No actions available
                 </div>
               ) : (
-                list.map(([type, items], i) => (
-                  <Fragment key={i}>
+                list.map(([type, items]) => (
+                  <Fragment key={type}>
                     <Ariakit.ComboboxGroup
                       className={cn(
                         stack({ direction: "col" }),
                         css({ pY: "small" }),
                       )}
                     >
-                      <h1
+                      <div
                         role="button"
                         onClick={() => {
+                          setValue(type);
+                        }}
+                        onKeyDown={() => {
                           setValue(type);
                         }}
                         className={cn(
@@ -167,12 +170,12 @@ export const CommandMenu: FC = () => {
                         )}
                       >
                         {type}
-                      </h1>
-                      {items.map((item, i) => (
+                      </div>
+                      {items.map(item => (
                         <Ariakit.ComboboxItem
                           focusOnHover
                           setValueOnClick={false}
-                          key={i}
+                          key={item.label}
                           value={item.label}
                           onClick={async () => {
                             await item.action();

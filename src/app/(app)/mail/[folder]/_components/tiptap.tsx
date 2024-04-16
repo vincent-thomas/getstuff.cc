@@ -9,7 +9,6 @@ import P from "@tiptap/extension-paragraph";
 import Placeholders from "@tiptap/extension-placeholder";
 import Text from "@tiptap/extension-text";
 import { EditorContent, type JSONContent, useEditor } from "@tiptap/react";
-import { ReactNode } from "react";
 import "./style.css";
 import "./tiptap.css";
 

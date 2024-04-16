@@ -6,21 +6,20 @@ export const serializeData = (data: string) => Buffer.from(data, "utf-8");
 export const deserializeData = (data: Buffer | Uint8Array) =>
   Buffer.from(data).toString("utf-8");
 
-export const encryptSymmetric = (data: string, key: Buffer) => {
+export const encryptSymmetric = (data: Buffer, key: Buffer) => {
   const nonce = randomBytes(secretbox.nonceLength);
-  const box = secretbox(serializeData(data), nonce, key);
+  const box = secretbox(data, nonce, key);
 
   const fullMessage = new Uint8Array(nonce.length + box.length);
   fullMessage.set(nonce);
   fullMessage.set(box, nonce.length);
 
-  return Buffer.from(fullMessage).toString("hex");
+  return Buffer.from(fullMessage);
 };
 
-export const decryptSymmetric = (data: string, key: Buffer) => {
-  const decodedData = Buffer.from(data, "hex");
-  const nonce = decodedData.slice(0, secretbox.nonceLength);
-  const message = decodedData.slice(secretbox.nonceLength, decodedData.length);
+export const decryptSymmetric = (data: Buffer, key: Buffer) => {
+  const nonce = data.slice(0, secretbox.nonceLength);
+  const message = data.slice(secretbox.nonceLength, data.length);
 
   const decrypted = secretbox.open(message, nonce, key);
 
@@ -28,7 +27,7 @@ export const decryptSymmetric = (data: string, key: Buffer) => {
     throw new Error("Could not decrypt message");
   }
 
-  return deserializeData(decrypted);
+  return Buffer.from(decrypted);
 };
 
 export const genSymmetricKey = () => randomBytes(secretbox.keyLength);

@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 import type { Location } from "src/middleware";
 import type { z } from "zod";
 
-export const authMiddleware = async (
+export const authMiddleware = (
   location: Location,
   session: z.infer<typeof jwtPayloadValidator> | null,
 ) => {

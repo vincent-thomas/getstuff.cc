@@ -12,8 +12,8 @@ export const addressAliasesRouter = router({
         TableName: getDataTable(env.STAGE),
         KeyConditionExpression: "pk = :pk and begins_with(sk, :sk)",
         ExpressionAttributeValues: {
-          ":sk": `address-alias|`,
-          ":pk": "mail|" + ctx.session.username,
+          ":sk": "address-alias|",
+          ":pk": `mail|${ctx.session.username}`,
         },
       });
 

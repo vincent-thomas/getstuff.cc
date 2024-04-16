@@ -1,11 +1,11 @@
 #!/usr/bin/env node
-import "source-map-support/register";
 import * as cdk from "aws-cdk-lib";
-import { DataApiInfra } from "./stack";
+import { HostedZone } from "aws-cdk-lib/aws-route53";
+import "source-map-support/register";
 import { env } from "../src/env";
 import { EmailReciever } from "./email-reciever-stack";
 import { SESIdentityStack } from "./ses-identity-stack";
-import { HostedZone } from "aws-cdk-lib/aws-route53";
+import { DataApiInfra } from "./stack";
 
 const app = new cdk.App();
 
@@ -20,7 +20,7 @@ const zone = HostedZone.fromLookup(RootStack, "stuff-zone", {
   domainName: env.DOMAIN,
 });
 
-const identityStack = new SESIdentityStack(app, `stuff-ses-identity`, {
+const identityStack = new SESIdentityStack(app, "stuff-ses-identity", {
   env: {
     region: env.AWS_REGION,
     account: env.AWS_ACCOUNT_ID,

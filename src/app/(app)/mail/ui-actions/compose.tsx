@@ -101,7 +101,7 @@ export const ComposeAction: FC<UIAction> = ({ open, onChange }) => {
 
   return (
     <Dialog
-      onOpenChange={(state) => {
+      onOpenChange={state => {
         if (!loading) {
           onChange(state);
         }
@@ -201,7 +201,7 @@ export const ComposeAction: FC<UIAction> = ({ open, onChange }) => {
             style={{ minHeight: "300px", overflow: "auto", maxHeight: "50vh" }}
           >
             <Tiptap
-              onUpdate={(editor) => {
+              onUpdate={editor => {
                 setShouldShadow(
                   (ref.current?.clientHeight || 0) > window.innerHeight * 0.5,
                 );

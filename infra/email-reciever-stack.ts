@@ -2,7 +2,7 @@ import { getDataTable, getUserTable } from "@stuff/infra-constants";
 import { type App, Duration, Stack, type StackProps } from "aws-cdk-lib";
 import { Table } from "aws-cdk-lib/aws-dynamodb";
 import { PolicyStatement } from "aws-cdk-lib/aws-iam";
-import { Code, Function, Runtime } from "aws-cdk-lib/aws-lambda";
+import { Code, Function as Lambda, Runtime } from "aws-cdk-lib/aws-lambda";
 import { SqsEventSource } from "aws-cdk-lib/aws-lambda-event-sources";
 import { Bucket } from "aws-cdk-lib/aws-s3";
 import { ReceiptRuleSet, TlsPolicy } from "aws-cdk-lib/aws-ses";
@@ -10,8 +10,8 @@ import { S3 as S3Action } from "aws-cdk-lib/aws-ses-actions";
 import { Topic } from "aws-cdk-lib/aws-sns";
 import { SqsSubscription } from "aws-cdk-lib/aws-sns-subscriptions";
 import { Queue } from "aws-cdk-lib/aws-sqs";
-import type { envInterface } from "packages/mail-reciever/src/env";
 import type { z } from "zod";
+import type { envInterface } from "../packages/mail-reciever/src/env";
 
 interface MailApiStackProps extends StackProps {
   emailDomain: string;
@@ -21,11 +21,6 @@ interface MailApiStackProps extends StackProps {
   };
   formattedEmailBucket: Bucket;
   stage: string;
-}
-
-interface LambdaOptions {
-  NODE_OPTIONS?: string;
-  AWS_REGION: string;
 }
 
 export class EmailReciever extends Stack {
@@ -89,12 +84,13 @@ export class EmailReciever extends Stack {
       EMAIL_DOMAIN: emailDomain,
     } satisfies Omit<z.infer<typeof envInterface>, "AWS_REGION">;
 
-    const lambda = new Function(this, "MailApiFunction", {
+    const lambda = new Lambda(this, "MailApiFunction", {
       code: Code.fromAsset("packages/mail-reciever/dist"),
       handler: "main.handler",
       functionName: `${stage}-stuff-mail-reciever-function`,
       runtime: Runtime.NODEJS_20_X,
       timeout: Duration.seconds(20),
+      memorySize: 512,
       environment: {
         ...lambdaEnv,
         NODE_OPTIONS: "--enable-source-maps",

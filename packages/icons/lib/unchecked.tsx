@@ -15,6 +15,7 @@ export const UnChecked = ({
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
+      <title>unchecked</title>
       <rect
         x="2"
         y="2"
@@ -44,6 +45,7 @@ export const Checked = ({
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
+      <title>checked</title>
       <rect
         x="2.08594"
         y="2"

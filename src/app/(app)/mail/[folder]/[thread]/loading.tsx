@@ -22,8 +22,8 @@ export default setupLoading({
             animation: `${pulse} 2s cubic-bezier(0.4, 0, 0.6, 1) infinite`,
           }}
         />
-        {[0, 1, 2, 3].map((_, index) => (
-          <ThreadContentSkeleton key={index} />
+        {[0, 1, 2, 3].map(_ => (
+          <ThreadContentSkeleton key={_} />
         ))}
       </div>
     );

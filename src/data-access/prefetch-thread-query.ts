@@ -12,8 +12,8 @@ export const prefetchThreadQuery = async ({
       queryKey: ["mailMessage", message.messageId],
       queryFn: async () => {
         const json = await fetch(message.contentUrl, { cache: "force-cache" })
-          .then((props) => props.json())
-          .then((props) =>
+          .then(props => props.json())
+          .then(props =>
             z.object({ text: z.string(), html: z.string() }).parse(props),
           );
 

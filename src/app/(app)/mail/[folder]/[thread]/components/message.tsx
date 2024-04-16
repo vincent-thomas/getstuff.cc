@@ -56,8 +56,8 @@ export const MailMessage = ({ thread }: { thread: MailMessage }) => {
     queryKey: ["mailMessage", thread.messageId, dataKey],
     queryFn: async () => {
       const json = await fetch(thread.contentUrl, { cache: "force-cache" })
-        .then((props) => props.json())
-        .then((props) =>
+        .then(props => props.json())
+        .then(props =>
           z.object({ text: z.string(), html: z.string() }).parse(props),
         );
 
@@ -87,7 +87,8 @@ export const MailMessage = ({ thread }: { thread: MailMessage }) => {
     >
       <div
         role="button"
-        onClick={() => setIsMinimized((is) => !is)}
+        onClick={() => setIsMinimized(is => !is)}
+        onKeyDown={() => setIsMinimized(is => !is)}
         className={cn(
           stack({ justify: "between", align: "center" }),
           css({

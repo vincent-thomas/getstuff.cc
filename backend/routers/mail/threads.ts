@@ -1,17 +1,17 @@
-import { QueryCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
-import { getDataTable, getEmailContentBucket } from "@stuff/infra-constants";
-import { z } from "zod";
-import { messageInterface } from "../../interfaces/message";
+import { env } from "@/env";
 import { GetObjectCommand } from "@aws-sdk/client-s3";
+import { QueryCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { protectedProc, router } from "backend/trpc";
-import { threadViewInterface } from "backend/interfaces/threadView";
-import { threadInterface } from "backend/interfaces/thread";
+import { getDataTable, getEmailContentBucket } from "@stuff/infra-constants";
+import { TRPCError } from "@trpc/server";
 import { messageViewInterface } from "backend/interfaces/messageView";
+import { threadInterface } from "backend/interfaces/thread";
+import { threadViewInterface } from "backend/interfaces/threadView";
+import { protectedProc, router } from "backend/trpc";
 import { moveThread } from "backend/utils/moveThread";
 import Fuse from "fuse.js";
-import { TRPCError } from "@trpc/server";
-import { env } from "@/env";
+import { z } from "zod";
+import { messageInterface } from "../../interfaces/message";
 
 export const threadsRouter = router({
   getThreads: protectedProc
@@ -38,8 +38,8 @@ export const threadsRouter = router({
           TableName: getDataTable(env.STAGE),
           KeyConditionExpression: "begins_with(sk,:sk) and pk = :pk",
           ExpressionAttributeValues: {
-            ":sk": `thread|`,
-            ":pk": "mail|" + threadView.pk.split("|")[1],
+            ":sk": "thread|",
+            ":pk": `mail|${threadView.pk.split("|")[1]}`,
           },
         });
 
@@ -66,7 +66,7 @@ export const threadsRouter = router({
           keys: ["title"],
         });
 
-        threads = fuse.search(searchQuery).map((v) => v.item);
+        threads = fuse.search(searchQuery).map(v => v.item);
       }
 
       return threads;
@@ -96,7 +96,7 @@ export const threadsRouter = router({
         TableName: getDataTable(env.STAGE),
         KeyConditionExpression: "begins_with(sk,:sk) and pk = :pk",
         ExpressionAttributeValues: {
-          ":sk": `message|`,
+          ":sk": "message|",
           ":pk": `mail|${threadId}`,
         },
       });
@@ -107,8 +107,8 @@ export const threadsRouter = router({
         TableName: getDataTable(env.STAGE),
         KeyConditionExpression: "begins_with(sk,:sk) and pk = :pk",
         ExpressionAttributeValues: {
-          ":sk": `thread|`,
-          ":pk": "mail|" + threadView.pk.split("|")[1],
+          ":sk": "thread|",
+          ":pk": `mail|${threadView.pk.split("|")[1]}`,
         },
       });
 
@@ -123,7 +123,7 @@ export const threadsRouter = router({
       for (const message of formattedMessages) {
         const messageId = message.sk.split("|")[1];
         const command = new GetObjectCommand({
-          Bucket: getEmailContentBucket(ctx.env.STAGE),
+          Bucket: getEmailContentBucket(env.STAGE),
           Key: messageId,
         });
 
@@ -133,14 +133,14 @@ export const threadsRouter = router({
           TableName: getDataTable(env.STAGE),
           KeyConditionExpression: "pk = :pk and begins_with(sk, :sk)",
           ExpressionAttributeValues: {
-            ":sk": `message-view|`,
+            ":sk": "message-view|",
             ":pk": `mail|${messageId}`,
           },
         });
 
         const messageViewsRAW = await ctx.dyn
           .send(getMessageViewCommand)
-          .then((v) => v.Items);
+          .then(v => v.Items);
 
         const messageView = messageViewInterface.parse(messageViewsRAW?.[0]);
 
@@ -153,7 +153,7 @@ export const threadsRouter = router({
           messageEncryptionKey: messageView.encryptedMessageEncryptionKey,
         });
 
-        await ctx.redis.set("content-url:" + messageId, contentUrl, "EX", 900);
+        await ctx.redis.set(`content-url:${messageId}`, contentUrl, "EX", 900);
       }
       return {
         messages: niceMessages,
@@ -207,7 +207,7 @@ export const threadsRouter = router({
     .mutation(async ({ ctx, input }) => {
       for (const threadId of input.threadIds) {
         const command = new UpdateCommand({
-          TableName: getDataTable(ctx.env.STAGE),
+          TableName: getDataTable(env.STAGE),
           Key: {
             pk: `mail|${threadId}`,
             sk: `thread-view|${ctx.session.username}|${input.folderId}`,

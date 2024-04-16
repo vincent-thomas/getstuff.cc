@@ -65,7 +65,7 @@ export class SESIdentityStack extends Stack {
         },
       ],
       zone,
-      recordName: zone.zoneName + ".",
+      recordName: `${zone.zoneName}.`,
     });
 
     new MxRecord(this, "stuff-feedback-mx-record", {
@@ -81,14 +81,14 @@ export class SESIdentityStack extends Stack {
 
     new TxtRecord(this, "stuff-txt-record", {
       zone,
-      recordName: "mail." + zone.zoneName + ".",
-      values: [`v=spf1 include:amazonses.com ~all`],
+      recordName: `mail.${zone.zoneName}.`,
+      values: ["v=spf1 include:amazonses.com ~all"],
     });
 
     new TxtRecord(this, "stuff-dmarc-record", {
       zone,
       recordName: `_dmarc.${zone.zoneName}.`,
-      values: [`v=DMARC1; p=none;`],
+      values: ["v=DMARC1; p=none;"],
     });
   }
 }

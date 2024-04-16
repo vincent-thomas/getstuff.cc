@@ -1,8 +1,8 @@
 import { GetCommand } from "@aws-sdk/lib-dynamodb";
 import { getDataTable } from "@stuff/infra-constants";
-import { getDyn } from "../sdks/dyn";
-import { folderInterface } from "../interfaces/folder";
 import { BUILTIN_FOLDERS } from "src/constants/builtinFolders";
+import { folderInterface } from "../interfaces/folder";
+import { getDyn } from "../sdks/dyn";
 
 export const getFolder = async (username: string, folderId: string) => {
   const command = new GetCommand({
@@ -13,7 +13,7 @@ export const getFolder = async (username: string, folderId: string) => {
     },
   });
 
-  const result = await getDyn().send(command);
+  const result = await getDyn(env.AWS_REGION).send(command);
   return folderInterface.optional().parse(result.Item);
 };
 

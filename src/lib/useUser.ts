@@ -1,6 +1,7 @@
 "use client";
 
 import { api } from "@stuff/api-client/react";
+import { vanillaApi } from "@stuff/api-client/vanilla";
 import { useAtom } from "jotai";
 import { useEffect, useRef } from "react";
 import { userDataInterface } from "../interfaces";
@@ -19,28 +20,18 @@ export const useUser = () => {
   const count = useRef(false);
 
   const [user, setUser] = useAtom(userAtom);
-  const logoutMutation = api.accounts.logout.useMutation();
-
-  const passwordDerivedSecretHex =
-    typeof window !== "undefined" ? getPasswordDerivedSecret() : undefined;
 
   useEffect(() => {
-    if (count.current == false) {
+    if (count.current === false) {
       count.current = true;
       return;
     }
-
+    const passwordDerivedSecretHex = getPasswordDerivedSecret();
     if (passwordDerivedSecretHex === null) {
-      async function logout() {
-        try {
-          await logoutMutation.mutateAsync();
-        } catch {}
+      vanillaApi.accounts.logout.mutate().then(() => {
         clearDerivedSecretStore();
         setUser(null);
-      }
-
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      logout();
+      });
       return;
     }
 
@@ -66,11 +57,10 @@ export const useUser = () => {
     const passwordDerivedSecret = Buffer.from(passwordDerivedSecretHex, "hex");
 
     const result = decryptSymmetric(
-      encryptedDataQuery.data.encryptedUserData,
+      Buffer.from(encryptedDataQuery.data.encryptedUserData, "hex"),
       passwordDerivedSecret,
-    );
+    ).toString("utf-8");
     setUser(userDataInterface.parse(JSON.parse(result)));
-  }, [encryptedDataQuery.data, passwordDerivedSecretHex, sessionQuery.data]);
-
+  }, [encryptedDataQuery.data, sessionQuery.data, setUser]);
   return user;
 };

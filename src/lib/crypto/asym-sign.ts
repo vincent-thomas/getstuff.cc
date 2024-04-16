@@ -15,7 +15,7 @@ export const genAsymSignKeyPair = () => {
   };
 };
 
-export const sign = async (message: Buffer, privateKey: string) => {
+export const sign = (message: Buffer, privateKey: string) => {
   const rawPrivateKey = deserialize(privateKey);
   return serialize(tweetSign(message, rawPrivateKey));
 };

@@ -1,3 +1,4 @@
+import { env } from "@/env";
 import { setupPage } from "@stuff/client/utils";
 import { Flex } from "@stuff/structure";
 import { H2, P } from "@stuff/typography";
@@ -5,7 +6,6 @@ import Link from "next/link";
 import { PageHeador } from "../_components/header";
 import { Section } from "../_components/section";
 import { StuffBranding } from "../_components/stuff";
-import { env } from "@/env";
 
 export default setupPage({
   Component() {

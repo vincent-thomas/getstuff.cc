@@ -1,15 +1,19 @@
-import { z } from "zod";
-import type { messageValidator } from "./validators";
-import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
-import { DynamoDBDocumentClient, PutCommand } from "@aws-sdk/lib-dynamodb";
-import { SESClient, SendEmailCommand } from "@aws-sdk/client-ses";
-import { mailHandlerGuard } from "./mailguard";
+import { GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
+import { SendEmailCommand } from "@aws-sdk/client-ses";
+import { PutCommand } from "@aws-sdk/lib-dynamodb";
+import { getDataTable } from "@stuff/infra-constants";
 import {
-  S3Client,
-  GetObjectCommand,
-  PutObjectCommand,
-} from "@aws-sdk/client-s3";
+  encryptAsymmetric,
+  encryptSymmetric,
+  genSymmetricKey,
+} from "@stuff/lib/crypto";
+import { getDyn, getS3, getSes } from "backend/sdks";
+import { getUser } from "backend/utils/getUser";
+import { moveThread } from "backend/utils/moveThread";
+import { z } from "zod";
 import { parseEmail } from "./emailParser";
+import { getEnv } from "./env";
+import { mailHandlerGuard } from "./mailguard";
 import {
   contactInterface,
   createMessageView,
@@ -19,16 +23,9 @@ import {
   getUserFromAlias,
   uploadMessage,
 } from "./util";
-import { getDataTable } from "@stuff/infra-constants";
-import { getEnv } from "./env";
-import { getUser } from "backend/utils/getUser";
-import {
-  encryptAsymmetric,
-  encryptSymmetric,
-  genSymmetricKey,
-} from "@stuff/lib/crypto";
-import { moveThread } from "backend/utils/moveThread";
-import { getKafka } from "backend/sdks";
+import type { messageValidator } from "./validators";
+
+const env = getEnv();
 
 export const mailHandler = async ({
   mail: {
@@ -42,10 +39,8 @@ export const mailHandler = async ({
     dmarcVerdict,
   },
 }: z.infer<typeof messageValidator>) => {
-  const env = getEnv();
-  const dynClient = new DynamoDBClient({ region: env.AWS_REGION });
-  const dyn = DynamoDBDocumentClient.from(dynClient);
-  const ses = new SESClient({ region: env.AWS_REGION });
+  const dyn = getDyn(env.AWS_REGION);
+  const ses = getSes(env.AWS_REGION);
   const tableName = getDataTable(env.STAGE);
 
   if (
@@ -58,11 +53,11 @@ export const mailHandler = async ({
       dmarcVerdict.status,
     ))
   ) {
-    console.log("MAIL FAILED GUARD");
+    console.info("MAIL FAILED GUARD");
     return;
   }
 
-  const s3 = new S3Client({ region: env.AWS_REGION });
+  const s3 = getS3(env.AWS_REGION);
 
   const emailFromBucketUnparsed = await s3
     .send(
@@ -71,7 +66,7 @@ export const mailHandler = async ({
         Key: objectKey,
       }),
     )
-    .then((data) => data.Body?.transformToString());
+    .then(data => data.Body?.transformToString());
 
   const parsed = await parseEmail(z.string().parse(emailFromBucketUnparsed));
 
@@ -81,8 +76,8 @@ export const mailHandler = async ({
 
   for (const address of parsed.recievedByAddresses
     .filter(({ address }) => address.endsWith(`@${env.EMAIL_DOMAIN}`))
-    .map((v) => v.address.split("@")[0])) {
-    let result = await getUser(dyn, env.STAGE, z.string().parse(address));
+    .map(v => v.address.split("@")[0])) {
+    let result = await getUser(z.string().parse(address));
 
     if (result === undefined) {
       result = await getUserFromAlias(
@@ -141,13 +136,16 @@ export const mailHandler = async ({
   }
 
   const textContent = encryptSymmetric(
-    parsed.body.text,
+    Buffer.from(parsed.body.text),
     Buffer.from(encryptionKey),
   );
   const htmlContent =
     parsed.body.html === false
       ? undefined
-      : encryptSymmetric(parsed.body.html, Buffer.from(encryptionKey));
+      : encryptSymmetric(
+          Buffer.from(parsed.body.html),
+          Buffer.from(encryptionKey),
+        );
 
   if (threadId === undefined) {
     console.debug("CREATING THREAD", parsed.subject ?? "Untitled Thread");
@@ -171,8 +169,8 @@ export const mailHandler = async ({
         to: z.array(contactInterface).parse(parsed.recievedByAddresses),
         cc: z.array(contactInterface).parse(parsed.cc),
         content: {
-          html: htmlContent,
-          text: textContent,
+          html: htmlContent?.toString("hex"),
+          text: textContent.toString("hex"),
         },
         from: contactInterface.parse(parsed.sentFromAddress),
       },
@@ -210,19 +208,19 @@ export const mailHandler = async ({
 
   // Adds proper metadata for users to be accessable
   for (const username of parsed.recievedByAddresses
-    .filter((address) => address.address?.endsWith(`@${env.EMAIL_DOMAIN}`))
-    .map((v) => v.address.split("@")[0])) {
+    .filter(address => address.address?.endsWith(`@${env.EMAIL_DOMAIN}`))
+    .map(v => v.address.split("@")[0])) {
     if (username === undefined) {
       return;
     }
 
     try {
-      let user = await getUser(dyn, env.STAGE, username);
+      let user = await getUser(username);
 
       if (user === undefined) {
         user = await getUserFromAlias(dyn, env.STAGE, username);
       }
-      console.debug("USERNAME to send", user?.user_id);
+      console.debug("USERNAME to send", user?.username);
 
       if (user === undefined) {
         continue;
@@ -253,31 +251,6 @@ export const mailHandler = async ({
         messageId,
         encryptedMessageEncryptionKey: encryptedUserKey,
       });
-
-      const kafka = getKafka();
-
-      const producer = kafka.producer({
-        allowAutoTopicCreation: true,
-      })
-
-      await producer.connect()
-      await producer.send({
-        topic: `new-mail-${username}`,
-        messages: [
-          {
-            value: JSON.stringify({
-              folderId: "inbox",
-              thread: {
-                threadId,
-                read: threadView?.read ?? false,
-                lastActive: threadView?.last_active ?? new Date().getTime()
-              }
-            })
-          }
-        ]
-      })
-
-      await producer.disconnect();
     } catch (e) {
       console.error("UNKNOWN ERROR", e);
     }

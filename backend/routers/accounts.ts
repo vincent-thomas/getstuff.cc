@@ -1,22 +1,17 @@
 import { z } from "zod";
 
-import { getDyn } from "../sdks/dyn";
-import { getStripe } from "../sdks/stripe";
-import { GetCommand, PutCommand } from "@aws-sdk/lib-dynamodb";
-import { userInterface } from "../interfaces/user";
-import { customerInterface } from "../interfaces/customer";
+import { randomBytes } from "crypto";
 import { TRPCError } from "@trpc/server";
-import { getCustomer, getUser } from "../utils/getUser";
+import { customerTable, users } from "backend/db/schema";
+import { protectedProc, pubProc, router } from "backend/trpc";
+import { cookies } from "next/headers";
 import {
   deriveSession,
   generateEphemeral,
 } from "secure-remote-password/server";
-import { randomBytes } from "crypto";
+import { getStripe } from "../sdks/stripe";
+import { getCustomer, getUser } from "../utils/getUser";
 import { createJwt } from "../utils/jwt";
-import { cookies } from "next/headers";
-import { getCustomerTable, getUserTable } from "packages/infra-constants/table";
-import { protectedProc, pubProc, router } from "backend/trpc";
-import { env } from "@/env";
 
 export const accountsRouter = router({
   createAccount: pubProc
@@ -33,6 +28,7 @@ export const accountsRouter = router({
     )
     .mutation(
       async ({
+        ctx: { db },
         input: {
           username,
           name,
@@ -43,17 +39,9 @@ export const accountsRouter = router({
           encryptedUserData,
         },
       }) => {
-        const dyn = getDyn();
         const stripe = await getStripe();
-        const commandIfUserExists = new GetCommand({
-          TableName: getUserTable(env.STAGE),
-          Key: {
-            user_id: username,
-          },
-        });
-
-        const userExists = await dyn.send(commandIfUserExists);
-        if (userExists.Item) {
+        const existingUser = await getUser(username);
+        if (existingUser) {
           throw new TRPCError({
             code: "CONFLICT",
             message: "Username already exists",
@@ -64,50 +52,29 @@ export const accountsRouter = router({
           name: username,
         });
 
-        const command = new PutCommand({
-          TableName: getUserTable(env.STAGE),
-          Item: userInterface.parse({
-            user_id: username,
-            created_at: Date.now(),
+        await db.transaction(async tr => {
+          await tr.insert(customerTable).values({
+            customerId: response.id,
+            status: "inactive",
+          });
+          await tr.insert(users).values({
+            username: username,
             customerId: response.id,
             salt,
-            name,
-            encryptedUserData,
             publicKey,
-            encryptedDataKey,
+            name,
             verifier,
-          }),
+            encryptedDataKey,
+            encryptedUserData,
+          });
         });
-        try {
-          await dyn.send(command);
-        } catch {
-          await stripe.customers.del(response.id);
-          throw {
-            code: "ALREADY_EXISTS",
-            message: "Account exists with username",
-          };
-        }
-
-        const command2 = new PutCommand({
-          TableName: getCustomerTable(env.STAGE),
-          Item: customerInterface.parse({
-            customer_id: response.id,
-            cancel_at: null,
-            created_at: Date.now(),
-            status: "inactive",
-            canceled_at: null,
-          } satisfies z.infer<typeof customerInterface>),
-        });
-
-        await dyn.send(command2);
       },
     ),
   initAccountSession: pubProc
     .input(z.object({ username: z.string() }))
     .output(z.object({ salt: z.string(), serverEphemeralPublic: z.string() }))
     .mutation(async ({ ctx: { redis }, input: { username } }) => {
-      const dyn = getDyn();
-      const user = await getUser(dyn, env.STAGE, username);
+      const user = await getUser(username);
 
       if (user === undefined) {
         logger.debug("user doesnt exist, sending random response");
@@ -143,19 +110,14 @@ export const accountsRouter = router({
           clientSessionProof,
         },
       }) => {
-        const dyn = getDyn();
-        const user = await getUser(dyn, env.STAGE, username);
+        const user = await getUser(username);
 
         try {
           if (user === undefined) {
-            logger.debug("user doesnt exist, user_id=" + username);
+            logger.debug(`user doesnt exist, user_id=${username}`);
             throw {};
           }
-          const customer = await getCustomer(dyn, env.STAGE, user.customerId);
-          if (customer === undefined) {
-            logger.error("CUSTOMER DOESNT EXIST: " + username);
-            throw {};
-          }
+          const customer = (await getCustomer(user.customerId))!;
           const serverSecretEpheremal = z
             .string()
             .parse(await redis.get(username));
@@ -174,7 +136,7 @@ export const accountsRouter = router({
             user.customerId,
             customer.status,
           );
-          cookies().set("stuff-token-" + username, jwt, {
+          cookies().set(`stuff-token-${username}`, jwt, {
             sameSite: "strict",
             secure: true,
             httpOnly: true,
@@ -188,19 +150,19 @@ export const accountsRouter = router({
           return {
             serverProof: serverSession.proof,
           };
-        } catch (e) {
+        } catch {
           throw { code: "NOT_FOUND", message: "Invalid credentials" };
         }
       },
     ),
-  logout: protectedProc.mutation(async ({ ctx }) => {
+  logout: protectedProc.mutation(() => {
     const username = cookies().get("stuff-active")?.value;
     cookies().delete("stuff-active");
 
     if (username) {
-      const jti = cookies().get("stuff-token-" + username)?.value;
+      const jti = cookies().get(`stuff-token-${username}`)?.value;
       if (jti) {
-        cookies().delete("stuff-token-" + username);
+        cookies().delete(`stuff-token-${username}`);
       }
     }
   }),

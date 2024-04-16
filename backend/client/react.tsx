@@ -10,7 +10,6 @@ import { clientOptions } from "./client-options";
 
 const createQueryClient = () => new QueryClient();
 
-
 let clientQueryClientSingleton: QueryClient | undefined = undefined;
 const getQueryClient = () => {
   if (typeof window === "undefined") {
@@ -26,9 +25,7 @@ export const api = createTRPCReact<AppRouter>();
 export function TRPCReactProvider(props: { children: React.ReactNode }) {
   const queryClient = getQueryClient();
 
-  const [trpcClient] = useState(() =>
-    api.createClient(clientOptions),
-  );
+  const [trpcClient] = useState(() => api.createClient(clientOptions));
 
   return (
     <QueryClientProvider client={queryClient}>

@@ -40,7 +40,7 @@ export const useDataKey = () => {
       return;
     }
     return decryptSymmetric(
-      raw.data.encryptedDataKey,
+      Buffer.from(raw.data.encryptedDataKey, "hex"),
       Buffer.from(derivedMasterPassword, "hex"),
     );
   }, [derivedMasterPassword, raw]);

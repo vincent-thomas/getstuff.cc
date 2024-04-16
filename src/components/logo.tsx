@@ -7,6 +7,7 @@ export const Logo = ({ size }: { size: number; color?: true }) => {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
+      <title>Stuff branding logo</title>
       <path d="M0 1L33 33.1649V97H0V1Z" fill={palette.solid1} />
       <path d="M37 36L53 50.7417V97H37V36Z" fill={palette.solid1} />
       <path d="M73 36L57 50.7417V97H73V36Z" fill={palette.solid1} />

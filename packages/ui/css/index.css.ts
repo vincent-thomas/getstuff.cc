@@ -1,8 +1,8 @@
 import { createSprinkles, defineProperties } from "@vanilla-extract/sprinkles";
 import { screenConditions } from "packages/ui/conditions";
 import { spacing } from "packages/ui/variables";
-import { palette } from "../theme/palettes.css";
 import { fadeEnter } from "../keyframes/enter.css";
+import { palette } from "../theme/palettes.css";
 
 const size = defineProperties({
   properties: {
@@ -117,11 +117,11 @@ export const fonts = defineProperties({
     fontSize: {
       small: `${base / multi}px`,
       medium: `${base}px`,
-      large: `${base * Math.pow(multi, 2)}px`,
-      xlarge: `${base * Math.pow(multi, 3)}px`,
-      "2xlarge": `${base * Math.pow(multi, 4)}px`,
-      "3xlarge": `${base * Math.pow(multi, 5)}px`,
-      "4xlarge": `${base * Math.pow(multi, 6)}px`,
+      large: `${base * multi ** 2}px`,
+      xlarge: `${base * multi ** 3}px`,
+      "2xlarge": `${base * multi ** 4}px`,
+      "3xlarge": `${base * multi ** 5}px`,
+      "4xlarge": `${base * multi ** 6}px`,
     },
     textAlign: ["center", "left", "right"],
   },

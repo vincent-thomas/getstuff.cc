@@ -4,7 +4,7 @@ import type { MetadataRoute } from "next";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const posts = allPosts
-    .filter((post) => post.published)
+    .filter(post => post.published)
     .sort((a, b) => {
       return compareDesc(new Date(a.date), new Date(b.date));
     });
@@ -35,7 +35,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: new Date(),
       changeFrequency: "weekly",
     },
-    ...posts.map((post) => ({
+    ...posts.map(post => ({
       url: `${env.APP_URL}/blog/${post.id}`,
       changeFrequency: "weekly" as const,
       lastModified: new Date(post.date),

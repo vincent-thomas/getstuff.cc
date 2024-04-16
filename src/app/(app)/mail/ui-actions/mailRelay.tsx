@@ -43,8 +43,8 @@ export const MailRelayModal = () => {
           style={{ minHeight: "300px", maxHeight: "600px", overflowY: "auto" }}
           className={cn(stack({ direction: "col", gap: "sm" }))}
         >
-          {(aliases ?? []).map((item, i) => (
-            <MailRelay key={i} {...item} />
+          {(aliases ?? []).map(item => (
+            <MailRelay key={item.sk} {...item} />
           ))}
         </div>
       </DialogContent>

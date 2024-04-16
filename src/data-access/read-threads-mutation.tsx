@@ -13,14 +13,15 @@ export const useThreadsReadMutation = () => {
 
       utils.mail.threads.getThreads.setData(
         { folderId: variables.folderId },
-        (old) =>
-          old?.map((thread) => {
+        old =>
+          old?.map(thread => {
             if (variables.threadIds.includes(thread.threadId)) {
               return {
                 ...thread,
                 read: variables.value,
               };
-            } else return thread;
+            }
+            return thread;
           }),
       );
       const previousSelected = selected;
@@ -28,15 +29,15 @@ export const useThreadsReadMutation = () => {
 
       return { previousData, previousSelected };
     },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    onError(_, variables, context: any) {
+    onError(_, variables, context: unknown) {
       utils.mail.threads.getThreads.setData(
         { folderId: variables.folderId },
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any
-        context!.previousData as any[],
+
+        // @ts-expect-error this doesn't matter
+        context?.previousData as unknown[],
       );
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      setSelected(context!.previousSelected as string[]);
+      // @ts-expect-error this doesn't matter
+      setSelected(context?.previousSelected as string[]);
     },
     async onSettled(_, __, variables) {
       await utils.mail.threads.getThreads.invalidate({

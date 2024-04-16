@@ -1,10 +1,10 @@
+import { SendEmailCommand } from "@aws-sdk/client-ses";
+import { getDataTable } from "@stuff/infra-constants";
 import {
   encryptAsymmetric,
   encryptSymmetric,
   genSymmetricKey,
 } from "@stuff/lib/crypto";
-import { SendEmailCommand } from "@aws-sdk/client-ses";
-import { getDataTable } from "@stuff/infra-constants";
 import { protectedProc, router } from "backend/trpc";
 import { getUser } from "backend/utils/getUser";
 import {
@@ -30,11 +30,7 @@ export const sendMailRouter = router({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const user = (await getUser(
-        ctx.dyn,
-        env.STAGE,
-        ctx.session.username,
-      ))!;
+      const user = (await getUser(ctx.session.username))!;
       const command = new SendEmailCommand({
         Destination: {
           BccAddresses: input.bcc,
@@ -71,12 +67,12 @@ export const sendMailRouter = router({
         const encryptionKey = genSymmetricKey();
 
         const htmlContent = encryptSymmetric(
-          input.content.html,
+          Buffer.from(input.content.html),
           Buffer.from(encryptionKey),
         );
 
         const textContent = encryptSymmetric(
-          input.content.text,
+          Buffer.from(input.content.text),
           Buffer.from(encryptionKey),
         );
 
@@ -88,11 +84,11 @@ export const sendMailRouter = router({
           threadId,
           {
             subject: input.subject,
-            to: input.to.map((address) => ({ name: "", address })),
-            cc: input.cc.map((address) => ({ name: "", address })),
+            to: input.to.map(address => ({ name: "", address })),
+            cc: input.cc.map(address => ({ name: "", address })),
             content: {
-              html: htmlContent,
-              text: textContent,
+              html: htmlContent.toString("hex"),
+              text: textContent.toString("hex"),
             },
             from: {
               name: user.name,

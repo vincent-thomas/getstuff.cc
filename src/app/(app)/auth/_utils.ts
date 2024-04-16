@@ -5,7 +5,7 @@ export const generateMasterSecret = async (pass: string, salt: string) => {
   return await hash({
     pass: Buffer.from(pass),
     salt: Buffer.from(salt, "hex"),
-  }).then((result) => result.encoded);
+  }).then(result => result.encoded);
 };
 
 export const deriveSymmetricKey = async (pass: string, salt: string) => {
@@ -14,6 +14,6 @@ export const deriveSymmetricKey = async (pass: string, salt: string) => {
 };
 
 export const createSRPPrivateKey = async (pass: string, salt: string) => {
-  return await deriveSymmetricKey(pass, salt).then((v) => v.toString("hex"));
+  return await deriveSymmetricKey(pass, salt).then(v => v.toString("hex"));
 };
 export const createPasswordDerivedSecret = deriveSymmetricKey;

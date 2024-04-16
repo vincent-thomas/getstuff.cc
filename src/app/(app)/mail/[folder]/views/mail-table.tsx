@@ -10,7 +10,10 @@ export interface FolderHeader {
   searchQuery?: string;
 }
 
-export const MailTable: FC<FolderHeader> = async ({ folderId, searchQuery }) => {
+export const MailTable: FC<FolderHeader> = async ({
+  folderId,
+  searchQuery,
+}) => {
   const threads = await api.mail.threads.getThreads.query({
     folderId: folderId,
     searchQuery,
@@ -34,7 +37,7 @@ export const MailTable: FC<FolderHeader> = async ({ folderId, searchQuery }) => 
   return (
     <div className={cn(css({ overflowY: "auto" }))}>
       <NewMailListener folderId={folderId} />
-      {threads.map((thread) => (
+      {threads.map(thread => (
         <MailRow key={thread.threadId} thread={thread} folderId={folderId} />
       ))}
     </div>

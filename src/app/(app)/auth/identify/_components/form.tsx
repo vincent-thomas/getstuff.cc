@@ -58,35 +58,35 @@ export const FormInput = () => {
   const requestSessionMutation = api.accounts.requestSession.useMutation();
 
   const router = useRouter();
-
   const [isLoading, setIsLoading] = useState(false);
 
   form.useValidate(({ values, touched }) => {
     if (touched.username) {
       if (!z.string().email().safeParse(values.username).success) {
-        form.setError(form.names.username, `Field is not a valid email`);
+        form.setError(form.names.username, "Field is not a valid email");
         return;
       }
       if (!values.username.endsWith("@getstuff.cc")) {
-        form.setError(form.names.username, `Required to end with @getstuff.cc`);
+        form.setError(form.names.username, "Required to end with @getstuff.cc");
         return;
       }
       if (!z.string().min(15).safeParse(values.username).success) {
         form.setError(
           form.names.username,
-          `Username should be atleast 3 characters`,
+          "Username should be atleast 3 characters",
         );
         return;
       }
     }
-    if (touched.password) {
-      if (!z.string().min(8).safeParse(values.password).success) {
-        form.setError(
-          form.names.password,
-          `Password should be atleast 8 characters`,
-        );
-        return;
-      }
+    if (
+      touched.password &&
+      !z.string().min(8).safeParse(values.password).success
+    ) {
+      form.setError(
+        form.names.password,
+        "Password should be atleast 8 characters",
+      );
+      return;
     }
   });
 
@@ -120,7 +120,7 @@ export const FormInput = () => {
       setPasswordDerivedSecret(passwordDerivedSecret.toString("hex"));
 
       router.push("/mail/inbox");
-    } catch (error) {
+    } catch {
       form.setError(form.names.username, "Invalid credentials");
       setIsLoading(false);
     }

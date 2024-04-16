@@ -5,11 +5,11 @@ import {
   QueryCommand,
 } from "@aws-sdk/lib-dynamodb";
 import { getDataTable } from "@stuff/infra-constants";
+import { TRPCError } from "@trpc/server";
 import { addressAliasInterface } from "backend/interfaces/addressAlias";
 import { protectedProc, router } from "backend/trpc";
-import { z } from "zod";
 import { generate } from "random-words";
-import { TRPCError } from "@trpc/server";
+import { z } from "zod";
 
 export const mailRelayRouter = router({
   enabled: protectedProc.query(async ({ ctx }) => {
@@ -17,11 +17,11 @@ export const mailRelayRouter = router({
       TableName: getDataTable(env.STAGE),
       Key: {
         pk: `extension|${ctx.session.username}`,
-        sk: `mail-relay`,
+        sk: "mail-relay",
       },
     });
 
-    const response = await ctx.dyn.send(command).then((v) => v.Item);
+    const response = await ctx.dyn.send(command).then(v => v.Item);
 
     return response !== undefined;
   }),
@@ -30,7 +30,7 @@ export const mailRelayRouter = router({
       TableName: getDataTable(env.STAGE),
       Item: {
         pk: `extension|${ctx.session.username}`,
-        sk: `mail-relay`,
+        sk: "mail-relay",
       },
     });
 
@@ -42,13 +42,13 @@ export const mailRelayRouter = router({
       KeyConditionExpression: "pk = :pk and begins_with(sk, :sk)",
       ExpressionAttributeValues: {
         ":pk": `mail|${ctx.session.username}`,
-        ":sk": `address-alias|`,
+        ":sk": "address-alias|",
       },
     });
 
     const response = await ctx.dyn
       .send(command)
-      .then((v) => addressAliasInterface.array().parse(v.Items));
+      .then(v => addressAliasInterface.array().parse(v.Items));
 
     return response;
   }),
@@ -93,15 +93,15 @@ export const mailRelayRouter = router({
         KeyConditionExpression: "begins_with(pk, :pk) and sk = :sk",
         IndexName: "gsi1",
         ExpressionAttributeValues: {
-          ":pk": `mail|`,
+          ":pk": "mail|",
           ":sk": `address-alias|${words}`,
         },
       });
 
       const existingAlias = await ctx.dyn
         .send(getCommand)
-        .then((v) => v.Items)
-        .then((v) => addressAliasInterface.array().parse(v));
+        .then(v => v.Items)
+        .then(v => addressAliasInterface.array().parse(v));
 
       if (existingAlias.length > 0) {
         throw new TRPCError({
