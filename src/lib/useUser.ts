@@ -28,10 +28,12 @@ export const useUser = () => {
     }
     const passwordDerivedSecretHex = getPasswordDerivedSecret();
     if (passwordDerivedSecretHex === null) {
-      vanillaApi.accounts.logout.mutate().then(() => {
+      try {
+        vanillaApi.accounts.logout.mutate().catch(() => ({}));
+      } finally {
         clearDerivedSecretStore();
         setUser(null);
-      });
+      }
       return;
     }
 

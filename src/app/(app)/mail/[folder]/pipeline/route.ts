@@ -1,10 +1,31 @@
+import { ItemBatcher } from "aws-cdk-lib/aws-stepfunctions";
+import { db } from "backend/db";
+import { folderTable, threadTable, threadViewTable } from "backend/db/schema";
 import { getUserFromHeader } from "backend/utils/getUserFromHeaders";
+import { and, eq, gte } from "drizzle-orm";
 import { type NextRequest, NextResponse } from "next/server";
+import { title } from "process";
+
+const encoder = new TextEncoder();
+
+export const sendData = async (
+  writer: WritableStreamDefaultWriter,
+  data: unknown,
+  id?: string,
+) => {
+  let message = `retry: 30000\ndata: ${JSON.stringify(data)}`;
+
+  if (id) {
+    message += `\nid: ${id}`;
+  }
+
+  await writer.write(encoder.encode(`${message}\n\n`));
+};
 
 export const dynamic = "force-dynamic";
 export const GET = async (
   req: NextRequest,
-  // { params }: { params: { folder: string } },
+  { params }: { params: { folder: string } },
 ) => {
   const username = req.cookies.get("stuff-active")?.value ?? "";
 
@@ -23,28 +44,62 @@ export const GET = async (
 
   const responseStream = new TransformStream();
   const writer = responseStream.writable.getWriter();
-  // const encoder = new TextEncoder();
+  let poll: NodeJS.Timeout;
+  let lastest_fetch: Date = new Date();
 
-  // const CHANNEL_NAME = `new-mail-${user.username}`;
-  writer.closed.catch(async () => {
-    // await consumer.disconnect();
+  writer.closed.catch(() => {
+    clearInterval(poll);
   });
 
   writer.ready
-    .then(async () => {
-      await writer.write("retry: 30000");
-      // consumer.connect()
-      // consumer.subscribe({ topic: CHANNEL_NAME, fromBeginning: true })
-      // consumer.run({
-      //   eachMessage: async ({message}) => {
-      //     console.log(message.value?.toString());
-      //     const json = JSON.parse(message.value?.toString());
+    .then(() => {
+      poll = setInterval(async () => {
+        const newData = await db
+          .select()
+          .from(threadTable)
+          .where(and(gte(threadTable.createdAt, lastest_fetch)))
+          .innerJoin(
+            threadViewTable,
+            and(eq(threadViewTable.username, user.username)),
+          );
+        lastest_fetch = new Date();
+        // const newData = await db
+        //   .select()
+        //   .from(threadViewTable)
+        //   .where(
+        //     and(
+        //       eq(threadViewTable.username, username),
+        //       eq(threadViewTable.folderId, params.folder),
+        //       eq(threadViewTable.read, false),
+        //     ),
+        //   )
+        //   .innerJoin(
+        //     threadTable,
+        //     and(gte(threadTable.createdAt, lastest_fetch)),
+        //   );
 
-      //     if (json.folderId !== params.folder) return;
+        // const newData = await db.query.threadViewTable.findMany({
+        //   where: and(
+        //     eq(threadViewTable.username, user.username),
+        //     eq(threadViewTable.folderId, params.folder),
+        //     // gte(threadViewTable., lastest_fetch),
+        //   ),
+        //   with: {
+        //     threadViewTable: true,
+        //   },
+        // });
 
-      //     await writer.write(encoder.encode(`data: ${JSON.stringify(json.thread)}\n\n`))
-      //   }
-      //  })
+        // console.log(item);
+
+        for (const item of newData) {
+          console.log(item.thread.createdAt, lastest_fetch);
+          const payload = {
+            created_at: item.thread.createdAt,
+            read: item.thread_view.read,
+          };
+          await sendData(writer, payload, item.thread.threadId);
+        }
+      }, 4000);
     })
     .catch(() => {
       logger.error("writer.ready error");

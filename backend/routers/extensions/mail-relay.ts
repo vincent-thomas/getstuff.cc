@@ -6,24 +6,27 @@ import {
 } from "@aws-sdk/lib-dynamodb";
 import { getDataTable } from "@stuff/infra-constants";
 import { TRPCError } from "@trpc/server";
+import { quickAliases } from "backend/db/schema";
 import { addressAliasInterface } from "backend/interfaces/addressAlias";
 import { protectedProc, router } from "backend/trpc";
+import { and, eq } from "drizzle-orm";
 import { generate } from "random-words";
 import { z } from "zod";
 
 export const mailRelayRouter = router({
   enabled: protectedProc.query(async ({ ctx }) => {
-    const command = new GetCommand({
-      TableName: getDataTable(env.STAGE),
-      Key: {
-        pk: `extension|${ctx.session.username}`,
-        sk: "mail-relay",
-      },
-    });
+    return false;
+    // const command = new GetCommand({
+    //   TableName: getDataTable(env.STAGE),
+    //   Key: {
+    //     pk: `extension|${ctx.session.username}`,
+    //     sk: "mail-relay",
+    //   },
+    // });
 
-    const response = await ctx.dyn.send(command).then(v => v.Item);
+    // const response = await ctx.dyn.send(command).then(v => v.Item);
 
-    return response !== undefined;
+    // return response !== undefined;
   }),
   enable: protectedProc.mutation(async ({ ctx }) => {
     const command = new PutCommand({
@@ -37,20 +40,11 @@ export const mailRelayRouter = router({
     await ctx.dyn.send(command);
   }),
   listAliases: protectedProc.query(async ({ ctx }) => {
-    const command = new QueryCommand({
-      TableName: getDataTable(env.STAGE),
-      KeyConditionExpression: "pk = :pk and begins_with(sk, :sk)",
-      ExpressionAttributeValues: {
-        ":pk": `mail|${ctx.session.username}`,
-        ":sk": "address-alias|",
-      },
+    const aliases = await ctx.db.query.quickAliases.findMany({
+      where: and(eq(quickAliases.username, ctx.session.username)),
     });
 
-    const response = await ctx.dyn
-      .send(command)
-      .then(v => addressAliasInterface.array().parse(v.Items));
-
-    return response;
+    return aliases;
   }),
 
   removeAlias: protectedProc
@@ -61,67 +55,33 @@ export const mailRelayRouter = router({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const command = new DeleteCommand({
-        TableName: getDataTable(env.STAGE),
-        Key: {
-          pk: `mail|${ctx.session.username}`,
-          sk: `address-alias|${input.enabled ? "enabled" : "disabled"}|${
-            input.alias
-          }`,
-        },
-      });
-
-      const response = await ctx.dyn.send(command);
-      return response;
+      await ctx.db
+        .delete(quickAliases)
+        .where(
+          and(
+            eq(quickAliases.username, ctx.session.username),
+            eq(quickAliases.enabled, true),
+          ),
+        );
     }),
-
   createAlias: protectedProc
     .input(
       z.object({
         label: z.string(),
       }),
     )
-    .mutation(async ({ ctx, input }) => {
+    .mutation(async ({ ctx }) => {
       const words = generate({
         min: 3,
         max: 3,
         join: "-",
       });
 
-      const getCommand = new QueryCommand({
-        TableName: getDataTable(env.STAGE),
-        KeyConditionExpression: "begins_with(pk, :pk) and sk = :sk",
-        IndexName: "gsi1",
-        ExpressionAttributeValues: {
-          ":pk": "mail|",
-          ":sk": `address-alias|${words}`,
-        },
+      await ctx.db.insert(quickAliases).values({
+        username: ctx.session.username,
+        mailAlias: words,
+        enabled: true,
+        created_at: new Date(),
       });
-
-      const existingAlias = await ctx.dyn
-        .send(getCommand)
-        .then(v => v.Items)
-        .then(v => addressAliasInterface.array().parse(v));
-
-      if (existingAlias.length > 0) {
-        throw new TRPCError({
-          code: "CONFLICT",
-          message: "Alias already exists",
-        });
-      }
-
-      const command = new PutCommand({
-        TableName: getDataTable(env.STAGE),
-        Item: addressAliasInterface.parse({
-          pk: `mail|${ctx.session.username}`,
-          sk: `address-alias|${words}`,
-          label: input.label,
-          description: "",
-          enabled: true,
-          created_at: Date.now(),
-        }),
-      });
-
-      await ctx.dyn.send(command);
     }),
 });

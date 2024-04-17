@@ -22,7 +22,7 @@ export const MailRow = ({
     threadId: string;
     read: boolean;
     title: string;
-    lastActive: number;
+    lastActive: Date;
   };
 }) => {
   const [selected, setSelected] = useAtom(messagesIdSelected);
@@ -41,6 +41,8 @@ export const MailRow = ({
       folderId,
     } as DraggableData),
   });
+
+  console.log(thread);
 
   return (
     <div
@@ -126,7 +128,7 @@ export const MailRow = ({
           {thread.title}
         </p>
         <Text2 className={cn(css({ marginLeft: "auto" }))}>
-          {formatDistanceToNow(new Date(thread.lastActive), {
+          {formatDistanceToNow(thread.lastActive, {
             addSuffix: true,
           })}
         </Text2>

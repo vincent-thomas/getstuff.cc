@@ -1,9 +1,8 @@
-import { PutCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
-import { getDataTable } from "@stuff/infra-constants";
-import { folderInterface } from "backend/interfaces/folder";
+import { folderTable } from "backend/db/schema";
 import { protectedProc, router } from "backend/trpc";
 import { createId } from "backend/utils/createId";
 import { builtInFolder, getFolder } from "backend/utils/folder";
+import { and, eq } from "drizzle-orm";
 import { z } from "zod";
 
 export const foldersRouter = router({
@@ -14,9 +13,14 @@ export const foldersRouter = router({
         return true;
       }
 
-      const userFolderExists = await getFolder(ctx.session.username, folderId);
+      const result = await ctx.db.query.folderTable.findFirst({
+        where: and(
+          eq(folderTable.folderId, folderId),
+          eq(folderTable.username, ctx.session.username),
+        ),
+      });
 
-      return !!userFolderExists;
+      return result !== undefined;
     }),
 
   getFolder: protectedProc
@@ -26,41 +30,33 @@ export const foldersRouter = router({
         return null;
       }
 
-      const userFolderExists = await getFolder(ctx.session.username, folderId);
+      const result = await ctx.db.query.folderTable.findFirst({
+        where: and(
+          eq(folderTable.folderId, folderId),
+          eq(folderTable.username, ctx.session.username),
+        ),
+      });
 
-      return userFolderExists;
+      return result;
     }),
 
   createFolder: protectedProc
     .input(z.object({ name: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const folderId = createId();
-      const command = new PutCommand({
-        TableName: getDataTable(env.STAGE),
-        Item: folderInterface.parse({
-          gsi2: `folder|${ctx.session.username}|${input.name}`,
-          pk: `mail|${ctx.session.username}`,
-          sk: `folder|${folderId}`,
-        } satisfies z.infer<typeof folderInterface>),
-      });
 
-      await ctx.dyn.send(command);
+      await ctx.db.insert(folderTable).values({
+        folderId,
+        folderName: input.name,
+        parentFolderId: null,
+        username: ctx.session.username,
+      });
     }),
   listFolders: protectedProc.query(async ({ ctx }) => {
-    const command = new QueryCommand({
-      TableName: getDataTable(env.STAGE),
-      KeyConditionExpression: "pk = :pk and begins_with(sk, :sk)",
-      ExpressionAttributeValues: {
-        ":pk": `mail|${ctx.session.username}`,
-        ":sk": "folder|",
-      },
+    const folders = await ctx.db.query.folderTable.findMany({
+      where: eq(folderTable.username, ctx.session.username),
+      orderBy: (folders, { asc }) => asc(folders.createdAt),
     });
-
-    const { Items } = await ctx.dyn.send(command);
-
-    const folders = z.array(folderInterface).parse(Items);
-
-    folders?.sort((a, b) => a.gsi2.localeCompare(b.gsi2));
 
     return folders;
   }),
