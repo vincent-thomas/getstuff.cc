@@ -42,7 +42,7 @@ const ses = getSes(env.AWS_REGION);
 export const createContextInner = (opts: CreateInnerContextOptions) => {
   return {
     session: opts.session,
-    dyn,
+    // dyn,
     redis,
     s3,
     ses,

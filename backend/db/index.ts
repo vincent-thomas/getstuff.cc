@@ -1,7 +1,7 @@
-import { drizzle } from "drizzle-orm/postgres-js";
-import postgres from "postgres";
+import { neon } from "@neondatabase/serverless";
+import { drizzle } from "drizzle-orm/neon-http";
 import * as schema from "./schema";
 
-export const dbPgClient = postgres(env.DATABASE_URL);
+export const dbPgClient = neon(env.DATABASE_URL);
 
-export const db = drizzle(dbPgClient, { schema });
+export const db = drizzle(dbPgClient, { schema, logger: true });
