@@ -58,11 +58,7 @@ export const sendMailRouter = router({
           await ctx.ses.send(command);
         const messageId = `<${DO_NOT_USE_BEYOND_ONE_LINE_DOWN}@${env.AWS_REGION}.amazonses.com>`;
 
-        const threadId = await createThread(
-          ctx.dyn,
-          getDataTable(env.STAGE),
-          input.subject,
-        );
+        const threadId = await createThread(input.subject);
 
         const encryptionKey = genSymmetricKey();
 
@@ -78,7 +74,7 @@ export const sendMailRouter = router({
 
         await uploadMessage(
           ctx.s3,
-          ctx.dyn,
+          // ctx.dyn,
           env.STAGE,
           z.string().parse(messageId),
           threadId,
@@ -102,18 +98,12 @@ export const sendMailRouter = router({
           user.publicKey,
         );
 
-        await createMessageView(ctx.dyn, env.STAGE, {
+        await createMessageView(env.STAGE, {
           messageId: z.string().parse(messageId),
           encryptedMessageEncryptionKey: encryptedUserKey,
         });
 
-        await createThreadView(
-          ctx.dyn,
-          env.STAGE,
-          "sent",
-          threadId,
-          ctx.session.username,
-        );
+        await createThreadView("sent", threadId, ctx.session.username);
       } catch (e) {
         console.error(e);
         throw e;

@@ -149,18 +149,13 @@ export const mailHandler = async ({
 
   if (threadId === undefined) {
     console.debug("CREATING THREAD", parsed.subject ?? "Untitled Thread");
-    threadId = await createThread(
-      dyn,
-      tableName,
-      parsed.subject ?? "Untitled Thread",
-    );
+    threadId = await createThread(parsed.subject ?? "Untitled Thread");
   }
 
   // Singular per conversation
   const uploadEmailContent = async () => {
     await uploadMessage(
       s3,
-      dyn,
       env.STAGE,
       messageId,
       z.string().parse(threadId),
@@ -241,13 +236,10 @@ export const mailHandler = async ({
       console.debug("THREAD VIEW", threadView);
 
       if (threadView?.sk.split("|")?.[2] === "sent") {
-        await moveThread(dyn, env.STAGE, username, threadId, {
-          folderId: "sent",
-          newFolderId: "inbox",
-        });
+        await moveThread(username, threadId, "sent", "inbox");
       }
 
-      await createMessageView(dyn, env.STAGE, {
+      await createMessageView(env.STAGE, {
         messageId,
         encryptedMessageEncryptionKey: encryptedUserKey,
       });

@@ -5,8 +5,8 @@ import "source-map-support/register";
 // import { EmailReciever } from "./email-reciever-stack";
 // import { SESIdentityStack } from "./ses-identity-stack";
 // import { DataApiInfra } from "./stack";
-import { Pipeline } from "./pipeline";
 import { z } from "zod";
+import { AppPipeline } from "./pipeline";
 const app = new cdk.App();
 
 const env = {
@@ -14,12 +14,10 @@ const env = {
   account: z.string().parse(process.env.AWS_ACCOUNT_ID),
 };
 
-console.log(env);
-
 // const STAGE = z.string().parse(process.env.STAGE);
 // const DOMAIN = z.string().parse(process.env.DOMAIN)
 
-const _pipeline = new Pipeline(app, "stuff-pipeline", {
+const _pipeline = new AppPipeline(app, "stuff-pipeline", {
   env,
 });
 

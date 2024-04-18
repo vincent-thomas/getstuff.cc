@@ -8,10 +8,11 @@ import {
 import { getDataTable, getEmailContentBucket } from "@stuff/infra-constants";
 import { addressAliasInterface } from "backend/interfaces/addressAlias";
 import { messageInterface } from "backend/interfaces/message";
-import type { messageViewInterface } from "backend/interfaces/messageView";
 import { threadViewInterface } from "backend/interfaces/threadView";
 import { getUser } from "backend/utils/getUser";
 import { z } from "zod";
+import { db } from "backend/db";
+import { threadTable } from "backend/db/schema";
 
 export const uploadEmailContent = async (
   s3: S3Client,
@@ -54,23 +55,13 @@ export const getThreadIdFromMsgId = async (
   return z.string().parse(message.pk.split("|")[1]);
 };
 
-export async function createThread(
-  dyn: DynamoDBDocumentClient,
-  tableName: string,
-  title: string,
-) {
+export async function createThread(title: string) {
   const threadId = randomUUID();
 
-  await dyn.send(
-    new PutCommand({
-      Item: {
-        pk: `mail|${threadId}`,
-        sk: `thread|${Date.now()}`,
-        title,
-      },
-      TableName: tableName,
-    }),
-  );
+  await db.insert(threadTable).values({
+    threadId,
+    title,
+  });
 
   return threadId;
 }
@@ -113,7 +104,6 @@ type Contact = z.infer<typeof contactInterface>;
 
 export const uploadMessage = async (
   s3: S3Client,
-  dyn: DynamoDBDocumentClient,
   stage: string,
   messageId: string,
   threadId: string,
@@ -137,41 +127,49 @@ export const uploadMessage = async (
     text,
   });
 
-  await dyn.send(
-    new PutCommand({
-      TableName: getDataTable(stage),
-      Item: {
-        pk: `mail|${threadId}`,
-        sk: `message|${messageId}`,
-        created_at: Date.now(),
-        subject,
-        from,
-        repliedToId: replyToMessageId ?? null,
-        to: to,
-        cc,
-      } satisfies z.infer<typeof messageInterface>,
-    }),
-  );
+  throw new Error("NOT IMPLE");
+
+  // await db.insert(message).values({
+  //   comeFromExternal: true,
+  //   messageId,
+  //   sender: from,
+  //   recieverUsername: to
+  // });
+
+  // await dyn.send(
+  //   new PutCommand({
+  //     TableName: getDataTable(stage),
+  //     Item: {
+  //       pk: `mail|${threadId}`,
+  //       sk: `message|${messageId}`,
+  //       created_at: Date.now(),
+  //       subject,
+  //       from,
+  //       repliedToId: replyToMessageId ?? null,
+  //       to: to,
+  //       cc,
+  //     } satisfies z.infer<typeof messageInterface>,
+  //   }),
+  // );
 };
 
 export const createThreadView = (
-  dyn: DynamoDBDocumentClient,
-  stage: string,
   folderId: string,
   threadId: string,
   username: string,
 ) => {
-  return dyn.send(
-    new PutCommand({
-      TableName: getDataTable(stage),
-      Item: {
-        pk: `mail|${threadId}`,
-        sk: `thread-view|${username}|${folderId}`,
-        last_active: Date.now(),
-        read: false,
-      } satisfies z.infer<typeof threadViewInterface>,
-    }),
-  );
+  throw new Error("NOT IMPLE");
+  // return dyn.send(
+  //   new PutCommand({
+  //     TableName: getDataTable(stage),
+  //     Item: {
+  //       pk: `mail|${threadId}`,
+  //       sk: `thread-view|${username}|${folderId}`,
+  //       last_active: Date.now(),
+  //       read: false,
+  //     } satisfies z.infer<typeof threadViewInterface>,
+  //   }),
+  // );
 };
 
 export const getThreadView = async (
@@ -195,21 +193,21 @@ export const getThreadView = async (
 };
 
 export const createMessageView = async (
-  dyn: DynamoDBDocumentClient,
   stage: string,
   {
     messageId,
     encryptedMessageEncryptionKey,
   }: { messageId: string; encryptedMessageEncryptionKey: string },
 ) => {
-  await dyn.send(
-    new PutCommand({
-      TableName: getDataTable(stage),
-      Item: {
-        pk: `mail|${messageId}`,
-        sk: `message-view|${Date.now()}`,
-        encryptedMessageEncryptionKey,
-      } satisfies z.infer<typeof messageViewInterface>,
-    }),
-  );
+  throw new Error("NOT IMPLE");
+  // await dyn.send(
+  //   new PutCommand({
+  //     TableName: getDataTable(stage),
+  //     Item: {
+  //       pk: `mail|${messageId}`,
+  //       sk: `message-view|${Date.now()}`,
+  //       encryptedMessageEncryptionKey,
+  //     } satisfies z.infer<typeof messageViewInterface>,
+  //   }),
+  // );
 };

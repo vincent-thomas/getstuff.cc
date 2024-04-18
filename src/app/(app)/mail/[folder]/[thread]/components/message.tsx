@@ -49,7 +49,10 @@ export const MailMessage = ({ thread }: { thread: MailMessage }) => {
     if (dataKey === undefined) {
       return null;
     }
-    return decryptAsymmetric(thread.messageEncryptionKey, dataKey);
+    return decryptAsymmetric(
+      thread.messageEncryptionKey,
+      Buffer.from(dataKey).toString("hex"),
+    );
   }, [dataKey, thread.messageEncryptionKey]);
 
   const mailMessage = useQuery({
@@ -70,7 +73,10 @@ export const MailMessage = ({ thread }: { thread: MailMessage }) => {
       return null;
     }
     return purify().sanitize(
-      decryptSymmetric(mailMessage.data.html, threadEncryptionKey),
+      decryptSymmetric(
+        Buffer.from(mailMessage.data.html),
+        threadEncryptionKey,
+      ).toString("utf-8"),
     );
   }, [mailMessage.data, threadEncryptionKey]);
 

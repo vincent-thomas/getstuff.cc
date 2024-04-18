@@ -1,9 +1,10 @@
 import { type App, Stack, type StackProps, SecretValue } from "aws-cdk-lib";
+import { BuildSpec, Project } from "aws-cdk-lib/aws-codebuild";
+import { Artifact, Pipeline, PipelineType } from "aws-cdk-lib/aws-codepipeline";
 import {
-  CodePipeline,
-  CodePipelineSource,
-  ShellStep,
-} from "aws-cdk-lib/pipelines";
+  CodeBuildAction,
+  GitHubSourceAction,
+} from "aws-cdk-lib/aws-codepipeline-actions";
 
 interface AccountStackProps extends StackProps {
   env: {
@@ -12,28 +13,96 @@ interface AccountStackProps extends StackProps {
   };
 }
 
-export class Pipeline extends Stack {
+export class AppPipeline extends Stack {
   constructor(scope: App, id: string, props: AccountStackProps) {
     super(scope, id, { ...props, crossRegionReferences: true });
 
-    const _pipeline = new CodePipeline(this, "stuff-pipeline", {
+    const pipeline = new Pipeline(this, "stuff-pipeline", {
       pipelineName: "pipeline-getstuff-cc",
-      synth: new ShellStep("Synth", {
-        input: CodePipelineSource.gitHub("vincent-thomas/getstuff.cc", "main", {
-          authentication: SecretValue.secretsManager(
+      pipelineType: PipelineType.V2,
+
+      // synth: new ShellStep("Synth", {
+      //   input: CodePipelineSource.gitHub("vincent-thomas/getstuff.cc", "main", {
+      //     authentication: SecretValue.secretsManager(
+      //       "/stuff/pipeline/github-token",
+      //     ),
+      //   }),
+      //   env: {
+      //     SHELL: "sh",
+      //     AWS_REGION: props.env.region,
+      //     AWS_ACCOUNT_ID: props.env.account,
+      //   },
+      //   installCommands: ["npm i -g pnpm@9.0.2", "pnpm install"],
+      //   commands: ["pnpm cdk:synth:pipeline"],
+      //   primaryOutputDirectory: "cdk.out",
+      // }),
+    });
+
+    const artifact = new Artifact();
+
+    pipeline.addStage({
+      stageName: "Source & Static Analysis",
+      actions: [
+        new GitHubSourceAction({
+          actionName: "source",
+          oauthToken: SecretValue.secretsManager(
             "/stuff/pipeline/github-token",
           ),
+          owner: "vincent-thomas",
+          repo: "getstuff.cc",
+          output: artifact,
+          branch: "main",
         }),
-        env: {
-          SHELL: "sh",
-          AWS_REGION: props.env.region,
-          AWS_ACCOUNT_ID: props.env.account,
-        },
-        installCommands: ["npm i -g pnpm@9.0.2", "pnpm install"],
-        commands: ["pnpm cdk:synth:pipeline"],
-        primaryOutputDirectory: "cdk.out",
-      }),
+      ],
     });
+    pipeline.addStage({
+      stageName: "Build",
+      actions: [
+        new CodeBuildAction({
+          actionName: "Build",
+          input: artifact,
+          project: new Project(this, "getstuff.cc-project", {
+            projectName: "getstuff-cc-build",
+
+            environment: {
+              environmentVariables: {
+                SHELL: {
+                  value: "sh",
+                },
+                AWS_REGION: { value: props.env.region },
+                AWS_ACCOUNT_ID: { value: props.env.account },
+              },
+            },
+            buildSpec: BuildSpec.fromObject({
+              version: "0.2",
+              phases: {
+                install: {
+                  commands: ["npm i -g pnpm@9.0.2", "pnpm install"],
+                },
+                pre_build: {
+                  commands: ["pnpm check:ci"],
+                },
+                build: {
+                  commands: [
+                    "SKIP_ENV_VALIDATION='1' pnpm build:app",
+                    "pnpm test:unit",
+                  ],
+                },
+              },
+            }),
+          }),
+          outputs: [artifact],
+        }),
+      ],
+    });
+
+    // pipeline.addStage({});
+
+    // pipeline.addStage(
+    //   new Stage("Build", {
+    //     commands: [],
+    //   }),
+    // );
 
     // const artifact = new Artifact();
 

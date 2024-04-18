@@ -1,5 +1,3 @@
-import { PutCommand } from "@aws-sdk/lib-dynamodb";
-import { getDataTable } from "@stuff/infra-constants";
 import { quickAliases } from "backend/db/schema";
 import { protectedProc, router } from "backend/trpc";
 import { and, eq } from "drizzle-orm";
@@ -22,16 +20,15 @@ export const mailRelayRouter = router({
 
     // return response !== undefined;
   }),
-  enable: protectedProc.mutation(async ({ ctx }) => {
-    const command = new PutCommand({
-      TableName: getDataTable(env.STAGE),
-      Item: {
-        pk: `extension|${ctx.session.username}`,
-        sk: "mail-relay",
-      },
-    });
-
-    await ctx.dyn.send(command);
+  enable: protectedProc.mutation(() => {
+    // const command = new PutCommand({
+    //   TableName: getDataTable(env.STAGE),
+    //   Item: {
+    //     pk: `extension|${ctx.session.username}`,
+    //     sk: "mail-relay",
+    //   },
+    // });
+    // await ctx.dyn.send(command);
   }),
   listAliases: protectedProc.query(async ({ ctx }) => {
     const aliases = await ctx.db.query.quickAliases.findMany({
