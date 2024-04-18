@@ -2,7 +2,6 @@ import { api as apiServer } from "@stuff/api-client/server";
 import { unstable_noStore } from "next/cache";
 import { redirect } from "next/navigation";
 import type { FC } from "react";
-import { z } from "zod";
 import { FolderHeaderInternal } from "./header-client";
 
 export const FolderHeader: FC<{ folderId: string }> = async ({ folderId }) => {
@@ -14,10 +13,7 @@ export const FolderHeader: FC<{ folderId: string }> = async ({ folderId }) => {
   if (folderResult === undefined) {
     redirect("/mail/inbox");
   }
-  const name =
-    folderResult === null
-      ? folderId
-      : z.string().parse(folderResult?.gsi2.split("|")?.[2]);
+  const name = folderResult === null ? folderId : folderResult.folderName;
 
   return <FolderHeaderInternal folderId={folderId} name={name} />;
 };

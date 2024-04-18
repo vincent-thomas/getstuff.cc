@@ -48,8 +48,11 @@ const better = allShit.map(([colorBetter, side]) => {
     colorBetter,
     side,
     {
+      // @ts-expect-error because
       [`border${Type[side]}Color`]: color,
+      // @ts-expect-error because
       [`border${Type[side]}Style`]: "solid",
+      // @ts-expect-error because
       [`border${Type[side]}Width`]: "1px",
     },
   ];

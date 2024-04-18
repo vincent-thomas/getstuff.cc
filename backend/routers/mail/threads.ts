@@ -3,7 +3,7 @@ import { protectedProc, router } from "backend/trpc";
 import { moveThread } from "backend/utils/moveThread";
 import { z } from "zod";
 import { and, eq } from "drizzle-orm";
-import { threadTable, threadViewTable } from "backend/db/schema";
+import { message, threadTable, threadViewTable } from "backend/db/schema";
 
 export const threadsRouter = router({
   getThreads: protectedProc
@@ -27,13 +27,52 @@ export const threadsRouter = router({
 
   getThread: protectedProc
     .input(z.object({ folderId: z.string(), threadId: z.string() }))
-    .query(() => {
-      console.info("testing");
+    .query(async ({ ctx, input }) => {
+      const result = await ctx.db
+        .select()
+        .from(threadViewTable)
+        .where(
+          and(
+            eq(threadViewTable.username, ctx.session.username),
+            eq(threadViewTable.threadId, input.threadId),
+          ),
+        );
+
+      if (result.length !== 1) {
+        throw new TRPCError({ code: "NOT_FOUND" });
+      }
+
+      const thread = await ctx.db
+        .select()
+        .from(threadTable)
+        .where(and(eq(threadTable.threadId, result[0]!.threadId)));
+
+      // TODO: message view
+
+      const messages = await ctx.db
+        .select()
+        .from(message)
+        .where(eq(message.threadId, thread[0]!.threadId));
+      // .innerJoin(messageView);
+
+      return {
+        thread: {
+          title: thread[0]!.title,
+          lastActive: result[0]!.lastActive,
+          read: result[0]!.read,
+          createdAt: thread[0]?.createdAt,
+        },
+        messages,
+      };
+      // const result = await ctx.db.select().from(threadTable).where(and(eq(threadTable.threadId)))
       // const result = await ctx.db
       //   .select()
       //   .from(threadTable)
-      //   .where(and(eq(threadTable.threadId, threadId)))
-      //   .leftJoin(threadViewTable, eq(threadViewTable.folderId, folderId));
+      //   .where(and(eq(threadTable.threadId, input.threadId)))
+      //   .leftJoin(
+      //     threadViewTable,
+      //     eq(threadViewTable.folderId, input.folderId),
+      //   );
 
       // console.info(result);
       // const threadViewsCommand = new QueryCommand({

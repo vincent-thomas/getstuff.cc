@@ -46,8 +46,8 @@ export const SelectedBar = ({
   const otherFolders = useMemo(() => {
     return (folders.data ?? [])
       .map(folder => ({
-        name: folder.gsi2.split("|")[2],
-        id: z.string().parse(folder.sk.split("|")[1]),
+        name: folder.folderName,
+        id: folder.folderId,
       }))
       .filter(folder => folder.id !== folderId);
   }, [folders.data, folderId]);

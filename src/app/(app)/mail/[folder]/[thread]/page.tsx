@@ -23,7 +23,7 @@ export default setupPage({
       redirect(`/mail/${folderId}`);
     }
 
-    if (!conversation?.thread.read) {
+    if (!conversation.thread.read) {
       await api.mail.threads.setRead.mutate({
         value: true,
         folderId,
@@ -37,7 +37,8 @@ export default setupPage({
         <div className={cn(css({ overflowY: "auto", p: "medium" }))}>
           <div className={stack({ direction: "col", gap: "md" })}>
             {conversation.messages.map(thread => (
-              <MailMessage key={thread.messageId} thread={thread} />
+              <>working on it</>
+              // <MailMessage key={thread.messageId} thread={} />
             ))}
           </div>
         </div>

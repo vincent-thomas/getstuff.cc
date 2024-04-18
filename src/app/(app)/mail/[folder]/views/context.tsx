@@ -67,7 +67,7 @@ async function handleDragEnd(
         { folderId: draggable.folderId },
         oldData => {
           return (oldData || []).filter(item => {
-            return item.threadId !== draggable.threadId;
+            return item.thread.threadId !== draggable.threadId;
           });
         },
       );

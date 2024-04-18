@@ -15,7 +15,7 @@ export const useThreadsReadMutation = () => {
         { folderId: variables.folderId },
         old =>
           old?.map(thread => {
-            if (variables.threadIds.includes(thread.threadId)) {
+            if (variables.threadIds.includes(thread.thread.threadId)) {
               return {
                 ...thread,
                 read: variables.value,

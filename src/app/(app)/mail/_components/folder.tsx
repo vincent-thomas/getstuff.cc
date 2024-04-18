@@ -19,10 +19,10 @@ export const Folder = ({
 }) => {
   const utils = api.useUtils();
   const { setNodeRef, isOver, over, active } = useDroppable({
-    id: folder.sk,
+    id: folder.folderId,
     data: {
       type: "folder",
-      folderId: folder.sk.split("|")[1],
+      folderId: folder.folderId,
     },
   });
 
@@ -33,7 +33,7 @@ export const Folder = ({
   const mouseOver = async () => {
     await utils.mail.threads.getThreads.prefetch(
       {
-        folderId: z.string().parse(folder.sk.split("|")[1]),
+        folderId: folder.folderId,
       },
       {
         staleTime: 1000 * 2,
@@ -44,14 +44,14 @@ export const Folder = ({
   return (
     <div ref={setNodeRef} className={cn(isOver && canDrop && isHoveringState)}>
       <Link
-        href={`./${folder.sk.split("|")[1]}`}
-        key={folder.sk.split("|")[1]}
+        href={`./${folder.folderId}`}
+        key={folder.folderId}
         className={cn(
           button({ variant: "ghost", size: "md", rounded: "medium" }),
         )}
         onMouseOver={mouseOver}
       >
-        {folder.gsi2.split("|")[2]}
+        {folder.folderName}
       </Link>
     </div>
   );

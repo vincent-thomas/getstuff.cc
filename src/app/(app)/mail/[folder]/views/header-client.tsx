@@ -34,7 +34,7 @@ export const FolderHeaderInternal: FC<{ folderId: string; name: string }> = ({
             setSelected([]);
             if (selected.length !== threadsQuery.data?.length) {
               for (const thread of threadsQuery.data ?? []) {
-                setSelected(value => [...value, thread.threadId]);
+                setSelected(value => [...value, thread.thread.threadId]);
               }
             }
           }}

@@ -44,7 +44,9 @@ export const MailRelayModal = () => {
           className={cn(stack({ direction: "col", gap: "sm" }))}
         >
           {(aliases ?? []).map(item => (
-            <MailRelay key={item.sk} {...item} />
+            //
+            <>fixing later</>
+            // <MailRelay key={item.mailAlias} {...item} />
           ))}
         </div>
       </DialogContent>

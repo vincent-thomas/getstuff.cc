@@ -1,11 +1,12 @@
 import { type App, Stack, type StackProps, SecretValue } from "aws-cdk-lib";
-import { BuildSpec, Project } from "aws-cdk-lib/aws-codebuild";
+import { BuildSpec, LinuxBuildImage, Project } from "aws-cdk-lib/aws-codebuild";
 import { Artifact, Pipeline, PipelineType } from "aws-cdk-lib/aws-codepipeline";
 import {
   CodeBuildAction,
   CodeBuildActionType,
   GitHubSourceAction,
 } from "aws-cdk-lib/aws-codepipeline-actions";
+import {} from "aws-cdk-lib/pipelines";
 
 interface AccountStackProps extends StackProps {
   env: {
@@ -22,11 +23,9 @@ export class AppPipeline extends Stack {
       pipelineName: "pipeline-getstuff-cc",
       pipelineType: PipelineType.V2,
     });
-
     const artifact = new Artifact();
 
     const installedDepsArtifacts = new Artifact();
-
     pipeline.addStage({
       stageName: "Source",
       actions: [
@@ -53,6 +52,7 @@ export class AppPipeline extends Stack {
             projectName: "getstuff-cc-build",
 
             environment: {
+              buildImage: LinuxBuildImage.STANDARD_7_0,
               environmentVariables: {
                 SHELL: {
                   value: "sh",
@@ -66,7 +66,7 @@ export class AppPipeline extends Stack {
               phases: {
                 install: {
                   "runtime-versions": {
-                    nodejs: "20",
+                    nodejs: 20,
                   },
                   commands: ["npm i -g pnpm@9.0.2", "pnpm install"],
                 },
@@ -96,12 +96,15 @@ export class AppPipeline extends Stack {
           input: installedDepsArtifacts,
           project: new Project(this, "getstuff-cc-test", {
             projectName: "getstuff-cc-test",
+            environment: {
+              buildImage: LinuxBuildImage.STANDARD_7_0,
+            },
             buildSpec: BuildSpec.fromObject({
               version: "0.2",
               phases: {
                 install: {
                   "runtime-versions": {
-                    nodejs: "20",
+                    nodejs: 20,
                   },
                   commands: ["npm i -g pnpm@9.0.2", "pnpm install"],
                 },

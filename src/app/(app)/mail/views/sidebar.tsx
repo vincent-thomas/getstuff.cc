@@ -105,7 +105,7 @@ const ListFolders = async () => {
       {folders.length === 0 ? (
         <>No Folders!</>
       ) : (
-        folders.map(folder => <Folder folder={folder} key={folder.sk} />)
+        folders.map(folder => <Folder folder={folder} key={folder.folderId} />)
       )}
     </div>
   );
