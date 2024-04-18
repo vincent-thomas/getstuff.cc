@@ -41,7 +41,7 @@ export class AppPipeline extends Stack {
     const artifact = new Artifact();
 
     pipeline.addStage({
-      stageName: "Source & Static Analysis",
+      stageName: "source-static-analysis",
       actions: [
         new GitHubSourceAction({
           actionName: "source",
@@ -61,7 +61,7 @@ export class AppPipeline extends Stack {
         new CodeBuildAction({
           actionName: "Build",
           input: artifact,
-          project: new Project(this, "getstuff.cc-project", {
+          project: new Project(this, "getstuff-cc-project", {
             projectName: "getstuff-cc-build",
 
             environment: {
@@ -76,8 +76,11 @@ export class AppPipeline extends Stack {
             buildSpec: BuildSpec.fromObject({
               version: "0.2",
               phases: {
+                pre_install: {
+                  commands: ["npm i -g pnpm@9.0.2"],
+                },
                 install: {
-                  commands: ["npm i -g pnpm@9.0.2", "pnpm install"],
+                  commands: ["pnpm install"],
                 },
                 pre_build: {
                   commands: ["pnpm check:ci"],
