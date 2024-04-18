@@ -75,15 +75,14 @@ export class AppPipeline extends Stack {
       "stuff-plus-pricing",
       `/stuff/api/${stage}/prices/stuff-plus`,
     );
-    const dbUrl = StringParameter.fromStringParameterName(
+    const dbUrl = StringParameter.fromSecureStringParameterAttributes(
       this,
-      "stuff-plus-pricing",
-      `/stuff/api/${stage}/database-url`,
+      "stuff-database-url",
+      { parameterName: `/stuff/api/${stage}/database-url` },
     );
 
     const project = new Project(this, "getstuff-cc-project", {
       projectName: "getstuff-cc-build",
-      // role: buildRole,
       environment: {
         buildImage: LinuxBuildImage.STANDARD_7_0,
         environmentVariables: {
@@ -92,7 +91,6 @@ export class AppPipeline extends Stack {
           },
           AWS_REGION: { value: props.env.region },
           AWS_ACCOUNT_ID: { value: props.env.account },
-          REDIS_URL: { value: redisParam.stringValue },
         },
       },
       buildSpec: BuildSpec.fromObject({
