@@ -3,6 +3,7 @@ import { BuildSpec, Project } from "aws-cdk-lib/aws-codebuild";
 import { Artifact, Pipeline, PipelineType } from "aws-cdk-lib/aws-codepipeline";
 import {
   CodeBuildAction,
+  CodeBuildActionType,
   GitHubSourceAction,
 } from "aws-cdk-lib/aws-codepipeline-actions";
 
@@ -40,8 +41,10 @@ export class AppPipeline extends Stack {
 
     const artifact = new Artifact();
 
+    const installedDepsArtifacts = new Artifact();
+
     pipeline.addStage({
-      stageName: "source-static-analysis",
+      stageName: "Source",
       actions: [
         new GitHubSourceAction({
           actionName: "source",
@@ -60,6 +63,7 @@ export class AppPipeline extends Stack {
       actions: [
         new CodeBuildAction({
           actionName: "Build",
+          type: CodeBuildActionType.BUILD,
           input: artifact,
           project: new Project(this, "getstuff-cc-project", {
             projectName: "getstuff-cc-build",
@@ -76,11 +80,8 @@ export class AppPipeline extends Stack {
             buildSpec: BuildSpec.fromObject({
               version: "0.2",
               phases: {
-                pre_install: {
-                  commands: ["npm i -g pnpm@9.0.2"],
-                },
                 install: {
-                  commands: ["pnpm install"],
+                  commands: ["npm i -g pnpm@9.0.2", "pnpm install"],
                 },
                 pre_build: {
                   commands: ["pnpm check:ci"],
@@ -94,7 +95,32 @@ export class AppPipeline extends Stack {
               },
             }),
           }),
-          outputs: [artifact],
+          outputs: [installedDepsArtifacts],
+        }),
+      ],
+    });
+
+    pipeline.addStage({
+      stageName: "Test",
+      actions: [
+        new CodeBuildAction({
+          actionName: "test",
+          type: CodeBuildActionType.TEST,
+          input: installedDepsArtifacts,
+          project: new Project(this, "getstuff-cc-test", {
+            projectName: "getstuff-cc-test",
+            buildSpec: BuildSpec.fromObject({
+              version: "0.2",
+              phases: {
+                install: {
+                  commands: ["npm i -g pnpm@9.0.2", "pnpm install"],
+                },
+                build: {
+                  commands: ["pnpm test:unit"],
+                },
+              },
+            }),
+          }),
         }),
       ],
     });
