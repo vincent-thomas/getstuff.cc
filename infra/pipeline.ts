@@ -26,9 +26,12 @@ export class Pipeline extends Stack {
         }),
         env: {
           SHELL: "sh",
+          AWS_REGION: props.env.region,
+          AWS_ACCOUNT_ID: props.env.account,
         },
         installCommands: ["npm i -g pnpm@9.0.2", "pnpm install"],
-        commands: ["pnpm cdk:mutate-pipeline"],
+        commands: ["pnpm cdk:synth:pipeline"],
+        primaryOutputDirectory: "cdk.out",
       }),
     });
 

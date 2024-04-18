@@ -19,7 +19,8 @@
     "cdk:deploy": "dotenv -- cdk deploy",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "cdk:mutate-pipeline": "pnpm dotenv -- cdk deploy stuff-pipeline"
+    "cdk:synth:pipeline": "dotenv -- cdk synth stuff-pipeline",
+    "cdk:mutate-pipeline": "dotenv -- cdk deploy stuff-pipeline"
   },
   "dependencies": {
     "@ariakit/react": "^0.4.5",

@@ -14,6 +14,8 @@ const env = {
   account: z.string().parse(process.env.AWS_ACCOUNT_ID),
 };
 
+console.log(env);
+
 // const STAGE = z.string().parse(process.env.STAGE);
 // const DOMAIN = z.string().parse(process.env.DOMAIN)
 
