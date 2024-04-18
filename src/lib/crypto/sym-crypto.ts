@@ -30,4 +30,4 @@ export const decryptSymmetric = (data: Buffer, key: Buffer) => {
   return Buffer.from(decrypted);
 };
 
-export const genSymmetricKey = () => randomBytes(secretbox.keyLength);
+export const genSymmetricKey = () => Buffer.from(randomBytes(secretbox.keyLength));

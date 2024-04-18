@@ -1,53 +1,19 @@
-import {
-  DeleteCommand,
-  type DynamoDBDocumentClient,
-  GetCommand,
-  PutCommand,
-} from "@aws-sdk/lib-dynamodb";
-import { getDataTable } from "@stuff/infra-constants";
-import { threadViewInterface } from "backend/interfaces/threadView";
+import { db } from "../../backend/db";
+import { folderTable, threadViewTable } from "backend/db/schema";
+import { and, eq } from "drizzle-orm";
 
 export const moveThread = async (
-  dyn: DynamoDBDocumentClient,
   stage: string,
   username: string,
-  threadId: string,
-  { folderId, newFolderId }: { folderId: string; newFolderId: string },
+  newFolderId: string,
 ) => {
-  const threadViewsCommand = new GetCommand({
-    TableName: getDataTable(stage),
-    Key: {
-      sk: `thread-view|${username}|${folderId}`,
-      pk: `mail|${threadId}`,
-    },
-  });
 
-  const { Item } = await dyn.send(threadViewsCommand);
+  const item = await db.select().from(folderTable).where(and(eq(folderTable.username, username)));
 
-  if (Item === undefined) {
-    return { success: false };
+  if (item.length === 0) {
+    return {success: false};
   }
 
-  const threadView = threadViewInterface.parse(Item);
-
-  const putCommand = new PutCommand({
-    TableName: getDataTable(stage),
-    Item: {
-      ...threadView,
-      sk: `thread-view|${username}|${newFolderId}`,
-    },
-  });
-
-  await dyn.send(putCommand);
-
-  const deleteCommand = new DeleteCommand({
-    TableName: getDataTable(stage),
-    Key: {
-      sk: `thread-view|${username}|${folderId}`,
-      pk: `mail|${threadId}`,
-    },
-  });
-
-  await dyn.send(deleteCommand);
+  await db.update(threadViewTable).set({folderId: newFolderId}).where(and(eq(threadViewTable.username, username)))
   return { success: true };
 };

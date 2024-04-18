@@ -45,22 +45,6 @@ export class DataApiInfra extends Stack {
   ) {
     super(scope, id, { ...props, crossRegionReferences: true });
 
-    const { table: dataTable } = new ThingsTable(this, "stuff-data-table", {
-      stage,
-    });
-
-    const { table: userTable } = new UsersTable(this, "stuff-users-table", {
-      stage,
-    });
-
-    const { table: customerTable } = new CustomersTable(
-      this,
-      "stuff-customers-table",
-      {
-        stage,
-      },
-    );
-
     this.formattedEmailBucket = new Bucket(this, "stuff-emails-bucket", {
       bucketName: getEmailContentBucket(stage),
       removalPolicy: RemovalPolicy.DESTROY,
@@ -72,76 +56,60 @@ export class DataApiInfra extends Stack {
       ],
     });
 
-    if (stage === "prod") {
-      new CnameRecord(this, "stuff-email-cname-record", {
-        zone,
-        recordName: "wwww",
-        domainName: "cname.vercel-dns.com",
-      });
+    // if (stage === "prod") {
+    //   new CnameRecord(this, "stuff-email-cname-record", {
+    //     zone,
+    //     recordName: "wwww",
+    //     domainName: "cname.vercel-dns.com",
+    //   });
 
-      new ARecord(this, "stuff-email-a-record", {
-        zone,
-        target: {
-          values: ["76.76.21.21"],
-        },
-      });
-    }
+    //   new ARecord(this, "stuff-email-a-record", {
+    //     zone,
+    //     target: {
+    //       values: ["76.76.21.21"],
+    //     },
+    //   });
+    // }
 
-    const parameterStatement = new PolicyStatement({
-      effect: Effect.ALLOW,
-      actions: ["ssm:GetParameter"],
-      resources: [
-        `arn:aws:ssm:${props.env.region}:${props.env.account}:parameter/stuff/api/${stage}/*`,
-        `arn:aws:ssm:${props.env.region}:${props.env.account}:parameter/stuff/api/${stage}/prices/*`,
-      ],
-    });
-
-    // const emailSendingStatement = new PolicyStatement({
+    // const parameterStatement = new PolicyStatement({
     //   effect: Effect.ALLOW,
-    //   actions: ["ses:SendEmail"],
+    //   actions: ["ssm:GetParameter"],
     //   resources: [
-    //     `arn:aws:ses:${props.env.region}:${props.env.account}:identity/${domain}`,
-    //   ]
+    //     `arn:aws:ssm:${props.env.region}:${props.env.account}:parameter/stuff/api/${stage}/*`,
+    //     `arn:aws:ssm:${props.env.region}:${props.env.account}:parameter/stuff/api/${stage}/prices/*`,
+    //   ],
     // });
 
-    const storageStatement = new PolicyStatement({
-      effect: Effect.ALLOW,
-      actions: ["s3:PutObject", "s3:GetObject"],
-      resources: [`${this.formattedEmailBucket.bucketArn}/*`],
-    });
+    // const storageStatement = new PolicyStatement({
+    //   effect: Effect.ALLOW,
+    //   actions: ["s3:PutObject", "s3:GetObject"],
+    //   resources: [`${this.formattedEmailBucket.bucketArn}/*`],
+    // });
 
-    const inlinePolicy = new PolicyDocument({
-      statements: [
-        parameterStatement,
-        // emailSendingStatement,
-        storageStatement,
-      ],
-    });
-    const user = new User(this, "app-external-user", {
-      userName: `${stage}-stuff-app-user`,
-    });
+    // const inlinePolicy = new PolicyDocument({
+    //   statements: [parameterStatement, storageStatement],
+    // });
+    // const user = new User(this, "app-external-user", {
+    //   userName: `${stage}-stuff-app-user`,
+    // });
 
-    emailIdentity.grantSendEmail(user);
-    user.attachInlinePolicy(
-      new Policy(this, "CustomPolicy", {
-        policyName: "MyCustomPolicy",
-        document: inlinePolicy,
-      }),
-    );
+    // emailIdentity.grantSendEmail(user);
+    // user.attachInlinePolicy(
+    //   new Policy(this, "CustomPolicy", {
+    //     policyName: "MyCustomPolicy",
+    //     document: inlinePolicy,
+    //   }),
+    // );
 
-    userTable.grantReadWriteData(user);
-    customerTable.grantReadWriteData(user);
-    dataTable.grantReadWriteData(user);
+    // const userAccessKey = new CfnAccessKey(this, "stuff-access-key", {
+    //   userName: user.userName,
+    // });
 
-    const userAccessKey = new CfnAccessKey(this, "stuff-access-key", {
-      userName: user.userName,
-    });
-
-    new CfnOutput(this, "userUsername", { value: user.userName });
-    new CfnOutput(this, "AppAccessKeyId", { value: userAccessKey.ref });
-    new CfnOutput(this, "AppAccessSecretKey", {
-      value: userAccessKey.attrSecretAccessKey,
-    });
+    // new CfnOutput(this, "userUsername", { value: user.userName });
+    // new CfnOutput(this, "AppAccessKeyId", { value: userAccessKey.ref });
+    // new CfnOutput(this, "AppAccessSecretKey", {
+    //   value: userAccessKey.attrSecretAccessKey,
+    // });
 
     Stack.of(this).tags.setTag("STAGE", stage);
     Stack.of(this).tags.setTag("scope", "stuff-api");

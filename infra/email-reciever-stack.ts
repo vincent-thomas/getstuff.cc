@@ -55,28 +55,28 @@ export class EmailReciever extends Stack {
 
     topic.addSubscription(new SqsSubscription(sqs));
 
-    const table = Table.fromTableArn(
-      this,
-      "EntitiesTable",
-      `arn:aws:dynamodb:${props.env.region}:${
-        props.env.account
-      }:table/${getDataTable(stage)}`,
-    );
-    const tableGSI1 = Table.fromTableArn(
-      this,
-      "EntitiesTableGSI1",
-      `arn:aws:dynamodb:${props.env.region}:${
-        props.env.account
-      }:table/${getDataTable(stage)}/index/gsi1`,
-    );
+    // const table = Table.fromTableArn(
+    //   this,
+    //   "EntitiesTable",
+    //   `arn:aws:dynamodb:${props.env.region}:${
+    //     props.env.account
+    //   }:table/${getDataTable(stage)}`,
+    // );
+    // const tableGSI1 = Table.fromTableArn(
+    //   this,
+    //   "EntitiesTableGSI1",
+    //   `arn:aws:dynamodb:${props.env.region}:${
+    //     props.env.account
+    //   }:table/${getDataTable(stage)}/index/gsi1`,
+    // );
 
-    const usersTable = Table.fromTableArn(
-      this,
-      "usersTable",
-      `arn:aws:dynamodb:${props.env.region}:${
-        props.env.account
-      }:table/${getUserTable(stage)}`,
-    );
+    // const usersTable = Table.fromTableArn(
+    //   this,
+    //   "usersTable",
+    //   `arn:aws:dynamodb:${props.env.region}:${
+    //     props.env.account
+    //   }:table/${getUserTable(stage)}`,
+    // );
 
     // AWS_REGION: Builtin in the runtime
     const lambdaEnv = {
@@ -98,13 +98,13 @@ export class EmailReciever extends Stack {
     });
 
     formattedEmailBucket.grantPut(lambda);
-    usersTable.grant(lambda, "dynamodb:GetItem");
+    // usersTable.grant(lambda, "dynamodb:GetItem");
 
-    table.grant(lambda, "dynamodb:PutItem");
-    table.grant(lambda, "dynamodb:Query");
-    table.grant(lambda, "dynamodb:GetItem");
-    table.grant(lambda, "dynamodb:DeleteItem");
-    tableGSI1.grant(lambda, "dynamodb:Query");
+    // table.grant(lambda, "dynamodb:PutItem");
+    // table.grant(lambda, "dynamodb:Query");
+    // table.grant(lambda, "dynamodb:GetItem");
+    // table.grant(lambda, "dynamodb:DeleteItem");
+    // tableGSI1.grant(lambda, "dynamodb:Query");
 
     lambda.addToRolePolicy(
       new PolicyStatement({
