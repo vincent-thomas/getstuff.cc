@@ -88,6 +88,7 @@ export class AppPipeline extends Stack {
           },
           AWS_REGION: { value: props.env.region },
           AWS_ACCOUNT_ID: { value: props.env.account },
+          REDIS_URL: { value: redisParam.stringValue },
         },
       },
       buildSpec: BuildSpec.fromObject({
@@ -124,9 +125,10 @@ export class AppPipeline extends Stack {
         resources: [
           StringParameter.fromStringParameterName(
             this,
-            "redis-url",
+            "stuff-plus-pricing",
             `/stuff/api/${stage}/prices/stuff-plus`,
           ).parameterArn,
+          redisParam.parameterArn,
         ],
       }),
     );
