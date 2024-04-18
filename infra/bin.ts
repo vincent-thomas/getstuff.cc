@@ -2,60 +2,51 @@
 import * as cdk from "aws-cdk-lib";
 import { HostedZone } from "aws-cdk-lib/aws-route53";
 import "source-map-support/register";
-import { env } from "../src/env";
 import { EmailReciever } from "./email-reciever-stack";
 import { SESIdentityStack } from "./ses-identity-stack";
 import { DataApiInfra } from "./stack";
 import { Pipeline } from "./pipeline";
-
+import {z} from "zod";
 const app = new cdk.App();
 
+const env = {
+  region: z.string().parse(process.env.AWS_REGION),
+  account: z.string().parse(process.env.AWS_ACCOUNT_ID)
+}
+
+const STAGE = z.string().parse(process.env.STAGE);
+const DOMAIN = z.string().parse(process.env.DOMAIN)
 
 const pipeline = new Pipeline(app, "stuff-pipeline", {
-  env: {
-    region: env.AWS_REGION,
-    account: env.AWS_ACCOUNT_ID
-  }
+  env
 });
 
 const RootStack = new cdk.Stack(app, "stuff-shared-stack", {
-  env: {
-    region: env.AWS_REGION,
-    account: env.AWS_ACCOUNT_ID,
-  },
+  env
 });
 
 const zone = HostedZone.fromLookup(RootStack, "stuff-zone", {
-  domainName: env.DOMAIN,
+  domainName: DOMAIN,
 });
 
 const identityStack = new SESIdentityStack(app, "stuff-ses-identity", {
-  env: {
-    region: env.AWS_REGION,
-    account: env.AWS_ACCOUNT_ID,
-  },
+  env,
   zone,
 });
 
-const dataApiStack = new DataApiInfra(app, `${env.STAGE}-stuff-infra`, {
-  env: {
-    region: env.AWS_REGION,
-    account: env.AWS_ACCOUNT_ID,
-  },
-  domain: env.DOMAIN,
+const dataApiStack = new DataApiInfra(app, `${STAGE}-stuff-infra`, {
+  env,
+  domain: DOMAIN,
   zone,
   emailIdentity: identityStack.emailIdentity,
-  stage: env.STAGE,
+  stage: STAGE,
 });
 
-new EmailReciever(app, `${env.STAGE}-stuff-email-reciever`, {
-  emailDomain: env.DOMAIN,
-  env: {
-    region: env.AWS_REGION,
-    account: env.AWS_ACCOUNT_ID,
-  },
+new EmailReciever(app, `${STAGE}-stuff-email-reciever`, {
+  emailDomain: DOMAIN,
+  env,
   formattedEmailBucket: dataApiStack.formattedEmailBucket,
-  stage: env.STAGE,
+  stage: STAGE,
 });
 
 app.synth();
