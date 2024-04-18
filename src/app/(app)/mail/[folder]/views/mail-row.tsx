@@ -42,8 +42,6 @@ export const MailRow = ({
     } as DraggableData),
   });
 
-  console.log(thread);
-
   return (
     <div
       ref={setNodeRef}

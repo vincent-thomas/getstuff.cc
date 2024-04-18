@@ -33,7 +33,7 @@ export const NewMailListener = ({ folderId }: { folderId: string }) => {
     sse.onmessage = async data => {
       const threadId = data.lastEventId;
 
-      console.log("data", JSON.parse(data.data));
+      console.info("data", JSON.parse(data.data));
 
       const payload = z
         .object({ created_at: z.string(), read: z.boolean() })
@@ -44,7 +44,7 @@ export const NewMailListener = ({ folderId }: { folderId: string }) => {
       //   threadId,
       // });
 
-      console.log(payload.created_at);
+      console.info(payload.created_at);
 
       setNewEmails(old => [
         ...old,

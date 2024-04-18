@@ -1,10 +1,8 @@
-import { ItemBatcher } from "aws-cdk-lib/aws-stepfunctions";
 import { db } from "backend/db";
-import { folderTable, threadTable, threadViewTable } from "backend/db/schema";
+import { threadTable, threadViewTable } from "backend/db/schema";
 import { getUserFromHeader } from "backend/utils/getUserFromHeaders";
 import { and, eq, gte } from "drizzle-orm";
 import { type NextRequest, NextResponse } from "next/server";
-import { title } from "process";
 
 const encoder = new TextEncoder();
 
@@ -60,7 +58,10 @@ export const GET = async (
           .where(and(gte(threadTable.createdAt, lastest_fetch)))
           .innerJoin(
             threadViewTable,
-            and(eq(threadViewTable.username, user.username)),
+            and(
+              eq(threadViewTable.username, user.username),
+              eq(threadViewTable.folderId, params.folder),
+            ),
           );
         lastest_fetch = new Date();
         // const newData = await db
@@ -92,7 +93,7 @@ export const GET = async (
         // console.log(item);
 
         for (const item of newData) {
-          console.log(item.thread.createdAt, lastest_fetch);
+          console.info(item.thread.createdAt, lastest_fetch);
           const payload = {
             created_at: item.thread.createdAt,
             read: item.thread_view.read,

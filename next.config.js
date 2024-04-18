@@ -33,7 +33,7 @@ const config = {
       loader: "base64-loader",
       type: "javascript/auto",
     });
-    config.stats = 'errors-only';
+    config.stats = "errors-only";
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
     config?.plugins?.push(

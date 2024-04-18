@@ -1,16 +1,18 @@
 {
   "$schema": "https://biomejs.dev/schemas/1.6.3/schema.json",
-  "organizeImports": {
-    "enabled": true,
-    "include": [
-      "./**/*.ts",
-      "./**/*.tsx"
-    ]
-  },
   "vcs": {
     "useIgnoreFile": true,
     "clientKind": "git",
+    "defaultBranch": "main",
     "enabled": true
+  },
+  "organizeImports": {
+    "enabled": false
+  },
+  "json": {
+    "formatter": {
+      "enabled": true
+    }
   },
   "javascript": {
     "formatter": {
@@ -28,10 +30,12 @@
     "enabled": true,
     "indentStyle": "space",
     "indentWidth": 2,
+    "include": ["**/*.ts", "**/*.tsx", "**/*.js"],
     "ignore": [
       "node_modules",
       ".next",
       ".pnpm-store",
+      "migrations",
       "cdk.out",
       "public",
       ".contentlayer"
@@ -46,7 +50,8 @@
         "noImplicitBoolean": "off",
         "noDefaultExport": "off",
         "useNodejsImportProtocol": "off",
-        "noNonNullAssertion": "off"
+        "noNonNullAssertion": "off",
+        "useImportType": "error"
       },
       "correctness": {
         "noUndeclaredVariables": "off"

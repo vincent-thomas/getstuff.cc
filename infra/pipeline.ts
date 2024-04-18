@@ -1,10 +1,9 @@
+import { type App, Stack, type StackProps, SecretValue } from "aws-cdk-lib";
 import {
-  type App,
-  Stack,
-  type StackProps,
-  SecretValue,
-} from "aws-cdk-lib";
-import { CodeBuildStep, CodePipeline, CodePipelineSource, ShellStep } from "aws-cdk-lib/pipelines";
+  CodePipeline,
+  CodePipelineSource,
+  ShellStep,
+} from "aws-cdk-lib/pipelines";
 
 interface AccountStackProps extends StackProps {
   env: {
@@ -14,36 +13,29 @@ interface AccountStackProps extends StackProps {
 }
 
 export class Pipeline extends Stack {
-  constructor(
-    scope: App,
-    id: string,
-    props: AccountStackProps,
-  ) {
+  constructor(scope: App, id: string, props: AccountStackProps) {
     super(scope, id, { ...props, crossRegionReferences: true });
 
-    const pipeline = new CodePipeline(this, "stuff-pipeline", {
+    const _pipeline = new CodePipeline(this, "stuff-pipeline", {
       pipelineName: "pipeline-getstuff-cc",
       synth: new ShellStep("Synth", {
         input: CodePipelineSource.gitHub("vincent-thomas/getstuff.cc", "main", {
-          authentication: SecretValue.secretsManager("/stuff/pipeline/github-token")
+          authentication: SecretValue.secretsManager(
+            "/stuff/pipeline/github-token",
+          ),
         }),
         env: {
-          SHELL: "sh"
+          SHELL: "sh",
         },
-        installCommands: [
-          "npm i -g pnpm@9.0.2",
-          "pnpm install"
-        ],
-        commands: ["pnpm cdk:mutate-pipeline"]
-      })
-    })
-
-    
+        installCommands: ["npm i -g pnpm@9.0.2", "pnpm install"],
+        commands: ["pnpm cdk:mutate-pipeline"],
+      }),
+    });
 
     // const artifact = new Artifact();
 
     // const repository =
-    
+
     // pipeline.addStage({
     //   stageName: "Source",
     //   actions: [
@@ -154,4 +146,3 @@ export class Pipeline extends Stack {
     Stack.of(this).tags.setTag("scope", "stuff-api");
   }
 }
-

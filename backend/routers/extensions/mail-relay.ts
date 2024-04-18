@@ -1,20 +1,14 @@
-import {
-  DeleteCommand,
-  GetCommand,
-  PutCommand,
-  QueryCommand,
-} from "@aws-sdk/lib-dynamodb";
+import { PutCommand } from "@aws-sdk/lib-dynamodb";
 import { getDataTable } from "@stuff/infra-constants";
-import { TRPCError } from "@trpc/server";
 import { quickAliases } from "backend/db/schema";
-import { addressAliasInterface } from "backend/interfaces/addressAlias";
 import { protectedProc, router } from "backend/trpc";
 import { and, eq } from "drizzle-orm";
 import { generate } from "random-words";
 import { z } from "zod";
 
 export const mailRelayRouter = router({
-  enabled: protectedProc.query(async ({ ctx }) => {
+  enabled: protectedProc.query(() => {
+    // TODO!
     return false;
     // const command = new GetCommand({
     //   TableName: getDataTable(env.STAGE),
@@ -54,7 +48,7 @@ export const mailRelayRouter = router({
         enabled: z.boolean(),
       }),
     )
-    .mutation(async ({ ctx, input }) => {
+    .mutation(async ({ ctx }) => {
       await ctx.db
         .delete(quickAliases)
         .where(

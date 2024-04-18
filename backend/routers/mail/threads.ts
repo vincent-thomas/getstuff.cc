@@ -1,16 +1,7 @@
-import { env } from "@/env";
-import { GetObjectCommand } from "@aws-sdk/client-s3";
-import { QueryCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { getDataTable, getEmailContentBucket } from "@stuff/infra-constants";
 import { TRPCError } from "@trpc/server";
-import { messageViewInterface } from "backend/interfaces/messageView";
-import { threadInterface } from "backend/interfaces/thread";
-import { threadViewInterface } from "backend/interfaces/threadView";
 import { protectedProc, router } from "backend/trpc";
 import { moveThread } from "backend/utils/moveThread";
 import { z } from "zod";
-import { messageInterface } from "../../interfaces/message";
 import { and, eq } from "drizzle-orm";
 import { threadTable, threadViewTable } from "backend/db/schema";
 
@@ -36,8 +27,8 @@ export const threadsRouter = router({
 
   getThread: protectedProc
     .input(z.object({ folderId: z.string(), threadId: z.string() }))
-    .query(async ({ ctx, input: { folderId, threadId } }) => {
-      console.log("testing");
+    .query(() => {
+      console.info("testing");
       // const result = await ctx.db
       //   .select()
       //   .from(threadTable)
@@ -136,14 +127,10 @@ export const threadsRouter = router({
       const results = [];
       for (const threadId of threadIds) {
         const result = await moveThread(
-          ctx.dyn,
-          env.STAGE,
           ctx.session.username,
           threadId,
-          {
-            folderId,
-            newFolderId,
-          },
+          folderId,
+          newFolderId,
         );
         results.push(result.success);
       }
@@ -158,24 +145,23 @@ export const threadsRouter = router({
         value: z.boolean(),
       }),
     )
-    .mutation(async ({ ctx, input }) => {
-      for (const threadId of input.threadIds) {
-        const command = new UpdateCommand({
-          TableName: getDataTable(env.STAGE),
-          Key: {
-            pk: `mail|${threadId}`,
-            sk: `thread-view|${ctx.session.username}|${input.folderId}`,
-          },
-          ExpressionAttributeNames: {
-            "#read": "read",
-          },
-          ExpressionAttributeValues: {
-            ":value": input.value,
-          },
-          UpdateExpression: "set #read = :value",
-        });
-
-        await ctx.dyn.send(command);
-      }
+    .mutation(async () => {
+      // for (const threadId of input.threadIds) {
+      //   const command = new UpdateCommand({
+      //     TableName: getDataTable(env.STAGE),
+      //     Key: {
+      //       pk: `mail|${threadId}`,
+      //       sk: `thread-view|${ctx.session.username}|${input.folderId}`,
+      //     },
+      //     ExpressionAttributeNames: {
+      //       "#read": "read",
+      //     },
+      //     ExpressionAttributeValues: {
+      //       ":value": input.value,
+      //     },
+      //     UpdateExpression: "set #read = :value",
+      //   });
+      //   await ctx.dyn.send(command);
+      // }
     }),
 });

@@ -1,28 +1,9 @@
-import {
-  type App,
-  CfnOutput,
-  RemovalPolicy,
-  Stack,
-  type StackProps,
-} from "aws-cdk-lib";
-import { CustomersTable, ThingsTable, UsersTable } from "./constructs/table";
+import { type App, RemovalPolicy, Stack, type StackProps } from "aws-cdk-lib";
 
 import { getEmailContentBucket } from "@stuff/infra-constants";
 import { Bucket, HttpMethods } from "aws-cdk-lib/aws-s3";
 
-import {
-  CfnAccessKey,
-  Effect,
-  Policy,
-  PolicyDocument,
-  PolicyStatement,
-  User,
-} from "aws-cdk-lib/aws-iam";
-import {
-  ARecord,
-  CnameRecord,
-  type IHostedZone,
-} from "aws-cdk-lib/aws-route53";
+import type { IHostedZone } from "aws-cdk-lib/aws-route53";
 import type { EmailIdentity } from "aws-cdk-lib/aws-ses";
 
 interface AccountStackProps extends StackProps {

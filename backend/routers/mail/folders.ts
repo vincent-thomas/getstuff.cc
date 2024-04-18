@@ -1,7 +1,7 @@
 import { folderTable } from "backend/db/schema";
 import { protectedProc, router } from "backend/trpc";
 import { createId } from "backend/utils/createId";
-import { builtInFolder, getFolder } from "backend/utils/folder";
+import { builtInFolder } from "backend/utils/folder";
 import { and, eq } from "drizzle-orm";
 import { z } from "zod";
 

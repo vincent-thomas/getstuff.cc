@@ -1,8 +1,6 @@
 import type { FC } from "react";
 
 import { api } from "@stuff/api-client/server";
-import { Flex } from "@stuff/structure";
-import { H2, P } from "@stuff/typography";
 import { MailRow } from "./mail-row";
 import { NewMailListener } from "./mail-row-subscriber";
 export interface FolderHeader {

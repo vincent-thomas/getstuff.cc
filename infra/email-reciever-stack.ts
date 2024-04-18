@@ -1,6 +1,4 @@
-import { getDataTable, getUserTable } from "@stuff/infra-constants";
 import { type App, Duration, Stack, type StackProps } from "aws-cdk-lib";
-import { Table } from "aws-cdk-lib/aws-dynamodb";
 import { PolicyStatement } from "aws-cdk-lib/aws-iam";
 import { Code, Function as Lambda, Runtime } from "aws-cdk-lib/aws-lambda";
 import { SqsEventSource } from "aws-cdk-lib/aws-lambda-event-sources";
