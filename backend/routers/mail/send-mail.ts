@@ -1,5 +1,4 @@
 import { SendEmailCommand } from "@aws-sdk/client-ses";
-import { getDataTable } from "@stuff/infra-constants";
 import {
   encryptAsymmetric,
   encryptSymmetric,

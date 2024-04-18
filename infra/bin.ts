@@ -14,11 +14,14 @@ const env = {
   account: z.string().parse(process.env.AWS_ACCOUNT_ID),
 };
 
+const stage = z.string().parse(process.env.STAGE);
+
 // const STAGE = z.string().parse(process.env.STAGE);
 // const DOMAIN = z.string().parse(process.env.DOMAIN)
 
 const _pipeline = new AppPipeline(app, "stuff-pipeline", {
   env,
+  stage,
 });
 
 // const RootStack = new cdk.Stack(app, "stuff-shared-stack", {

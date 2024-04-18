@@ -10,7 +10,7 @@ import { TRPCError, initTRPC } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError, type z } from "zod";
 import { db } from "./db";
-import { getRedis, getS3, getSes } from "./sdks";
+import { redis, getS3, getSes } from "./sdks";
 import { getUserFromHeader } from "./utils/getUserFromHeaders";
 import { jwtPayloadValidator } from "./utils/jwt";
 
@@ -20,7 +20,6 @@ interface CreateInnerContextOptions {
   session: z.infer<typeof sessionType>;
 }
 
-const redis = await getRedis(env.AWS_REGION, env.STAGE);
 const s3 = getS3(env.AWS_REGION);
 const ses = getSes(env.AWS_REGION);
 // const kafka = getKafka().producer({
