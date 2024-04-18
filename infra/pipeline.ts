@@ -63,10 +63,6 @@ export class AppPipeline extends Stack {
       ],
     });
 
-    // const buildRole = new Role(this, "build-stage-role", {
-    //   assumedBy: new ServicePrincipal.("ssm.amazonaws.com"),
-    // });
-
     const redisParam = StringParameter.fromSecureStringParameterAttributes(
       this,
       "test",
@@ -74,8 +70,16 @@ export class AppPipeline extends Stack {
         parameterName: `/stuff/api/${stage}/redis-url`,
       },
     );
-
-    // redisParam.grantRead(buildRole);
+    const stuffPlusPricing = StringParameter.fromStringParameterName(
+      this,
+      "stuff-plus-pricing",
+      `/stuff/api/${stage}/prices/stuff-plus`,
+    );
+    const dbUrl = StringParameter.fromStringParameterName(
+      this,
+      "stuff-plus-pricing",
+      `/stuff/api/${stage}/database-url`,
+    );
 
     const project = new Project(this, "getstuff-cc-project", {
       projectName: "getstuff-cc-build",
@@ -123,12 +127,9 @@ export class AppPipeline extends Stack {
         actions: ["ssm:GetParameter"],
         effect: Effect.ALLOW,
         resources: [
-          StringParameter.fromStringParameterName(
-            this,
-            "stuff-plus-pricing",
-            `/stuff/api/${stage}/prices/stuff-plus`,
-          ).parameterArn,
           redisParam.parameterArn,
+          stuffPlusPricing.parameterArn,
+          dbUrl.parameterArn,
         ],
       }),
     );

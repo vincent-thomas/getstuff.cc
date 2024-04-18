@@ -10,8 +10,6 @@ export const env = createEnv({
     DOMAIN: z.string(),
     APP_URL: z.string().url(),
     JWT_SECRET: z.string().length(64),
-    DATABASE_URL: z.string().url(),
-    REDIS_URL: z.string().url(),
   },
   client: {},
   runtimeEnv: {
@@ -21,10 +19,8 @@ export const env = createEnv({
     AWS_ACCOUNT_ID: process.env.AWS_ACCOUNT_ID,
     DOMAIN: process.env.DOMAIN,
     APP_URL: process.env.APP_URL,
-    JWT_SECRET: process.env.JWT_SECRET,
-    DATABASE_URL: process.env.DATABASE_URL,
-    REDIS_URL: process.env.REDIS_URL,
-  },
+    JWT_SECRET: process.env.JWT_SECRET
+   },
   skipValidation: !!process.env.SKIP_ENV_VALIDATION,
   emptyStringAsUndefined: true,
 });
