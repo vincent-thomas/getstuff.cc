@@ -65,11 +65,10 @@ export class AppPipeline extends Stack {
               version: "0.2",
               phases: {
                 install: {
-                  commands: [
-                    "npm i -g pnpm@9.0.2",
-                    "pnpm env use --global lts",
-                    "pnpm install",
-                  ],
+                  "runtime-versions": {
+                    nodejs: "20",
+                  },
+                  commands: ["npm i -g pnpm@9.0.2", "pnpm install"],
                 },
                 pre_build: {
                   commands: ["pnpm check:ci"],
@@ -101,6 +100,9 @@ export class AppPipeline extends Stack {
               version: "0.2",
               phases: {
                 install: {
+                  "runtime-versions": {
+                    nodejs: "20",
+                  },
                   commands: ["npm i -g pnpm@9.0.2", "pnpm install"],
                 },
                 build: {
