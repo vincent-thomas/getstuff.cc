@@ -19,8 +19,8 @@ export const env = createEnv({
     AWS_ACCOUNT_ID: process.env.AWS_ACCOUNT_ID,
     DOMAIN: process.env.DOMAIN,
     APP_URL: process.env.APP_URL,
-    JWT_SECRET: process.env.JWT_SECRET
-   },
+    JWT_SECRET: process.env.JWT_SECRET,
+  },
   skipValidation: !!process.env.SKIP_ENV_VALIDATION,
   emptyStringAsUndefined: true,
 });
