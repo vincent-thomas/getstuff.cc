@@ -6,8 +6,17 @@ import { env } from "../src/env";
 import { EmailReciever } from "./email-reciever-stack";
 import { SESIdentityStack } from "./ses-identity-stack";
 import { DataApiInfra } from "./stack";
+import { Pipeline } from "./pipeline";
 
 const app = new cdk.App();
+
+
+const pipeline = new Pipeline(app, "stuff-pipeline", {
+  env: {
+    region: env.AWS_REGION,
+    account: env.AWS_ACCOUNT_ID
+  }
+});
 
 const RootStack = new cdk.Stack(app, "stuff-shared-stack", {
   env: {
