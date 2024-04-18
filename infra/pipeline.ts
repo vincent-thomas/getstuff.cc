@@ -31,7 +31,7 @@ export class Pipeline extends Stack {
           SHELL: "sh"
         },
         installCommands: [
-          "npm i -g pnpm@8.15.1",
+          "npm i -g pnpm@9.0.2",
           "pnpm install"
         ],
         commands: ["pnpm cdk:mutate-pipeline"]
