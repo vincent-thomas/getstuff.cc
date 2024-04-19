@@ -49,6 +49,7 @@ export class AppPipeline extends Stack {
       artifactBucket,
       executionMode: ExecutionMode.SUPERSEDED,
     });
+
     const repoStore = new Artifact("raw-source");
 
     pipeline.addStage({
@@ -113,7 +114,7 @@ export class AppPipeline extends Stack {
           paths: ["./.pnpm-store/**/*", "./node_modules/.modules.yaml"],
         },
         artifacts: {
-          files: ["./.next/**/*", "./next-env.d.ts", "./unimport.d.ts"],
+          files: ["./.next", "./next-env.d.ts", "./unimport.d.ts"],
         },
       },
       { cacheBucket, artifactBucket },
@@ -177,7 +178,10 @@ export class AppPipeline extends Stack {
             this,
             "getstuff-cc-publish-project",
             {
-              preBuild: ['mv "$(echo $CODEBUILD_SRC_DIR_buildstore)"/** .'],
+              preBuild: [
+                'mv "$(echo $CODEBUILD_SRC_DIR_buildstore)"/** .',
+                'mv "$(echo $CODEBUILD_SRC_DIR_buildstore)"/.next ./.next',
+              ],
               build: ["docker build -t getstuff.cc ."],
             },
             {

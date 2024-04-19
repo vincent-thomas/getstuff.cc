@@ -19,7 +19,7 @@ const stage = z.string().parse(process.env.STAGE);
 // const STAGE = z.string().parse(process.env.STAGE);
 // const DOMAIN = z.string().parse(process.env.DOMAIN)
 
-const _pipeline = new AppPipeline(app, "stuff-pipeline", {
+new AppPipeline(app, "stuff-pipeline", {
   env,
   stage,
 });
