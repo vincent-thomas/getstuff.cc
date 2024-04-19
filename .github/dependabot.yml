@@ -6,7 +6,12 @@
 
 version: 2
 updates:
- - package-ecosystem: "devcontainers"
-   directory: "/"
+ - package-ecosystem: docker
+   schedule:
+     interval: weekly
+ - package-ecosystem: npm
+   schedule:
+     interval: weekly
+ - package-ecosystem: github-actions
    schedule:
      interval: weekly

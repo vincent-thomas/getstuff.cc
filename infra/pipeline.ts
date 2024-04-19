@@ -179,7 +179,7 @@ export class AppPipeline extends Stack {
             this,
             "getstuff-cc-publish-project",
             {
-              preBuild: ["echo $CODEBUILD_SRC_DIR_buildstore"],
+              preBuild: ["mv $CODEBUILD_SRC_DIR_buildstore/**/* ."],
               build: ["docker build -t getstuff.cc ."],
             },
             {
