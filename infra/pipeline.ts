@@ -24,6 +24,7 @@ import {
   CodeBuildActionType,
   GitHubSourceAction,
 } from "aws-cdk-lib/aws-codepipeline-actions";
+import { Repository } from "aws-cdk-lib/aws-ecr";
 import { Effect, PolicyStatement } from "aws-cdk-lib/aws-iam";
 import { Bucket } from "aws-cdk-lib/aws-s3";
 import { StringParameter } from "aws-cdk-lib/aws-ssm";
@@ -54,34 +55,109 @@ export class AppPipeline extends Stack {
 
     pipeline.addStage({
       stageName: "Source",
-      actions: [
-        new GitHubSourceAction({
-          actionName: "github",
-          oauthToken: SecretValue.secretsManager(
-            "/stuff/pipeline/github-token",
-          ),
-          owner: "vincent-thomas",
-          runOrder: 1,
-          repo: "getstuff.cc",
-          output: repoStore,
-          branch: "main",
-        }),
-      ],
+      actions: [this.createSourceAction({ output: repoStore })],
     });
 
     pipeline.addStage({
       stageName: "Analysis",
+      actions: [this.createLintingAction({ input: repoStore })],
+    });
+
+    const buildStore = new Artifact("buildstore");
+
+    pipeline.addStage({
+      stageName: "Build",
       actions: [
-        new CodeBuildAction({
-          actionName: "Lint",
+        this.createBuildAction({
+          stage,
           input: repoStore,
-          project: this.createPipelineProject(this, "getstuff-cc-analysis", {
-            build: ["npx @biomejs/biome ci ."],
-          }),
+          output: buildStore,
+          buckets: {
+            artifact: artifactBucket,
+            cache: cacheBucket,
+          },
+        }),
+        this.createTestAction({
+          input: repoStore,
+          buckets: {
+            cache: cacheBucket,
+          },
         }),
       ],
     });
 
+    const repository = new Repository(this, "getstuff-cc-app");
+
+    pipeline.addStage({
+      stageName: "Release",
+      actions: [
+        new CodeBuildAction({
+          actionName: "Build-image",
+          input: repoStore,
+          extraInputs: [buildStore],
+          project: this.createPipelineProject(
+            this,
+            "getstuff-cc-publish-project",
+            {
+              envVariables: {
+                ECR_REPO: repository.repositoryName,
+                IMAGE_NAME: "getstuff.cc",
+              },
+              preBuild: [
+                'mv "$(echo $CODEBUILD_SRC_DIR_buildstore)"/** .',
+                'mv "$(echo $CODEBUILD_SRC_DIR_buildstore)"/.next ./.next',
+              ],
+              build: [
+                'export IMAGE_TAG=build-`echo build-$CODEBUILD_BUILD_ID | awk –F":" ‘{print $2}‘`',
+                "$(aws ecr get-login --no-include-email)",
+                "docker build -t $IMAGE_NAME:$IMAGE_TAG .",
+                "docker tag $IMAGE_NAME:$IMAGE_TAG $ECR_REPO:$IMAGE_TAG",
+                "docker push $ECR_REPO:$IMAGE_TAG",
+              ],
+            },
+            {
+              artifactBucket,
+            },
+          ),
+        }),
+      ],
+    });
+
+    Stack.of(this).tags.setTag("scope", "stuff-pipeline");
+  }
+
+  private createSourceAction({ output }: { output: Artifact }) {
+    return new GitHubSourceAction({
+      actionName: "github",
+      oauthToken: SecretValue.secretsManager("/stuff/pipeline/github-token"),
+      owner: "vincent-thomas",
+      runOrder: 1,
+      repo: "getstuff.cc",
+      output,
+      branch: "main",
+    });
+  }
+
+  private createLintingAction({ input }: { input: Artifact }) {
+    return new CodeBuildAction({
+      actionName: "Lint",
+      input,
+      project: this.createPipelineProject(this, "getstuff-cc-analysis", {
+        build: ["npx @biomejs/biome ci ."],
+      }),
+    });
+  }
+  private createBuildAction({
+    stage,
+    input,
+    output,
+    buckets,
+  }: {
+    stage: string;
+    input: Artifact;
+    output: Artifact;
+    buckets: { cache: Bucket; artifact: Bucket };
+  }) {
     const redisParam = StringParameter.fromSecureStringParameterAttributes(
       this,
       "test",
@@ -117,7 +193,7 @@ export class AppPipeline extends Stack {
           files: ["./.next/**/*", "./next-env.d.ts", "./unimport.d.ts"],
         },
       },
-      { cacheBucket, artifactBucket },
+      { cacheBucket: buckets.cache, artifactBucket: buckets.artifact },
     );
 
     project.applyRemovalPolicy(RemovalPolicy.DESTROY);
@@ -132,74 +208,46 @@ export class AppPipeline extends Stack {
         ],
       }),
     );
-    const buildStore = new Artifact("buildstore");
-
-    pipeline.addStage({
-      stageName: "Build",
-      actions: [
-        new CodeBuildAction({
-          actionName: "Compile",
-          type: CodeBuildActionType.BUILD,
-          input: repoStore,
-          project,
-          runOrder: 1,
-          outputs: [buildStore],
-        }),
-        new CodeBuildAction({
-          type: CodeBuildActionType.TEST,
-          actionName: "Test",
-          input: repoStore,
-          extraInputs: [buildStore],
-          runOrder: 2,
-          project: this.createPipelineProject(
-            this,
-            "getstuff-cc-test-project",
-            {
-              install: [
-                "npm install -g pnpm@9.0.2",
-                "pnpm config set store-dir ./.pnpm-store",
-                "pnpm install",
-              ],
-              cache: {
-                paths: ["./.pnpm-store/**/*", "./node_modules/.modules.yaml"],
-              },
-              build: ["pnpm test:unit"],
-            },
-            { cacheBucket },
-          ),
-        }),
-      ],
+    return new CodeBuildAction({
+      actionName: "Compile",
+      type: CodeBuildActionType.BUILD,
+      input,
+      project,
+      outputs: [output],
     });
-
-    pipeline.addStage({
-      stageName: "Release",
-      actions: [
-        new CodeBuildAction({
-          actionName: "Build-image",
-          input: repoStore,
-          extraInputs: [buildStore],
-          project: this.createPipelineProject(
-            this,
-            "getstuff-cc-publish-project",
-            {
-              preBuild: [
-                'mv "$(echo $CODEBUILD_SRC_DIR_buildstore)"/** .',
-                'mv "$(echo $CODEBUILD_SRC_DIR_buildstore)"/.next ./.next',
-              ],
-              build: ["docker build -t getstuff.cc ."],
-            },
-            {
-              artifactBucket,
-            },
-          ),
-        }),
-      ],
-    });
-
-    Stack.of(this).tags.setTag("scope", "stuff-pipeline");
   }
 
-  public createPipelineProject(
+  private createTestAction({
+    input,
+    buckets,
+  }: {
+    input: Artifact;
+    buckets: { cache: Bucket };
+  }) {
+    return new CodeBuildAction({
+      type: CodeBuildActionType.TEST,
+      actionName: "Test",
+      input,
+      project: this.createPipelineProject(
+        this,
+        "getstuff-cc-test-project",
+        {
+          install: [
+            "npm install -g pnpm@9.0.2",
+            "pnpm config set store-dir ./.pnpm-store",
+            "pnpm install",
+          ],
+          cache: {
+            paths: ["./.pnpm-store/**/*", "./node_modules/.modules.yaml"],
+          },
+          build: ["pnpm test:unit"],
+        },
+        { cacheBucket: buckets.cache },
+      ),
+    });
+  }
+
+  private createPipelineProject(
     scope: Construct,
     name: string,
     commands: Command,
@@ -217,6 +265,9 @@ export class AppPipeline extends Stack {
       },
       buildSpec: BuildSpec.fromObject({
         version: "0.2",
+        env: {
+          variables: commands.envVariables,
+        },
         phases: {
           pre_build: {
             commands: commands.preBuild,
@@ -246,6 +297,9 @@ interface Command {
   postBuild?: string[];
   cache?: {
     paths: string[];
+  };
+  envVariables?: {
+    [key: string]: string;
   };
   artifacts?: {
     files: string[];
