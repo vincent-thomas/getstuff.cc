@@ -15,9 +15,15 @@ COPY ./.next/static ./.next/static
 
 ENV NEXT_TELEMETRY_DISABLED 1
 
+RUN corepack enable
+
+
+
 ENV PORT $PORT
 ENV HOSTNAME 0.0.0.0
 
-RUN rm -rf node_modules && npm install --force
+EXPOSE 3000
+
+RUN rm -rf node_modules && pnpm install
 
 CMD [ "node", "./server.js" ]

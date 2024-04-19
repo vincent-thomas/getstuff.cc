@@ -8,8 +8,8 @@ import {
 import {
   BuildSpec,
   Cache,
+  ComputeType,
   LinuxBuildImage,
-  LocalCacheMode,
   Project,
 } from "aws-cdk-lib/aws-codebuild";
 import { Artifact, Pipeline, PipelineType } from "aws-cdk-lib/aws-codepipeline";
@@ -18,15 +18,10 @@ import {
   CodeBuildActionType,
   GitHubSourceAction,
 } from "aws-cdk-lib/aws-codepipeline-actions";
-import {
-  Effect,
-  Policy,
-  PolicyStatement,
-  Role,
-  ServicePrincipal,
-} from "aws-cdk-lib/aws-iam";
+import { Effect, PolicyStatement } from "aws-cdk-lib/aws-iam";
+import { Bucket } from "aws-cdk-lib/aws-s3";
 import { StringParameter } from "aws-cdk-lib/aws-ssm";
-import {} from "aws-cdk-lib/pipelines";
+import type { Construct } from "constructs";
 
 interface AccountStackProps extends StackProps {
   env: {
@@ -35,18 +30,18 @@ interface AccountStackProps extends StackProps {
   };
   stage: string;
 }
-
 export class AppPipeline extends Stack {
   constructor(scope: App, id: string, { stage, ...props }: AccountStackProps) {
     super(scope, id, { ...props, crossRegionReferences: true });
-
+    const cacheBucket = new Bucket(this, "cache-bucket", {
+      bucketName: "getstuff.cc-pipeline-cache-bucket",
+    });
     const pipeline = new Pipeline(this, "stuff-pipeline", {
       pipelineName: "pipeline-getstuff-cc",
       pipelineType: PipelineType.V2,
     });
-    const artifact = new Artifact();
+    const repoStore = new Artifact("raw-source");
 
-    const installedDepsArtifacts = new Artifact();
     pipeline.addStage({
       stageName: "Source",
       actions: [
@@ -56,8 +51,9 @@ export class AppPipeline extends Stack {
             "/stuff/pipeline/github-token",
           ),
           owner: "vincent-thomas",
+          runOrder: 1,
           repo: "getstuff.cc",
-          output: artifact,
+          output: repoStore,
           branch: "main",
         }),
       ],
@@ -81,45 +77,28 @@ export class AppPipeline extends Stack {
       { parameterName: `/stuff/api/${stage}/database-url` },
     );
 
-    const project = new Project(this, "getstuff-cc-project", {
-      projectName: "getstuff-cc-build",
-      environment: {
-        buildImage: LinuxBuildImage.STANDARD_7_0,
-        environmentVariables: {
-          SHELL: {
-            value: "sh",
-          },
-          AWS_REGION: { value: props.env.region },
-          AWS_ACCOUNT_ID: { value: props.env.account },
+    const project = this.createPipelineProject(
+      this,
+      "getstuff-cc-build-project",
+      {
+        install: [
+          "npm install -g pnpm@9.0.2",
+          "pnpm config set store-dir ./.pnpm-store",
+          "pnpm install --frozen-lockfile",
+        ],
+        preBuild: ["pnpm check:ci"],
+        build: ["SKIP_ENV_VALIDATION='1' pnpm build:app"],
+        cache: {
+          paths: ["./.pnpm-store/**/*", "./node_modules/.modules.yaml"],
+        },
+        artifacts: {
+          files: ["./.next", "./next-env.d.ts", "./unimport.d.ts"],
         },
       },
-      buildSpec: BuildSpec.fromObject({
-        version: "0.2",
-        phases: {
-          install: {
-            "runtime-versions": {
-              nodejs: 20,
-            },
-            commands: ["npm i -g pnpm@9.0.2", "pnpm install"],
-          },
-          pre_build: {
-            commands: ["pnpm check:ci"],
-          },
-          build: {
-            commands: [
-              "SKIP_ENV_VALIDATION='1' pnpm build:app",
-              "pnpm test:unit",
-            ],
-          },
-        },
-        cache: {
-          paths: ["~/.local/share/pnpm/store"],
-        },
-      }),
-    });
+      cacheBucket,
+    );
 
     project.applyRemovalPolicy(RemovalPolicy.DESTROY);
-
     project.addToRolePolicy(
       new PolicyStatement({
         actions: ["ssm:GetParameter"],
@@ -131,54 +110,108 @@ export class AppPipeline extends Stack {
         ],
       }),
     );
+    const buildStore = new Artifact("buildstore");
 
     pipeline.addStage({
       stageName: "Build",
       actions: [
         new CodeBuildAction({
-          actionName: "Build",
+          actionName: "Compile",
           type: CodeBuildActionType.BUILD,
-          input: artifact,
+          input: repoStore,
           project,
-
-          outputs: [installedDepsArtifacts],
+          runOrder: 1,
+          outputs: [buildStore],
+        }),
+        new CodeBuildAction({
+          type: CodeBuildActionType.TEST,
+          actionName: "Test",
+          input: repoStore,
+          extraInputs: [buildStore],
+          runOrder: 2,
+          project: this.createPipelineProject(
+            this,
+            "getstuff-cc-test-project",
+            {
+              install: ["npm install -g pnpm@9.0.2", "pnpm install"],
+              cache: {
+                paths: ["./.pnpm-store/**/*", "./node_modules/.modules.yaml"],
+              },
+              build: ["pnpm test:unit"],
+            },
+          ),
         }),
       ],
     });
 
     pipeline.addStage({
-      stageName: "Test",
+      stageName: "Release",
       actions: [
         new CodeBuildAction({
-          actionName: "test",
-          type: CodeBuildActionType.TEST,
-          input: installedDepsArtifacts,
-          project: new Project(this, "getstuff-cc-test", {
-            projectName: "getstuff-cc-test",
-            environment: {
-              buildImage: LinuxBuildImage.STANDARD_7_0,
+          actionName: "Build-image",
+          input: repoStore,
+          extraInputs: [buildStore],
+          project: this.createPipelineProject(
+            this,
+            "getstuff-cc-publish-project",
+            {
+              build: ["docker build -t getstuff.cc ."],
             },
-            buildSpec: BuildSpec.fromObject({
-              version: "0.2",
-              phases: {
-                install: {
-                  "runtime-versions": {
-                    nodejs: 20,
-                  },
-                  commands: ["npm i -g pnpm@9.0.2", "pnpm install"],
-                },
-                build: {
-                  commands: ["pnpm test:unit"],
-                },
-              },
-              cache: {
-                paths: {},
-              },
-            }),
-          }),
+          ),
         }),
       ],
     });
+
     Stack.of(this).tags.setTag("scope", "stuff-pipeline");
   }
+
+  public createPipelineProject(
+    scope: Construct,
+    name: string,
+    commands: Command,
+    cacheBucket?: Bucket,
+  ): Project {
+    return new Project(scope, name, {
+      projectName: name,
+      cache: cacheBucket ? Cache.bucket(cacheBucket) : undefined,
+      environment: {
+        buildImage: LinuxBuildImage.STANDARD_7_0,
+        computeType: ComputeType.MEDIUM,
+      },
+      buildSpec: BuildSpec.fromObject({
+        version: "0.2",
+        phases: {
+          pre_build: {
+            commands: commands.preBuild,
+          },
+          install: {
+            "runtime-versions": { nodejs: 20, docker: 24 },
+            commands: commands.install,
+          },
+          build: {
+            commands: commands.build,
+          },
+          post_build: {
+            commands: commands.postBuild,
+          },
+        },
+        cache: commands?.cache,
+        artifacts: commands?.artifacts,
+      }),
+    });
+  }
+}
+
+interface Command {
+  install?: string[];
+  preBuild?: string[];
+  build?: string[];
+  postBuild?: string[];
+  cache?: {
+    paths: string[];
+  };
+  artifacts?: {
+    files: string[];
+    "base-directory"?: string;
+  };
 }
