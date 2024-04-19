@@ -102,14 +102,15 @@ export class AppPipeline extends Stack {
               envVariables: {
                 ECR_REPO: repository.repositoryName,
                 IMAGE_NAME: "getstuff.cc",
+                AWS_ACCOUNT_ID: props.env.account,
               },
               preBuild: [
                 'mv "$(echo $CODEBUILD_SRC_DIR_buildstore)"/** .',
                 'mv "$(echo $CODEBUILD_SRC_DIR_buildstore)"/.next ./.next',
               ],
               build: [
-                'export IMAGE_TAG=build-`echo build-$CODEBUILD_BUILD_ID | awk –F":" ‘{print $2}‘`',
-                "$(aws ecr get-login --no-include-email)",
+                "export IMAGE_TAG=build-$(echo $CODEBUILD_BUILD_ID | cut -d ':' -f 2)",
+                "aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com",
                 "docker build -t $IMAGE_NAME:$IMAGE_TAG .",
                 "docker tag $IMAGE_NAME:$IMAGE_TAG $ECR_REPO:$IMAGE_TAG",
                 "docker push $ECR_REPO:$IMAGE_TAG",
