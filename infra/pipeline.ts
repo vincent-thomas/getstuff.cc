@@ -185,7 +185,7 @@ export class AppPipeline extends Stack {
             commands: commands.preBuild,
           },
           install: {
-            "runtime-versions": { nodejs: 20, docker: 24 },
+            "runtime-versions": { nodejs: 20 },
             commands: commands.install,
           },
           build: {
