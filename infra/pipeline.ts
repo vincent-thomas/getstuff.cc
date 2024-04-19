@@ -4,6 +4,7 @@ import {
   type StackProps,
   SecretValue,
   RemovalPolicy,
+  aws_codestarconnections,
 } from "aws-cdk-lib";
 import {
   Artifacts,
@@ -22,6 +23,7 @@ import {
 import {
   CodeBuildAction,
   CodeBuildActionType,
+  CodeStarConnectionsSourceAction,
   GitHubSourceAction,
 } from "aws-cdk-lib/aws-codepipeline-actions";
 import { Effect, PolicyStatement } from "aws-cdk-lib/aws-iam";
@@ -46,6 +48,7 @@ export class AppPipeline extends Stack {
     const pipeline = new Pipeline(this, "stuff-pipeline", {
       pipelineName: "pipeline-getstuff-cc",
       pipelineType: PipelineType.V2,
+      artifactBucket,
       executionMode: ExecutionMode.SUPERSEDED,
     });
     const repoStore = new Artifact("raw-source");

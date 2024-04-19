@@ -46,7 +46,7 @@ export const MailRelayModal = () => {
         >
           {(aliases ?? []).map(item => (
             //
-            <Fragment key={item.quickAlias}>fixing later</Fragment>
+            <Fragment key={item.mailAlias}>fixing later</Fragment>
             // <MailRelay key={item.mailAlias} {...item} />
           ))}
         </div>
