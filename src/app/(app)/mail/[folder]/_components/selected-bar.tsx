@@ -11,7 +11,6 @@ import { useRouter } from "next/navigation";
 import { stack } from "packages/ui/patterns/stack";
 import { palette } from "packages/ui/theme";
 import { useMemo } from "react";
-import { z } from "zod";
 import { messagesIdSelected } from "../store/messages-id-selected";
 
 import type { TRPCError } from "@trpc/server";

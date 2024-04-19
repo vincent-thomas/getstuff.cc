@@ -13,7 +13,12 @@ import {
   LinuxBuildImage,
   Project,
 } from "aws-cdk-lib/aws-codebuild";
-import { Artifact, Pipeline, PipelineType } from "aws-cdk-lib/aws-codepipeline";
+import {
+  Artifact,
+  ExecutionMode,
+  Pipeline,
+  PipelineType,
+} from "aws-cdk-lib/aws-codepipeline";
 import {
   CodeBuildAction,
   CodeBuildActionType,
@@ -37,12 +42,11 @@ export class AppPipeline extends Stack {
     const cacheBucket = new Bucket(this, "cache-bucket", {
       bucketName: "getstuff.cc-pipeline-cache-bucket",
     });
-    const artifactBucket = new Bucket(this, "artifact-bucket", {
-      bucketName: "getstuff.cc-pipeline-artifact-bucket",
-    });
+    const artifactBucket = new Bucket(this, "artifact-bucket");
     const pipeline = new Pipeline(this, "stuff-pipeline", {
       pipelineName: "pipeline-getstuff-cc",
       pipelineType: PipelineType.V2,
+      executionMode: ExecutionMode.SUPERSEDED,
     });
     const repoStore = new Artifact("raw-source");
 
@@ -50,7 +54,7 @@ export class AppPipeline extends Stack {
       stageName: "Source",
       actions: [
         new GitHubSourceAction({
-          actionName: "source",
+          actionName: "github",
           oauthToken: SecretValue.secretsManager(
             "/stuff/pipeline/github-token",
           ),
@@ -59,6 +63,19 @@ export class AppPipeline extends Stack {
           repo: "getstuff.cc",
           output: repoStore,
           branch: "main",
+        }),
+      ],
+    });
+
+    pipeline.addStage({
+      stageName: "Analysis",
+      actions: [
+        new CodeBuildAction({
+          actionName: "Lint",
+          input: repoStore,
+          project: this.createPipelineProject(this, "getstuff-cc-analysis", {
+            build: ["npx @biomejs/biome ci ."],
+          }),
         }),
       ],
     });
@@ -90,13 +107,12 @@ export class AppPipeline extends Stack {
           "pnpm config set store-dir ./.pnpm-store",
           "pnpm install --frozen-lockfile",
         ],
-        preBuild: ["pnpm check:ci"],
         build: ["SKIP_ENV_VALIDATION='1' pnpm build:app"],
         cache: {
           paths: ["./.pnpm-store/**/*", "./node_modules/.modules.yaml"],
         },
         artifacts: {
-          files: ["./.next", "./next-env.d.ts", "./unimport.d.ts"],
+          files: ["./.next/**/*", "./next-env.d.ts", "./unimport.d.ts"],
         },
       },
       { cacheBucket, artifactBucket },
@@ -160,10 +176,8 @@ export class AppPipeline extends Stack {
             this,
             "getstuff-cc-publish-project",
             {
+              preBuild: ["echo $CODEBUILD_SRC_DIR_buildstore"],
               build: ["docker build -t getstuff.cc ."],
-              artifacts: {
-                files: ["./.next", "./next-env.d.ts", "./unimport.d.ts"],
-              },
             },
             {
               artifactBucket,

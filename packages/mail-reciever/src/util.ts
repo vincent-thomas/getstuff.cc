@@ -193,7 +193,7 @@ export const getThreadView = async (
 };
 
 export const createMessageView = async (
-  stage: string,
+  _stage: string,
   {
     messageId,
     encryptedMessageEncryptionKey,

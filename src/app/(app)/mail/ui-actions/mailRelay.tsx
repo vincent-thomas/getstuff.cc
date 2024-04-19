@@ -14,6 +14,7 @@ import {
 import { useMemo } from "react";
 import { Card } from "src/app/(public)/_components/card";
 import { border } from "src/components/recipies";
+import { Fragment } from "react";
 
 export const mailRelayOpen = atom(false);
 
@@ -45,7 +46,7 @@ export const MailRelayModal = () => {
         >
           {(aliases ?? []).map(item => (
             //
-            <>fixing later</>
+            <Fragment key={item.quickAlias}>fixing later</Fragment>
             // <MailRelay key={item.mailAlias} {...item} />
           ))}
         </div>

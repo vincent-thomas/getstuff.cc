@@ -4,7 +4,8 @@ import { unstable_noStore } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { ThreadHeading } from "./components/components";
-import { MailMessage } from "./components/message";
+import { Fragment } from "react";
+// import { MailMessage } from "./components/message";
 
 export default setupPage({
   params: z.object({
@@ -37,7 +38,7 @@ export default setupPage({
         <div className={cn(css({ overflowY: "auto", p: "medium" }))}>
           <div className={stack({ direction: "col", gap: "md" })}>
             {conversation.messages.map(thread => (
-              <>working on it</>
+              <Fragment key={thread.threadId}>working on it</Fragment>
               // <MailMessage key={thread.messageId} thread={} />
             ))}
           </div>
