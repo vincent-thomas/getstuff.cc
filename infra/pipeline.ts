@@ -114,7 +114,7 @@ export class AppPipeline extends Stack {
           paths: ["./.pnpm-store/**/*", "./node_modules/.modules.yaml"],
         },
         artifacts: {
-          files: ["./.next", "./next-env.d.ts", "./unimport.d.ts"],
+          files: ["./.next/**/*", "./next-env.d.ts", "./unimport.d.ts"],
         },
       },
       { cacheBucket, artifactBucket },
@@ -155,7 +155,11 @@ export class AppPipeline extends Stack {
             this,
             "getstuff-cc-test-project",
             {
-              install: ["npm install -g pnpm@9.0.2", "pnpm install"],
+              install: [
+                "npm install -g pnpm@9.0.2",
+                "pnpm config set store-dir ./.pnpm-store",
+                "pnpm install",
+              ],
               cache: {
                 paths: ["./.pnpm-store/**/*", "./node_modules/.modules.yaml"],
               },
