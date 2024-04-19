@@ -4,7 +4,6 @@ import {
   type StackProps,
   SecretValue,
   RemovalPolicy,
-  aws_codestarconnections,
 } from "aws-cdk-lib";
 import {
   Artifacts,
@@ -23,7 +22,6 @@ import {
 import {
   CodeBuildAction,
   CodeBuildActionType,
-  CodeStarConnectionsSourceAction,
   GitHubSourceAction,
 } from "aws-cdk-lib/aws-codepipeline-actions";
 import { Effect, PolicyStatement } from "aws-cdk-lib/aws-iam";
@@ -179,7 +177,7 @@ export class AppPipeline extends Stack {
             this,
             "getstuff-cc-publish-project",
             {
-              preBuild: ["mv $CODEBUILD_SRC_DIR_buildstore/**/* ."],
+              preBuild: ['mv "$(echo $CODEBUILD_SRC_DIR_buildstore)"/** .'],
               build: ["docker build -t getstuff.cc ."],
             },
             {
