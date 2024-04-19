@@ -6,6 +6,7 @@ import {
   RemovalPolicy,
 } from "aws-cdk-lib";
 import {
+  Artifacts,
   BuildSpec,
   Cache,
   ComputeType,
@@ -35,6 +36,9 @@ export class AppPipeline extends Stack {
     super(scope, id, { ...props, crossRegionReferences: true });
     const cacheBucket = new Bucket(this, "cache-bucket", {
       bucketName: "getstuff.cc-pipeline-cache-bucket",
+    });
+    const artifactBucket = new Bucket(this, "artifact-bucket", {
+      bucketName: "getstuff.cc-pipeline-artifact-bucket",
     });
     const pipeline = new Pipeline(this, "stuff-pipeline", {
       pipelineName: "pipeline-getstuff-cc",
@@ -95,7 +99,7 @@ export class AppPipeline extends Stack {
           files: ["./.next", "./next-env.d.ts", "./unimport.d.ts"],
         },
       },
-      cacheBucket,
+      { cacheBucket, artifactBucket },
     );
 
     project.applyRemovalPolicy(RemovalPolicy.DESTROY);
@@ -139,6 +143,7 @@ export class AppPipeline extends Stack {
               },
               build: ["pnpm test:unit"],
             },
+            { cacheBucket },
           ),
         }),
       ],
@@ -156,6 +161,12 @@ export class AppPipeline extends Stack {
             "getstuff-cc-publish-project",
             {
               build: ["docker build -t getstuff.cc ."],
+              artifacts: {
+                files: ["./.next", "./next-env.d.ts", "./unimport.d.ts"],
+              },
+            },
+            {
+              artifactBucket,
             },
           ),
         }),
@@ -169,11 +180,14 @@ export class AppPipeline extends Stack {
     scope: Construct,
     name: string,
     commands: Command,
-    cacheBucket?: Bucket,
+    param?: { cacheBucket?: Bucket; artifactBucket?: Bucket },
   ): Project {
     return new Project(scope, name, {
       projectName: name,
-      cache: cacheBucket ? Cache.bucket(cacheBucket) : undefined,
+      cache: param?.cacheBucket ? Cache.bucket(param.cacheBucket) : undefined,
+      artifacts: param?.artifactBucket
+        ? Artifacts.s3({ bucket: param.artifactBucket })
+        : undefined,
       environment: {
         buildImage: LinuxBuildImage.STANDARD_7_0,
         computeType: ComputeType.MEDIUM,
