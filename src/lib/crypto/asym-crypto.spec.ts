@@ -5,9 +5,8 @@ import {
   genKeyPair,
 } from "./asym-crypto";
 
-const { privateKey, publicKey } = genKeyPair();
-
 test("test", () => {
+  const { privateKey, publicKey } = genKeyPair();
   const data = Buffer.from("data");
   const encrypted = encryptAsymmetric(data, publicKey);
   const decrypted = decryptAsymmetric(encrypted, privateKey);

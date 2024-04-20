@@ -1,9 +1,8 @@
 import { expect, test } from "@jest/globals";
 import { genAsymSignKeyPair, sign, verify } from "./asym-sign";
 
-const { privateKey, publicKey } = genAsymSignKeyPair();
-
 test("Signing", async () => {
+  const { privateKey, publicKey } = genAsymSignKeyPair();
   const data = "data";
   const encrypted = await sign(Buffer.from(data), privateKey);
   const decrypted = verify(encrypted, publicKey);

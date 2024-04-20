@@ -6,9 +6,11 @@ import {
 import { RemovalPolicy, type Stack } from "aws-cdk-lib";
 import {
   AttributeType,
+  Billing,
   BillingMode,
   ProjectionType,
   Table,
+  TableV2,
 } from "aws-cdk-lib/aws-dynamodb";
 import { Construct } from "constructs";
 
@@ -19,7 +21,7 @@ interface TableOptions {
  * Exports a Output named STUFF-TABLE
  */
 export class ThingsTable extends Construct {
-  public readonly table: Table;
+  public readonly table: TableV2;
   constructor(
     scope: Stack,
     id: string,
@@ -27,7 +29,7 @@ export class ThingsTable extends Construct {
     { stage }: TableOptions,
   ) {
     super(scope, id);
-    this.table = new Table(this, "STUFF-TABLE", {
+    this.table = new TableV2(this, "STUFF-TABLE", {
       tableName: getDataTable(stage),
       partitionKey: {
         name: "pk",
@@ -37,7 +39,7 @@ export class ThingsTable extends Construct {
         name: "sk",
         type: AttributeType.STRING,
       },
-      billingMode: BillingMode.PAY_PER_REQUEST,
+      billing: Billing.onDemand(),
       removalPolicy: RemovalPolicy.DESTROY,
     });
 

@@ -7,12 +7,12 @@ import {
 } from "aws-cdk-lib";
 import {
   Artifacts,
+  type BuildEnvironmentVariable,
+  BuildEnvironmentVariableType,
   BuildSpec,
   Cache,
   ComputeType,
   LinuxArmBuildImage,
-  LinuxArmLambdaBuildImage,
-  LinuxBuildImage,
   Project,
 } from "aws-cdk-lib/aws-codebuild";
 import {
@@ -26,12 +26,23 @@ import {
   CodeBuildActionType,
   GitHubSourceAction,
 } from "aws-cdk-lib/aws-codepipeline-actions";
-import { type IRepository, Repository } from "aws-cdk-lib/aws-ecr";
-import { Effect, PolicyStatement } from "aws-cdk-lib/aws-iam";
+import {
+  type IRepository,
+  Repository,
+  TagMutability,
+} from "aws-cdk-lib/aws-ecr";
+import {
+  Effect,
+  type IRole,
+  PolicyStatement,
+  Role,
+  ServicePrincipal,
+} from "aws-cdk-lib/aws-iam";
 import { Bucket } from "aws-cdk-lib/aws-s3";
 import { StringParameter } from "aws-cdk-lib/aws-ssm";
 import type { Construct } from "constructs";
-
+import { packageManager } from "../../package.json";
+import { z } from "zod";
 interface AccountStackProps extends StackProps {
   env: {
     account: string;
@@ -39,6 +50,8 @@ interface AccountStackProps extends StackProps {
   };
   stage: string;
 }
+const pnpmVersion = z.string().parse(packageManager.split("@")[1]);
+
 export class AppPipeline extends Stack {
   constructor(scope: App, id: string, { stage, ...props }: AccountStackProps) {
     super(scope, id, { ...props, crossRegionReferences: true });
@@ -55,59 +68,13 @@ export class AppPipeline extends Stack {
 
     const repoStore = new Artifact("raw-source");
     const buildStore = new Artifact("buildstore");
-    const depsStore = new Artifact("depsstore");
-    const repository = new Repository(this, "getstuff-cc-app");
+    const repository = new Repository(this, "getstuff-cc-app", {
+      imageTagMutability: TagMutability.IMMUTABLE,
+    });
 
     pipeline.addStage({
       stageName: "Source",
       actions: [this.createSourceAction({ output: repoStore })],
-    });
-
-    pipeline.addStage({
-      stageName: "UpdatePipeline",
-      actions: [
-        new CodeBuildAction({
-          actionName: "UpdatePipeline",
-          input: repoStore,
-          outputs: [depsStore],
-          project: this.createPipelineProject(
-            this,
-            "update-pipeline",
-            {
-              install: [
-                "npm install -g pnpm@9.0.2",
-                "pnpm config set store-dir ./.pnpm-store",
-                "pnpm install --frozen-lockfile",
-              ],
-              build: ["pnpm cdk:synth:pipeline", "pnpm cdk:mutate-pipeline"],
-              artifacts: {
-                files: ["./.pnpm-store/**/*", "./node_modules/.modules.yaml"],
-              },
-              cache: {
-                paths: ["./.pnpm-store/**/*", "./node_modules/.modules.yaml"],
-              },
-            },
-            {
-              artifactBucket,
-              cacheBucket,
-            },
-          ),
-        }),
-        //   this.(this, "update-pipeline", {
-        //   install: [
-        //     "npm install -g pnpm@9.0.2",
-        //     "pnpm config set store-dir ./.pnpm-store",
-        //     "pnpm install --frozen-lockfile",
-        //   ],
-        //   build: ["SKIP_ENV_VALIDATION='1' pnpm build:app"],
-        //   cache: {
-        //     paths: ["./.pnpm-store/**/*", "./node_modules/.modules.yaml"],
-        //   },
-        //   artifacts: {
-        //     files: ["./.next/**/*", "./next-env.d.ts", "./unimport.d.ts"],
-        //   },
-        // { cacheBucket: buckets.cache, artifactBucket: buckets.artifact },
-      ],
     });
 
     pipeline.addStage({
@@ -121,7 +88,6 @@ export class AppPipeline extends Stack {
         this.createBuildAction({
           stage,
           input: repoStore,
-          extraInputs: [depsStore],
           output: buildStore,
           buckets: {
             artifact: artifactBucket,
@@ -130,7 +96,6 @@ export class AppPipeline extends Stack {
         }),
         this.createTestAction({
           input: repoStore,
-          extraInputs: [depsStore],
           buckets: {
             cache: cacheBucket,
           },
@@ -144,8 +109,6 @@ export class AppPipeline extends Stack {
         this.createBuildImageAction({
           input: repoStore,
           buildInput: buildStore,
-          accountId: props.env.account,
-          region: props.env.region,
           buckets: {
             artifact: artifactBucket,
           },
@@ -163,6 +126,7 @@ export class AppPipeline extends Stack {
       oauthToken: SecretValue.secretsManager("/stuff/pipeline/github-token"),
       owner: "vincent-thomas",
       runOrder: 1,
+
       repo: "getstuff.cc",
       output,
       branch: "main",
@@ -189,7 +153,7 @@ export class AppPipeline extends Stack {
     input: Artifact;
     extraInputs?: Artifact[];
     output: Artifact;
-    buckets: { cache: Bucket; artifact: Bucket };
+    buckets: { artifact: Bucket; cache: Bucket };
   }) {
     const redisParam = StringParameter.fromSecureStringParameterAttributes(
       this,
@@ -214,20 +178,19 @@ export class AppPipeline extends Stack {
       "getstuff-cc-build-project",
       {
         install: [
-          'mv "$(echo $CODEBUILD_SRC_DIR_depsstore)"/.pnpm-store ./.pnpm-store',
-          "npm install -g pnpm@9.0.2",
+          `npm install -g pnpm@${pnpmVersion}`,
           "pnpm config set store-dir ./.pnpm-store",
           "pnpm install --frozen-lockfile",
         ],
         build: ["SKIP_ENV_VALIDATION='1' pnpm build:app"],
-        cache: {
-          paths: ["./.pnpm-store/**/*", "./node_modules/.modules.yaml"],
-        },
         artifacts: {
           files: ["./.next/**/*", "./next-env.d.ts", "./unimport.d.ts"],
         },
+        cache: {
+          paths: ["./.pnpm-store/**/*", "./node_modules/.modules.yaml"],
+        },
       },
-      { cacheBucket: buckets.cache, artifactBucket: buckets.artifact },
+      { artifactBucket: buckets.artifact, cacheBucket: buckets.cache },
     );
 
     project.applyRemovalPolicy(RemovalPolicy.DESTROY);
@@ -254,30 +217,32 @@ export class AppPipeline extends Stack {
 
   private createTestAction({
     input,
-    extraInputs,
     buckets,
   }: {
     input: Artifact;
-    extraInputs: Artifact[];
     buckets: { cache: Bucket };
   }) {
     return new CodeBuildAction({
       type: CodeBuildActionType.TEST,
       actionName: "Test",
       input,
-      extraInputs,
       project: this.createPipelineProject(
         this,
         "getstuff-cc-test-project",
         {
           install: [
-            'mv "$(echo $CODEBUILD_SRC_DIR_depsstore)"/.pnpm-store ./.pnpm-store',
-            "npm install -g pnpm@9.0.2",
+            `npm install -g pnpm@${pnpmVersion}`,
             "pnpm config set store-dir ./.pnpm-store",
             "pnpm install",
           ],
           cache: {
-            paths: ["./.pnpm-store/**/*", "./node_modules/.modules.yaml"],
+            paths: ["./.pnpm-store/**/*"],
+          },
+          reports: {
+            tests: {
+              files: ["reports/*.xml"],
+              "file-format": "JUNITXML",
+            },
           },
           build: ["pnpm test:unit"],
         },
@@ -291,48 +256,64 @@ export class AppPipeline extends Stack {
     buildInput,
     repository,
     buckets,
-    region,
-    accountId,
   }: {
     input: Artifact;
     buildInput: Artifact;
-    accountId: string;
     repository: IRepository;
-    region: string;
     buckets: {
       artifact: Bucket;
     };
   }) {
+    const role = new Role(this, "build-image-policy", {
+      assumedBy: new ServicePrincipal("codebuild.amazonaws.com"),
+    });
+    repository.grant(role, "ecr:GetAuthorizationToken");
+    repository.grantPush(role);
+    const project = this.createPipelineProject(
+      this,
+      "getstuff-cc-publish-project",
+      {
+        role,
+        envVariables: {
+          ECR_REPO: {
+            type: BuildEnvironmentVariableType.PLAINTEXT,
+            value: repository.repositoryUri,
+          },
+          IMAGE_NAME: {
+            type: BuildEnvironmentVariableType.PLAINTEXT,
+            value: "getstuff.cc",
+          },
+          AWS_ACCOUNT_ID: {
+            type: BuildEnvironmentVariableType.PLAINTEXT,
+            value: Stack.of(this).account,
+          },
+          REGION: {
+            type: BuildEnvironmentVariableType.PLAINTEXT,
+            value: Stack.of(this).region,
+          },
+        },
+        preBuild: [
+          'mv "$(echo $CODEBUILD_SRC_DIR_buildstore)"/** .',
+          'mv "$(echo $CODEBUILD_SRC_DIR_buildstore)"/.next ./.next',
+          "aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $(echo $AWS_ACCOUNT_ID).dkr.ecr.$(echo $REGION).amazonaws.com",
+          "export IMAGE_TAG=build-$(echo $CODEBUILD_BUILD_ID | cut -d ':' -f 2)",
+        ],
+        build: [
+          "docker build -t $IMAGE_NAME:$IMAGE_TAG .",
+          "docker tag $IMAGE_NAME:$IMAGE_TAG $ECR_REPO:$IMAGE_TAG",
+          "docker push $ECR_REPO:$IMAGE_TAG",
+        ],
+      },
+      {
+        artifactBucket: buckets.artifact,
+      },
+    );
+
     return new CodeBuildAction({
       actionName: "Build-image",
       input,
       extraInputs: [buildInput],
-      project: this.createPipelineProject(
-        this,
-        "getstuff-cc-publish-project",
-        {
-          envVariables: {
-            ECR_REPO: repository.repositoryName,
-            IMAGE_NAME: "getstuff.cc",
-            AWS_ACCOUNT_ID: accountId,
-            REGION: region,
-          },
-          preBuild: [
-            'mv "$(echo $CODEBUILD_SRC_DIR_buildstore)"/** .',
-            'mv "$(echo $CODEBUILD_SRC_DIR_buildstore)"/.next ./.next',
-            "aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $(echo $AWS_ACCOUNT_ID).dkr.ecr.$(echo $REGION).amazonaws.com",
-            "export IMAGE_TAG=build-$(echo $CODEBUILD_BUILD_ID | cut -d ':' -f 2)",
-          ],
-          build: [
-            "docker build -t $IMAGE_NAME:$IMAGE_TAG .",
-            "docker tag $IMAGE_NAME:$IMAGE_TAG $ECR_REPO:$IMAGE_TAG",
-            "docker push $ECR_REPO:$IMAGE_TAG",
-          ],
-        },
-        {
-          artifactBucket: buckets.artifact,
-        },
-      ),
+      project,
     });
   }
 
@@ -351,12 +332,11 @@ export class AppPipeline extends Stack {
       environment: {
         buildImage: LinuxArmBuildImage.AMAZON_LINUX_2_STANDARD_3_0,
         computeType: ComputeType.SMALL,
+        environmentVariables: commands.envVariables,
       },
+      role: commands.role,
       buildSpec: BuildSpec.fromObject({
         version: "0.2",
-        env: {
-          variables: commands.envVariables,
-        },
         phases: {
           pre_build: {
             commands: commands.preBuild,
@@ -372,6 +352,7 @@ export class AppPipeline extends Stack {
             commands: commands.postBuild,
           },
         },
+        reports: commands?.reports,
         cache: commands?.cache,
         artifacts: commands?.artifacts,
       }),
@@ -383,12 +364,14 @@ interface Command {
   install?: string[];
   preBuild?: string[];
   build?: string[];
+  role?: IRole;
+  reports?: Record<string, { "file-format": string; files: string[] }>;
   postBuild?: string[];
   cache?: {
     paths: string[];
   };
   envVariables?: {
-    [key: string]: string;
+    [key: string]: BuildEnvironmentVariable;
   };
   artifacts?: {
     files: string[];
