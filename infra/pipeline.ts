@@ -24,7 +24,7 @@ import {
   CodeBuildActionType,
   GitHubSourceAction,
 } from "aws-cdk-lib/aws-codepipeline-actions";
-import { Repository } from "aws-cdk-lib/aws-ecr";
+import { type IRepository, Repository } from "aws-cdk-lib/aws-ecr";
 import { Effect, PolicyStatement } from "aws-cdk-lib/aws-iam";
 import { Bucket } from "aws-cdk-lib/aws-s3";
 import { StringParameter } from "aws-cdk-lib/aws-ssm";
@@ -40,10 +40,10 @@ interface AccountStackProps extends StackProps {
 export class AppPipeline extends Stack {
   constructor(scope: App, id: string, { stage, ...props }: AccountStackProps) {
     super(scope, id, { ...props, crossRegionReferences: true });
+    const artifactBucket = new Bucket(this, "artifact-bucket");
     const cacheBucket = new Bucket(this, "cache-bucket", {
       bucketName: "getstuff.cc-pipeline-cache-bucket",
     });
-    const artifactBucket = new Bucket(this, "artifact-bucket");
     const pipeline = new Pipeline(this, "stuff-pipeline", {
       pipelineName: "pipeline-getstuff-cc",
       pipelineType: PipelineType.V2,
@@ -52,6 +52,8 @@ export class AppPipeline extends Stack {
     });
 
     const repoStore = new Artifact("raw-source");
+    const buildStore = new Artifact("buildstore");
+    const repository = new Repository(this, "getstuff-cc-app");
 
     pipeline.addStage({
       stageName: "Source",
@@ -62,8 +64,6 @@ export class AppPipeline extends Stack {
       stageName: "Analysis",
       actions: [this.createLintingAction({ input: repoStore })],
     });
-
-    const buildStore = new Artifact("buildstore");
 
     pipeline.addStage({
       stageName: "Build",
@@ -86,40 +86,17 @@ export class AppPipeline extends Stack {
       ],
     });
 
-    const repository = new Repository(this, "getstuff-cc-app");
-
     pipeline.addStage({
       stageName: "Release",
       actions: [
-        new CodeBuildAction({
-          actionName: "Build-image",
+        this.createBuildImageAction({
           input: repoStore,
-          extraInputs: [buildStore],
-          project: this.createPipelineProject(
-            this,
-            "getstuff-cc-publish-project",
-            {
-              envVariables: {
-                ECR_REPO: repository.repositoryName,
-                IMAGE_NAME: "getstuff.cc",
-                AWS_ACCOUNT_ID: props.env.account,
-              },
-              preBuild: [
-                'mv "$(echo $CODEBUILD_SRC_DIR_buildstore)"/** .',
-                'mv "$(echo $CODEBUILD_SRC_DIR_buildstore)"/.next ./.next',
-              ],
-              build: [
-                "export IMAGE_TAG=build-$(echo $CODEBUILD_BUILD_ID | cut -d ':' -f 2)",
-                "aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com",
-                "docker build -t $IMAGE_NAME:$IMAGE_TAG .",
-                "docker tag $IMAGE_NAME:$IMAGE_TAG $ECR_REPO:$IMAGE_TAG",
-                "docker push $ECR_REPO:$IMAGE_TAG",
-              ],
-            },
-            {
-              artifactBucket,
-            },
-          ),
+          buildInput: buildStore,
+          accountId: props.env.account,
+          buckets: {
+            artifact: artifactBucket,
+          },
+          repository,
         }),
       ],
     });
@@ -244,6 +221,53 @@ export class AppPipeline extends Stack {
           build: ["pnpm test:unit"],
         },
         { cacheBucket: buckets.cache },
+      ),
+    });
+  }
+
+  private createBuildImageAction({
+    input,
+    buildInput,
+    repository,
+    buckets,
+    accountId,
+  }: {
+    input: Artifact;
+    buildInput: Artifact;
+    accountId: string;
+    repository: IRepository;
+    buckets: {
+      artifact: Bucket;
+    };
+  }) {
+    return new CodeBuildAction({
+      actionName: "Build-image",
+      input,
+      extraInputs: [buildInput],
+      project: this.createPipelineProject(
+        this,
+        "getstuff-cc-publish-project",
+        {
+          envVariables: {
+            ECR_REPO: repository.repositoryName,
+            IMAGE_NAME: "getstuff.cc",
+            AWS_ACCOUNT_ID: accountId,
+          },
+          preBuild: [
+            'mv "$(echo $CODEBUILD_SRC_DIR_buildstore)"/** .',
+            'mv "$(echo $CODEBUILD_SRC_DIR_buildstore)"/.next ./.next',
+            "$(aws ecr get-login --region $AWS_DEFAULT_REGION --no-include-email)",
+            "export IMAGE_TAG=build-$(echo $CODEBUILD_BUILD_ID | cut -d ':' -f 2)",
+          ],
+          build: [
+            "docker build -t $IMAGE_NAME:$IMAGE_TAG .",
+            "docker tag $IMAGE_NAME:$IMAGE_TAG $ECR_REPO:$IMAGE_TAG",
+            "docker push $ECR_REPO:$IMAGE_TAG",
+          ],
+        },
+        {
+          artifactBucket: buckets.artifact,
+        },
       ),
     });
   }

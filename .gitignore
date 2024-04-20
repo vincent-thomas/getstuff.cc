@@ -20,14 +20,13 @@ cdk.out
 
 # vercel
 .vercel
-**/dist 
+dist 
 # typescript
 *.tsbuildinfo
 .pnpm-store
 
 # Contentlayer
 .contentlayer
-**/dist
 *storybook.log
 unimport.d.ts
 logs
