@@ -10,6 +10,8 @@ import {
   BuildSpec,
   Cache,
   ComputeType,
+  LinuxArmBuildImage,
+  LinuxArmLambdaBuildImage,
   LinuxBuildImage,
   Project,
 } from "aws-cdk-lib/aws-codebuild";
@@ -53,11 +55,59 @@ export class AppPipeline extends Stack {
 
     const repoStore = new Artifact("raw-source");
     const buildStore = new Artifact("buildstore");
+    const depsStore = new Artifact("depsstore");
     const repository = new Repository(this, "getstuff-cc-app");
 
     pipeline.addStage({
       stageName: "Source",
       actions: [this.createSourceAction({ output: repoStore })],
+    });
+
+    pipeline.addStage({
+      stageName: "UpdatePipeline",
+      actions: [
+        new CodeBuildAction({
+          actionName: "UpdatePipeline",
+          input: repoStore,
+          outputs: [depsStore],
+          project: this.createPipelineProject(
+            this,
+            "update-pipeline",
+            {
+              install: [
+                "npm install -g pnpm@9.0.2",
+                "pnpm config set store-dir ./.pnpm-store",
+                "pnpm install --frozen-lockfile",
+              ],
+              build: ["pnpm cdk:synth:pipeline", "pnpm cdk:mutate-pipeline"],
+              artifacts: {
+                files: ["./.pnpm-store/**/*", "./node_modules/.modules.yaml"],
+              },
+              cache: {
+                paths: ["./.pnpm-store/**/*", "./node_modules/.modules.yaml"],
+              },
+            },
+            {
+              artifactBucket,
+              cacheBucket,
+            },
+          ),
+        }),
+        //   this.(this, "update-pipeline", {
+        //   install: [
+        //     "npm install -g pnpm@9.0.2",
+        //     "pnpm config set store-dir ./.pnpm-store",
+        //     "pnpm install --frozen-lockfile",
+        //   ],
+        //   build: ["SKIP_ENV_VALIDATION='1' pnpm build:app"],
+        //   cache: {
+        //     paths: ["./.pnpm-store/**/*", "./node_modules/.modules.yaml"],
+        //   },
+        //   artifacts: {
+        //     files: ["./.next/**/*", "./next-env.d.ts", "./unimport.d.ts"],
+        //   },
+        // { cacheBucket: buckets.cache, artifactBucket: buckets.artifact },
+      ],
     });
 
     pipeline.addStage({
@@ -71,6 +121,7 @@ export class AppPipeline extends Stack {
         this.createBuildAction({
           stage,
           input: repoStore,
+          extraInputs: [depsStore],
           output: buildStore,
           buckets: {
             artifact: artifactBucket,
@@ -79,6 +130,7 @@ export class AppPipeline extends Stack {
         }),
         this.createTestAction({
           input: repoStore,
+          extraInputs: [depsStore],
           buckets: {
             cache: cacheBucket,
           },
@@ -93,6 +145,7 @@ export class AppPipeline extends Stack {
           input: repoStore,
           buildInput: buildStore,
           accountId: props.env.account,
+          region: props.env.region,
           buckets: {
             artifact: artifactBucket,
           },
@@ -129,10 +182,12 @@ export class AppPipeline extends Stack {
     stage,
     input,
     output,
+    extraInputs,
     buckets,
   }: {
     stage: string;
     input: Artifact;
+    extraInputs?: Artifact[];
     output: Artifact;
     buckets: { cache: Bucket; artifact: Bucket };
   }) {
@@ -159,6 +214,7 @@ export class AppPipeline extends Stack {
       "getstuff-cc-build-project",
       {
         install: [
+          'mv "$(echo $CODEBUILD_SRC_DIR_depsstore)"/.pnpm-store ./.pnpm-store',
           "npm install -g pnpm@9.0.2",
           "pnpm config set store-dir ./.pnpm-store",
           "pnpm install --frozen-lockfile",
@@ -190,6 +246,7 @@ export class AppPipeline extends Stack {
       actionName: "Compile",
       type: CodeBuildActionType.BUILD,
       input,
+      extraInputs,
       project,
       outputs: [output],
     });
@@ -197,20 +254,24 @@ export class AppPipeline extends Stack {
 
   private createTestAction({
     input,
+    extraInputs,
     buckets,
   }: {
     input: Artifact;
+    extraInputs: Artifact[];
     buckets: { cache: Bucket };
   }) {
     return new CodeBuildAction({
       type: CodeBuildActionType.TEST,
       actionName: "Test",
       input,
+      extraInputs,
       project: this.createPipelineProject(
         this,
         "getstuff-cc-test-project",
         {
           install: [
+            'mv "$(echo $CODEBUILD_SRC_DIR_depsstore)"/.pnpm-store ./.pnpm-store',
             "npm install -g pnpm@9.0.2",
             "pnpm config set store-dir ./.pnpm-store",
             "pnpm install",
@@ -230,12 +291,14 @@ export class AppPipeline extends Stack {
     buildInput,
     repository,
     buckets,
+    region,
     accountId,
   }: {
     input: Artifact;
     buildInput: Artifact;
     accountId: string;
     repository: IRepository;
+    region: string;
     buckets: {
       artifact: Bucket;
     };
@@ -252,11 +315,12 @@ export class AppPipeline extends Stack {
             ECR_REPO: repository.repositoryName,
             IMAGE_NAME: "getstuff.cc",
             AWS_ACCOUNT_ID: accountId,
+            REGION: region,
           },
           preBuild: [
             'mv "$(echo $CODEBUILD_SRC_DIR_buildstore)"/** .',
             'mv "$(echo $CODEBUILD_SRC_DIR_buildstore)"/.next ./.next',
-            "$(aws ecr get-login --region $AWS_DEFAULT_REGION --no-include-email)",
+            "aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $(echo $AWS_ACCOUNT_ID).dkr.ecr.$(echo $REGION).amazonaws.com",
             "export IMAGE_TAG=build-$(echo $CODEBUILD_BUILD_ID | cut -d ':' -f 2)",
           ],
           build: [
@@ -285,8 +349,8 @@ export class AppPipeline extends Stack {
         ? Artifacts.s3({ bucket: param.artifactBucket })
         : undefined,
       environment: {
-        buildImage: LinuxBuildImage.STANDARD_7_0,
-        computeType: ComputeType.MEDIUM,
+        buildImage: LinuxArmBuildImage.AMAZON_LINUX_2_STANDARD_3_0,
+        computeType: ComputeType.SMALL,
       },
       buildSpec: BuildSpec.fromObject({
         version: "0.2",
