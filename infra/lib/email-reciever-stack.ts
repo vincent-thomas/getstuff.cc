@@ -9,7 +9,7 @@ import { Topic } from "aws-cdk-lib/aws-sns";
 import { SqsSubscription } from "aws-cdk-lib/aws-sns-subscriptions";
 import { Queue } from "aws-cdk-lib/aws-sqs";
 import type { z } from "zod";
-import type { envInterface } from "../packages/mail-reciever/src/env";
+import type { envInterface } from "../../packages/mail-reciever/src/env";
 
 interface MailApiStackProps extends StackProps {
   emailDomain: string;

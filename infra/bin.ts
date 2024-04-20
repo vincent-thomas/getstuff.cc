@@ -6,7 +6,7 @@ import "source-map-support/register";
 // import { SESIdentityStack } from "./ses-identity-stack";
 // import { DataApiInfra } from "./stack";
 import { z } from "zod";
-import { AppPipeline } from "./pipeline";
+import { AppPipeline } from "./lib/pipeline";
 const app = new cdk.App();
 
 const env = {
