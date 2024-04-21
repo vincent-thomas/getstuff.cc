@@ -1,7 +1,6 @@
 import { quickAliases } from "backend/db/schema";
 import { protectedProc, router } from "backend/trpc";
 import { and, eq } from "drizzle-orm";
-import { revalidatePath } from "next/cache";
 import { generate } from "random-words";
 import { z } from "zod";
 

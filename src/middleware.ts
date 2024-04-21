@@ -1,4 +1,3 @@
-import { getUserFromHeader } from "backend/utils/getUserFromHeaders";
 import type { NextRequest } from "next/server";
 import { authMiddleware } from "./middlewares/auth";
 import { verifyJwt } from "backend/utils/jwt";

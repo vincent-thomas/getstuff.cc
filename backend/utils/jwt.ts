@@ -1,13 +1,13 @@
 import { SignJWT, jwtVerify as joseVerifyJwt } from "jose";
 import { z } from "zod";
-import { customerInterface } from "../interfaces/customer";
+import type { customerInterface } from "../interfaces/customer";
 const getJwtKey = () => {
   return env.JWT_SECRET;
 };
 
 export const jwtPayloadValidator = z.object({
   customerId: z.string(),
-  customerStatus: customerInterface.shape.status,
+  customerStatus: z.enum(["inactive", "active", "canceled"]),
   userId: z.string(),
 });
 
@@ -28,9 +28,10 @@ export const createJwt = (
     .sign(new TextEncoder().encode(getJwtKey()));
 };
 
-export const verifyJwt = async (jwt: string) =>
-  jwtPayloadValidator.parse(
-    await joseVerifyJwt(jwt, new TextEncoder().encode(getJwtKey())).then(
-      v => v.payload,
-    ),
-  );
+export const verifyJwt = async (jwt: string) => {
+  const token = await joseVerifyJwt(
+    jwt,
+    new TextEncoder().encode(getJwtKey()),
+  ).then(v => v.payload);
+  return jwtPayloadValidator.parse(token);
+};

@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     "A blog by Stuff developers spreading messages of how security and privacy is important on the internet.",
 };
 
-export default async function BlogPage() {
+export default function BlogPage() {
   const posts = allPosts
     .filter(post => post.published)
     .sort((a, b) => {
