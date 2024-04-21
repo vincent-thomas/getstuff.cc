@@ -2,11 +2,6 @@
 
 import { formatDate } from "date-fns";
 import { border } from "src/components/recipies";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "packages/ui/components/tooltip/tooltip";
 import { toast } from "sonner";
 import { EllipsisVerticalIcon } from "lucide-react";
 import {
@@ -16,26 +11,7 @@ import {
   MenuItem,
 } from "packages/ui/components";
 import { api } from "@stuff/api-client/react";
-
-const CopyableAlias = ({ alias }: { alias: string }) => {
-  return (
-    <Tooltip>
-      <TooltipTrigger>
-        <button
-          type="button"
-          className={cn(css({ color: "text1" }))}
-          onClick={() => {
-            navigator.clipboard.writeText(`${alias}@getstuff.cc`);
-            toast.info("Copied to clipboard");
-          }}
-        >
-          {alias}@getstuff.cc
-        </button>
-      </TooltipTrigger>
-      <TooltipContent>Copy alias</TooltipContent>
-    </Tooltip>
-  );
-};
+import { Link } from "src/components/structure/link";
 
 export const Alias = ({
   label,
@@ -48,18 +24,27 @@ export const Alias = ({
   return (
     <div
       className={cn(
-        stack({ gap: "md" }),
-        css({ p: "large", bg: { hover: "bgHover" } }),
+        stack({ gap: "md", align: "center" }),
+        css({ bg: { hover: "bgHover" } }),
         border({ rounded: "radius" }),
       )}
-      key={mailAlias}
     >
-      <div>
+      <Link
+        href={`/a/${mailAlias}`}
+        className={cn(
+          border({ rounded: "radius" }),
+          css({ p: "large" }),
+          stack({ direction: "col", align: "start" }),
+        )}
+        key={mailAlias}
+      >
         <p className={cn(css({ color: "text2", fontSize: "medium" }))}>
           {label}
         </p>
-        <CopyableAlias alias={mailAlias} />
-      </div>
+        <p className={cn(css({ color: "text1", fontSize: "small" }))}>
+          {mailAlias}@getstuff.cc
+        </p>
+      </Link>
       <p
         className={cn(
           css({ color: "text1", marginLeft: "auto" }),
@@ -69,10 +54,18 @@ export const Alias = ({
         {formatDate(created_at, "MMM dd, yyyy")}
       </p>
       <Menu>
-        <MenuButton>
+        <MenuButton className={cn(css({ paddingRight: "large" }))}>
           <EllipsisVerticalIcon color={palette.text2} />
         </MenuButton>
         <MenuContent>
+          <MenuItem
+            onClick={() => {
+              navigator.clipboard.writeText(`${mailAlias}@getstuff.cc`);
+              toast.info("Copied to clipboard");
+            }}
+          >
+            Copy Alias
+          </MenuItem>
           <MenuItem
             variant="danger"
             onClick={async () => {

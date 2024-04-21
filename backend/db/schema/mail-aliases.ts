@@ -6,7 +6,7 @@ export const quickAliases = pgTable("quick_aliases", {
     .notNull()
     .references(() => users.userId),
   mailAlias: text("mail_alias").primaryKey().notNull().unique(),
-  enabled: boolean("enabled"),
+  enabled: boolean("enabled").notNull(),
   label: text("label").notNull(),
   created_at: timestamp("created_at").notNull(),
 });

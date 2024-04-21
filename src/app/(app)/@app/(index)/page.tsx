@@ -3,10 +3,15 @@
 import { setupPage } from "src/utils/setupPage";
 import { api } from "@stuff/api-client/react";
 import { Alias } from "../components/alias";
+import { useAtomValue } from "jotai";
+import { searchQuery } from "../components/search-field";
 
 export default setupPage({
   Component() {
-    const { data: aliases } = api.mailRelay.listAliases.useQuery();
+    const query = useAtomValue(searchQuery);
+    const { data: aliases } = api.mailRelay.listAliases.useQuery({
+      query: query === "" ? undefined : query,
+    });
 
     if (aliases === undefined) {
       return <></>;

@@ -20,7 +20,7 @@ const Page = () => {
           Welcome to Stuff!
         </h1>
         <Link
-          href="/auth/identify"
+          href="/identify"
           className={cn(
             "text-sm font-medium leading-none",
             button({ variant: "link" }),

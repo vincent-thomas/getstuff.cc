@@ -11,8 +11,11 @@ import {
 import { Form } from "packages/ui/components";
 import { z } from "zod";
 import { toast } from "sonner";
-import { Spinner } from "../../../auth/icons/spinner";
+import { Spinner } from "../../../(auth)/icons/spinner";
 import { useState } from "react";
+import { P } from "@stuff/typography";
+import { useRouter } from "next/navigation";
+
 export const CreateAliasButton = () => {
   const test = api.mailRelay.createAlias.useMutation();
   const utils = api.useUtils();
@@ -26,13 +29,14 @@ export const CreateAliasButton = () => {
       return;
     }
   });
-
+  const router = useRouter();
   form.useSubmit(async ({ values }) => {
-    await test.mutateAsync({
+    const aliasId = await test.mutateAsync({
       label: values.label,
     });
     await utils.mailRelay.listAliases.invalidate();
     setOpen(false);
+    router.push(`/a/${aliasId}`);
     toast.success("Alias created");
   });
 
@@ -51,6 +55,13 @@ export const CreateAliasButton = () => {
         className={cn(css({ p: "medium" }))}
         mainTitle="Create Alias"
       >
+        <P
+          style={{ maxWidth: "45ch" }}
+          className={cn(css({ marginTop: "small" }))}
+        >
+          A Label can be anything from a website to a short descriptive meaning
+          to a specific alias.
+        </P>
         <Form.Root
           store={form}
           className={cn(
