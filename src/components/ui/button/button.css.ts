@@ -89,6 +89,7 @@ export const button = recipe({
       ],
     },
     size: {
+      xs: { padding: spacing.xsmall },
       sm: { padding: spacing.small },
       md: { padding: spacing.medium },
       lg: { padding: spacing.large },

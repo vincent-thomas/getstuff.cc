@@ -14,7 +14,7 @@ const decideLocation = (pathname: string) => {
   if (pathname.startsWith("/mail")) {
     return "IN_APP" as const;
   }
-  if (pathname.startsWith("/auth")) {
+  if (pathname.startsWith("/identify") || pathname.startsWith("/init")) {
     return "IN_AUTH" as const;
   }
 

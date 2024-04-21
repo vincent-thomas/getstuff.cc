@@ -9,10 +9,10 @@ export const authMiddleware = (
   session: z.infer<typeof jwtPayloadValidator> | null,
 ) => {
   if (location === "IN_AUTH" && session !== null) {
-    return NextResponse.redirect(`${env.APP_URL}/app`);
+    return NextResponse.redirect(`${env.APP_URL}`);
   }
   if (location === "IN_APP" && session === null) {
-    return NextResponse.redirect(`${env.APP_URL}/auth/identify`);
+    return NextResponse.redirect(`${env.APP_URL}/identify`);
   }
 
   return null;

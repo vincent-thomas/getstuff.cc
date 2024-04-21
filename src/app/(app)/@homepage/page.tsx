@@ -17,7 +17,7 @@ import {
   extensions,
   folders,
   imageRotate,
-} from "../../(public)/page.css";
+} from "./page.css";
 import Layout from "../../(public)/layout";
 
 import Image from "next/image";

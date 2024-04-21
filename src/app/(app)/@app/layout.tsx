@@ -9,14 +9,14 @@ import { Profile } from "./components/profile-image";
 export const getUser = async () => {
   const jwt = cookies().get("token")?.value;
   if (!jwt) {
-    redirect("/auth/identify");
+    redirect("/identify");
   }
 
   try {
     const session = await verifyJwt(jwt);
     return (await getUserE(session.userId))!;
   } catch {
-    redirect("/auth/identify");
+    redirect("/identify");
   }
 };
 
@@ -29,7 +29,13 @@ export default setupLayout({
           className={cn(
             rootStyle,
             stack({ direction: "col", gap: "xl" }),
-            css({ width: "full", mX: "auto", pY: "3xlarge", pX: "large" }),
+            css({
+              width: "full",
+              mX: "auto",
+              pY: "3xlarge",
+              pX: "large",
+              maxHeight: "screen",
+            }),
           )}
         >
           <div
@@ -51,20 +57,6 @@ export default setupLayout({
             </h1>
             <Profile url={user.profileImageUrl} />
           </div>
-          {/* <div className={cn(stack({ justify: "between", align: "end" }))}>
-            <h2
-              className={cn(
-                css({
-                  color: "text1",
-                  fontSize: "medium",
-                  fontWeight: "semibold",
-                }),
-              )}
-            >
-              Mail aliases:
-            </h2>
-            <CreateAliasButton />
-          </div> */}
           {children}
         </div>
       </div>

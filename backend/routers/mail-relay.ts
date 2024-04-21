@@ -1,42 +1,40 @@
 import { quickAliases } from "backend/db/schema";
 import { protectedProc, router } from "backend/trpc";
-import { and, eq } from "drizzle-orm";
+import { and, eq, ilike, or } from "drizzle-orm";
 import { generate } from "random-words";
 import { z } from "zod";
 
 export const mailRelayRouter = router({
-  enabled: protectedProc.query(() => {
-    // TODO!
-    return false;
-    // const command = new GetCommand({
-    //   TableName: getDataTable(env.STAGE),
-    //   Key: {
-    //     pk: `extension|${ctx.session.username}`,
-    //     sk: "mail-relay",
-    //   },
-    // });
+  changeAliasStatus: protectedProc
+    .input(z.object({ aliasId: z.string(), enabled: z.boolean() }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db
+        .update(quickAliases)
+        .set({ enabled: input.enabled })
+        .where(
+          and(
+            eq(quickAliases.userId, ctx.session.userId),
+            eq(quickAliases.mailAlias, input.aliasId),
+          ),
+        );
+    }),
+  listAliases: protectedProc
+    .input(z.object({ query: z.string().optional() }))
+    .query(async ({ ctx, input }) => {
+      const aliases = await ctx.db.query.quickAliases.findMany({
+        where: and(
+          eq(quickAliases.userId, ctx.session.userId),
+          input.query !== undefined
+            ? or(
+                ilike(quickAliases.label, `%${input.query}%`),
+                ilike(quickAliases.mailAlias, `%${input.query}%`),
+              )
+            : undefined,
+        ),
+      });
 
-    // const response = await ctx.dyn.send(command).then(v => v.Item);
-
-    // return response !== undefined;
-  }),
-  enable: protectedProc.mutation(() => {
-    // const command = new PutCommand({
-    //   TableName: getDataTable(env.STAGE),
-    //   Item: {
-    //     pk: `extension|${ctx.session.username}`,
-    //     sk: "mail-relay",
-    //   },
-    // });
-    // await ctx.dyn.send(command);
-  }),
-  listAliases: protectedProc.query(async ({ ctx }) => {
-    const aliases = await ctx.db.query.quickAliases.findMany({
-      where: and(eq(quickAliases.userId, ctx.session.userId)),
-    });
-
-    return aliases;
-  }),
+      return aliases;
+    }),
 
   removeAlias: protectedProc
     .input(
@@ -74,5 +72,6 @@ export const mailRelayRouter = router({
         enabled: true,
         created_at: new Date(),
       });
+      return words;
     }),
 });

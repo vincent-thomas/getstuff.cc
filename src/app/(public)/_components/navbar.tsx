@@ -58,7 +58,7 @@ export const Navbar = () => (
       </div>
       <nav className={stack({ direction: "row", gap: "xl", align: "center" })}>
         <Link
-          href="/auth/identify"
+          href="/identify"
           className={cn(
             css({ fontWeight: "semibold" }),
             button({ variant: "link", size: "md", rounded: "medium" }),

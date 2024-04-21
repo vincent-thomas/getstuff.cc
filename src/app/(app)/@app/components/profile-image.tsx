@@ -7,6 +7,7 @@ import {
   MenuButton,
   MenuContent,
   MenuItem,
+  MenuSeparator,
 } from "packages/ui/components";
 import { toast } from "sonner";
 
@@ -18,6 +19,8 @@ export const Profile = ({ url }: { url: string }) => {
         <img src={url} width={50} height={50} alt="user profile" />
       </MenuButton>
       <MenuContent>
+        <MenuItem>Billing</MenuItem>
+        <MenuSeparator />
         <MenuItem
           onClick={async () => {
             await vanillaApi.accounts.logout.mutate();
