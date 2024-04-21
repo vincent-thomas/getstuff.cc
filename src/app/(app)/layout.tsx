@@ -2,7 +2,10 @@ import type { ReactNode } from "react";
 import { cookies } from "next/headers";
 import { verifyJwt } from "backend/utils/jwt";
 
-export default async function RootLayout(props: { homepage: ReactNode; app: ReactNode }) {
+export default async function RootLayout(props: {
+  homepage: ReactNode;
+  app: ReactNode;
+}) {
   const token = cookies().get("token")?.value || "";
   try {
     await verifyJwt(token);
@@ -13,4 +16,3 @@ export default async function RootLayout(props: { homepage: ReactNode; app: Reac
   }
   return props.homepage;
 }
-

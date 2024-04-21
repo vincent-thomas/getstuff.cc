@@ -4,7 +4,7 @@ import { Navbar } from "./_components/navbar";
 import type { ReactNode } from "react";
 import { CookieTeller } from "./_components/cookie-teller";
 
-const Layout = ({children}: {children: ReactNode}) => (
+const Layout = ({ children }: { children: ReactNode }) => (
   <div
     className={cn(
       css({ overflowX: "hidden", minHeight: "screen" }),
