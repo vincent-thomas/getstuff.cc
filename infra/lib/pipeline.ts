@@ -79,7 +79,12 @@ export class AppPipeline extends Stack {
 
     pipeline.addStage({
       stageName: "Analysis",
-      actions: [this.createLintingAction({ input: repoStore })],
+      actions: [
+        this.createLintingAction({
+          input: repoStore,
+          buckets: { cache: cacheBucket },
+        }),
+      ],
     });
 
     pipeline.addStage({
@@ -133,13 +138,31 @@ export class AppPipeline extends Stack {
     });
   }
 
-  private createLintingAction({ input }: { input: Artifact }) {
+  private createLintingAction({
+    input,
+    buckets,
+  }: { input: Artifact; buckets: { cache: Bucket } }) {
     return new CodeBuildAction({
       actionName: "Lint",
       input,
-      project: this.createPipelineProject(this, "getstuff-cc-analysis", {
-        build: ["npx @biomejs/biome ci ."],
-      }),
+      project: this.createPipelineProject(
+        this,
+        "getstuff-cc-analysis",
+        {
+          install: [
+            `npm install -g pnpm@${pnpmVersion}`,
+            "pnpm config set store-dir ./.pnpm-store",
+            "pnpm install --frozen-lockfile",
+          ],
+          build: ["pnpm check:ci"],
+          cache: {
+            paths: ["./.pnpm-store/**/*", "./node_modules/.modules.yaml"],
+          },
+        },
+        {
+          cacheBucket: buckets.cache,
+        },
+      ),
     });
   }
   private createBuildAction({
