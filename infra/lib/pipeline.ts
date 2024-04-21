@@ -190,6 +190,11 @@ export class AppPipeline extends Stack {
       "stuff-plus-pricing",
       `/stuff/api/${stage}/prices/stuff-plus`,
     );
+    const stripeKey = StringParameter.fromStringParameterName(
+      this,
+      "stuff-stripe-key",
+      `/stuff/api/${stage}/stripe-key`,
+    );
     const dbUrl = StringParameter.fromSecureStringParameterAttributes(
       this,
       "stuff-database-url",
@@ -225,6 +230,7 @@ export class AppPipeline extends Stack {
           redisParam.parameterArn,
           stuffPlusPricing.parameterArn,
           dbUrl.parameterArn,
+          stripeKey.parameterArn
         ],
       }),
     );
