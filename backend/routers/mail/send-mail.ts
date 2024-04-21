@@ -5,7 +5,7 @@ import {
   genSymmetricKey,
 } from "@stuff/lib/crypto";
 import { protectedProc, router } from "backend/trpc";
-import { getUser } from "backend/utils/getUser";
+import { getUser } from "backend/utils/user";
 import {
   createMessageView,
   createThread,
@@ -29,83 +29,73 @@ export const sendMailRouter = router({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const user = (await getUser(ctx.session.username))!;
-      const command = new SendEmailCommand({
-        Destination: {
-          BccAddresses: input.bcc,
-          CcAddresses: input.cc,
-          ToAddresses: input.to,
-        },
-        Message: {
-          Body: {
-            Html: {
-              Data: input.content.html,
-            },
-            Text: {
-              Data: input.content.text,
-            },
-          },
-          Subject: {
-            Data: input.subject,
-          },
-        },
-        Source: `${ctx.session.username}@${env.DOMAIN}`,
-      });
-
-      try {
-        const { MessageId: DO_NOT_USE_BEYOND_ONE_LINE_DOWN } =
-          await ctx.ses.send(command);
-        const messageId = `<${DO_NOT_USE_BEYOND_ONE_LINE_DOWN}@${env.AWS_REGION}.amazonses.com>`;
-
-        const threadId = await createThread(input.subject);
-
-        const encryptionKey = genSymmetricKey();
-
-        const htmlContent = encryptSymmetric(
-          Buffer.from(input.content.html),
-          Buffer.from(encryptionKey),
-        );
-
-        const textContent = encryptSymmetric(
-          Buffer.from(input.content.text),
-          Buffer.from(encryptionKey),
-        );
-
-        await uploadMessage(
-          ctx.s3,
-          // ctx.dyn,
-          env.STAGE,
-          z.string().parse(messageId),
-          threadId,
-          {
-            subject: input.subject,
-            to: input.to.map(address => ({ name: "", address })),
-            cc: input.cc.map(address => ({ name: "", address })),
-            content: {
-              html: htmlContent.toString("hex"),
-              text: textContent.toString("hex"),
-            },
-            from: {
-              name: user.name,
-              address: `${ctx.session.username}@${env.DOMAIN}`,
-            },
-          },
-        );
-
-        const encryptedUserKey = encryptAsymmetric(
-          Buffer.from(encryptionKey),
-          user.publicKey,
-        );
-
-        await createMessageView(env.STAGE, {
-          messageId: z.string().parse(messageId),
-          encryptedMessageEncryptionKey: encryptedUserKey,
-        });
-
-        await createThreadView("sent", threadId, ctx.session.username);
-      } catch (e) {
-        console.error(e);
-        throw e;
-      }
+      // const user = (await getUser(ctx.session.userId))!;
+      // const command = new SendEmailCommand({
+      //   Destination: {
+      //     BccAddresses: input.bcc,
+      //     CcAddresses: input.cc,
+      //     ToAddresses: input.to,
+      //   },
+      //   Message: {
+      //     Body: {
+      //       Html: {
+      //         Data: input.content.html,
+      //       },
+      //       Text: {
+      //         Data: input.content.text,
+      //       },
+      //     },
+      //     Subject: {
+      //       Data: input.subject,
+      //     },
+      //   },
+      //   Source: `${ctx.session.userId}@${env.DOMAIN}`,
+      // });
+      // try {
+      //   const { MessageId: DO_NOT_USE_BEYOND_ONE_LINE_DOWN } =
+      //     await ctx.ses.send(command);
+      //   const messageId = `<${DO_NOT_USE_BEYOND_ONE_LINE_DOWN}@${env.AWS_REGION}.amazonses.com>`;
+      //   const threadId = await createThread(input.subject);
+      //   const encryptionKey = genSymmetricKey();
+      //   const htmlContent = encryptSymmetric(
+      //     Buffer.from(input.content.html),
+      //     Buffer.from(encryptionKey),
+      //   );
+      //   const textContent = encryptSymmetric(
+      //     Buffer.from(input.content.text),
+      //     Buffer.from(encryptionKey),
+      //   );
+      //   await uploadMessage(
+      //     ctx.s3,
+      //     // ctx.dyn,
+      //     env.STAGE,
+      //     z.string().parse(messageId),
+      //     threadId,
+      //     {
+      //       subject: input.subject,
+      //       to: input.to.map(address => ({ name: "", address })),
+      //       cc: input.cc.map(address => ({ name: "", address })),
+      //       content: {
+      //         html: htmlContent.toString("hex"),
+      //         text: textContent.toString("hex"),
+      //       },
+      //       from: {
+      //         name: user.name,
+      //         address: `${ctx.session.}@${env.DOMAIN}`,
+      //       },
+      //     },
+      //   );
+      //   const encryptedUserKey = encryptAsymmetric(
+      //     Buffer.from(encryptionKey),
+      //     user.publicKey,
+      //   );
+      //   await createMessageView(env.STAGE, {
+      //     messageId: z.string().parse(messageId),
+      //     encryptedMessageEncryptionKey: encryptedUserKey,
+      //   });
+      //   await createThreadView("sent", threadId, ctx.session.username);
+      // } catch (e) {
+      //   throw e;
+      // }
     }),
 });

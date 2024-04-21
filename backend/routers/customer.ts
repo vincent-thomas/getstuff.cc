@@ -1,23 +1,14 @@
 import { env } from "@/env";
-import { TRPCError } from "@trpc/server";
 import type Stripe from "stripe";
 import { z } from "zod";
 import { getStripe } from "../sdks/stripe";
 import { protectedProc, router } from "../trpc";
-import { getCustomer } from "../utils/getUser";
 import { getStuffPlusPriceId } from "../utils/prices";
 
 export const customerRouter = router({
   checkout: protectedProc
     .output(z.object({ sessionUrl: z.string() }))
     .mutation(async ({ ctx }) => {
-      const customer = await getCustomer(ctx.session.customerId);
-      if (!customer) {
-        throw new TRPCError({
-          code: "FORBIDDEN",
-        });
-      }
-
       const stripe = await getStripe();
 
       const cachedSession = z
@@ -35,7 +26,7 @@ export const customerRouter = router({
 
       const session = await createSession(
         stripe,
-        customer.customerId,
+        ctx.session.customerId,
         now + expires_at,
       );
       await ctx.redis.set(

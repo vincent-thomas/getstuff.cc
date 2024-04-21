@@ -10,9 +10,11 @@ export const env = createEnv({
     DOMAIN: z.string(),
     APP_URL: z.string().url(),
     JWT_SECRET: z.string().length(64),
+    DATABASE_URL: z.string().url(),
   },
   client: {},
   runtimeEnv: {
+    DATABASE_URL: process.env.DATABASE_URL,
     NODE_ENV: process.env.NODE_ENV,
     AWS_REGION: process.env.AWS_REGION,
     STAGE: process.env.STAGE,

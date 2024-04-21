@@ -17,7 +17,6 @@ export async function getUserFromHeader(cookies: Record<string, string>) {
 
       return user;
     } catch (e) {
-      console.error(e);
       return null;
     }
   }

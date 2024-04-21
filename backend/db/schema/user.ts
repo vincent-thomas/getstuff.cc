@@ -1,22 +1,18 @@
-import { pgTable, text, timestamp } from "drizzle-orm/pg-core";
-import { customerTable } from "./customer";
-import { relations } from "drizzle-orm";
+import { pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+
+export const customerStatus = pgEnum("customer_status_enum", [
+  "active",
+  "inactive",
+  "canceled",
+]);
 
 export const users = pgTable("user", {
-  username: text("id").primaryKey(),
-  customerId: text("customer_id").notNull().unique(),
+  userId: text("user_id").primaryKey(),
+  email: text("email").unique().notNull(),
   name: text("name").notNull(),
-  salt: text("salt").notNull(),
-  publicKey: text("public_key").notNull(),
-  verifier: text("srp_verifier").notNull(),
-  encryptedUserData: text("encrypted_user_data").notNull(),
-  encryptedDataKey: text("encrypted_user_data_key").notNull(),
+  profileImageUrl: text("profile_url").notNull(),
   created_at: timestamp("created_at").notNull().defaultNow(),
-});
 
-export const userRelation = relations(users, ({ one }) => ({
-  customer: one(customerTable, {
-    fields: [users.customerId],
-    references: [customerTable.customerId],
-  }),
-}));
+  customerId: text("customer_id").notNull().unique(),
+  status: customerStatus("customer_status").notNull(),
+});

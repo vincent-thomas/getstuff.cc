@@ -8,7 +8,7 @@ export const addressAliasesRouter = router({
     .input(z.object({ folderId: z.string() }))
     .query(async ({ ctx }) => {
       const aliases = await ctx.db.query.quickAliases.findMany({
-        where: eq(quickAliases.username, ctx.session.username),
+        where: eq(quickAliases.userId, ctx.session.userId),
       });
 
       return aliases;

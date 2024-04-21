@@ -5,29 +5,15 @@
     {
       "idx": 0,
       "version": "5",
-      "when": 1713381095895,
-      "tag": "0000_tiresome_malcolm_colcord",
+      "when": 1713665437093,
+      "tag": "0000_icy_nicolaos",
       "breakpoints": true
     },
     {
       "idx": 1,
       "version": "5",
-      "when": 1713381114858,
-      "tag": "0001_sour_lila_cheney",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "5",
-      "when": 1713385447550,
-      "tag": "0002_spotty_professor_monster",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "5",
-      "when": 1713386541348,
-      "tag": "0003_curious_mister_fear",
+      "when": 1713665556478,
+      "tag": "0001_dusty_outlaw_kid",
       "breakpoints": true
     }
   ]

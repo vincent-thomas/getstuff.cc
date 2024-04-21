@@ -11,8 +11,8 @@ import superjson from "superjson";
 import { ZodError, type z } from "zod";
 import { db } from "./db";
 import { getRedis, getS3, getSes } from "./sdks";
-import { getUserFromHeader } from "./utils/getUserFromHeaders";
-import { jwtPayloadValidator } from "./utils/jwt";
+import { jwtPayloadValidator, verifyJwt } from "./utils/jwt";
+import { cookies } from "next/headers";
 
 const sessionType = jwtPayloadValidator.nullable();
 
@@ -53,17 +53,13 @@ export const createContextInner = (opts: CreateInnerContextOptions) => {
  * @link https://trpc.io/docs/v11/context#inner-and-outer-context
  */
 export async function createContext(opts: { cookies: Record<string, string> }) {
-  const active = opts.cookies["stuff-active"] ?? "";
-  const token = opts.cookies[`stuff-token-${active}`] ?? "";
+  let session = null;
 
-  const session = await getUserFromHeader({
-    "stuff-active": active,
-    [`stuff-token-${active}`]: token,
-  });
-  const contextInner = await createContextInner({ session });
-  return {
-    ...contextInner,
-  };
+  if (opts.cookies.token) {
+    session = await verifyJwt(opts.cookies.token);
+  }
+
+  return createContextInner({ session });
 }
 
 /**
@@ -112,9 +108,8 @@ export const pubProc = t.procedure;
 
 export const protectedProc = t.procedure.use(function isAuthed(opts) {
   const { ctx } = opts;
-
   // `ctx.user` is nullable
-  if (!ctx.session) {
+  if (ctx.session === null) {
     //     ^?
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }

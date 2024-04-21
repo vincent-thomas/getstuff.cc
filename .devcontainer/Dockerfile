@@ -10,12 +10,6 @@ RUN apk add --no-cache aws-cli
 
 RUN apk add git
 
-COPY ./package.json ./
-
-COPY ./pnpm-lock.yaml ./
-
-RUN pnpm install
-
 COPY . .
 
 RUN <<EOR

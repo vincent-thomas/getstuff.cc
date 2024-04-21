@@ -8,17 +8,17 @@ const getJwtKey = () => {
 export const jwtPayloadValidator = z.object({
   customerId: z.string(),
   customerStatus: customerInterface.shape.status,
-  username: z.string(),
+  userId: z.string(),
 });
 
 export const createJwt = (
-  username: string,
+  userId: string,
   customerId: string,
   customerStatus: z.infer<typeof customerInterface>["status"],
 ) => {
   return new SignJWT(
     jwtPayloadValidator.parse({
-      username,
+      userId,
       customerId,
       customerStatus,
     }),

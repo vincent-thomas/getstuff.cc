@@ -49,83 +49,25 @@ const createSession = async ({
 export const FormInput = () => {
   const form = Form.useStore({
     defaultValues: {
-      username: "",
-      password: "",
+      email: "",
     },
   });
-  const initAccountSessionMutation =
-    api.accounts.initAccountSession.useMutation();
-  const requestSessionMutation = api.accounts.requestSession.useMutation();
-
-  const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
+  const initAccountSessionMutation = api.accounts.initLoginLink.useMutation();
 
   form.useValidate(({ values, touched }) => {
-    if (touched.username) {
-      if (!z.string().email().safeParse(values.username).success) {
-        form.setError(form.names.username, "Field is not a valid email");
+    if (touched.email) {
+      if (!z.string().email().safeParse(values.email).success) {
+        form.setError(form.names.email, "Field is not a valid email");
         return;
       }
-      if (!values.username.endsWith("@getstuff.cc")) {
-        form.setError(form.names.username, "Required to end with @getstuff.cc");
-        return;
-      }
-      if (!z.string().min(15).safeParse(values.username).success) {
-        form.setError(
-          form.names.username,
-          "Username should be atleast 3 characters",
-        );
-        return;
-      }
-    }
-    if (
-      touched.password &&
-      !z.string().min(8).safeParse(values.password).success
-    ) {
-      form.setError(
-        form.names.password,
-        "Password should be atleast 8 characters",
-      );
-      return;
     }
   });
 
-  form.useSubmit(async ({ values: { password, username: username_EMAIL } }) => {
-    setIsLoading(true);
-    const username = username_EMAIL.replace("@getstuff.cc", "");
-
-    const { salt, serverEphemeralPublic } =
-      await initAccountSessionMutation.mutateAsync({ username });
-
-    const hashedPassword = await generateMasterSecret(password, salt);
-
-    const { clientEpheremal, clientSession } = await createSession({
-      salt,
-      username,
-      password: hashedPassword,
-      serverEphemeralPublic,
-    });
-
-    try {
-      await requestSessionMutation.mutateAsync({
-        username,
-        clientEpheremalPublic: clientEpheremal.public,
-        clientSessionProof: clientSession.proof,
-      });
-
-      const passwordDerivedSecret = await createPasswordDerivedSecret(
-        hashedPassword,
-        salt,
-      );
-      setPasswordDerivedSecret(passwordDerivedSecret.toString("hex"));
-
-      router.push("/mail/inbox");
-    } catch {
-      form.setError(form.names.username, "Invalid credentials");
-      setIsLoading(false);
-    }
-    setIsLoading(false);
+  form.useSubmit(async ({ values: { email } }) => {
+    await initAccountSessionMutation.mutateAsync({ email });
   });
+
+  const isLoading = form.useState().submitting;
 
   return (
     <Form.Root
@@ -136,8 +78,7 @@ export const FormInput = () => {
         border({ rounded: "radius", color: "interactive", side: "all" }),
       )}
     >
-      <Form.Field name={form.names.username.toString()} type="text" />
-      <Form.Field name={form.names.password.toString()} type="password" />
+      <Form.Field name={form.names.email.toString()} type="text" />
       <Button type="submit" variant="primary" size="md" disabled={isLoading}>
         Submit
         {isLoading && <Spinner size={20} />}
