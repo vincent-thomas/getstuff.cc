@@ -1,25 +1,12 @@
 "use client";
 
-import { api } from "@stuff/api-client/react";
-import { vanillaApi } from "@stuff/api-client/vanilla";
 import { useAtom } from "jotai";
-import { useEffect, useRef } from "react";
-import { userDataInterface } from "../interfaces";
-import { decryptSymmetric } from "./crypto";
-import {
-  clearDerivedSecretStore,
-  getPasswordDerivedSecret,
-} from "./useUserPrivateKey";
+import { useEffect } from "react";
+
 import { userAtom } from "./userStore";
 
 export const useUser = () => {
-  const sessionQuery = api.user.session.useQuery();
-  const encryptedDataQuery = api.user.encryptedData.useQuery(undefined, {
-    enabled: sessionQuery.data !== undefined && sessionQuery.data !== null,
-  });
-  const count = useRef(false);
-
-  const [user, setUser] = useAtom(userAtom);
+  const [user, _setUser] = useAtom(userAtom);
 
   useEffect(() => {
     // if (count.current === false) {
@@ -57,6 +44,6 @@ export const useUser = () => {
     //   passwordDerivedSecret,
     // ).toString("utf-8");
     // setUser(userDataInterface.parse(JSON.parse(result)));
-  }, [ ]);
+  }, []);
   return user;
 };

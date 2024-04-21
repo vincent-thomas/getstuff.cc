@@ -12,7 +12,6 @@ import { ZodError, type z } from "zod";
 import { db } from "./db";
 import { getRedis, getS3, getSes } from "./sdks";
 import { jwtPayloadValidator, verifyJwt } from "./utils/jwt";
-import { cookies } from "next/headers";
 
 const sessionType = jwtPayloadValidator.nullable();
 

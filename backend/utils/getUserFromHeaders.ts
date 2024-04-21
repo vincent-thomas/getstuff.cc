@@ -16,7 +16,7 @@ export async function getUserFromHeader(cookies: Record<string, string>) {
       const user = await verifyJwt(jwt);
 
       return user;
-    } catch (e) {
+    } catch {
       return null;
     }
   }

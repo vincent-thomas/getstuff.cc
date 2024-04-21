@@ -29,7 +29,7 @@ export class AppStack extends Stack {
     });
 
     const url = lambda.addFunctionUrl();
-    const cdn = new Distribution(this, "distro", {
+    new Distribution(this, "distro", {
       defaultBehavior: {
         origin: new FunctionUrlOrigin(url),
       },
