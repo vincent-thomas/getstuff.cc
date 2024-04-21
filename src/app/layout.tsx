@@ -13,8 +13,6 @@ import { roundingClass, spacingDefiningClass } from "packages/ui/variables";
 import type { ReactNode } from "react";
 import { Toaster } from "src/providers/sonner";
 import { store } from "./global-store";
-import { cookies } from "next/headers";
-import { verifyJwt } from "backend/utils/jwt";
 
 const font = Inter({
   axes: ["slnt"],
@@ -58,9 +56,7 @@ export const viewport: Viewport = {
   themeColor: "hsl(20 14.3% 4.1%)",
 };
 
-export default async function RootLayout({
-  children,
-}: { children: ReactNode }) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head />

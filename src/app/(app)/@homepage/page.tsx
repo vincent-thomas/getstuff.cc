@@ -18,7 +18,7 @@ import {
   folders,
   imageRotate,
 } from "../../(public)/page.css";
-import Layout from "../../(public)/layout"
+import Layout from "../../(public)/layout";
 
 import Image from "next/image";
 import { Text1 } from "packages/ui/atoms";
@@ -190,9 +190,9 @@ export default setupPage({
                   <P>Extension:</P>
                   <H2 className={css({ fontSize: "large" })}>Folder Rules</H2>
                   <P className="max-w-[30ch] text-wrap">
-                    With folder rules you can customise where and how your emails
-                    are recieved. You can configure forwarding, archiving, moving
-                    of mails when recieved.
+                    With folder rules you can customise where and how your
+                    emails are recieved. You can configure forwarding,
+                    archiving, moving of mails when recieved.
                   </P>
                   <Link href="#" className={button({ variant: "link" })}>
                     Learn more
@@ -219,8 +219,8 @@ export default setupPage({
                     >
                       <H2 className={css({ fontSize: "large" })}>Extensions</H2>
                       <Text1>
-                        With Stuff Extensions, behavior and features can be added
-                        and highly customised to Stuff.
+                        With Stuff Extensions, behavior and features can be
+                        added and highly customised to Stuff.
                       </Text1>
                     </div>
                     <div className={stack({ justify: "end" })}>
@@ -243,7 +243,7 @@ export default setupPage({
               <Disclosure.Content>testing</Disclosure.Content>
             </Disclosure.Root>
           </Section>
-      </div>
+        </div>
       </Layout>
     );
   },
