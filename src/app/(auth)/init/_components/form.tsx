@@ -2,7 +2,6 @@
 
 import { vanillaApi } from "@stuff/api-client/vanilla";
 import { Button } from "@stuff/ui/button";
-import { useRouter } from "next/navigation";
 import { Form } from "packages/ui/components";
 
 import { border } from "src/components/recipies";
@@ -11,8 +10,6 @@ import { z } from "zod";
 import { Spinner } from "../../icons/spinner";
 
 export const FormInput = () => {
-  const _router = useRouter();
-
   const form = Form.useStore({
     defaultValues: {
       name: "",

@@ -13,6 +13,8 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "packages/ui/components/tooltip/tooltip";
+import { Link } from "src/components/structure/link";
+import { ArrowLeftIcon } from "lucide-react";
 
 export default setupPage({
   params: z.object({ aliasId: z.string() }),
@@ -32,19 +34,31 @@ export default setupPage({
       <div className={cn(stack({ direction: "col" }))}>
         <div className={cn(stack({ justify: "between", align: "start" }))}>
           <div className={cn(stack({ direction: "col", gap: "sm" }))}>
-            <h1
-              className={cn(
-                css({ fontSize: "large", color: "text2" }),
-                stack({ gap: "md" }),
-              )}
-            >
-              <span>{alias.label}</span>
+            <div className={cn(stack({ gap: "md", align: "start" }))}>
+              <Link
+                href="/"
+                className={cn(
+                  css({ bg: { hover: "bgHover" }, p: "small" }),
+                  border({ rounded: "circle" }),
+                )}
+              >
+                <ArrowLeftIcon size={24} color={palette.text2} />
+              </Link>
+              <h1
+                className={cn(
+                  css({ fontSize: "large", color: "text2" }),
+                  stack({ gap: "md" }),
+                )}
+              >
+                {alias.label}
+              </h1>
               <span
                 className={cn(
                   css({
                     fontSize: "small",
                     pY: "xsmall",
                     pX: "small",
+                    color: "text1",
                     fontWeight: "semibold",
                   }),
                   border({ side: "all", color: "subtle", rounded: "xl" }),
@@ -52,7 +66,7 @@ export default setupPage({
               >
                 {alias.enabled ? "Active" : "Disabled"}
               </span>
-            </h1>
+            </div>
             <Tooltip placement="bottom-start">
               <TooltipTrigger
                 render={
@@ -61,6 +75,7 @@ export default setupPage({
                     size="xs"
                     rounded="medium"
                     render={
+                      // biome-ignore lint/a11y/useHeadingContent: This is just rendering
                       <h2
                         className={cn(
                           css({
