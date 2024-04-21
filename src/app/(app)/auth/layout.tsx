@@ -4,21 +4,9 @@ import { cn } from "@stuff/components/utils";
 import { P } from "@stuff/typography";
 import { button } from "@stuff/ui/button";
 import Link from "next/link";
-import { type ReactNode, useState } from "react";
+import type { ReactNode } from "react";
 import { border, stack } from "src/components/recipies";
-import { Spinner } from "./icons/spinner";
-import { UserChecker } from "./userChecker";
-
 const Layout = ({ children }: { children: ReactNode }) => {
-  const [loading, setLoading] = useState(true);
-  if (loading) {
-    return (
-      <div className="flex h-screen w-screen items-center justify-center">
-        <UserChecker whenDone={() => setLoading(false)} />
-        <Spinner size={24} />
-      </div>
-    );
-  }
   return (
     <>
       <div

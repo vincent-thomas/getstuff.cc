@@ -26,7 +26,7 @@ import { Link } from "src/components/structure/link";
 import { NiceCard } from "./_components/nicecard";
 
 export default setupPage({
-  Component() {
+  async Component() {
     return (
       <div className={cn(stack({ gap: "xl", direction: "col" }))}>
         <div

@@ -26,22 +26,23 @@ export const clearDerivedSecretStore = () => {
 };
 
 export const useDataKey = () => {
-  const raw = api.user.encryptedData.useQuery();
-  const keyStore = useMemo(() => getSessionKeyStore(), []);
-  const derivedMasterPassword =
-    typeof window !== "undefined" ? keyStore.get(KEY) : null;
+  // const raw = api.user.encryptedData.useQuery();
+  // const keyStore = useMemo(() => getSessionKeyStore(), []);
+  // const derivedMasterPassword =
+  //   typeof window !== "undefined" ? keyStore.get(KEY) : null;
 
-  return useMemo(() => {
-    if (
-      raw.data === undefined ||
-      raw.data === null ||
-      derivedMasterPassword === null
-    ) {
-      return;
-    }
-    return decryptSymmetric(
-      Buffer.from(raw.data.encryptedDataKey, "hex"),
-      Buffer.from(derivedMasterPassword, "hex"),
-    );
-  }, [derivedMasterPassword, raw]);
+  // return useMemo(() => {
+  //   if (
+  //     raw.data === undefined ||
+  //     raw.data === null ||
+  //     derivedMasterPassword === null
+  //   ) {
+  //     return;
+  //   }
+  //   return decryptSymmetric(
+  //     Buffer.from(raw.data.encryptedDataKey, "hex"),
+  //     Buffer.from(derivedMasterPassword, "hex"),
+  //   );
+  // }, [derivedMasterPassword, raw]);
+  return Buffer.from("test");
 };

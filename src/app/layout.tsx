@@ -63,7 +63,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body
         className={cn(
           font.className,
-          css({ bg: "bgApp", minHeight: "screen" }),
+          css({ bg: "bgSubtle", minHeight: "screen" }),
           spacingDefiningClass,
           themeClass,
           roundingClass,

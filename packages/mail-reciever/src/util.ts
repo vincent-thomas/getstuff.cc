@@ -9,10 +9,8 @@ import { getDataTable, getEmailContentBucket } from "@stuff/infra-constants";
 import { addressAliasInterface } from "backend/interfaces/addressAlias";
 import { messageInterface } from "backend/interfaces/message";
 import { threadViewInterface } from "backend/interfaces/threadView";
-import { getUser } from "backend/utils/getUser";
 import { z } from "zod";
 import { db } from "backend/db";
-import { threadTable } from "backend/db/schema";
 
 export const uploadEmailContent = async (
   s3: S3Client,
@@ -58,10 +56,10 @@ export const getThreadIdFromMsgId = async (
 export async function createThread(title: string) {
   const threadId = randomUUID();
 
-  await db.insert(threadTable).values({
-    threadId,
-    title,
-  });
+  // await db.insert(threadTable).values({
+  //   threadId,
+  //   title,
+  // });
 
   return threadId;
 }
@@ -92,7 +90,7 @@ export const getUserFromAlias = async (
   if (existingAlias === undefined) {
     return undefined;
   }
-  return await getUser(z.string().parse(existingAlias.pk.split("|")[1]));
+  // return await getUser(z.string().parse(existingAlias.pk.split("|")[1]));
 };
 
 export const contactInterface = z.object({

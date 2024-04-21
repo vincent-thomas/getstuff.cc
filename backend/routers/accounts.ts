@@ -1,169 +1,84 @@
 import { z } from "zod";
 
-import { randomBytes } from "crypto";
 import { TRPCError } from "@trpc/server";
-import { customerTable, users } from "backend/db/schema";
 import { protectedProc, pubProc, router } from "backend/trpc";
 import { cookies } from "next/headers";
-import {
-  deriveSession,
-  generateEphemeral,
-} from "secure-remote-password/server";
-import { getStripe } from "../sdks/stripe";
-import { getCustomer, getUser } from "../utils/getUser";
+
 import { createJwt } from "../utils/jwt";
+import { createUser, getUser } from "backend/utils/user";
+import { createId } from "backend/utils/createId";
+import { SendEmailCommand } from "@aws-sdk/client-ses";
 
 export const accountsRouter = router({
   createAccount: pubProc
     .input(
       z.object({
-        username: z.string(),
-        salt: z.string(),
-        verifier: z.string(),
-        publicKey: z.string(),
         name: z.string(),
-        encryptedUserData: z.string(),
-        encryptedDataKey: z.string(),
+        email: z.string(),
       }),
     )
-    .mutation(
-      async ({
-        ctx: { db },
-        input: {
-          username,
-          name,
-          salt,
-          verifier,
-          publicKey,
-          encryptedDataKey,
-          encryptedUserData,
-        },
-      }) => {
-        const stripe = await getStripe();
-        const existingUser = await getUser(username);
-        if (existingUser) {
-          throw new TRPCError({
-            code: "CONFLICT",
-            message: "Username already exists",
-          });
-        }
-        const response = await stripe.customers.create({
-          email: `${username}@getstuff.cc`,
-          name: username,
+    .mutation(async ({ input: { name, email } }) => {
+      try {
+        await createUser({ email, name });
+      } catch (e) {
+        logger.error("unknown error", e);
+        throw new TRPCError({
+          code: "CONFLICT",
+          message: "Username already exists",
         });
-
-        await db.transaction(async tr => {
-          await tr.insert(customerTable).values({
-            customerId: response.id,
-            status: "inactive",
-          });
-          await tr.insert(users).values({
-            username: username,
-            customerId: response.id,
-            salt,
-            publicKey,
-            name,
-            verifier,
-            encryptedDataKey,
-            encryptedUserData,
-          });
-        });
-      },
-    ),
-  initAccountSession: pubProc
-    .input(z.object({ username: z.string() }))
-    .output(z.object({ salt: z.string(), serverEphemeralPublic: z.string() }))
-    .mutation(async ({ ctx: { redis }, input: { username } }) => {
-      const user = await getUser(username);
-
-      if (user === undefined) {
-        logger.debug("user doesnt exist, sending random response");
-        // Random response to prevent knowing that username doesn't exist
-        return {
-          salt: randomBytes(64).toString("hex"),
-          serverEphemeralPublic: randomBytes(512).toString("hex"),
-        };
       }
+    }),
+  initLoginLink: pubProc
+    .input(z.object({ email: z.string() }))
+    .mutation(async ({ ctx: { redis, ses }, input: { email } }) => {
+      const id = createId();
+      await redis.set(`auth:magic-link:${id}`, email, "EX", 300);
 
-      const serverEphemeral = generateEphemeral(user.verifier);
-      await redis.set(username, serverEphemeral.secret, "EX", 60 * 5);
-
-      return {
-        salt: user.salt,
-        serverEphemeralPublic: serverEphemeral.public,
-      };
+      await ses.send(
+        new SendEmailCommand({
+          Destination: {
+            ToAddresses: [email],
+          },
+          Source: `noreply@${env.DOMAIN}`,
+          Message: {
+            Body: { Text: { Data: `heres link: ${env.APP_URL}/login/${id}` } },
+            Subject: { Data: "Login" },
+          },
+        }),
+      );
     }),
   requestSession: pubProc
     .input(
       z.object({
-        username: z.string(),
-        clientEpheremalPublic: z.string(),
-        clientSessionProof: z.string(),
+        linkId: z.string(),
       }),
     )
-    .mutation(
-      async ({
-        ctx: { redis },
-        input: {
-          username,
-          clientEpheremalPublic: clientPublicEpheremal,
-          clientSessionProof,
-        },
-      }) => {
-        const user = await getUser(username);
+    .mutation(async ({ ctx: { redis }, input: { linkId } }) => {
+      const email = await redis.get(`auth:magic-link:${linkId}`);
 
-        try {
-          if (user === undefined) {
-            logger.debug(`user doesnt exist, user_id=${username}`);
-            throw {};
-          }
-          const customer = (await getCustomer(user.customerId))!;
-          const serverSecretEpheremal = z
-            .string()
-            .parse(await redis.get(username));
-
-          const serverSession = deriveSession(
-            serverSecretEpheremal,
-            clientPublicEpheremal,
-            user.salt,
-            username,
-            user.verifier,
-            clientSessionProof,
-          );
-
-          const jwt = await createJwt(
-            username,
-            user.customerId,
-            customer.status,
-          );
-          cookies().set(`stuff-token-${username}`, jwt, {
-            sameSite: "strict",
-            secure: true,
-            httpOnly: true,
-          });
-          cookies().set("stuff-active", username, {
-            sameSite: "strict",
-            secure: true,
-            httpOnly: true,
-          });
-
-          return {
-            serverProof: serverSession.proof,
-          };
-        } catch {
-          throw { code: "NOT_FOUND", message: "Invalid credentials" };
-        }
-      },
-    ),
-  logout: protectedProc.mutation(() => {
-    const username = cookies().get("stuff-active")?.value;
-    cookies().delete("stuff-active");
-
-    if (username) {
-      const jti = cookies().get(`stuff-token-${username}`)?.value;
-      if (jti) {
-        cookies().delete(`stuff-token-${username}`);
+      if (email === null) {
+        throw new TRPCError({ code: "FORBIDDEN", message: "Code has expired" });
       }
-    }
+      const user = await getUser(email);
+
+      if (user === undefined) {
+        logger.error(`user not defined: email=${email}`);
+        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+      }
+
+      const jwt = await createJwt(user.userId, user.customerId, user.status);
+      cookies().set(`stuff-token-${user.userId}`, jwt, {
+        sameSite: "strict",
+        secure: true,
+        httpOnly: true,
+      });
+      cookies().set("stuff-active", user.userId, {
+        sameSite: "strict",
+        secure: true,
+        httpOnly: true,
+      });
+    }),
+  logout: protectedProc.mutation(() => {
+    cookies().delete("token");
   }),
 });

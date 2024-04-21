@@ -1,17 +1,14 @@
-import { getCustomer, getUser } from "backend/utils/getUser";
+import { getUser } from "backend/utils/user";
 import { protectedProc, pubProc, router } from "../trpc";
 
 export const userRouter = router({
   encryptedData: protectedProc.query(async ({ ctx: { session } }) => {
-    const user = (await getUser(session.username))!;
-    const customer = (await getCustomer(user.customerId))!;
+    const user = (await getUser(session.userId))!;
 
     return {
-      encryptedUserData: user.encryptedUserData,
-      encryptedDataKey: user.encryptedDataKey,
-      username: user.username,
+      email: user.email,
       name: user.name,
-      has_plus: customer.status === "active",
+      has_plus: user.status === "active",
     };
   }),
   session: pubProc.query(({ ctx: { session } }) => {

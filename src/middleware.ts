@@ -1,6 +1,7 @@
 import { getUserFromHeader } from "backend/utils/getUserFromHeaders";
 import type { NextRequest } from "next/server";
 import { authMiddleware } from "./middlewares/auth";
+import { verifyJwt } from "backend/utils/jwt";
 
 export const config = {
   matcher: [
@@ -22,16 +23,12 @@ const decideLocation = (pathname: string) => {
 };
 
 export async function middleware(request: NextRequest) {
-  const active = request.cookies.get("stuff-active")?.value ?? "";
-  const cookies = {
-    "stuff-active": active,
-    [`stuff-token-${active}`]:
-      request.cookies.get(`stuff-token-${active}`)?.value ?? "",
-  };
-  const session = await getUserFromHeader(cookies);
+  const active = request.cookies.get("token")?.value ?? "";
+
+  const session = active !== "" ? await verifyJwt(active) : null;
 
   const location = decideLocation(request.nextUrl.pathname);
-  const result = await authMiddleware(location, session);
+  const result = authMiddleware(location, session);
   if (result !== null) {
     return result;
   }

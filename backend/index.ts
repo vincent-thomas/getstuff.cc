@@ -1,16 +1,16 @@
 import { accountsRouter } from "backend/routers/accounts";
 import { customerRouter } from "./routers/customer";
 import { extensionsRouter } from "./routers/extensions";
-import { mailRouter } from "./routers/mail";
 import { userRouter } from "./routers/user";
 import { router } from "./trpc";
+import { mailRelayRouter } from "./routers/mail-relay";
 export const appRouter = router({
   accounts: accountsRouter,
   user: userRouter,
-  mail: mailRouter,
+  //  mail: mailRouter,
   customer: customerRouter,
   extensions: extensionsRouter,
-
+  mailRelay: mailRelayRouter,
   // addItemInSub: protectedProc.input(z.object({folderId: z.string(), thread: z.object({
   //   threadId: z.string(),
   //   read: z.boolean(),

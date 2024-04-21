@@ -1,6 +1,4 @@
 import { router } from "backend/trpc";
-import { mailRelayRouter } from "./mail-relay";
+import { mailRelayRouter } from "../mail-relay";
 
-export const extensionsRouter = router({
-  mailRelay: mailRelayRouter,
-});
+export const extensionsRouter = router({});
