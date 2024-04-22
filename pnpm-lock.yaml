@@ -32,9 +32,6 @@ importers:
       '@tanstack/react-query':
         specifier: ^4.36.1
         version: 4.36.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@upstash/redis':
-        specifier: ^1.28.4
-        version: 1.29.0
       aws-cdk-lib:
         specifier: ^2.132.0
         version: 2.136.0(constructs@10.3.0)
@@ -107,9 +104,6 @@ importers:
       stripe:
         specifier: ^14.20.0
         version: 14.24.0
-      superjson:
-        specifier: ^2.2.1
-        version: 2.2.1
       tweetnacl:
         specifier: ^1.0.3
         version: 1.0.3
@@ -2280,9 +2274,6 @@ packages:
   '@types/yargs@17.0.32':
     resolution: {integrity: sha512-xQ67Yc/laOG5uMfX/093MRlGGCIBzZMarVa+gfNKJxWAIgykYpVGkBdbqEzGDDfCrVUj6Hiff4mTZ5BA6TmAog==}
 
-  '@upstash/redis@1.29.0':
-    resolution: {integrity: sha512-kbO5fgMAeUzErnA/SOtaSbAa0dguYhhBT4MZHJ1O8gVl4iK754aC9+rIYY5hsp4nlxeCGfnIDkWpof991c9jjA==}
-
   '@vanilla-extract/babel-plugin-debug-ids@1.0.5':
     resolution: {integrity: sha512-Rc9A6ylsw7EBErmpgqCMvc/Z/eEZxI5k1xfLQHw7f5HHh3oc5YfzsAsYU/PdmSNjF1dp3sGEViBdDltvwnfVaA==}
 
@@ -2736,9 +2727,6 @@ packages:
   cross-spawn@7.0.3:
     resolution: {integrity: sha512-iRDPJKUPVEND7dHPO8rkbOnPpyDygcDFtWjpeWNCgy8WP2rXcxXL8TskReQl6OrB2G7+UJrags1q15Fudc7G6w==}
     engines: {node: '>= 8'}
-
-  crypto-js@4.2.0:
-    resolution: {integrity: sha512-KALDyEYgpY+Rlob/iriUtjV6d5Eq+Y191A5g4UqLAi8CyGP9N1+FdVbkc1SxKc2r4YAYqG8JzO2KGL+AizD70Q==}
 
   css-what@6.1.0:
     resolution: {integrity: sha512-HTUrgRJ7r4dsZKU6GjmpfRK1O76h97Z8MfS1G0FozR+oF2kG6Vfe8JE6zwrkbxigziPHinCJ+gCPjA9EaBDtRw==}
@@ -7794,10 +7782,6 @@ snapshots:
     dependencies:
       '@types/yargs-parser': 21.0.3
 
-  '@upstash/redis@1.29.0':
-    dependencies:
-      crypto-js: 4.2.0
-
   '@vanilla-extract/babel-plugin-debug-ids@1.0.5':
     dependencies:
       '@babel/core': 7.24.4
@@ -8372,8 +8356,6 @@ snapshots:
       path-key: 3.1.1
       shebang-command: 2.0.0
       which: 2.0.2
-
-  crypto-js@4.2.0: {}
 
   css-what@6.1.0: {}
 
