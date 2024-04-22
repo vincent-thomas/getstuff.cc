@@ -10,16 +10,22 @@ import {
   MenuContent,
   MenuItem,
 } from "packages/ui/components";
-import { api } from "@stuff/api-client/react";
 import { Link } from "src/components/structure/link";
+import { useAction } from "next-safe-action/hooks";
+import { removeAliasAction } from "./actions/removeAlias.action";
+import { useRouter } from "next/navigation";
 
 export const Alias = ({
   label,
   mailAlias,
   created_at,
 }: { label: string; mailAlias: string; created_at: Date }) => {
-  const remove = api.mailRelay.removeAlias.useMutation();
-  const utils = api.useUtils();
+  const router = useRouter();
+  const { execute } = useAction(removeAliasAction, {
+    onSuccess() {
+      router.refresh();
+    },
+  });
 
   return (
     <div
@@ -68,10 +74,7 @@ export const Alias = ({
           </MenuItem>
           <MenuItem
             variant="danger"
-            onClick={async () => {
-              await remove.mutateAsync({ alias: mailAlias });
-              await utils.mailRelay.listAliases.invalidate();
-            }}
+            onClick={() => execute({ aliasId: mailAlias })}
           >
             Delete
           </MenuItem>

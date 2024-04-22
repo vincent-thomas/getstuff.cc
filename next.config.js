@@ -26,13 +26,6 @@ const config = {
     useLightningcss: true,
   },
   webpack: config => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-    config?.module?.rules?.push({
-      test: /\.wasm$/,
-      loader: "base64-loader",
-      type: "javascript/auto",
-    });
-
     config.infrastructureLogging = {
       level: "error",
     };

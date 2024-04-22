@@ -6,7 +6,7 @@ await build({
   bundle: true,
   outdir: resolve("packages/mail-reciever/dist"),
   platform: "node",
-  format: "esm",
+  format: "cjs",
   external: ["@/env"],
   minify: false,
   treeShaking: false,

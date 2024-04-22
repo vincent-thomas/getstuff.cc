@@ -1,12 +1,11 @@
 #!/usr/bin/env node
 import * as cdk from "aws-cdk-lib";
-// import { HostedZone } from "aws-cdk-lib/aws-route53";
 import "source-map-support/register";
-// import { EmailReciever } from "./email-reciever-stack";
-// import { SESIdentityStack } from "./ses-identity-stack";
-// import { DataApiInfra } from "./stack";
 import { z } from "zod";
 import { AppPipeline } from "./lib/pipeline";
+import { SESIdentityStack } from "./lib/ses-identity-stack";
+import { EmailReciever } from "./lib/email-reciever-stack";
+import { HostedZone } from "aws-cdk-lib/aws-route53";
 const app = new cdk.App();
 
 const env = {
@@ -16,40 +15,31 @@ const env = {
 
 const stage = z.string().parse(process.env.STAGE);
 
-// const STAGE = z.string().parse(process.env.STAGE);
-// const DOMAIN = z.string().parse(process.env.DOMAIN)
+const STAGE = z.string().parse(process.env.STAGE);
+const DOMAIN = z.string().parse(process.env.DOMAIN);
 
 new AppPipeline(app, "stuff-pipeline", {
   env,
   stage,
 });
 
-// const RootStack = new cdk.Stack(app, "stuff-shared-stack", {
-//   env
-// });
+const RootStack = new cdk.Stack(app, "stuff-shared-stack", {
+  env,
+});
 
-// const zone = HostedZone.fromLookup(RootStack, "stuff-zone", {
-//   domainName: DOMAIN,
-// });
+const zone = HostedZone.fromLookup(RootStack, "stuff-zone", {
+  domainName: DOMAIN,
+});
 
-// const identityStack = new SESIdentityStack(app, "stuff-ses-identity", {
-//   env,
-//   zone,
-// });
+new SESIdentityStack(app, "stuff-ses-identity", {
+  env,
+  zone,
+});
 
-// const dataApiStack = new DataApiInfra(app, `${STAGE}-stuff-infra`, {
-//   env,
-//   domain: DOMAIN,
-//   zone,
-//   emailIdentity: identityStack.emailIdentity,
-//   stage: STAGE,
-// });
-
-// new EmailReciever(app, `${STAGE}-stuff-email-reciever`, {
-//   emailDomain: DOMAIN,
-//   env,
-//   formattedEmailBucket: dataApiStack.formattedEmailBucket,
-//   stage: STAGE,
-// });
+new EmailReciever(app, `${stage}-stuff-email-reciever`, {
+  zone,
+  env,
+  stage: STAGE,
+});
 
 app.synth();

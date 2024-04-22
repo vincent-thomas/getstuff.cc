@@ -1,13 +1,14 @@
 "use client";
 
-import { api } from "@stuff/api-client/react";
 import { cn } from "@stuff/components/utils";
 import { Button } from "@stuff/ui/button";
 import { Form } from "packages/ui/components";
 import { border, stack } from "src/components/recipies";
 import { z } from "zod";
-
+import { useAction } from "next-safe-action/hooks";
 import { Spinner } from "../../icons/spinner";
+import { sendMagicLinkAction } from "./login-action";
+import { toast } from "sonner";
 
 export const FormInput = () => {
   const form = Form.useStore({
@@ -15,7 +16,13 @@ export const FormInput = () => {
       email: "",
     },
   });
-  const initAccountSessionMutation = api.accounts.initLoginLink.useMutation();
+  const { execute } = useAction(sendMagicLinkAction, {
+    onSuccess() {
+      toast.info(
+        "A link has been sent to the email address, to login click the link in that email",
+      );
+    },
+  });
 
   form.useValidate(({ values, touched }) => {
     if (touched.email) {
@@ -26,9 +33,7 @@ export const FormInput = () => {
     }
   });
 
-  form.useSubmit(async ({ values: { email } }) => {
-    await initAccountSessionMutation.mutateAsync({ email });
-  });
+  form.useSubmit(({ values: { email } }) => execute({ email }));
 
   const isLoading = form.useState().submitting;
 

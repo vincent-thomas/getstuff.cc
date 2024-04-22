@@ -1,6 +1,5 @@
 "use client";
 
-import { vanillaApi } from "@stuff/api-client/vanilla";
 import { Button } from "@stuff/ui/button";
 import { Form } from "packages/ui/components";
 
@@ -8,12 +7,21 @@ import { border } from "src/components/recipies";
 import { z } from "zod";
 
 import { Spinner } from "../../icons/spinner";
+import { useAction } from "next-safe-action/hooks";
+import { createUserAction } from "./create-user.action";
+import { toast } from "sonner";
 
 export const FormInput = () => {
   const form = Form.useStore({
     defaultValues: {
       name: "",
       email: "",
+    },
+  });
+
+  const { execute, status } = useAction(createUserAction, {
+    onSuccess() {
+      toast("A link has been sent to your email address");
     },
   });
 
@@ -29,18 +37,7 @@ export const FormInput = () => {
     }
   });
 
-  form.useSubmit(async ({ values: data }) => {
-    form.setState("submitting", true);
-    await vanillaApi.accounts.createAccount.mutate({
-      email: data.email,
-      name: data.name,
-    });
-    await vanillaApi.accounts.initLoginLink.mutate({
-      email: data.email,
-    });
-  });
-
-  const { submitting } = form.useState();
+  form.useSubmit(({ values: { email, name } }) => execute({ name, email }));
 
   return (
     <Form.Root
@@ -58,9 +55,9 @@ export const FormInput = () => {
         rounded="medium"
         size="md"
         type="submit"
-        disabled={submitting}
+        disabled={status === "executing"}
       >
-        Submit {submitting && <Spinner size={20} />}
+        Submit {status === "executing" && <Spinner size={20} />}
       </Button>
     </Form.Root>
   );
