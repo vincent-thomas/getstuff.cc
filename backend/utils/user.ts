@@ -1,16 +1,14 @@
 import { db } from "backend/db";
 import { users } from "backend/db/schema";
 import { createId } from "./createId";
-import { getStripe } from "backend/sdks";
 import { eq } from "drizzle-orm";
 import { randomBytes } from "tweetnacl";
+import { stripe } from "backend/sdks";
 
 interface createUserI {
   email: string;
   name: string;
 }
-
-const stripe = await getStripe();
 
 export const createUser = async ({ email, name }: createUserI) => {
   const userId = createId();

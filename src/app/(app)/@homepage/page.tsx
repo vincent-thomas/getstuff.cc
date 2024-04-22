@@ -1,5 +1,3 @@
-import "server-only";
-
 import { setupPage } from "@stuff/client/utils";
 import { cn } from "@stuff/components/utils";
 import { H1, H2, P } from "@stuff/typography";

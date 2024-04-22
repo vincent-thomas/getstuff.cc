@@ -1,6 +1,5 @@
 "use client";
 
-import { api } from "@stuff/api-client/react";
 import { Button } from "@stuff/ui/button";
 import { PlusIcon } from "lucide-react";
 import {
@@ -15,13 +14,27 @@ import { Spinner } from "../../../(auth)/icons/spinner";
 import { useState } from "react";
 import { P } from "@stuff/typography";
 import { useRouter } from "next/navigation";
+import { useAction } from "next-safe-action/hooks";
+import { createAliasAction } from "../actions/create-alias";
 
 export const CreateAliasButton = () => {
-  const test = api.mailRelay.createAlias.useMutation();
-  const utils = api.useUtils();
-  const form = Form.useStore({ defaultValues: { label: "" } });
-
   const [isOpen, setOpen] = useState(false);
+  const router = useRouter();
+
+  const { execute } = useAction(createAliasAction, {
+    onSuccess(data) {
+      router.push(`/a/${data.aliasId}`);
+      toast.success("Alias created");
+      setOpen(false);
+    },
+    onError() {
+      toast.error(
+        "Maximum aliases exceeded on the free tier, upgrade to get more",
+      );
+      setOpen(false);
+    },
+  });
+  const form = Form.useStore({ defaultValues: { label: "" } });
 
   form.useValidate(({ values }) => {
     if (!z.string().min(3).safeParse(values.label).success) {
@@ -29,16 +42,8 @@ export const CreateAliasButton = () => {
       return;
     }
   });
-  const router = useRouter();
-  form.useSubmit(async ({ values }) => {
-    const aliasId = await test.mutateAsync({
-      label: values.label,
-    });
-    await utils.mailRelay.listAliases.invalidate();
-    setOpen(false);
-    router.push(`/a/${aliasId}`);
-    toast.success("Alias created");
-  });
+
+  form.useSubmit(({ values }) => execute({ label: values.label }));
 
   const isLoading = form.useState().submitting;
 

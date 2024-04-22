@@ -2,12 +2,6 @@
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-import { createTRPCReact } from "@trpc/react-query";
-import { useState } from "react";
-
-import type { AppRouter } from "..";
-import { clientOptions } from "./client-options";
-
 const createQueryClient = () => new QueryClient();
 
 let clientQueryClientSingleton: QueryClient | undefined = undefined;
@@ -20,18 +14,12 @@ const getQueryClient = () => {
   return (clientQueryClientSingleton ??= createQueryClient());
 };
 
-export const api = createTRPCReact<AppRouter>();
-
-export function TRPCReactProvider(props: { children: React.ReactNode }) {
+export function QueryProvider(props: { children: React.ReactNode }) {
   const queryClient = getQueryClient();
-
-  const [trpcClient] = useState(() => api.createClient(clientOptions));
 
   return (
     <QueryClientProvider client={queryClient}>
-      <api.Provider client={trpcClient} queryClient={queryClient}>
-        {props.children}
-      </api.Provider>
+      {props.children}
     </QueryClientProvider>
   );
 }

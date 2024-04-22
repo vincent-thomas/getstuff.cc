@@ -33,6 +33,7 @@ export default setupLayout({
               width: "full",
               mX: "auto",
               pY: "3xlarge",
+              position: "relative",
               pX: "large",
               maxHeight: "screen",
             }),

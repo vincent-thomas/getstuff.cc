@@ -5,7 +5,6 @@ import "./globals.css";
 import { Inter } from "next/font/google";
 
 import { env } from "@/env";
-import { TRPCReactProvider } from "@stuff/api-client/react";
 import { Provider } from "jotai";
 import type { Metadata, Viewport } from "next";
 import { themeClass } from "packages/ui/theme/palettes.css";
@@ -13,6 +12,7 @@ import { roundingClass, spacingDefiningClass } from "packages/ui/variables";
 import type { ReactNode } from "react";
 import { Toaster } from "src/providers/sonner";
 import { store } from "./global-store";
+import { QueryProvider } from "src/providers/react-query";
 
 const font = Inter({
   axes: ["slnt"],
@@ -69,9 +69,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           roundingClass,
         )}
       >
-        <TRPCReactProvider>
+        <QueryProvider>
           <Provider store={store}>{children}</Provider>
-        </TRPCReactProvider>
+        </QueryProvider>
         <Toaster />
       </body>
     </html>

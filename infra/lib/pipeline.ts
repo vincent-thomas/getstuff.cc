@@ -31,15 +31,8 @@ import {
   Repository,
   TagMutability,
 } from "aws-cdk-lib/aws-ecr";
-import {
-  Effect,
-  type IRole,
-  PolicyStatement,
-  Role,
-  ServicePrincipal,
-} from "aws-cdk-lib/aws-iam";
+import { type IRole, Role, ServicePrincipal } from "aws-cdk-lib/aws-iam";
 import { Bucket } from "aws-cdk-lib/aws-s3";
-import { StringParameter } from "aws-cdk-lib/aws-ssm";
 import type { Construct } from "constructs";
 import { packageManager } from "../../package.json";
 import { z } from "zod";
@@ -91,7 +84,6 @@ export class AppPipeline extends Stack {
       stageName: "Build",
       actions: [
         this.createBuildAction({
-          stage,
           input: repoStore,
           output: buildStore,
           buckets: {
@@ -166,41 +158,16 @@ export class AppPipeline extends Stack {
     });
   }
   private createBuildAction({
-    stage,
     input,
     output,
     extraInputs,
     buckets,
   }: {
-    stage: string;
     input: Artifact;
     extraInputs?: Artifact[];
     output: Artifact;
     buckets: { artifact: Bucket; cache: Bucket };
   }) {
-    const redisParam = StringParameter.fromSecureStringParameterAttributes(
-      this,
-      "test",
-      {
-        parameterName: `/stuff/api/${stage}/redis-url`,
-      },
-    );
-    const stuffPlusPricing = StringParameter.fromStringParameterName(
-      this,
-      "stuff-plus-pricing",
-      `/stuff/api/${stage}/prices/stuff-plus`,
-    );
-    const stripeKey = StringParameter.fromSecureStringParameterAttributes(
-      this,
-      "stuff-stripe-key",
-      {parameterName: `/stuff/api/${stage}/stripe-key`},
-    );
-    const dbUrl = StringParameter.fromSecureStringParameterAttributes(
-      this,
-      "stuff-database-url",
-      { parameterName: `/stuff/api/${stage}/database-url` },
-    );
-
     const project = this.createPipelineProject(
       this,
       "getstuff-cc-build-project",
@@ -222,18 +189,7 @@ export class AppPipeline extends Stack {
     );
 
     project.applyRemovalPolicy(RemovalPolicy.DESTROY);
-    project.addToRolePolicy(
-      new PolicyStatement({
-        actions: ["ssm:GetParameter"],
-        effect: Effect.ALLOW,
-        resources: [
-          redisParam.parameterArn,
-          stuffPlusPricing.parameterArn,
-          dbUrl.parameterArn,
-          stripeKey.parameterArn,
-        ],
-      }),
-    );
+
     return new CodeBuildAction({
       actionName: "Compile",
       type: CodeBuildActionType.BUILD,

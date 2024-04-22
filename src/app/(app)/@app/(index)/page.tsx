@@ -1,16 +1,18 @@
 "use client";
 
 import { setupPage } from "src/utils/setupPage";
-import { api } from "@stuff/api-client/react";
 import { Alias } from "../components/alias";
 import { useAtomValue } from "jotai";
 import { searchQuery } from "../components/search-field";
+import { useQuery } from "@tanstack/react-query";
+import { listAliases } from "./actions/list-aliases.action";
 
 export default setupPage({
   Component() {
     const query = useAtomValue(searchQuery);
-    const { data: aliases } = api.mailRelay.listAliases.useQuery({
-      query: query === "" ? undefined : query,
+    const { data: aliases } = useQuery({
+      queryKey: ["list-aliases", query],
+      queryFn: () => listAliases(query).then(v => v.data),
     });
 
     if (aliases === undefined) {

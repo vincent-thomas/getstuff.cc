@@ -22,8 +22,6 @@ interface SESIdentityStackProps extends StackProps {
 }
 
 export class SESIdentityStack extends Stack {
-  public emailIdentity: EmailIdentity;
-
   constructor(
     scope: App,
     id: string,
@@ -31,7 +29,7 @@ export class SESIdentityStack extends Stack {
   ) {
     super(scope, id, props);
 
-    this.emailIdentity = new EmailIdentity(this, "stuff-email-identity", {
+    const emailIdentity = new EmailIdentity(this, "stuff-email-identity", {
       identity: Identity.domain(zone.zoneName),
       dkimIdentity: DkimIdentity.easyDkim(
         EasyDkimSigningKeyLength.RSA_2048_BIT,
@@ -43,10 +41,10 @@ export class SESIdentityStack extends Stack {
       mailFromBehaviorOnMxFailure: MailFromBehaviorOnMxFailure.REJECT_MESSAGE,
     });
 
-    for (const dkimRecord of this.emailIdentity.dkimRecords) {
+    for (const dkimRecord of emailIdentity.dkimRecords) {
       new CnameRecord(
         this,
-        `stuff-email-dkim-record-${this.emailIdentity.dkimRecords.indexOf(
+        `stuff-email-dkim-record-${emailIdentity.dkimRecords.indexOf(
           dkimRecord,
         )}`,
         {

@@ -1,10 +1,8 @@
-import { getRedis } from "backend/sdks";
+import { redis } from "backend/sdks";
 import { createJwt } from "backend/utils/jwt";
 import { getUserFromEmail } from "backend/utils/user";
 import { cookies } from "next/headers";
 import { type NextRequest, NextResponse } from "next/server";
-
-const redis = await getRedis(env.AWS_REGION, env.STAGE);
 
 export const GET = async (
   _req: NextRequest,
