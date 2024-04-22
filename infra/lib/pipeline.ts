@@ -190,10 +190,10 @@ export class AppPipeline extends Stack {
       "stuff-plus-pricing",
       `/stuff/api/${stage}/prices/stuff-plus`,
     );
-    const stripeKey = StringParameter.fromStringParameterName(
+    const stripeKey = StringParameter.fromSecureStringParameterAttributes(
       this,
       "stuff-stripe-key",
-      `/stuff/api/${stage}/stripe-key`,
+      {parameterName: `/stuff/api/${stage}/stripe-key`},
     );
     const dbUrl = StringParameter.fromSecureStringParameterAttributes(
       this,
