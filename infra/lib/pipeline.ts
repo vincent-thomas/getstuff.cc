@@ -230,7 +230,7 @@ export class AppPipeline extends Stack {
           redisParam.parameterArn,
           stuffPlusPricing.parameterArn,
           dbUrl.parameterArn,
-          stripeKey.parameterArn
+          stripeKey.parameterArn,
         ],
       }),
     );
