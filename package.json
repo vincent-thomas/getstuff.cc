@@ -11,7 +11,7 @@
     "db:migrate": "dotenv -c local -- tsx ./schema-migrator.ts",
     "dev": "next dev",
     "check:ci": "biome ci .",
-    "test:unit": "jest",
+    "test:unit": "cross-env SKIP_ENV_VALIDATION='1' jest",
     "start": "next start",
     "cdk:synth": "dotenv -- cdk synth",
     "cdk:destroy": "dotenv -- cdk destroy --all",
@@ -19,7 +19,7 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "cdk:synth:pipeline": "dotenv -- cdk synth stuff-pipeline",
-    "cdk:mutate-pipeline": "dotenv -- cdk deploy stuff-pipeline",
+    "cdk:mutate-pipeline": "dotenv -c local -- cdk deploy stuff-pipeline",
     "cdk:deploy:mail-reciever": "dotenv -c local -- cdk deploy dev-stuff-email-reciever"
   },
   "dependencies": {
@@ -38,6 +38,7 @@
     "drizzle-orm": "^0.30.8",
     "fuse.js": "^7.0.0",
     "ioredis": "^5.3.2",
+    "jest-environment-jsdom": "^29.7.0",
     "jose": "^5.2.3",
     "jotai": "^2.7.0",
     "lucide-react": "^0.352.0",
@@ -77,6 +78,7 @@
     "@vanilla-extract/sprinkles": "^1.6.1",
     "aws-cdk": "^2.132.0",
     "constructs": "^10.3.0",
+    "cross-env": "^7.0.3",
     "dotenv-cli": "^7.4.0",
     "drizzle-kit": "^0.20.17",
     "esbuild": "^0.20.1",

@@ -71,16 +71,6 @@ export class AppPipeline extends Stack {
     });
 
     pipeline.addStage({
-      stageName: "Analysis",
-      actions: [
-        this.createLintingAction({
-          input: repoStore,
-          buckets: { cache: cacheBucket },
-        }),
-      ],
-    });
-
-    pipeline.addStage({
       stageName: "Build",
       actions: [
         this.createBuildAction({
@@ -88,12 +78,6 @@ export class AppPipeline extends Stack {
           output: buildStore,
           buckets: {
             artifact: artifactBucket,
-            cache: cacheBucket,
-          },
-        }),
-        this.createTestAction({
-          input: repoStore,
-          buckets: {
             cache: cacheBucket,
           },
         }),
@@ -130,33 +114,6 @@ export class AppPipeline extends Stack {
     });
   }
 
-  private createLintingAction({
-    input,
-    buckets,
-  }: { input: Artifact; buckets: { cache: Bucket } }) {
-    return new CodeBuildAction({
-      actionName: "Lint",
-      input,
-      project: this.createPipelineProject(
-        this,
-        "getstuff-cc-analysis",
-        {
-          install: [
-            `npm install -g pnpm@${pnpmVersion}`,
-            "pnpm config set store-dir ./.pnpm-store",
-            "pnpm install --frozen-lockfile",
-          ],
-          build: ["pnpm check:ci"],
-          cache: {
-            paths: ["./.pnpm-store/**/*", "./node_modules/.modules.yaml"],
-          },
-        },
-        {
-          cacheBucket: buckets.cache,
-        },
-      ),
-    });
-  }
   private createBuildAction({
     input,
     output,
@@ -177,12 +134,19 @@ export class AppPipeline extends Stack {
           "pnpm config set store-dir ./.pnpm-store",
           "pnpm install --frozen-lockfile",
         ],
-        build: ["SKIP_ENV_VALIDATION='1' pnpm build:app"],
+        preBuild: ["pnpm check:ci"],
+        build: ["SKIP_ENV_VALIDATION='1' pnpm build:app", "pnpm test:unit"],
+        reports: {
+          tests: {
+            files: ["reports/*.xml"],
+            "file-format": "JUNITXML",
+          },
+        },
         artifacts: {
           files: ["./.next/**/*", "./next-env.d.ts", "./unimport.d.ts"],
         },
         cache: {
-          paths: ["./.pnpm-store/**/*", "./node_modules/.modules.yaml"],
+          paths: ["./.pnpm-store/**/*", "./node_modules/.modules.yaml", ".next/cache/**/*"],
         },
       },
       { artifactBucket: buckets.artifact, cacheBucket: buckets.cache },
@@ -191,48 +155,12 @@ export class AppPipeline extends Stack {
     project.applyRemovalPolicy(RemovalPolicy.DESTROY);
 
     return new CodeBuildAction({
-      actionName: "Compile",
+      actionName: "Build",
       type: CodeBuildActionType.BUILD,
       input,
       extraInputs,
       project,
       outputs: [output],
-    });
-  }
-
-  private createTestAction({
-    input,
-    buckets,
-  }: {
-    input: Artifact;
-    buckets: { cache: Bucket };
-  }) {
-    return new CodeBuildAction({
-      type: CodeBuildActionType.TEST,
-      actionName: "Test",
-      input,
-      project: this.createPipelineProject(
-        this,
-        "getstuff-cc-test-project",
-        {
-          install: [
-            `npm install -g pnpm@${pnpmVersion}`,
-            "pnpm config set store-dir ./.pnpm-store",
-            "pnpm install",
-          ],
-          cache: {
-            paths: ["./.pnpm-store/**/*"],
-          },
-          reports: {
-            tests: {
-              files: ["reports/*.xml"],
-              "file-format": "JUNITXML",
-            },
-          },
-          build: ["pnpm test:unit"],
-        },
-        { cacheBucket: buckets.cache },
-      ),
     });
   }
 

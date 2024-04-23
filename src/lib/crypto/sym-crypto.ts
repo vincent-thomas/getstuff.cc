@@ -8,7 +8,7 @@ export const deserializeData = (data: Buffer | Uint8Array) =>
 
 export const encryptSymmetric = (data: Buffer, key: Buffer) => {
   const nonce = randomBytes(secretbox.nonceLength);
-  const box = secretbox(data, nonce, key);
+  const box = secretbox(Uint8Array.from(data), nonce, Uint8Array.from(key));
 
   const fullMessage = new Uint8Array(nonce.length + box.length);
   fullMessage.set(nonce);
@@ -21,7 +21,7 @@ export const decryptSymmetric = (data: Buffer, key: Buffer) => {
   const nonce = data.slice(0, secretbox.nonceLength);
   const message = data.slice(secretbox.nonceLength, data.length);
 
-  const decrypted = secretbox.open(message, nonce, key);
+  const decrypted = secretbox.open(Uint8Array.from(message), Uint8Array.from(nonce), Uint8Array.from(key));
 
   if (!decrypted) {
     throw new Error("Could not decrypt message");

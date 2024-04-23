@@ -1,14 +1,15 @@
-/** @type {import('ts-jest').JestConfigWithTsJest} */
-const config = {
-  preset: "ts-jest/presets/default-esm",
+import nextJest from "next/jest.js";
+
+const createJestConfig = nextJest({
+  dir: ".",
+})
+
+const config = createJestConfig({
   testEnvironment: "node",
+  testEnvironment: "jsdom",
   reporters: [
     "default",
     ["jest-junit", { outputDirectory: "reports", outputName: "report.xml" }],
   ],
-  extensionsToTreatAsEsm: [".ts"],
-  moduleNameMapper: {
-    "^(\\.{1,2}/.*)\\.js$": "$1",
-  },
-};
+})
 export default config;

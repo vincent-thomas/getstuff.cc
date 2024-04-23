@@ -17,11 +17,11 @@ export const genAsymSignKeyPair = () => {
 
 export const sign = (message: Buffer, privateKey: string) => {
   const rawPrivateKey = deserialize(privateKey);
-  return serialize(tweetSign(message, rawPrivateKey));
+  return serialize(tweetSign(Uint8Array.from(message), Uint8Array.from(rawPrivateKey)));
 };
 
 export const verify = (signature: string, publicKey: string) => {
   const rawPublicKey = deserialize(publicKey);
   const decodedSignature = deserialize(signature);
-  return tweetSign.open(decodedSignature, rawPublicKey);
+  return tweetSign.open(Uint8Array.from(decodedSignature), Uint8Array.from(rawPublicKey));
 };
