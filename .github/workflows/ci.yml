@@ -10,7 +10,7 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    name: Build
+    name: Test
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -82,7 +82,7 @@ jobs:
       - name: Install dependencies
         run: pnpm install
       - name: Build
-        run: pnpm build:app
+        run: SKIP_ENV_VALIDATION='1' pnpm build:app
       - uses: actions/upload-artifact@v4
         with:
           # Optional. Default is 'artifact'

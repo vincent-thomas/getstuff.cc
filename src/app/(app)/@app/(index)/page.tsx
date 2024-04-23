@@ -32,7 +32,7 @@ export default setupPage({
     return (
       <div className={cn(stack({ direction: "col" }), css({ width: "full" }))}>
         {aliases.map(alias => (
-          <Alias {...alias} />
+          <Alias {...alias} key={alias.mailAlias} />
         ))}
       </div>
     );
