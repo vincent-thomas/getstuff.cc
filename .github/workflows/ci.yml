@@ -89,10 +89,10 @@ jobs:
           name: app-bundle
 
           path: |
-            .next
-            !.next/cache
-            unimport.d.ts
-            next-env.d.ts
+            .next/static
+            .next/standalone
+            public
+            Dockerfile
           retention-days: 1
           overwrite: true
 
