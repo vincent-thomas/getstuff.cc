@@ -146,7 +146,11 @@ export class AppPipeline extends Stack {
           files: ["./.next/**/*", "./next-env.d.ts", "./unimport.d.ts"],
         },
         cache: {
-          paths: ["./.pnpm-store/**/*", "./node_modules/.modules.yaml", ".next/cache/**/*"],
+          paths: [
+            "./.pnpm-store/**/*",
+            "./node_modules/.modules.yaml",
+            ".next/cache/**/*",
+          ],
         },
       },
       { artifactBucket: buckets.artifact, cacheBucket: buckets.cache },

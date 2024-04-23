@@ -21,7 +21,11 @@ export const decryptSymmetric = (data: Buffer, key: Buffer) => {
   const nonce = data.slice(0, secretbox.nonceLength);
   const message = data.slice(secretbox.nonceLength, data.length);
 
-  const decrypted = secretbox.open(Uint8Array.from(message), Uint8Array.from(nonce), Uint8Array.from(key));
+  const decrypted = secretbox.open(
+    Uint8Array.from(message),
+    Uint8Array.from(nonce),
+    Uint8Array.from(key),
+  );
 
   if (!decrypted) {
     throw new Error("Could not decrypt message");
