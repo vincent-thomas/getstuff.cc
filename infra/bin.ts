@@ -27,7 +27,7 @@ const zone = HostedZone.fromLookup(RootStack, "stuff-zone", {
 
 new CDPipeline(app, "stuff-cd-pipeline", {
   env,
-})
+});
 
 new SESIdentityStack(app, "stuff-ses-identity", {
   env,
