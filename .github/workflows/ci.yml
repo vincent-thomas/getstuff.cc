@@ -99,7 +99,7 @@ jobs:
       - uses: aws-actions/configure-aws-credentials@v4
         with:
           audience: sts.amazonaws.com
-          aws-region: us-east-3
+          aws-region: eu-central-1
           role-to-assume: arn:aws:iam::649534857523:role/github-ci
           role-session-name: getstuff.cc-github-cd
       - id: login-ecr
