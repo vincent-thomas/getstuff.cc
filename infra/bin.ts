@@ -5,6 +5,7 @@ import { z } from "zod";
 import { SESIdentityStack } from "./lib/ses-identity-stack";
 import { EmailReciever } from "./lib/email-reciever-stack";
 import { HostedZone } from "aws-cdk-lib/aws-route53";
+import { CDPipeline } from "./stacks/cd";
 const app = new cdk.App();
 
 const env = {
@@ -23,6 +24,10 @@ const RootStack = new cdk.Stack(app, "stuff-shared-stack", {
 const zone = HostedZone.fromLookup(RootStack, "stuff-zone", {
   domainName: DOMAIN,
 });
+
+new CDPipeline(app, "stuff-cd-pipeline", {
+  env,
+})
 
 new SESIdentityStack(app, "stuff-ses-identity", {
   env,
