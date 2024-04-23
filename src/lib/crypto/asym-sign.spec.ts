@@ -1,4 +1,3 @@
-import { expect, test } from "@jest/globals";
 import { genAsymSignKeyPair, sign, verify } from "./asym-sign";
 
 test("Signing", () => {

@@ -21,6 +21,9 @@
     "module": "ESNext",
     "moduleResolution": "bundler",
     "jsx": "preserve",
+    "types": [
+      "vitest/globals"
+    ],
     "plugins": [
       {
         "name": "next"
@@ -103,7 +106,8 @@
     ".next/types/**/*.ts",
     "drizzle.config.ts",
     ".contentlayer/generated",
-    "./unimport.d.ts"
+    "./unimport.d.ts",
+    "./setupTest.ts"
   ],
   "exclude": [
     "**/dist",

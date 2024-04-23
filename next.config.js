@@ -15,24 +15,7 @@ const withBundleAnalyzer = bundleAnalyzer({
   openAnalyzer: true,
 });
 
-const withVE = createVanillaExtractPlugin();
-
-/** @type {import("next").NextConfig} */
-const config = {
-  reactStrictMode: true,
-  poweredByHeader: false,
-  output: "standalone",
-  experimental: {
-    useLightningcss: true,
-  },
-  webpack: config => {
-    config.infrastructureLogging = {
-      level: "error",
-    };
-
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-    config?.plugins?.push(
-      unimport.webpack({
+export const unimportPluginConfig = {
         dts: true,
         imports: [
           {
@@ -60,7 +43,26 @@ const config = {
             name: "logger",
           },
         ],
-      }),
+      }
+
+const withVE = createVanillaExtractPlugin();
+
+/** @type {import("next").NextConfig} */
+const config = {
+  reactStrictMode: true,
+  poweredByHeader: false,
+  output: "standalone",
+  experimental: {
+    useLightningcss: true,
+  },
+  webpack: config => {
+    config.infrastructureLogging = {
+      level: "error",
+    };
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+    config?.plugins?.push(
+      unimport.webpack(unimportPluginConfig),
     );
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access

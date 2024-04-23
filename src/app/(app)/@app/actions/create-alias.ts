@@ -17,9 +17,10 @@ export const createAliasAction = protectedProc(
   async ({ label }, { session }) => {
     try {
       if (session.customerStatus === "inactive") {
-        const howMany = await db.query.quickAliases.findMany({
-          where: and(eq(quickAliases.userId, session.userId)),
-        });
+        const howMany = await db
+          .select()
+          .from(quickAliases)
+          .where(and(eq(quickAliases.userId, session.userId)));
 
         if (howMany.length > 9) {
           throw new Error("maximum aliases exceeded");

@@ -7,10 +7,15 @@ import { sendMagicLinkAction } from "../../identify/_components/login-action";
 
 const schema = z.object({
   name: z.string(),
-  email: z.string(),
+  email: z.string().email(),
 });
 
 export const createUserAction = publicProc(schema, async ({ name, email }) => {
+
+  if (email.endsWith(`@${env.NEXT_PUBLIC_DOMAIN}`)) {
+    throw { message: "Can't register with getstuff.cc domain" }
+  }
+
   try {
     await createUser({ email, name });
   } catch {
