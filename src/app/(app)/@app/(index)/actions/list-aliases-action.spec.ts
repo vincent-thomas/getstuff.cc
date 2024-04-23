@@ -1,8 +1,7 @@
 import { createJwt } from "@backend/utils/jwt";
 import { users } from "@backend/db/schema";
 import { testDb } from "setupTest";
-import { listAliasesActionHandler } from "./list-aliases.action-handler";
-import { before } from "node:test";
+import { listAliasesActionHandler } from "./list-aliases-action-handler";
 
 vi.mock("next/headers", async () => {
   const token = await createJwt("TEST_USER", "TEST_CUSTOMER", "inactive");

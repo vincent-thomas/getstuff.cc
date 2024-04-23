@@ -1,7 +1,7 @@
 import { createJwt } from "@backend/utils/jwt";
 import { quickAliases, users } from "@backend/db/schema";
 import { testDb } from "setupTest";
-import { changeAliasStatusActionHandler } from "./toggle-alias.action-handler";
+import { changeAliasStatusActionHandler } from "./toggle-alias-action-handler";
 
 vi.mock("next/headers", async () => {
   const token = await createJwt("USER", "TEST_CUSTOMER", "inactive");

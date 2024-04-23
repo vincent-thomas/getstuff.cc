@@ -11,9 +11,8 @@ const schema = z.object({
 });
 
 export const createUserAction = publicProc(schema, async ({ name, email }) => {
-
   if (email.endsWith(`@${env.NEXT_PUBLIC_DOMAIN}`)) {
-    throw { message: "Can't register with getstuff.cc domain" }
+    throw { message: "Can't register with getstuff.cc domain" };
   }
 
   try {

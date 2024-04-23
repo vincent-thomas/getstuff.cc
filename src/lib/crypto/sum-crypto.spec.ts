@@ -4,8 +4,6 @@ import {
   genSymmetricKey,
 } from "./sym-crypto";
 
-
-
 test("Symmetric encryption", () => {
   const key = genSymmetricKey();
   const data = Buffer.from("data");

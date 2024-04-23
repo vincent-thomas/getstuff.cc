@@ -16,34 +16,34 @@ const withBundleAnalyzer = bundleAnalyzer({
 });
 
 export const unimportPluginConfig = {
-        dts: true,
-        imports: [
-          {
-            from: "@/env",
-            name: "env",
-          },
-          {
-            from: "@style-system/css",
-            name: "css",
-          },
-          {
-            from: "@style-system/utils",
-            name: "cn",
-          },
-          {
-            from: "@style-system/patterns",
-            name: "stack",
-          },
-          {
-            from: "@style-system/palette",
-            name: "palette",
-          },
-          {
-            from: "packages/logger",
-            name: "logger",
-          },
-        ],
-      }
+  dts: true,
+  imports: [
+    {
+      from: "@/env",
+      name: "env",
+    },
+    {
+      from: "@style-system/css",
+      name: "css",
+    },
+    {
+      from: "@style-system/utils",
+      name: "cn",
+    },
+    {
+      from: "@style-system/patterns",
+      name: "stack",
+    },
+    {
+      from: "@style-system/palette",
+      name: "palette",
+    },
+    {
+      from: "packages/logger",
+      name: "logger",
+    },
+  ],
+};
 
 const withVE = createVanillaExtractPlugin();
 
@@ -61,9 +61,7 @@ const config = {
     };
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-    config?.plugins?.push(
-      unimport.webpack(unimportPluginConfig),
-    );
+    config?.plugins?.push(unimport.webpack(unimportPluginConfig));
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
     config.resolve.fallback = {
