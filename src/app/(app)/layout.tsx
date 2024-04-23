@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { cookies } from "next/headers";
-import { verifyJwt } from "backend/utils/jwt";
+import { verifyJwt } from "@backend/utils/jwt";
 
 export default async function RootLayout(props: {
   homepage: ReactNode;

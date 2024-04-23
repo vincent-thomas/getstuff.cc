@@ -16,13 +16,16 @@ import { P } from "@stuff/typography";
 import { useRouter } from "next/navigation";
 import { useAction } from "next-safe-action/hooks";
 import { createAliasAction } from "../actions/create-alias";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const CreateAliasButton = () => {
   const [isOpen, setOpen] = useState(false);
   const router = useRouter();
+  const qC = useQueryClient();
 
   const { execute } = useAction(createAliasAction, {
-    onSuccess(data) {
+    async onSuccess(data) {
+      await qC.invalidateQueries({ queryKey: ["list-aliases", ""] });
       router.push(`/a/${data.aliasId}`);
       toast.success("Alias created");
       setOpen(false);

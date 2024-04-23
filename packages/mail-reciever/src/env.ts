@@ -4,6 +4,7 @@ export const envInterface = z.object({
   STAGE: z.string(),
   AWS_REGION: z.string(),
   EMAIL_DOMAIN: z.string(),
+  DATABASE_URL: z.string(),
 });
 
 export const getEnv = () => envInterface.parse(process.env);

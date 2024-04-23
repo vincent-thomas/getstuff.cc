@@ -1,16 +1,16 @@
 "use server";
 
 import { SendEmailCommand } from "@aws-sdk/client-ses";
-import { action } from "@stuff/lib/safe-action";
-import { redis, getSes } from "backend/sdks";
-import { createId } from "backend/utils/createId";
+import { publicProc } from "@stuff/lib/safe-action";
+import { redis, getSes } from "@backend/sdks";
+import { createId } from "@backend/utils/createId";
 import { z } from "zod";
 
 const schema = z.object({
   email: z.string().email(),
 });
 
-export const sendMagicLinkAction = action(schema, async ({ email }) => {
+export const sendMagicLinkAction = publicProc(schema, async ({ email }) => {
   const id = createId();
   await redis.set(`auth:magic-link:${id}`, email, "EX", 300);
   const ses = getSes(env.AWS_REGION);
@@ -20,7 +20,7 @@ export const sendMagicLinkAction = action(schema, async ({ email }) => {
       Destination: {
         ToAddresses: [email],
       },
-      Source: `noreply@${env.DOMAIN}`,
+      Source: `noreply@${env.NEXT_PUBLIC_DOMAIN}`,
       Message: {
         Body: { Text: { Data: `heres link: ${env.APP_URL}/login/${id}` } },
         Subject: { Data: "Login" },

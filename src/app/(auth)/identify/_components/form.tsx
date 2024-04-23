@@ -46,7 +46,11 @@ export const FormInput = () => {
         border({ rounded: "radius", color: "interactive", side: "all" }),
       )}
     >
-      <Form.Field name={form.names.email.toString()} type="text" />
+      <Form.Field
+        name={form.names.email.toString()}
+        type="email"
+        autoComplete="email"
+      />
       <Button type="submit" variant="primary" size="md" disabled={isLoading}>
         Submit
         {isLoading && <Spinner size={20} />}

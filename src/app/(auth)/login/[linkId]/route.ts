@@ -1,6 +1,6 @@
-import { redis } from "backend/sdks";
-import { createJwt } from "backend/utils/jwt";
-import { getUserFromEmail } from "backend/utils/user";
+import { redis } from "@backend/sdks";
+import { createJwt } from "@backend/utils/jwt";
+import { getUserFromEmail } from "@backend/utils/user";
 import { cookies } from "next/headers";
 import { type NextRequest, NextResponse } from "next/server";
 

@@ -1,6 +1,6 @@
 import type { NextRequest } from "next/server";
 import { authMiddleware } from "./middlewares/auth";
-import { verifyJwt } from "backend/utils/jwt";
+import { verifyJwt } from "@backend/utils/jwt";
 
 export const config = {
   matcher: [

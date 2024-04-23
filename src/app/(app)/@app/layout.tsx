@@ -1,10 +1,11 @@
 import { setupLayout } from "src/utils/setupPage";
 import { rootStyle } from "./layout.css";
-import { getUser as getUserE } from "backend/utils/user";
+import { getUser as getUserE } from "@backend/utils/user";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
-import { verifyJwt } from "backend/utils/jwt";
+import { verifyJwt } from "@backend/utils/jwt";
 import { Profile } from "./components/profile-image";
+import { SubscribeButton } from "./components/subscribe-button";
 
 export const getUser = async () => {
   const jwt = cookies().get("token")?.value;
@@ -22,7 +23,7 @@ export const getUser = async () => {
 
 export default setupLayout({
   async Component({ children }) {
-    const user = await getUser();
+    const session = await getUser();
     return (
       <div className={cn(stack({ direction: "col" }))}>
         <div
@@ -54,9 +55,12 @@ export default setupLayout({
                 }),
               )}
             >
-              Stuff Mail
+              Stuff{session.status !== "inactive" ? "+" : ""}
             </h1>
-            <Profile url={user.profileImageUrl} />
+            <div className={cn(stack({ gap: "md", align: "center" }))}>
+              {session.status === "inactive" && <SubscribeButton />}
+              <Profile url={session.profileImageUrl} />
+            </div>
           </div>
           {children}
         </div>

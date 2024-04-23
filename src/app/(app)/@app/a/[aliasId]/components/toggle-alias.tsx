@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@stuff/ui/button";
-import { useAction } from "next-safe-action/hooks";
+import { useOptimisticAction } from "next-safe-action/hooks";
 import { useRouter } from "next/navigation";
 import { changeAliasStatusAction } from "./toggle-alias.action";
 import { toast } from "sonner";
@@ -11,22 +11,26 @@ export const ToggleAliasButton = ({
   aliasId,
 }: { enabled: boolean; aliasId: string }) => {
   const router = useRouter();
-  const { execute, status } = useAction(changeAliasStatusAction, {
-    onSuccess(data) {
-      router.refresh();
-      toast(`Updated Status: ${data.enabled ? "Enabled" : "Disabled"}`);
+  const { execute, optimisticData } = useOptimisticAction(
+    changeAliasStatusAction,
+    { enabled },
+    previousState => ({ enabled: !previousState.enabled }),
+    {
+      onSuccess(data) {
+        router.refresh();
+        toast(`Alias: ${data.enabled ? "Enabled" : "Disabled"}`);
+      },
     },
-  });
+  );
 
   return (
     <Button
-      variant="primary"
+      variant={optimisticData.enabled ? "outline" : "primary"}
       size="md"
       rounded="medium"
-      disabled={status === "executing"}
       onClick={() => execute({ aliasId, enabled: !enabled })}
     >
-      {enabled ? "Disable" : "Enable"}
+      {optimisticData.enabled ? "Disable" : "Enable"}
     </Button>
   );
 };

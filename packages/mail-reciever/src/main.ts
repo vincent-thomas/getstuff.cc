@@ -19,7 +19,7 @@ interface MailRecord {
 }
 
 export const handler = async (event: { Records: MailRecord[] }) => {
-  for (const { body, awsRegion } of event.Records) {
+  for (const { body } of event.Records) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
     // biome-ignore lint/suspicious/noExplicitAny: Det parsas ändå
     const mail = JSON.parse((JSON.parse(body) as any).Message) as any;
@@ -34,6 +34,7 @@ export const handler = async (event: { Records: MailRecord[] }) => {
     await mailHandler(
       pmail.receipt.action.bucketName,
       pmail.receipt.action.objectKey,
+      pmail.mail.messageId,
     );
   }
 

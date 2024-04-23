@@ -1,5 +1,5 @@
 import { env } from "@/env";
-import type { jwtPayloadValidator } from "backend/utils/jwt";
+import type { jwtPayloadValidator } from "@backend/utils/jwt";
 import { NextResponse } from "next/server";
 import type { Location } from "src/middleware";
 import type { z } from "zod";

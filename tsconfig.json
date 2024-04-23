@@ -33,13 +33,13 @@
         "./src/env.js"
       ],
       "@stuff/api-client/react": [
-        "./backend/client/react.tsx"
+        "src/backend/client/react.tsx"
       ],
       "@stuff/api-client/vanilla": [
-        "./backend/client/vanilla.ts"
+        "src/backend/client/vanilla.ts"
       ],
       "@stuff/api-client/server": [
-        "./backend/client/server.ts"
+        "src/backend/client/server.ts"
       ],
       "@stuff/infra-constants": [
         "./packages/infra-constants/index.ts"
@@ -85,6 +85,9 @@
       ],
       "@style-system/palette": [
         "./packages/ui/theme/palettes.css.ts"
+      ],
+      "@backend/*": [
+        "./src/backend/*"
       ]
     }
   },
@@ -95,12 +98,9 @@
     "src/**/*.tsx",
     "./packages/**/*.ts",
     "./packages/**/*.tsx",
-    "!./packages/mail-reciever/**/*.ts",
     "next.config.js",
     "./infra/**/*.ts",
     ".next/types/**/*.ts",
-    "./src/types/reset.d.ts",
-    "./backend/**/*.ts",
     "drizzle.config.ts",
     ".contentlayer/generated",
     "./unimport.d.ts"

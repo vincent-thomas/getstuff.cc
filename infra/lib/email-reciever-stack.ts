@@ -14,6 +14,7 @@ import type { IHostedZone } from "aws-cdk-lib/aws-route53";
 
 interface MailApiStackProps extends StackProps {
   zone: IHostedZone;
+  databaseUrl: string;
   env: {
     account: string;
     region: string;
@@ -25,7 +26,7 @@ export class EmailReciever extends Stack {
   constructor(
     scope: App,
     id: string,
-    { stage, zone, ...props }: MailApiStackProps,
+    { stage, zone, databaseUrl, ...props }: MailApiStackProps,
   ) {
     super(scope, id, props);
 
@@ -56,6 +57,7 @@ export class EmailReciever extends Stack {
     const lambdaEnv = {
       STAGE: stage,
       EMAIL_DOMAIN: zone.zoneName,
+      DATABASE_URL: databaseUrl,
     } satisfies Omit<z.infer<typeof envInterface>, "AWS_REGION">;
 
     const lambda = new Lambda(this, "MailApiFunction", {
@@ -73,7 +75,7 @@ export class EmailReciever extends Stack {
 
     lambda.addToRolePolicy(
       new PolicyStatement({
-        actions: ["ses:SendEmail"],
+        actions: ["ses:SendEmail", "ses:SendBounce"],
         resources: ["*"],
       }),
     );

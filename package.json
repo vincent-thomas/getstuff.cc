@@ -19,7 +19,8 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "cdk:synth:pipeline": "dotenv -- cdk synth stuff-pipeline",
-    "cdk:mutate-pipeline": "dotenv -- cdk deploy stuff-pipeline"
+    "cdk:mutate-pipeline": "dotenv -- cdk deploy stuff-pipeline",
+    "cdk:deploy:mail-reciever": "dotenv -c local -- cdk deploy dev-stuff-email-reciever"
   },
   "dependencies": {
     "@ariakit/react": "^0.4.5",

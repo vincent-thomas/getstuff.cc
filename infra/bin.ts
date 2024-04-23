@@ -16,7 +16,8 @@ const env = {
 const stage = z.string().parse(process.env.STAGE);
 
 const STAGE = z.string().parse(process.env.STAGE);
-const DOMAIN = z.string().parse(process.env.DOMAIN);
+const DOMAIN = z.string().parse(process.env.NEXT_PUBLIC_DOMAIN);
+const DATABASE_URL = z.string().parse(process.env.DATABASE_URL);
 
 new AppPipeline(app, "stuff-pipeline", {
   env,
@@ -30,7 +31,6 @@ const RootStack = new cdk.Stack(app, "stuff-shared-stack", {
 const zone = HostedZone.fromLookup(RootStack, "stuff-zone", {
   domainName: DOMAIN,
 });
-
 new SESIdentityStack(app, "stuff-ses-identity", {
   env,
   zone,
@@ -40,6 +40,7 @@ new EmailReciever(app, `${stage}-stuff-email-reciever`, {
   zone,
   env,
   stage: STAGE,
+  databaseUrl: DATABASE_URL,
 });
 
 app.synth();

@@ -1,9 +1,9 @@
-import { db } from "backend/db";
-import { users } from "backend/db/schema";
+import { db } from "@backend/db";
+import { users } from "@backend/db/schema";
 import { createId } from "./createId";
 import { eq } from "drizzle-orm";
 import { randomBytes } from "tweetnacl";
-import { stripe } from "backend/sdks";
+import { stripe } from "@backend/sdks";
 
 interface createUserI {
   email: string;
