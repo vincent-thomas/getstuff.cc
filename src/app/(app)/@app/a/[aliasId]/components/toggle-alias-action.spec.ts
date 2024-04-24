@@ -1,5 +1,5 @@
 import { createJwt } from "@backend/utils/jwt";
-import { quickAliases, users } from "@backend/db/schema";
+import { quickAliases, userTable } from "@backend/db/schema";
 import { testDb } from "setupTest";
 import { changeAliasStatusActionHandler } from "./toggle-alias-action-handler";
 
@@ -20,7 +20,7 @@ vi.mock("next/headers", async () => {
 
 describe("toggle-alias", () => {
   beforeAll(async () => {
-    await testDb.insert(users).values({
+    await testDb.insert(userTable).values({
       userId: "USER",
       customerId: "TEST_CUSTOMERR",
       name: "testing",

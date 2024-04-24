@@ -1,6 +1,6 @@
 import { innerRequest } from "./handler";
 import { createId } from "@backend/utils/createId";
-import { users } from "@backend/db/schema";
+import { userTable } from "@backend/db/schema";
 import { verifyJwt } from "@backend/utils/jwt";
 import { testDb, testRedis } from "setupTest";
 
@@ -25,7 +25,7 @@ describe("Login function", () => {
 
     await testRedis.set(`auth:magic-link:${linkId}`, email, "EX", 300);
 
-    await testDb.insert(users).values({
+    await testDb.insert(userTable).values({
       email,
       customerId: "testing",
       name: "testing",

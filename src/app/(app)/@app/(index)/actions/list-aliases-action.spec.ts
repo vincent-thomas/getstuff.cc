@@ -1,5 +1,5 @@
 import { createJwt } from "@backend/utils/jwt";
-import { users } from "@backend/db/schema";
+import { userTable } from "@backend/db/schema";
 import { testDb } from "setupTest";
 import { listAliasesActionHandler } from "./list-aliases-action-handler";
 
@@ -20,7 +20,7 @@ vi.mock("next/headers", async () => {
 
 describe("list-aliases", () => {
   beforeAll(async () => {
-    await testDb.insert(users).values({
+    await testDb.insert(userTable).values({
       userId: "TEST_USER",
       customerId: "TEST_CUSTOMER",
       name: "testing",

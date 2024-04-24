@@ -9,7 +9,12 @@ export const getStuffPlusLink = protectedProc(
   async (_, { session: { customerId } }) => {
     const checkoutSession = await stripe.checkout.sessions.create({
       customer: customerId,
-      mode: "setup",
+      mode: "subscription",
+      line_items: [
+        {
+          price: env.STRIPE_PER_ALIAS_PRICE_ID,
+        },
+      ],
       success_url: `${env.APP_URL}`,
       currency: "SEK",
     });

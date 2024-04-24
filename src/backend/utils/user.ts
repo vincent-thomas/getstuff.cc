@@ -1,5 +1,5 @@
 import { db } from "@backend/db";
-import { users } from "@backend/db/schema";
+import { userTable } from "@backend/db/schema";
 import { createId } from "./createId";
 import { eq } from "drizzle-orm";
 import { randomBytes } from "tweetnacl";
@@ -18,13 +18,12 @@ export const createUser = async ({ email, name }: createUserI) => {
     name,
   });
 
-  return await db.insert(users).values({
+  return await db.insert(userTable).values({
     userId,
     email,
     profileImageUrl: `https://api.dicebear.com/8.x/micah/svg?seed=${Buffer.from(
       randomBytes(4),
     ).toString("hex")}`,
-    status: "inactive",
     customerId: response.id,
     name,
   });
@@ -33,8 +32,8 @@ export const createUser = async ({ email, name }: createUserI) => {
 export const getUser = (userId: string) => {
   return db
     .select()
-    .from(users)
-    .where(eq(users.userId, userId))
+    .from(userTable)
+    .where(eq(userTable.userId, userId))
     .execute()
     .then(user => user?.[0]);
 };
@@ -42,8 +41,8 @@ export const getUser = (userId: string) => {
 export const getUserFromEmail = (db: PostgresJsDatabase, email: string) => {
   return db
     .select()
-    .from(users)
-    .where(eq(users.email, email))
+    .from(userTable)
+    .where(eq(userTable.email, email))
     .execute()
     .then(user => user?.[0]);
 };

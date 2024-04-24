@@ -1,5 +1,7 @@
+import { subscriptionTable } from "@backend/db/schema/subscriptions";
 import { createJwt } from "@backend/utils/jwt";
 import { getUserFromEmail } from "@backend/utils/user";
+import { and, desc, eq } from "drizzle-orm";
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import type { Redis } from "ioredis";
 import { cookies } from "next/headers";
@@ -33,7 +35,19 @@ export const innerRequest = async ({
   }
 
   await redis.del(`auth:magic-link:${params.linkId}`);
-  const jwt = await createJwt(user.userId, user.customerId, user.status);
+
+  const subscription = await db
+    .select()
+    .from(subscriptionTable)
+    .orderBy(desc(subscriptionTable.startDate))
+    .where(and(eq(subscriptionTable.customerId, user.customerId)))
+    .then(v => v?.[0]);
+
+  const jwt = await createJwt(
+    user.userId,
+    user.customerId,
+    subscription === undefined ? "inactive" : subscription.status,
+  );
 
   cookies().set("token", jwt, {
     secure: true,

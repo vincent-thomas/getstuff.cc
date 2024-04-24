@@ -21,7 +21,7 @@ export const CopyAbleAlias = ({
       )}
       onClick={async () => {
         await navigator.clipboard.writeText(
-          `${aliasId}"${env.NEXT_PUBLIC_DOMAIN}`,
+          `${aliasId}@${env.NEXT_PUBLIC_DOMAIN}`,
         );
         toast("Alias copied");
       }}

@@ -1,3 +1,5 @@
+"use server";
+
 import { verifyJwt } from "@backend/utils/jwt";
 import { createSafeActionClient } from "next-safe-action";
 import { cookies } from "next/headers";

@@ -7,7 +7,7 @@ const getJwtKey = () => {
 
 export const jwtPayloadValidator = z.object({
   customerId: z.string(),
-  customerStatus: z.enum(["inactive", "active", "canceled"]),
+  customerStatus: z.enum(["inactive", "active", "past_due", "canceled"]),
   userId: z.string(),
 });
 

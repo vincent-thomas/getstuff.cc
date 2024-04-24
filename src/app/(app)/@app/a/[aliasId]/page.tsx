@@ -15,12 +15,16 @@ export default setupPage({
   params: z.object({ aliasId: z.string() }),
   async Component({ params }) {
     const user = await getUser();
-    const alias = await db.query.quickAliases.findFirst({
-      where: and(
-        eq(quickAliases.userId, user.userId),
-        eq(quickAliases.mailAlias, params.aliasId),
-      ),
-    });
+    const alias = await db
+      .select()
+      .from(quickAliases)
+      .where(
+        and(
+          eq(quickAliases.userId, user.userId),
+          eq(quickAliases.mailAlias, params.aliasId),
+        ),
+      )
+      .then(v => v?.[0]);
 
     if (alias === undefined) {
       notFound();
@@ -28,7 +32,11 @@ export default setupPage({
     return (
       <div className={cn(stack({ direction: "col" }))}>
         <div className={cn(stack({ justify: "between", align: "start" }))}>
-          <div className={cn(stack({ direction: "col", gap: "sm" }))}>
+          <div
+            className={cn(
+              stack({ direction: "col", gap: "sm", align: "start" }),
+            )}
+          >
             <div className={cn(stack({ gap: "md", align: "start" }))}>
               <Link
                 href="/"

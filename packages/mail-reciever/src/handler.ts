@@ -5,7 +5,7 @@ import {
 } from "@aws-sdk/client-s3";
 import { parseEmail } from "./emailParser";
 import { getEnv } from "./env";
-import { quickAliases, users } from "@backend/db/schema";
+import { quickAliases, userTable } from "@backend/db/schema";
 import { eq } from "drizzle-orm";
 import {
   BounceType,
@@ -67,6 +67,7 @@ export const mailHandler = async (
     .select()
     .from(quickAliases)
     .where(eq(quickAliases.mailAlias, aliasId))
+    .execute()
     .then(value => value?.[0]);
 
   if (alias === undefined || !alias.enabled) {
@@ -89,8 +90,9 @@ export const mailHandler = async (
 
   const user = (await db
     .select()
-    .from(users)
-    .where(eq(users.userId, alias.userId))
+    .from(userTable)
+    .where(eq(userTable.userId, alias.userId))
+    .execute()
     .then(v => v?.[0]))!;
 
   const deleteEmailCommand = new DeleteObjectCommand({

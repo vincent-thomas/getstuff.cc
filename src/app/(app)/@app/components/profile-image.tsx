@@ -11,6 +11,9 @@ import {
 import { toast } from "sonner";
 import { signOutAction } from "./actions/signout.action";
 import { useAction } from "next-safe-action/hooks";
+import { useGetUser } from "@backend/actions/getUser";
+import { generateBillingSession } from "@backend/actions/generateBillingSession/handler";
+import { z } from "zod";
 
 export const Profile = ({ url }: { url: string }) => {
   const router = useRouter();
@@ -21,13 +24,27 @@ export const Profile = ({ url }: { url: string }) => {
     },
   });
 
+  const user = useGetUser();
+
   return (
     <Menu>
       <MenuButton>
         <img src={url} width={50} height={50} alt="user profile" />
       </MenuButton>
       <MenuContent>
-        <MenuItem>Billing</MenuItem>
+        {user.data?.customerStatus !== "inactive" && (
+          <MenuItem
+            onClick={async () => {
+              const result = await generateBillingSession({
+                customerId: z.string().parse(user.data?.customerId),
+              });
+
+              window.location.href = result.url;
+            }}
+          >
+            Manage Billing
+          </MenuItem>
+        )}
         <MenuSeparator />
         <MenuItem onClick={() => execute(undefined)}>Sign out</MenuItem>
       </MenuContent>

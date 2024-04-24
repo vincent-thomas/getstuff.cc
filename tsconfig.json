@@ -100,6 +100,7 @@
     "src/**/*.ts",
     "src/**/*.tsx",
     "./packages/**/*.ts",
+    "./content/**/*.mdx",
     "./packages/**/*.tsx",
     "next.config.js",
     "./infra/**/*.ts",

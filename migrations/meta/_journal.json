@@ -15,6 +15,27 @@
       "when": 1713665556478,
       "tag": "0001_dusty_outlaw_kid",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1713977372707,
+      "tag": "0002_lumpy_peter_parker",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1713992142682,
+      "tag": "0003_fine_marvel_apes",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1713998786713,
+      "tag": "0004_smiling_forge",
+      "breakpoints": true
     }
   ]
 }

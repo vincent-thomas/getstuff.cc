@@ -51,8 +51,7 @@
         "noDefaultExport": "off",
         "useNodejsImportProtocol": "off",
         "noNonNullAssertion": "off",
-        "useImportType": "error",
-        "noNamespaceImport": "off"
+        "useImportType": "error"
       },
       "correctness": {
         "noUndeclaredVariables": "off"
@@ -62,10 +61,6 @@
       },
       "suspicious": {
         "noAssignInExpressions": "off"
-      },
-      "performance": {
-        "noBarrelFile": "off",
-        "noReExportAll": "off"
       }
     }
   }
