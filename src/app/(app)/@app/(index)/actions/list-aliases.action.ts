@@ -6,8 +6,8 @@ import { db } from "@backend/db";
 import { quickAliases } from "@backend/db/schema";
 import { and, eq, ilike, or } from "drizzle-orm";
 
-export const listAliases = protectedProc(
-  z.string(),
+export const listAliasesAction = protectedProc(
+  z.string().optional(),
   async (query, { session }) => {
     return await db
       .select()

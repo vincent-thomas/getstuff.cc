@@ -23,8 +23,8 @@ const decideLocation = (pathname: string) => {
 
 export async function middleware(request: NextRequest) {
   const active = request.cookies.get("token")?.value ?? "";
-
-  const session = active !== "" ? await verifyJwt(active) : null;
+  const session =
+    active !== "" ? await verifyJwt(active).catch(() => null) : null;
 
   const location = decideLocation(request.nextUrl.pathname);
   const result = authMiddleware(location, session);

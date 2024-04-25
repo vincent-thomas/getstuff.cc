@@ -70,16 +70,10 @@ export const setupLayout =
     });
   };
 
-type Loading = ({
-  children,
-}: {
-  children: ReactNode;
-}) => Promise<JSX.Element> | JSX.Element;
+type Loading = () => Promise<JSX.Element> | JSX.Element;
 
 export const setupLoading =
   ({ Component }: { Component: Loading }): FC<LayoutProps> =>
   props => {
-    return Component({
-      children: props.children,
-    });
+    return Component();
   };

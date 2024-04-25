@@ -4,7 +4,7 @@ import { quickAliases } from "@backend/db/schema";
 import { and, eq, ilike, or } from "drizzle-orm";
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 
-export const listAliasesActionHandler = async ({
+export const listAliases = async ({
   clients: { db },
   query,
   userId,
@@ -12,7 +12,7 @@ export const listAliasesActionHandler = async ({
   clients: {
     db: PostgresJsDatabase;
   };
-  query: string;
+  query?: string;
   userId: string;
 }) => {
   return await db

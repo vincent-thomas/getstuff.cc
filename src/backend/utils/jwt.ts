@@ -1,6 +1,6 @@
 import { SignJWT, jwtVerify as joseVerifyJwt } from "jose";
 import { z } from "zod";
-import type { customerInterface } from "../interfaces/customer";
+import type { customerStatusValidator } from "@backend/db/schema";
 const getJwtKey = () => {
   return env.JWT_SECRET;
 };
@@ -14,7 +14,7 @@ export const jwtPayloadValidator = z.object({
 export const createJwt = (
   userId: string,
   customerId: string,
-  customerStatus: z.infer<typeof customerInterface>["status"],
+  customerStatus?: z.infer<typeof customerStatusValidator>,
 ) => {
   return new SignJWT(
     jwtPayloadValidator.parse({

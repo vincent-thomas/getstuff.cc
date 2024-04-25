@@ -1,23 +1,23 @@
-"use client";
-
 import { setupPage } from "src/utils/setupPage";
 import { Alias } from "../components/alias";
-import { useAtomValue } from "jotai";
-import { searchQuery } from "../components/search-field";
-import { useQuery } from "@tanstack/react-query";
-import { listAliases } from "./actions/list-aliases.action";
+import { z } from "zod";
+import { listAliases } from "./actions/list-aliases-action-handler";
+import { db } from "@backend/db";
+import { getUser } from "../layout";
 
 export default setupPage({
-  Component() {
-    const query = useAtomValue(searchQuery);
-    const { data: aliases } = useQuery({
-      queryKey: ["list-aliases", query],
-      queryFn: () => listAliases(query).then(v => v.data),
+  query: z.object({
+    q: z.string().optional(),
+  }),
+  async Component({ query }) {
+    const user = await getUser();
+    const aliases = await listAliases({
+      clients: {
+        db,
+      },
+      query: query.q,
+      userId: user.userId,
     });
-
-    if (aliases === undefined) {
-      return <></>;
-    }
 
     if (aliases.length === 0) {
       return (

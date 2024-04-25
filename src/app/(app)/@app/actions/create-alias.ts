@@ -7,6 +7,8 @@ import { generate } from "random-words";
 import { quickAliases } from "@backend/db/schema";
 import { stripe } from "@backend/sdks";
 import { and, eq } from "drizzle-orm";
+import { usagesTable } from "@backend/db/schema/usages";
+import { revalidatePath } from "next/cache";
 
 const schema = z.object({
   label: z.string(),
@@ -44,7 +46,7 @@ export const createAliasAction = protectedProc(
       });
 
       if (session.customerStatus === "active") {
-        await stripe.billing.meterEvents.create({
+        const meterEvent = await stripe.billing.meterEvents.create({
           timestamp: Math.round(created_at.getTime() / 1000),
           event_name: "api",
           payload: {
@@ -52,7 +54,16 @@ export const createAliasAction = protectedProc(
             stripe_customer_id: session.customerId,
           },
         });
+
+        await db.insert(usagesTable).values({
+          usageId: meterEvent.identifier,
+          customerId: session.customerId,
+          value: 1,
+          createdAt: new Date(meterEvent.created * 1000),
+        });
       }
+
+      revalidatePath("/");
 
       return { aliasId: words };
     } catch (e) {

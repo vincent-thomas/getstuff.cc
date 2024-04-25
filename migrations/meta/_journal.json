@@ -36,6 +36,20 @@
       "when": 1713998786713,
       "tag": "0004_smiling_forge",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1714062804286,
+      "tag": "0005_fluffy_thing",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1714063062952,
+      "tag": "0006_black_christian_walker",
+      "breakpoints": true
     }
   ]
 }

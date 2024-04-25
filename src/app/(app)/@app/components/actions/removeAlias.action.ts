@@ -2,7 +2,7 @@
 
 import { protectedProc } from "@stuff/lib/safe-action";
 import { db } from "@backend/db";
-import { quickAliases } from "@backend/db/schema";
+import { quickAliases, usagesTable } from "@backend/db/schema";
 import { and, eq } from "drizzle-orm";
 import { z } from "zod";
 import { stripe } from "@backend/sdks";
@@ -19,13 +19,19 @@ export const removeAliasAction = protectedProc(
         ),
       );
     if (session.customerStatus !== "inactive") {
-      await stripe.billing.meterEvents.create({
+      const meterEvent = await stripe.billing.meterEvents.create({
         timestamp: Math.round(Date.now() / 1000),
         event_name: "api",
         payload: {
           value: "-1",
           stripe_customer_id: session.customerId,
         },
+      });
+      await db.insert(usagesTable).values({
+        usageId: meterEvent.identifier,
+        customerId: session.customerId,
+        value: -1,
+        createdAt: new Date(meterEvent.created * 1000),
       });
     }
   },

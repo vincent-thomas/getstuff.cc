@@ -14,18 +14,15 @@ import { Link } from "src/components/structure/link";
 import { useAction } from "next-safe-action/hooks";
 import { removeAliasAction } from "./actions/removeAlias.action";
 import { useRouter } from "next/navigation";
-import { useQueryClient } from "@tanstack/react-query";
 
 export const Alias = ({
   label,
   mailAlias,
   created_at,
 }: { label: string; mailAlias: string; created_at: Date }) => {
-  const qC = useQueryClient();
   const router = useRouter();
   const { execute } = useAction(removeAliasAction, {
-    async onSuccess() {
-      await qC.invalidateQueries({ queryKey: ["list-aliases", ""] });
+    onSuccess() {
       router.refresh();
     },
   });

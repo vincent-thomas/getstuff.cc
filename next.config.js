@@ -51,7 +51,7 @@ const withVE = createVanillaExtractPlugin();
 const config = {
   reactStrictMode: true,
   poweredByHeader: false,
-  output: "standalone",
+  // output: "standalone",
   experimental: {
     useLightningcss: true,
   },

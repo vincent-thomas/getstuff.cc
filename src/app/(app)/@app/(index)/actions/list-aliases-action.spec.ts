@@ -1,7 +1,7 @@
 import { createJwt } from "@backend/utils/jwt";
 import { userTable } from "@backend/db/schema";
 import { testDb } from "setupTest";
-import { listAliasesActionHandler } from "./list-aliases-action-handler";
+import { listAliases } from "./list-aliases-action-handler";
 
 vi.mock("next/headers", async () => {
   const token = await createJwt("TEST_USER", "TEST_CUSTOMER", "inactive");
@@ -32,7 +32,7 @@ describe("list-aliases", () => {
   });
 
   test("test", async () => {
-    const result = await listAliasesActionHandler({
+    const result = await listAliases({
       query: "",
       clients: { db: testDb },
       userId: "TEST_USER",

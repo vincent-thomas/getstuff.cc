@@ -46,7 +46,7 @@ export const innerRequest = async ({
   const jwt = await createJwt(
     user.userId,
     user.customerId,
-    subscription === undefined ? "inactive" : subscription.status,
+    subscription?.status,
   );
 
   cookies().set("token", jwt, {
