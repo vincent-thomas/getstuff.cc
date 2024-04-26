@@ -2,7 +2,7 @@ import { subscriptionTable } from "@backend/db/schema/subscriptions";
 import { createJwt } from "@backend/utils/jwt";
 import { getUserFromEmail } from "@backend/utils/user";
 import { and, desc, eq } from "drizzle-orm";
-import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
+import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 import type { Redis } from "ioredis";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
@@ -13,10 +13,12 @@ export const innerRequest = async ({
   params,
 }: {
   redis: Redis;
-  db: PostgresJsDatabase;
+  db: NodePgDatabase;
   params: { linkId: string };
 }) => {
+  console.log("testing");
   const email = await redis.get(`auth:magic-link:${params.linkId}`);
+  console.log(email);
 
   if (email === null) {
     return Response.json(
@@ -54,5 +56,5 @@ export const innerRequest = async ({
     httpOnly: true,
   });
 
-  return Response.redirect(`${env.APP_URL}`);
+  return NextResponse.redirect(`${env.APP_URL}`);
 };

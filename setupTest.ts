@@ -3,14 +3,15 @@ import {
   type StartedPostgreSqlContainer,
 } from "@testcontainers/postgresql";
 import { execSync } from "child_process";
-import { type PostgresJsDatabase, drizzle } from "drizzle-orm/postgres-js";
+import type { NodePgDatabase } from "drizzle-orm/node-postgres";
+import { drizzle } from "drizzle-orm/node-postgres";
 import { Redis } from "ioredis";
-import postgres from "postgres";
+import { Client } from "pg";
 import { GenericContainer, type StartedTestContainer } from "testcontainers";
 
 let postgresContainer: StartedPostgreSqlContainer;
 let postgresClient: Client;
-let testDb: PostgresJsDatabase;
+let testDb: NodePgDatabase;
 let redisContainer: StartedTestContainer;
 let redisClient: Redis;
 
@@ -22,7 +23,7 @@ beforeAll(async () => {
       NODE_ENV: "test",
     },
   });
-  const postgresSql = postgres(postgresContainer.getConnectionUri());
+  const postgresSql = new Client(postgresContainer.getConnectionUri());
 
   testDb = drizzle(postgresSql);
 

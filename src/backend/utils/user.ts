@@ -4,7 +4,7 @@ import { createId } from "./createId";
 import { eq } from "drizzle-orm";
 import { randomBytes } from "tweetnacl";
 import { stripe } from "@backend/sdks";
-import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
+import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 
 interface createUserI {
   email: string;
@@ -38,7 +38,7 @@ export const getUser = (userId: string) => {
     .then(user => user?.[0]);
 };
 
-export const getUserFromEmail = (db: PostgresJsDatabase, email: string) => {
+export const getUserFromEmail = (db: NodePgDatabase, email: string) => {
   return db
     .select()
     .from(userTable)

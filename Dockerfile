@@ -8,6 +8,7 @@ ENV NEXT_TELEMETRY_DISABLED 1
 ENV PORT $PORT
 ENV HOSTNAME 0.0.0.0
 
+COPY --from=public.ecr.aws/awsguru/aws-lambda-adapter:0.8.3 /lambda-adapter /opt/extensions/lambda-adapter
 COPY ./public ./public
 COPY ./.next/standalone ./
 COPY ./.next/static ./.next/static

@@ -30,7 +30,6 @@ describe("Login function", () => {
       customerId: "testing",
       name: "testing",
       profileImageUrl: "example.com",
-      status: "inactive",
       userId: "TEST",
       created_at: new Date(),
     });

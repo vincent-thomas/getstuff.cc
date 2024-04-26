@@ -4,6 +4,5 @@ import * as schema from "@backend/db/schema";
 import { neon } from "@neondatabase/serverless";
 
 const env = getEnv();
-const pg = neon(env.DATABASE_URL);
 
-export const db = drizzle(pg, { schema, logger: true });
+export const db = drizzle(neon(env.DATABASE_URL), { schema, logger: true });

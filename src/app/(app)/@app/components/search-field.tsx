@@ -1,15 +1,14 @@
 "use client";
 
-import { atom, useSetAtom } from "jotai";
+import { useSetAtom } from "jotai";
 import { SearchIcon } from "lucide-react";
 import { Form } from "packages/ui/components";
 import { border } from "src/components/recipies";
-
-export const searchQuery = atom("");
+import { searchQueryAtom } from "../store/searchQuery";
 
 export const Search = () => {
   const form = Form.useStore({ defaultValues: { search: "" } });
-  const setSearchQuery = useSetAtom(searchQuery);
+  const setSearchQuery = useSetAtom(searchQueryAtom);
 
   form.useSubmit(({ values }) => {
     setSearchQuery(values.search);

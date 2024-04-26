@@ -4,7 +4,7 @@ import { testDb } from "setupTest";
 import { changeAliasStatusActionHandler } from "./toggle-alias-action-handler";
 
 vi.mock("next/headers", async () => {
-  const token = await createJwt("USER", "TEST_CUSTOMER", "inactive");
+  const token = await createJwt("USER", "TEST_CUSTOMER", undefined);
   return {
     cookies: () => {
       return {
@@ -26,7 +26,6 @@ describe("toggle-alias", () => {
       name: "testing",
       email: "test2@gmail.com",
       profileImageUrl: "https://example.com",
-      status: "inactive",
       created_at: new Date(),
     });
 

@@ -4,7 +4,7 @@ import { testDb } from "setupTest";
 import { listAliases } from "./list-aliases-action-handler";
 
 vi.mock("next/headers", async () => {
-  const token = await createJwt("TEST_USER", "TEST_CUSTOMER", "inactive");
+  const token = await createJwt("TEST_USER", "TEST_CUSTOMER", undefined);
   return {
     cookies: () => {
       return {
@@ -26,7 +26,6 @@ describe("list-aliases", () => {
       name: "testing",
       email: "test@gmail.com",
       profileImageUrl: "https://example.com",
-      status: "inactive",
       created_at: new Date(),
     });
   });

@@ -99,6 +99,7 @@
     "next-env.d.ts",
     "src/**/*.ts",
     "src/**/*.tsx",
+    "./unplugins.js",
     "./packages/**/*.ts",
     "./content/**/*.mdx",
     "./packages/**/*.tsx",

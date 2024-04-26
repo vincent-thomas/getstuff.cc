@@ -9,41 +9,12 @@ import { withContentlayer } from "next-contentlayer";
 import unimport from "unimport/unplugin";
 import million from "million/compiler";
 import bundleAnalyzer from "@next/bundle-analyzer";
+import { unimportConfig } from "./unplugins.js";
 
 const withBundleAnalyzer = bundleAnalyzer({
   enabled: process.env.ANALYZE === "true",
   openAnalyzer: true,
 });
-
-export const unimportPluginConfig = {
-  dts: true,
-  imports: [
-    {
-      from: "@/env",
-      name: "env",
-    },
-    {
-      from: "@style-system/css",
-      name: "css",
-    },
-    {
-      from: "@style-system/utils",
-      name: "cn",
-    },
-    {
-      from: "@style-system/patterns",
-      name: "stack",
-    },
-    {
-      from: "@style-system/palette",
-      name: "palette",
-    },
-    {
-      from: "packages/logger",
-      name: "logger",
-    },
-  ],
-};
 
 const withVE = createVanillaExtractPlugin();
 
@@ -51,7 +22,7 @@ const withVE = createVanillaExtractPlugin();
 const config = {
   reactStrictMode: true,
   poweredByHeader: false,
-  // output: "standalone",
+  output: "standalone",
   experimental: {
     useLightningcss: true,
   },
@@ -61,7 +32,7 @@ const config = {
     };
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-    config?.plugins?.push(unimport.webpack(unimportPluginConfig));
+    config?.plugins?.push(unimport.webpack(unimportConfig));
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
     config.resolve.fallback = {

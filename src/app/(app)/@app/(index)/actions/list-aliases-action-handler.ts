@@ -2,7 +2,7 @@
 
 import { quickAliases } from "@backend/db/schema";
 import { and, eq, ilike, or } from "drizzle-orm";
-import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
+import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 
 export const listAliases = async ({
   clients: { db },
@@ -10,7 +10,7 @@ export const listAliases = async ({
   userId,
 }: {
   clients: {
-    db: PostgresJsDatabase;
+    db: NodePgDatabase;
   };
   query?: string;
   userId: string;

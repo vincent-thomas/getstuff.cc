@@ -2,13 +2,13 @@
 
 import { quickAliases } from "@backend/db/schema";
 import { and, eq } from "drizzle-orm";
-import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
+import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 
 export const changeAliasStatusActionHandler = async ({
   data,
   clients,
 }: {
-  clients: { db: PostgresJsDatabase };
+  clients: { db: NodePgDatabase };
   data: { userId: string; aliasId: string; enabled: boolean };
 }) => {
   await clients.db
