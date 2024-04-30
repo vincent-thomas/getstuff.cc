@@ -11,6 +11,9 @@ permissions:
   id-token: write
   contents: read
 
+env:
+  IMAGE_NAME: getstuff.cc
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -87,6 +90,9 @@ jobs:
 
   deploy:
     if: github.event_name == 'push' && github.ref_name == 'main'
+    permissions:
+      packages: write
+      contents: read
     needs:
       - test
       - build
@@ -96,18 +102,23 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: app-bundle
-      - uses: aws-actions/configure-aws-credentials@v4
-        with:
-          audience: sts.amazonaws.com
-          aws-region: eu-central-1
-          role-to-assume: arn:aws:iam::649534857523:role/github-ci
-          role-session-name: getstuff.cc-github-cd
-      - id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v2
-      - env:
-          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          REPOSITORY: getstuff.cc
-          IMAGE_TAG: ${{ github.run_id }}
+
+      - run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+      - name: Push image
         run: |
-          docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
-          docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+          IMAGE_ID=ghcr.io/${{ github.repository_owner }}/$IMAGE_NAME
+          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+          [ "$VERSION" == "main" ] && VERSION=latest
+          echo IMAGE_ID=$IMAGE_ID
+          echo VERSION=$VERSION
+          docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
+          docker push $IMAGE_ID:$VERSION
+      # - env:
+      #     REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+      #     REPOSITORY: getstuff.cc
+      #     IMAGE_TAG: ${{ github.run_id }}
+      #   run: |
+      #     docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
+      #     docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
