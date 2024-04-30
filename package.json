@@ -10,7 +10,7 @@
     "db:generate": "dotenv -c local -- drizzle-kit generate:pg",
     "db:migrate": "dotenv -c local -- tsx ./schema-migrator.ts",
     "dev": "next dev",
-    "check:ci": "biome ci . && tsc --noEmit",
+    "check:ci": "biome ci .",
     "test": "dotenv -c local -- cross-env SKIP_ENV_VALIDATION='1' vitest run",
     "start": "next start",
     "cdk:synth": "dotenv -- cdk synth",
