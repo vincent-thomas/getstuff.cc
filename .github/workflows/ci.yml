@@ -52,7 +52,7 @@ jobs:
       - name: Lint
         run: pnpm check:ci
       - name: Test
-        run: pnpm test:unit
+        run: pnpm test
 
   build:
     runs-on: ubuntu-latest
